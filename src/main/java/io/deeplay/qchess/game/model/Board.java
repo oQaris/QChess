@@ -1,4 +1,4 @@
-package io.deeplay.qchess.game;
+package io.deeplay.qchess.game.model;
 
 public final class Board {
 

@@ -1,4 +1,4 @@
-package io.deeplay.qchess.game;
+package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.figures.IFigure;
 
@@ -11,6 +11,13 @@ public class Cell {
      */
     public IFigure getFigure() {
         return figure;
+    }
+
+    /**
+     * @return true если клетка свободная
+     */
+    public boolean isEmpty() {
+        return figure == null;
     }
 
     /**

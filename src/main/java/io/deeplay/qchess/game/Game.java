@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game;
 
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.IPlayer;
 
