@@ -15,20 +15,19 @@ public final class Game {
         return game;
     }
 
-    private Board board;
+    private Board board = Board.getBoard();
     private IPlayer firstPlayer;
     private IPlayer secondPlayer;
     private IPlayer currentPlayerToMove;
 
     public void start() {
-        Move move = currentPlayerToMove.getMove();
+        // TODO: сделать условие выхода
+        while (true) {
+            Move move = currentPlayerToMove.getMove(board);
 
-        update(move);
+            board.moveFigure(move);
 
-        currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
-    }
-
-    private void update(Move move) {
-        // TODO: применение хода и обновление доски
+            currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
+        }
     }
 }

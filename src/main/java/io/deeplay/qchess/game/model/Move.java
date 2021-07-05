@@ -2,5 +2,14 @@ package io.deeplay.qchess.game.model;
 
 public class Move {
 
-    // TODO: "from" "to"
+    private Cell from;
+    private Cell to;
+
+    public Cell getFrom() {
+        return from;
+    }
+
+    public Cell getTo() {
+        return to;
+    }
 }

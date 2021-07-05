@@ -1,27 +1,31 @@
 package io.deeplay.qchess.game.model;
 
+import io.deeplay.qchess.game.figures.IFigure;
+import java.util.Map;
+
 public final class Board {
 
-    private final static int BOARD_SIZE = 8;
     private static Board board = new Board();
 
     private Board() {
     }
 
-    private Cell[][] cells = new Cell[BOARD_SIZE][BOARD_SIZE];
+    private Map<Cell, IFigure> cells;
 
     public static Board getBoard() {
         return board;
     }
 
     /**
-     * @throw IllegalArgumentException если координаты выходят за границу доски
-     * @return клетка доски
+     * Перемещает фигуру, если ход корректный
+     *
+     * @throws IllegalArgumentException если ход некорректный
      */
-    public Cell getCell(int i, int j) throws IllegalArgumentException {
-        if (i < 0 || j < 0 || i >= BOARD_SIZE || j >= BOARD_SIZE) {
-            throw new IllegalArgumentException("Координаты выходят за границу доски");
+    public void moveFigure(Move move) throws IllegalArgumentException {
+        if (!cells.get(move.getFrom()).getAllMovePositions().contains(move.getTo())) {
+            throw new IllegalArgumentException("Move is incorrect");
         }
-        return cells[i][j];
+        IFigure figure = cells.get(move.getFrom());
+        cells.put(move.getTo(), figure);
     }
 }
