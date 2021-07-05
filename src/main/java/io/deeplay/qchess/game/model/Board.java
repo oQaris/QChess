@@ -18,6 +18,13 @@ public final class Board {
     }
 
     /**
+     * @return фигура или null, если клетка пуста
+     */
+    public IFigure getFigure(Cell cell) {
+        return cells.get(cell);
+    }
+
+    /**
      * Перемещает фигуру, если ход корректный
      *
      * @throws ChessException если ход некорректный
