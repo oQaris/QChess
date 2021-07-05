@@ -6,15 +6,9 @@ import io.deeplay.qchess.game.figures.IFigure;
 public final class Board {
 
     private final static int BOARD_SIZE = 8;
-    private static Board board = new Board();
-
-    private Board() {
-    }
-
     private IFigure[][] cells = new IFigure[BOARD_SIZE][BOARD_SIZE];
 
-    public static Board getBoard() {
-        return board;
+    public Board() {
     }
 
     /**
@@ -29,25 +23,21 @@ public final class Board {
     }
 
     /**
-     * Перемещает фигуру, если ход корректный
+     * Перемещает фигуру с заменой старой, даже если ход некорректный.
+     * Перед применением необходима проверка на корректность
      *
-     * @throws ChessException если ход некорректный
-     * @return true если ход был выполнен успешно
+     * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
      */
-    public boolean moveFigure(Move move) throws ChessException {
-        try {
-            int toX = move.getTo().getX();
-            int toY = move.getTo().getY();
-            int fromX = move.getFrom().getX();
-            int fromY = move.getFrom().getY();
-            if (!cells[fromX][fromY].getAllMovePositions().contains(move.getTo())) {
-                throw new ChessException();
-            }
-            cells[toX][toY] = cells[fromX][fromY];
-            cells[fromX][fromY] = null;
-        } catch (ChessException e) {
-            throw new ChessException("Ход некорректный");
-        }
-        return true;
+    public IFigure moveFigure(Move move) {
+        int toX = move.getTo().getX();
+        int toY = move.getTo().getY();
+        int fromX = move.getFrom().getX();
+        int fromY = move.getFrom().getY();
+
+        IFigure oldFigure = cells[toX][toY];
+        cells[toX][toY] = cells[fromX][fromY];
+        cells[fromX][fromY] = null;
+
+        return oldFigure;
     }
 }

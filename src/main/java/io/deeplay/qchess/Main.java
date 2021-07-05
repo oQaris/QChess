@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         IPlayer firstPlayer = null;
         IPlayer secondPlayer = null;
-        Game game = Game.initGame(firstPlayer, secondPlayer);
+        Game game = new Game(firstPlayer, secondPlayer);
         game.start();
     }
 }

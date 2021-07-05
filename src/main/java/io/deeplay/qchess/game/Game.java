@@ -1,28 +1,21 @@
 package io.deeplay.qchess.game;
 
-import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.IPlayer;
 
-public final class Game {
+public class Game {
 
-    private static Game game;
-
-    private Game(IPlayer firstPlayer, IPlayer secondPlayer) {
+    public Game(IPlayer firstPlayer, IPlayer secondPlayer /* , TODO: одно из правил игры (enum?) */) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.currentPlayerToMove = firstPlayer;
+        this.moveControl = new MoveSystem(/* TODO: правила игры */);
     }
 
-    public static Game initGame(IPlayer firstPlayer, IPlayer secondPlayer) {
-        if (game == null) {
-            game = new Game(firstPlayer, secondPlayer);
-        }
-        return game;
-    }
-
-    private Board board = Board.getBoard();
+    private MoveSystem moveControl;
+    private Board board = new Board();
     private IPlayer firstPlayer;
     private IPlayer secondPlayer;
     private IPlayer currentPlayerToMove;
@@ -33,15 +26,11 @@ public final class Game {
             // TODO: отправлять json доски (или не отправлять), получать json Move
             Move move = currentPlayerToMove.getMove(board);
 
-            boolean moveSuccess = false;
-            try {
-                moveSuccess = board.moveFigure(move);
-            } catch (ChessException e) {
-                // TODO: отправлять ответ, что ход некорректный
-            }
-
-            if (moveSuccess) {
+            if (moveControl.isCorrectMove(board, move)) {
+                board.moveFigure(move);
                 currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
+            } else {
+                // TODO: отправлять ответ, что ход некорректный
             }
         }
     }
