@@ -5,12 +5,46 @@ import io.deeplay.qchess.game.figures.IFigure;
 public class Cell {
 
     private IFigure figure;
+    private int x;
+    private int y;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Cell o = (Cell) obj;
+        return x == o.x && y == o.y;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + this.x;
+        hash = 97 * hash + this.y;
+        return hash;
+    }
 
     /**
      * @return фигура или null, если нет
      */
     public IFigure getFigure() {
         return figure;
+    }
+
+    public void setFigure(IFigure figure) {
+        this.figure = figure;
     }
 
     /**

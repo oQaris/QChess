@@ -2,26 +2,30 @@ package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.IFigure;
-import java.util.Map;
 
 public final class Board {
 
+    private final static int BOARD_SIZE = 8;
     private static Board board = new Board();
 
     private Board() {
     }
 
-    private Map<Cell, IFigure> cells;
+    private IFigure[][] cells = new IFigure[BOARD_SIZE][BOARD_SIZE];
 
     public static Board getBoard() {
         return board;
     }
 
     /**
+     * @throws ChessException если клетка не лежит в пределах доски
      * @return фигура или null, если клетка пуста
      */
-    public IFigure getFigure(Cell cell) {
-        return cells.get(cell);
+    public IFigure getFigure(int x, int y) throws ChessException {
+        if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) {
+            throw new ChessException("Координаты выходят за границу доски");
+        }
+        return cells[x][y];
     }
 
     /**
@@ -31,11 +35,19 @@ public final class Board {
      * @return true если ход был выполнен успешно
      */
     public boolean moveFigure(Move move) throws ChessException {
-        if (!cells.get(move.getFrom()).getAllMovePositions().contains(move.getTo())) {
-            throw new ChessException("Move is incorrect");
+        try {
+            int toX = move.getTo().getX();
+            int toY = move.getTo().getY();
+            int fromX = move.getFrom().getX();
+            int fromY = move.getFrom().getY();
+            if (!cells[fromX][fromY].getAllMovePositions().contains(move.getTo())) {
+                throw new ChessException();
+            }
+            cells[toX][toY] = cells[fromX][fromY];
+            cells[fromX][fromY] = null;
+        } catch (ChessException e) {
+            throw new ChessException("Ход некорректный");
         }
-        IFigure figure = cells.get(move.getFrom());
-        cells.put(move.getTo(), figure);
         return true;
     }
 }
