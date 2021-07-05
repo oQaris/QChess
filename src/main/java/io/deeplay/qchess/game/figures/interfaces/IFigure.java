@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.figures.interfaces;
 
 import io.deeplay.qchess.game.model.Cell;
-
 import java.util.Set;
 
 public interface IFigure {

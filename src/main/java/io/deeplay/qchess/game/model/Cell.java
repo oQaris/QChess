@@ -3,6 +3,7 @@ package io.deeplay.qchess.game.model;
 import java.util.Objects;
 
 public class Cell {
+
     private int col, row;
 
     public Cell(int col, int row) {
@@ -15,8 +16,9 @@ public class Cell {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
                 int digit = pos.charAt(1) - '0';
-                if (digit >= 1 && digit <= 8)
+                if (digit >= 1 && digit <= 8) {
                     return new Cell(letter - 'a', digit - 1);
+                }
             }
         }
         throw new IllegalArgumentException("Incorrect position!");
@@ -49,31 +51,19 @@ public class Cell {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Cell)) return false;
-        Cell cell = (Cell) o;
-        return getCol() == cell.getCol() &&
-                getRow() == cell.getRow();
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Cell o = (Cell) obj;
+        return col == o.col && row == o.row;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getCol(), getRow());
-    }
-
-    /**
-     * @return true если клетку бьет черная фигура, false иначе
-     */
-    public boolean blackHits() {
-        // TODO: реализовать рейкастом (или перебором будет быстрее?)
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-
-    /**
-     * @return true если клетку бьет белая фигура, false иначе
-     */
-    public boolean whiteHits() {
-        throw new UnsupportedOperationException("not implemented yet");
     }
 }

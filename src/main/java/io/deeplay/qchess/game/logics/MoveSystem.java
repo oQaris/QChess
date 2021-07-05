@@ -1,7 +1,7 @@
 package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.IFigure;
+import io.deeplay.qchess.game.figures.interfaces.IFigure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
@@ -20,7 +20,7 @@ public class MoveSystem {
 
     public boolean isCorrectMove(Board board, Move move) {
         try {
-            IFigure figure = board.getFigure(move.getFrom().getX(), move.getFrom().getY());
+            IFigure figure = board.getFigure(move.getFrom());
             Set<Cell> allMoves = figure.getAllMovePositions();
             Set<Cell> correctMoves = filterAvaliableMoves(allMoves);
             return correctMoves.contains(move.getTo());

@@ -3,14 +3,13 @@ package io.deeplay.qchess.game.figures.interfaces;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public abstract class Figure implements IFigure {
+
     protected static List<Cell> xMove = Arrays.asList(
             new Cell(-1, -1),
             new Cell(-1, 1),
@@ -54,7 +53,10 @@ public abstract class Figure implements IFigure {
         return pos;
     }
 
-    protected Set<Cell> rayTrace(@NotNull List<Cell> moves) {
+    protected Set<Cell> rayTrace(List<Cell> moves) {
+        if (moves == null) {
+            throw new NullPointerException("Список ходов не может быть null");
+        }
         var result = new HashSet<Cell>();
         try {
             for (Cell shift : moves) {
@@ -65,8 +67,9 @@ public abstract class Figure implements IFigure {
                 }
                 //todo можно сделать добавление в другое множество
                 var endFigure = board.getFigure(cord);
-                if (endFigure != null && white != endFigure.isWhite())
+                if (endFigure != null && white != endFigure.isWhite()) {
                     result.add(cord);
+                }
             }
         } catch (ChessException e) {
             e.printStackTrace();

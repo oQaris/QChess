@@ -4,7 +4,6 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

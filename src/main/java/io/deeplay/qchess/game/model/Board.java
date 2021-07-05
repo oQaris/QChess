@@ -4,26 +4,23 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.interfaces.IFigure;
 
 public final class Board {
+
     private final static int BOARD_SIZE = 8;
-    private static Board board = new Board();
     private IFigure[][] cells = new IFigure[BOARD_SIZE][BOARD_SIZE];
 
-    private Board() {
-    }
-
-    public static Board getBoard() {
-        return board;
+    public Board() {
     }
 
     /**
-     * @return фигура или null, если клетка пуста
      * @throws ChessException если клетка не лежит в пределах доски
+     * @return фигура или null, если клетка пуста
      */
     public IFigure getFigure(Cell cell) throws ChessException {
         int x = cell.getCol();
         int y = cell.getRow();
-        /*if (!isCorrectCell(x, y))
-            throw new ChessException("Координаты выходят за границу доски");*/
+        if (!isCorrectCell(x, y)) {
+            throw new ChessException("Координаты выходят за границу доски");
+        }
         return isCorrectCell(x, y) ? cells[x][y] : null;
     }
 
@@ -31,8 +28,9 @@ public final class Board {
     public IFigure setFigure(IFigure figure) throws ChessException {
         int x = figure.getCurrentPosition().getCol();
         int y = figure.getCurrentPosition().getRow();
-        if (!isCorrectCell(x, y))
+        if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
+        }
         return cells[x][y] = figure;
     }
 
@@ -57,24 +55,21 @@ public final class Board {
     }
 
     /**
-     * Перемещает фигуру, если ход корректный
+     * Перемещает фигуру с заменой старой, даже если ход некорректный.
+     * Перед применением необходима проверка на корректность
      *
-     * @throws ChessException если ход некорректный
+     * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
      */
-    public boolean moveFigure(Move move) throws ChessException {
-        try {
-            int toX = move.getTo().getCol();
-            int toY = move.getTo().getRow();
-            int fromX = move.getFrom().getCol();
-            int fromY = move.getFrom().getRow();
-            if (!cells[fromX][fromY].getAllMovePositions().contains(move.getTo())) {
-                throw new ChessException("ашыпка!");
-            }
-            cells[toX][toY] = cells[fromX][fromY];
-            cells[fromX][fromY] = null;
-        } catch (ChessException e) {
-            throw new ChessException("Ход некорректный");
-        }
-        return true;
+    public IFigure moveFigure(Move move) {
+        int toX = move.getTo().getCol();
+        int toY = move.getTo().getRow();
+        int fromX = move.getFrom().getCol();
+        int fromY = move.getFrom().getRow();
+
+        IFigure oldFigure = cells[toX][toY];
+        cells[toX][toY] = cells[fromX][fromY];
+        cells[fromX][fromY] = null;
+
+        return oldFigure;
     }
 }
