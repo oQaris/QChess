@@ -1,4 +1,6 @@
-package io.deeplay;
+package io.deeplay.qchess;
+
+import io.deeplay.qchess.game.Game;
 
 public class Main {
 
