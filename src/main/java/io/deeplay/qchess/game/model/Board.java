@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.model;
 
+import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.IFigure;
 import java.util.Map;
 
@@ -19,13 +20,15 @@ public final class Board {
     /**
      * Перемещает фигуру, если ход корректный
      *
-     * @throws IllegalArgumentException если ход некорректный
+     * @throws ChessException если ход некорректный
+     * @return true если ход был выполнен успешно
      */
-    public void moveFigure(Move move) throws IllegalArgumentException {
+    public boolean moveFigure(Move move) throws ChessException {
         if (!cells.get(move.getFrom()).getAllMovePositions().contains(move.getTo())) {
-            throw new IllegalArgumentException("Move is incorrect");
+            throw new ChessException("Move is incorrect");
         }
         IFigure figure = cells.get(move.getFrom());
         cells.put(move.getTo(), figure);
+        return true;
     }
 }
