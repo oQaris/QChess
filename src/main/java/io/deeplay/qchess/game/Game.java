@@ -8,6 +8,10 @@ import io.deeplay.qchess.game.player.IPlayer;
 public final class Game {
 
     private static Game game;
+    private Board board = Board.getBoard();
+    private IPlayer firstPlayer;
+    private IPlayer secondPlayer;
+    private IPlayer currentPlayerToMove;
 
     private Game(IPlayer firstPlayer, IPlayer secondPlayer) {
         this.firstPlayer = firstPlayer;
@@ -21,11 +25,6 @@ public final class Game {
         }
         return game;
     }
-
-    private Board board = Board.getBoard();
-    private IPlayer firstPlayer;
-    private IPlayer secondPlayer;
-    private IPlayer currentPlayerToMove;
 
     public void start() {
         // TODO: сделать условие выхода
