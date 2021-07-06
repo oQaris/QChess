@@ -33,6 +33,11 @@ public abstract class Figure {
     protected final Board board;
     protected final boolean white;
     protected Cell pos;
+    protected boolean isFirstMove = true;
+
+    public void madeFirstMove() {
+        isFirstMove = false;
+    }
 
     public Figure(Board board, boolean white, Cell pos) {
         this.board = board;

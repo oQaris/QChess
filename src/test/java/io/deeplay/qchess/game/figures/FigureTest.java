@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -11,7 +12,12 @@ import java.util.Set;
 
 public class FigureTest {
 
-    private Board board = new Board();
+    private Board board;
+
+    @Before
+    public void setUp() throws Exception {
+        board = new Board();
+    }
 
     @Test
     public void testBishop() throws ChessException {
@@ -29,6 +35,7 @@ public class FigureTest {
 
         var bishop2 = new Bishop(board, true, Cell.parse("b3"));
         board.setFigure(bishop2);
+
         Assert.assertEquals(
                 toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8"),
                 bishop2.getAllMovePositions());
@@ -78,10 +85,12 @@ public class FigureTest {
     @Test
     public void testPawn() throws ChessException {
         //--- Пешка ---//
-        var pawn = new Pawn(board, false, Cell.parse("c2"));
+        var pawn = new Pawn(board, true, Cell.parse("c2"));
+        var enemy = new Queen(board, false, Cell.parse("d3"));
         board.setFigure(pawn);
+        board.setFigure(enemy);
         Assert.assertEquals(
-                toCellsSet("C3", "C4", "D4", "B4"),
+                toCellsSet("C3", "C4", "D3"),
                 pawn.getAllMovePositions());
     }
 

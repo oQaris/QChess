@@ -25,6 +25,9 @@ public class Pawn extends Figure {
         var move = pos.add(shift);
         if (board.isEmptyCell(move))
             result.add(move);
+        var moveLong = move.add(shift);
+        if (isFirstMove && board.isEmptyCell(moveLong))
+            result.add(moveLong);
 
         var cellLeft = move.add(new Cell(-1, 0));
         var cellRight = move.add(new Cell(1, 0));

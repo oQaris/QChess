@@ -17,6 +17,7 @@ public class Knight extends Figure {
     public Set<Cell> getAllMovePositions() {
         return knightMove.stream()
                 .map(shift -> pos.add(shift))
+                .filter(cell -> board.isEmptyCell(cell) || isEnemyFigureOn(cell))
                 .collect(Collectors.toSet());
     }
 }
