@@ -57,6 +57,10 @@ public abstract class Figure {
         return pos;
     }
 
+    public void setCurrentPosition(Cell pos) {
+        this.pos = pos;
+    }
+
     protected Set<Cell> rayTrace(List<Cell> moves) {
         if (moves == null) {
             throw new NullPointerException("Список ходов не может быть null");

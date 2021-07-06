@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game;
 
+import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
@@ -21,7 +22,7 @@ public class Game {
     private IPlayer secondPlayer;
     private IPlayer currentPlayerToMove;
 
-    public void start() {
+    public void start() throws ChessException {
         // TODO: сделать условие выхода
         while (true) {
             // TODO: отправлять json доски (или не отправлять), получать json Move

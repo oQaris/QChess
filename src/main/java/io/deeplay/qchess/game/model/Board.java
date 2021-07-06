@@ -1,7 +1,10 @@
 package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Board {
 
@@ -9,6 +12,39 @@ public final class Board {
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
     public Board() {
+    }
+
+    /**
+     * @param white цвет фигур, true - белые, false - черные
+     * @return позиция короля определенного цвета
+     */
+    public Cell findKingCell(boolean white) {
+        Cell kingCell = null;
+        for (Figure[] f : cells) {
+            for (Figure ff : f) {
+                if (ff.isWhite() == white && ff.getClass() == King.class) {
+                    kingCell = ff.getCurrentPosition();
+                    break;
+                }
+            }
+        }
+        return kingCell;
+    }
+
+    /**
+     * @param white цвет фигур, true - белые, false - черные
+     * @return фигуры определенного цвета
+     */
+    public List<Figure> getFigures(boolean white) {
+        List<Figure> list = new ArrayList<>();
+        for (Figure[] f : cells) {
+            for (Figure ff : f) {
+                if (ff.isWhite() == white) {
+                    list.add(ff);
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -81,7 +117,7 @@ public final class Board {
 
     /**
      * Перемещает фигуру с заменой старой, даже если ход некорректный.
-     * Перед применением необходима проверка на корректность
+     * При срублении фигуры, возвращается эта фигура без изменения собственных координат.
      *
      * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
      */
@@ -91,7 +127,11 @@ public final class Board {
         int fromX = move.getFrom().getCol();
         int fromY = move.getFrom().getRow();
 
+        Figure figure = cells[fromX][fromY];
         Figure oldFigure = cells[toX][toY];
+
+        figure.setCurrentPosition(move.getTo());
+
         cells[toX][toY] = cells[fromX][fromY];
         cells[fromX][fromY] = null;
 
