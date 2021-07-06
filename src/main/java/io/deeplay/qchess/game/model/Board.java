@@ -41,9 +41,9 @@ public final class Board {
      *
      * @return удаленную фигуру
      */
-    public Figure removeFigure(Figure figure) throws ChessException {
-        int x = figure.getCurrentPosition().getCol();
-        int y = figure.getCurrentPosition().getRow();
+    public Figure removeFigure(Cell cell) throws ChessException {
+        int x = cell.getCol();
+        int y = cell.getRow();
         if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
         }
