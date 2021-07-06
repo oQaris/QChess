@@ -12,6 +12,7 @@ public final class Board {
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
     public Board() {
+
     }
 
     /**
