@@ -23,29 +23,40 @@ public class MoveSystem {
      */
     public void move(Board board, Move move) {
         // взятие на проходе
-        Cell cellUp = new Cell(move.getTo().getCol(), move.getTo().getRow() - 1);
-        if (board.isCorrectCell(cellUp)) {
+        if (isCorrectPawnMove(board, move)) {
             try {
-                Pawn pawn = (Pawn) board.getFigure(cellUp);
-                // TODO: если противоположный цвет - удалить фигуру
-                if (pawn.isWhite()) {
-
-                }
+                board.removeFigure(prevMove.getTo());
             } catch (ChessException e) {
             }
         }
 
-        // рокировка
+        // TODO: рокировка
         // ход
         board.moveFigure(move);
+    }
 
+    private boolean isCorrectPawnMove(Board board, Move move) {
+        try {
+            Pawn currentPawn = (Pawn) board.getFigure(move.getFrom());
+            Pawn pawn = (Pawn) board.getFigure(prevMove.getTo());
+
+            Cell cellDown = pawn.isWhite()
+                    ? new Cell(move.getTo().getCol(), move.getTo().getRow() + 1)
+                    : new Cell(move.getTo().getCol(), move.getTo().getRow() - 1);
+
+            if (cellDown.equals(move.getTo())) {
+                return true;
+            }
+        } catch (ChessException e) {
+        }
+        return false;
     }
 
     public boolean isCorrectMove(Board board, Move move) {
         try {
             Figure figure = board.getFigure(move.getFrom());
             Set<Cell> allMoves = figure.getAllMovePositions();
-            Set<Cell> correctMoves = filterAvaliableMoves(allMoves);
+            Set<Cell> correctMoves = filterAvailableMoves(allMoves);
             return correctMoves.contains(move.getTo());
         } catch (ChessException e) {
             return false;
@@ -58,7 +69,7 @@ public class MoveSystem {
      * @param figureMoves ходы для какой-либо фигуры
      * @return все доступные клетки для хода
      */
-    private Set<Cell> filterAvaliableMoves(Set<Cell> figureMoves) {
+    private Set<Cell> filterAvailableMoves(Set<Cell> figureMoves) {
         return figureMoves;
     }
 }
