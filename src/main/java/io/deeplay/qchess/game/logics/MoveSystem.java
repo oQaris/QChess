@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import java.util.Set;
 
 /**
@@ -13,17 +14,19 @@ import java.util.Set;
  */
 public class MoveSystem {
 
+    private Board board;
     private Move prevMove;
 
-    public MoveSystem() {
+    public MoveSystem(Board board) {
+        this.board = board;
     }
 
     /**
      * Делает ход без проверок
      */
-    public void move(Board board, Move move) {
+    public void move(Move move) {
         // взятие на проходе
-        if (isCorrectPawnMove(board, move)) {
+        if (move.getMoveType().equals(MoveType.ATTACK) && isCorrectPawnEnPassant(move.getFrom(), move.getTo())) {
             try {
                 board.removeFigure(prevMove.getTo());
             } catch (ChessException e) {
@@ -33,43 +36,37 @@ public class MoveSystem {
         // TODO: рокировка
         // ход
         board.moveFigure(move);
+        prevMove = move;
     }
 
-    private boolean isCorrectPawnMove(Board board, Move move) {
+    /**
+     * @return true если взятие на проходе корректное
+     */
+    public boolean isCorrectPawnEnPassant(Cell from, Cell to) {
         try {
-            Pawn currentPawn = (Pawn) board.getFigure(move.getFrom());
+            Pawn currentPawn = (Pawn) board.getFigure(from);
             Pawn pawn = (Pawn) board.getFigure(prevMove.getTo());
 
             Cell cellDown = pawn.isWhite()
-                    ? new Cell(move.getTo().getCol(), move.getTo().getRow() + 1)
-                    : new Cell(move.getTo().getCol(), move.getTo().getRow() - 1);
+                    ? new Cell(to.getCol(), to.getRow() + 1)
+                    : new Cell(to.getCol(), to.getRow() - 1);
 
-            if (cellDown.equals(move.getTo())) {
-                return true;
-            }
-        } catch (ChessException e) {
-        }
-        return false;
-    }
-
-    public boolean isCorrectMove(Board board, Move move) {
-        try {
-            Figure figure = board.getFigure(move.getFrom());
-            Set<Cell> allMoves = figure.getAllMovePositions();
-            Set<Cell> correctMoves = filterAvailableMoves(allMoves);
-            return correctMoves.contains(move.getTo());
+            return cellDown.equals(to);
         } catch (ChessException e) {
             return false;
         }
     }
 
     /**
-     * Отбирает специфичные ситуации и отбрасывает неподходящие ходы
-     *
-     * @param figureMoves ходы для какой-либо фигуры
-     * @return все доступные клетки для хода
+     * @return true если ход корректный
      */
-    private Set<Cell> filterAvailableMoves(Set<Cell> figureMoves) {
-        return figureMoves;
+    public boolean isCorrectMove(Move move) {
+        try {
+            Figure figure = board.getFigure(move.getFrom());
+            Set<Cell> allMoves = figure.getAllMovePositions();
+            return allMoves.contains(move.getTo());
+        } catch (ChessException e) {
+            return false;
+        }
     }
 }

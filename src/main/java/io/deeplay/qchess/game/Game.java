@@ -11,11 +11,12 @@ public class Game {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.currentPlayerToMove = firstPlayer;
-        this.moveSystem = new MoveSystem();
+        this.board = new Board();
+        this.moveSystem = new MoveSystem(board);
     }
 
+    private Board board;
     private MoveSystem moveSystem;
-    private Board board = new Board();
     private IPlayer firstPlayer;
     private IPlayer secondPlayer;
     private IPlayer currentPlayerToMove;
@@ -26,8 +27,8 @@ public class Game {
             // TODO: отправлять json доски (или не отправлять), получать json Move
             Move move = currentPlayerToMove.getMove(board);
 
-            if (moveSystem.isCorrectMove(board, move)) {
-                moveSystem.move(board, move);
+            if (moveSystem.isCorrectMove(move)) {
+                moveSystem.move(move);
                 currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ, что ход некорректный
