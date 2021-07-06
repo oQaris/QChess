@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.figures.Pawn;
 import io.deeplay.qchess.game.figures.interfaces.IFigure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -12,10 +13,32 @@ import java.util.Set;
  */
 public class MoveSystem {
 
-    // TODO: добавить данные для специфичных ситуаций.
-    // Например: для взятия на проходе хранить клетку, которую перепрыгнули и,
-    // возможно, последнюю срубленную фигуру (для ее восстановления при взятии)
-    public MoveSystem(/* TODO: одно из правил игры */) {
+    private Move prevMove;
+
+    public MoveSystem() {
+    }
+
+    /**
+     * Делает ход без проверок
+     */
+    public void move(Board board, Move move) {
+        // взятие на проходе
+        Cell cellUp = new Cell(move.getTo().getCol(), move.getTo().getRow() - 1);
+        if (board.isCorrectCell(cellUp)) {
+            try {
+                Pawn pawn = (Pawn) board.getFigure(cellUp);
+                // TODO: если противоположный цвет - удалить фигуру
+                if (pawn.isWhite()) {
+
+                }
+            } catch (ChessException e) {
+            }
+        }
+
+        // рокировка
+        // ход
+        board.moveFigure(move);
+
     }
 
     public boolean isCorrectMove(Board board, Move move) {
