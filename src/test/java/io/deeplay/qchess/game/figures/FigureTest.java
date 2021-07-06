@@ -3,10 +3,11 @@ package io.deeplay.qchess.game.figures;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class FigureTest {
 
@@ -33,6 +34,7 @@ public class FigureTest {
                 bishop2.getAllMovePositions());
     }
 
+    @Test
     public void testRook() throws ChessException {
         //--- Ладья ---//
         var rook = new Rook(board, false, Cell.parse("a6"));
@@ -42,6 +44,7 @@ public class FigureTest {
                 rook.getAllMovePositions());
     }
 
+    @Test
     public void testQueen() throws ChessException {
         //--- Ферзь ---//
         var queen = new Queen(board, false, Cell.parse("b3"));
@@ -52,6 +55,7 @@ public class FigureTest {
                 queen.getAllMovePositions());
     }
 
+    @Test
     public void testKing() throws ChessException {
         //--- Король ---//
         var king = new King(board, false, Cell.parse("e1"));
@@ -61,6 +65,7 @@ public class FigureTest {
                 king.getAllMovePositions());
     }
 
+    @Test
     public void testKnight() throws ChessException {
         //--- Конь ---//
         var knight = new Knight(board, false, Cell.parse("f4"));
@@ -70,6 +75,7 @@ public class FigureTest {
                 knight.getAllMovePositions());
     }
 
+    @Test
     public void testPawn() throws ChessException {
         //--- Пешка ---//
         var pawn = new Pawn(board, false, Cell.parse("c2"));

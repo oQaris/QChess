@@ -3,13 +3,13 @@ package io.deeplay.qchess.game.figures.interfaces;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class Figure implements IFigure {
-
+public abstract class Figure {
     protected static List<Cell> xMove = Arrays.asList(
             new Cell(-1, -1),
             new Cell(-1, 1),
@@ -29,6 +29,7 @@ public abstract class Figure implements IFigure {
             new Cell(1, 2),
             new Cell(2, -1),
             new Cell(2, 1));
+
     protected final Board board;
     protected final boolean white;
     protected Cell pos;
@@ -39,16 +40,16 @@ public abstract class Figure implements IFigure {
         this.pos = pos;
     }
 
+    public abstract Set<Cell> getAllMovePositions();
+
     public Board getBoard() {
         return board;
     }
 
-    @Override
     public boolean isWhite() {
         return white;
     }
 
-    @Override
     public Cell getCurrentPosition() {
         return pos;
     }
@@ -58,22 +59,26 @@ public abstract class Figure implements IFigure {
             throw new NullPointerException("Список ходов не может быть null");
         }
         var result = new HashSet<Cell>();
-        try {
-            for (Cell shift : moves) {
-                Cell cord = pos.add(shift);
-                while (board.isEmptyCell(cord)) {
-                    result.add(cord);
-                    cord = cord.add(shift);
-                }
-                //todo можно сделать добавление в другое множество
-                var endFigure = board.getFigure(cord);
-                if (endFigure != null && white != endFigure.isWhite()) {
-                    result.add(cord);
-                }
+        for (Cell shift : moves) {
+            Cell cord = pos.add(shift);
+            while (board.isEmptyCell(cord)) {
+                result.add(cord);
+                cord = cord.add(shift);
             }
-        } catch (ChessException e) {
-            e.printStackTrace();
+            //todo можно сделать добавление в другое множество
+            if (isEnemyFigureOn(cord)) {
+                result.add(cord);
+            }
         }
         return result;
+    }
+
+    protected boolean isEnemyFigureOn(Cell cell) {
+        Figure enemyFigure = null;
+        try {
+            enemyFigure = board.getFigure(cell);
+        } catch (ChessException ignored) {
+        }
+        return enemyFigure != null && white != enemyFigure.isWhite();
     }
 }

@@ -7,18 +7,17 @@ import io.deeplay.qchess.game.player.IPlayer;
 
 public class Game {
 
+    private MoveSystem moveControl;
+    private Board board = new Board();
+    private IPlayer firstPlayer;
+    private IPlayer secondPlayer;
+    private IPlayer currentPlayerToMove;
     public Game(IPlayer firstPlayer, IPlayer secondPlayer /* , TODO: одно из правил игры (enum?) */) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.currentPlayerToMove = firstPlayer;
         this.moveControl = new MoveSystem(/* TODO: правила игры */);
     }
-
-    private MoveSystem moveControl;
-    private Board board = new Board();
-    private IPlayer firstPlayer;
-    private IPlayer secondPlayer;
-    private IPlayer currentPlayerToMove;
 
     public void start() {
         // TODO: сделать условие выхода
