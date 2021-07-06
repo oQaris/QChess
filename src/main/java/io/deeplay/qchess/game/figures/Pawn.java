@@ -23,19 +23,16 @@ public class Pawn extends Figure {
         else shift = new Cell(0, 1);
 
         var move = pos.add(shift);
-        // if (board.isEmptyCell(move))
-        result.add(move);
+        if (board.isEmptyCell(move))
+            result.add(move);
 
-        var longMove = move.add(shift);
-        // if (board.isNotMakeMoves(this)) {
-        result.add(longMove);
+        var cellLeft = move.add(new Cell(-1, 0));
+        var cellRight = move.add(new Cell(1, 0));
+        if (isEnemyFigureOn(cellLeft))
+            result.add(cellLeft);
+        if (isEnemyFigureOn(cellRight))
+            result.add(cellRight);
 
-        var cellLeft = longMove.add(new Cell(-1, 0));
-        var cellRight = longMove.add(new Cell(1, 0));
-        // if (isEnemyFigureOn(cellLeft))
-        result.add(cellLeft);
-        // if (isEnemyFigureOn(cellRight))
-        result.add(cellRight);
         return result;
     }
 }

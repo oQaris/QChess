@@ -81,7 +81,7 @@ public class FigureTest {
         var pawn = new Pawn(board, false, Cell.parse("c2"));
         board.setFigure(pawn);
         Assert.assertEquals(
-                toCellsSet("C3", "C4"/*, "B3"*/),
+                toCellsSet("C3", "C4", "D4", "B4"),
                 pawn.getAllMovePositions());
     }
 
