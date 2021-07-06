@@ -21,4 +21,9 @@ public class King extends Figure {
                 .filter(cell -> board.isEmptyCell(cell) || isEnemyFigureOn(cell))
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public String toString() {
+        return "King " + (white ? "White" : "Black");
+    }
 }

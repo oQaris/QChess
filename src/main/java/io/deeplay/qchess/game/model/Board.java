@@ -8,7 +8,7 @@ import java.util.List;
 
 public final class Board {
 
-    private final static int BOARD_SIZE = 8;
+    public final static int BOARD_SIZE = 8;
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
     public Board() {

@@ -17,7 +17,7 @@ public class Cell {
             if (letter >= 'a' && letter <= 'h') {
                 int digit = pos.charAt(1) - '0';
                 if (digit >= 1 && digit <= 8) {
-                    return new Cell(letter - 'a', digit - 1);
+                    return new Cell(letter - 'a', Board.BOARD_SIZE - digit);
                 }
             }
         }
@@ -47,7 +47,7 @@ public class Cell {
     @Override
     public String toString() {
         //return "" + (Arrays.toString(Character.toChars('a' + col))) + Arrays.toString(Character.toChars('1' + row));
-        return "" + (char) ('a' + col) + (char) ('1' + row);
+        return "" + (char) ('a' + col) + (char) ('0' + (Board.BOARD_SIZE - row));
     }
 
     @Override

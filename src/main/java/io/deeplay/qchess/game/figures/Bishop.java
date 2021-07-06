@@ -16,4 +16,9 @@ public class Bishop extends Figure {
     public Set<Cell> getAllMovePositions() {
         return rayTrace(xMove);
     }
+
+    @Override
+    public String toString() {
+        return "Bishop " + (white ? "White" : "Black");
+    }
 }
