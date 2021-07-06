@@ -8,7 +8,6 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-
 import java.util.List;
 import java.util.Set;
 
@@ -29,12 +28,8 @@ public class MoveSystem {
      */
     public void move(Move move) throws ChessException {
         // взятие на проходе
-        if (move.getMoveType().equals(MoveType.ATTACK) &&
-                isCorrectPawnEnPassant(move.getFrom(), move.getTo())) {
-            try {
-                board.removeFigure(prevMove.getTo());
-            } catch (ChessException e) {
-            }
+        if (move.getMoveType().equals(MoveType.ATTACK) && isPawnEnPassant(move.getFrom(), move.getTo())) {
+            board.removeFigure(prevMove.getTo());
         }
 
         // TODO: рокировка
@@ -44,9 +39,12 @@ public class MoveSystem {
     }
 
     /**
-     * @return true если взятие на проходе корректное
+     * Проверяет, является ли атака пешки взятием на проходе.
+     * Входные данные гарантированно являются диагональным ходом пешки противоположного цвета!
+     *
+     * @return true если это взятие на проходе
      */
-    public boolean isCorrectPawnEnPassant(Cell from, Cell to) {
+    public boolean isPawnEnPassant(Cell from, Cell to) {
         try {
             if (board.getFigure(from).getClass() != Pawn.class) {
                 return false;
@@ -54,11 +52,14 @@ public class MoveSystem {
             Pawn pawn = (Pawn) board.getFigure(prevMove.getTo());
 
             Cell cellDown = pawn.isWhite()
-                    ? new Cell(to.getCol(), to.getRow() + 1)
-                    : new Cell(to.getCol(), to.getRow() - 1);
+                    ? new Cell(prevMove.getTo().getCol(), prevMove.getTo().getRow() + 1)
+                    : new Cell(prevMove.getTo().getCol(), prevMove.getTo().getRow() - 1);
+            Cell cellDoubleDown = pawn.isWhite()
+                    ? new Cell(cellDown.getCol(), cellDown.getRow() + 1)
+                    : new Cell(cellDown.getCol(), cellDown.getRow() - 1);
 
-            return cellDown.equals(to);
-        } catch (ChessException e) {
+            return cellDoubleDown.equals(prevMove.getFrom()) && cellDown.equals(to);
+        } catch (ChessException | ClassCastException e) {
             return false;
         }
     }

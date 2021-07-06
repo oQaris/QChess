@@ -12,12 +12,11 @@ public final class Board /*implements Iterable<Figure>*/ {
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
     public Board() {
-
     }
 
     /**
      * @param white цвет фигур, true - белые, false - черные
-     * @return позиция короля определенного цвета
+     * @return позиция короля определенного цвета или null, если короля нет
      */
     public Cell findKingCell(boolean white) {
         Cell kingCell = null;
@@ -82,7 +81,7 @@ public final class Board /*implements Iterable<Figure>*/ {
     /**
      * Убирает фигуру с доски
      *
-     * @return удаленную фигуру
+     * @return удаленную фигуру или null, если клетка была пуста
      */
     public Figure removeFigure(Cell cell) throws ChessException {
         int x = cell.getCol();
@@ -102,24 +101,10 @@ public final class Board /*implements Iterable<Figure>*/ {
     }
 
     /**
-     * @return true, если данная фигура ещё не делала ходов
-     */
-    public boolean isNotMakeMoves(Figure figure) {
-        return true;
-    }
-
-    /**
      * @return true, если клетка принадлежит доске
      */
     public boolean isCorrectCell(int col, int row) {
         return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
-    }
-
-    /**
-     * @return true, если клетка принадлежит доске
-     */
-    public boolean isCorrectCell(Cell cell) {
-        return isCorrectCell(cell.getCol(), cell.getRow());
     }
 
     /**
@@ -131,14 +116,9 @@ public final class Board /*implements Iterable<Figure>*/ {
      */
     public Figure moveFigure(Move move) throws ChessException {
         Figure figure = getFigure(move.getFrom());
-        Figure oldFigure = getFigure(move.getTo());
-
         figure.setCurrentPosition(move.getTo());
         setFigure(figure);
-
-        cells[move.getFrom().getCol()][move.getFrom().getRow()] = null;
-
-        return oldFigure;
+        return removeFigure(move.getFrom());
     }
 
     public Set<Move> getAllMoves(boolean color){
