@@ -3,12 +3,16 @@ package io.deeplay.qchess.game.figures.interfaces;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public abstract class Figure {
+    protected static final Logger log = LoggerFactory.getLogger(Figure.class);
 
     protected static List<Cell> xMove = Arrays.asList(
             new Cell(-1, -1),
@@ -63,6 +67,7 @@ public abstract class Figure {
     }
 
     protected Set<Cell> rayTrace(List<Cell> moves) {
+        log.info("Запущен рэйтрейс фигуры {} из точки {}", this, pos);
         if (moves == null) {
             throw new NullPointerException("Список ходов не может быть null");
         }

@@ -20,4 +20,9 @@ public class Knight extends Figure {
                 .filter(cell -> board.isEmptyCell(cell) || isEnemyFigureOn(cell))
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public String toString() {
+        return "Knight " + (white ? "White" : "Black");
+    }
 }

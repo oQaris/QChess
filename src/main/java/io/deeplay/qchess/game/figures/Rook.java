@@ -16,4 +16,9 @@ public class Rook extends Figure {
     public Set<Cell> getAllMovePositions() {
         return rayTrace(plusMove);
     }
+
+    @Override
+    public String toString() {
+        return "Rook " + (white ? "White" : "Black");
+    }
 }
