@@ -22,6 +22,9 @@ public final class Board {
         Cell kingCell = null;
         for (Figure[] f : cells) {
             for (Figure ff : f) {
+                if (ff == null) {
+                    continue;
+                }
                 if (ff.isWhite() == white && ff.getClass() == King.class) {
                     kingCell = ff.getCurrentPosition();
                     break;
@@ -39,6 +42,9 @@ public final class Board {
         List<Figure> list = new ArrayList<>();
         for (Figure[] f : cells) {
             for (Figure ff : f) {
+                if (ff == null) {
+                    continue;
+                }
                 if (ff.isWhite() == white) {
                     list.add(ff);
                 }
@@ -119,21 +125,17 @@ public final class Board {
      * Перемещает фигуру с заменой старой, даже если ход некорректный.
      * При срублении фигуры, возвращается эта фигура без изменения собственных координат.
      *
+     * @throws ChessException если ход выходит за пределы доски
      * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
      */
-    public Figure moveFigure(Move move) {
-        int toX = move.getTo().getCol();
-        int toY = move.getTo().getRow();
-        int fromX = move.getFrom().getCol();
-        int fromY = move.getFrom().getRow();
-
-        Figure figure = cells[fromX][fromY];
-        Figure oldFigure = cells[toX][toY];
+    public Figure moveFigure(Move move) throws ChessException {
+        Figure figure = getFigure(move.getFrom());
+        Figure oldFigure = getFigure(move.getTo());
 
         figure.setCurrentPosition(move.getTo());
+        setFigure(figure);
 
-        cells[toX][toY] = cells[fromX][fromY];
-        cells[fromX][fromY] = null;
+        cells[move.getFrom().getCol()][move.getFrom().getRow()] = null;
 
         return oldFigure;
     }

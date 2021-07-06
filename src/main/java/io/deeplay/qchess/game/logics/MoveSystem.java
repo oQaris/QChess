@@ -84,8 +84,8 @@ public class MoveSystem {
             return false;
         }
 
-        Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled.getClass() == King.class) {
+        Figure virtualKilled = tryVirtualMove(move);
+        if (virtualKilled != null && virtualKilled.getClass() == King.class) {
             throw new ChessException("Срубили короля!");
         }
         boolean isCheck;
@@ -98,6 +98,14 @@ public class MoveSystem {
             return false;
         }
         return !isCheck;
+    }
+
+    private Figure tryVirtualMove(Move move) {
+        try {
+            return board.moveFigure(move);
+        } catch (ChessException e) {
+            return null;
+        }
     }
 
     private boolean inCorrectMoves(Move move) {
