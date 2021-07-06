@@ -3,10 +3,10 @@ package io.deeplay.qchess.game.model;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
-import java.util.ArrayList;
-import java.util.List;
 
-public final class Board {
+import java.util.*;
+
+public final class Board /*implements Iterable<Figure>*/ {
 
     public final static int BOARD_SIZE = 8;
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
@@ -126,8 +126,8 @@ public final class Board {
      * Перемещает фигуру с заменой старой, даже если ход некорректный.
      * При срублении фигуры, возвращается эта фигура без изменения собственных координат.
      *
-     * @throws ChessException если ход выходит за пределы доски
      * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
+     * @throws ChessException если ход выходит за пределы доски
      */
     public Figure moveFigure(Move move) throws ChessException {
         Figure figure = getFigure(move.getFrom());
@@ -140,4 +140,36 @@ public final class Board {
 
         return oldFigure;
     }
+
+    public Set<Move> getAllMoves(boolean color){
+        //todo надо сделать как то
+        return new HashSet<>();
+    }
+
+    // не, это отстой какой то, надо хранить множество фигур
+    /*@Override
+    public Iterator<Figure> iterator() {
+        return null;
+    }
+
+    private class FigIterator implements Iterator<Figure> {
+        private Cell curPos = new Cell(0, 0);
+
+        @Override
+        public boolean hasNext() {
+            if (curPos.getCol() == BOARD_SIZE)
+                return false;
+        }
+
+        @Override
+        public Figure next() {
+            try {
+                return getFigure(curPos);
+                curPos = curPos.add(new Cell(0, 1));
+                if (curPos.getCol() == BOARD_SIZE)
+            } catch (ChessException ignored) {
+            }
+            return null;
+        }
+    }*/
 }

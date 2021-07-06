@@ -3,7 +3,6 @@ package io.deeplay.qchess.game.model;
 import java.util.Objects;
 
 public class Cell {
-
     private int col, row;
 
     public Cell(int col, int row) {
@@ -46,7 +45,6 @@ public class Cell {
 
     @Override
     public String toString() {
-        //return "" + (Arrays.toString(Character.toChars('a' + col))) + Arrays.toString(Character.toChars('1' + row));
         return "" + (char) ('a' + col) + (char) ('0' + (Board.BOARD_SIZE - row));
     }
 

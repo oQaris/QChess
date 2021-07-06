@@ -8,6 +8,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,8 @@ public class MoveSystem {
      */
     public void move(Move move) throws ChessException {
         // взятие на проходе
-        if (move.getMoveType().equals(MoveType.ATTACK) && isCorrectPawnEnPassant(move.getFrom(), move.getTo())) {
+        if (move.getMoveType().equals(MoveType.ATTACK) &&
+                isCorrectPawnEnPassant(move.getFrom(), move.getTo())) {
             try {
                 board.removeFigure(prevMove.getTo());
             } catch (ChessException e) {

@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.model;
 
 public class Move {
-
     private MoveType moveType;
     private Cell from;
     private Cell to;

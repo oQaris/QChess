@@ -26,7 +26,7 @@ public class Game {
         // TODO: сделать условие выхода
         while (true) {
             // TODO: отправлять json доски (или не отправлять), получать json Move
-            Move move = currentPlayerToMove.getMove(board);
+            Move move = currentPlayerToMove.getNextMove();
 
             if (moveSystem.isCorrectMove(move)) {
                 moveSystem.move(move);
