@@ -27,7 +27,7 @@ public class MoveSystemPawnEnPassantTest {
     @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_1() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
-        Figure figureW1 = new Pawn(board, true, white1.getTo());
+        Figure figureW1 = new Pawn(ms, board, true, white1.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
         field.set(ms, white1);
@@ -36,10 +36,10 @@ public class MoveSystemPawnEnPassantTest {
         Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
         Move black4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(board, false, black1.getFrom());
-        Figure figureB2 = new Pawn(board, false, black2.getFrom());
-        Figure figureB3 = new Pawn(board, false, black3.getFrom());
-        Figure figureB4 = new Pawn(board, false, black4.getFrom());
+        Figure figureB1 = new Pawn(ms, board, false, black1.getFrom());
+        Figure figureB2 = new Pawn(ms, board, false, black2.getFrom());
+        Figure figureB3 = new Pawn(ms, board, false, black3.getFrom());
+        Figure figureB4 = new Pawn(ms, board, false, black4.getFrom());
 
         board.setFigure(figureW1);
         board.setFigure(figureB1);
@@ -56,7 +56,7 @@ public class MoveSystemPawnEnPassantTest {
     @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_2() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white2 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c3"));
-        Figure figureW2 = new Pawn(board, true, white2.getTo());
+        Figure figureW2 = new Pawn(ms, board, true, white2.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
         field.set(ms, white2);
@@ -65,10 +65,10 @@ public class MoveSystemPawnEnPassantTest {
         Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
         Move black4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(board, false, black1.getFrom());
-        Figure figureB2 = new Pawn(board, false, black2.getFrom());
-        Figure figureB3 = new Pawn(board, false, black3.getFrom());
-        Figure figureB4 = new Pawn(board, false, black4.getFrom());
+        Figure figureB1 = new Pawn(ms, board, false, black1.getFrom());
+        Figure figureB2 = new Pawn(ms, board, false, black2.getFrom());
+        Figure figureB3 = new Pawn(ms, board, false, black3.getFrom());
+        Figure figureB4 = new Pawn(ms, board, false, black4.getFrom());
 
         board.setFigure(figureW2);
         board.setFigure(figureB1);
@@ -85,7 +85,7 @@ public class MoveSystemPawnEnPassantTest {
     @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_3() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("c2"), Cell.parse("d3"));
-        Figure figureW3 = new Pawn(board, true, white3.getTo());
+        Figure figureW3 = new Pawn(ms, board, true, white3.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
         field.set(ms, white3);
@@ -94,10 +94,10 @@ public class MoveSystemPawnEnPassantTest {
         Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
         Move black4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(board, false, black1.getFrom());
-        Figure figureB2 = new Pawn(board, false, black2.getFrom());
-        Figure figureB3 = new Pawn(board, false, black3.getFrom());
-        Figure figureB4 = new Pawn(board, false, black4.getFrom());
+        Figure figureB1 = new Pawn(ms, board, false, black1.getFrom());
+        Figure figureB2 = new Pawn(ms, board, false, black2.getFrom());
+        Figure figureB3 = new Pawn(ms, board, false, black3.getFrom());
+        Figure figureB4 = new Pawn(ms, board, false, black4.getFrom());
 
         board.setFigure(figureW3);
         board.setFigure(figureB1);
@@ -123,10 +123,10 @@ public class MoveSystemPawnEnPassantTest {
         Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
         Move black4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(board, false, black1.getFrom());
-        Figure figureB2 = new Pawn(board, false, black2.getFrom());
-        Figure figureB3 = new Pawn(board, false, black3.getFrom());
-        Figure figureB4 = new Pawn(board, false, black4.getFrom());
+        Figure figureB1 = new Pawn(ms, board, false, black1.getFrom());
+        Figure figureB2 = new Pawn(ms, board, false, black2.getFrom());
+        Figure figureB3 = new Pawn(ms, board, false, black3.getFrom());
+        Figure figureB4 = new Pawn(ms, board, false, black4.getFrom());
 
         board.setFigure(figureW1);
         board.setFigure(figureB1);
@@ -143,7 +143,7 @@ public class MoveSystemPawnEnPassantTest {
     @Test
     public void testIsCorrectPawnEnPassant_notPawnAttack() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
-        Figure figureW1 = new Pawn(board, true, white1.getTo());
+        Figure figureW1 = new Pawn(ms, board, true, white1.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
         field.set(ms, white1);
@@ -172,7 +172,7 @@ public class MoveSystemPawnEnPassantTest {
     @Test
     public void testIsCorrectPawnEnPassant_whitePawnAttack_1() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move black1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c7"), Cell.parse("c5"));
-        Figure figureB1 = new Pawn(board, false, black1.getTo());
+        Figure figureB1 = new Pawn(ms, board, false, black1.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
         field.set(ms, black1);
@@ -181,10 +181,10 @@ public class MoveSystemPawnEnPassantTest {
         Move white2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
         Move white4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
-        Figure figureW1 = new Pawn(board, true, white1.getFrom());
-        Figure figureW2 = new Pawn(board, true, white2.getFrom());
-        Figure figureW3 = new Pawn(board, true, white3.getFrom());
-        Figure figureW4 = new Pawn(board, true, white4.getFrom());
+        Figure figureW1 = new Pawn(ms, board, true, white1.getFrom());
+        Figure figureW2 = new Pawn(ms, board, true, white2.getFrom());
+        Figure figureW3 = new Pawn(ms, board, true, white3.getFrom());
+        Figure figureW4 = new Pawn(ms, board, true, white4.getFrom());
 
         board.setFigure(figureB1);
         board.setFigure(figureW1);
@@ -201,7 +201,7 @@ public class MoveSystemPawnEnPassantTest {
     @Test
     public void testIsCorrectPawnEnPassant_whitePawnAttack_2() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move black2 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c7"), Cell.parse("c6"));
-        Figure figureB2 = new Pawn(board, false, black2.getTo());
+        Figure figureB2 = new Pawn(ms, board, false, black2.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
         field.set(ms, black2);
@@ -210,10 +210,10 @@ public class MoveSystemPawnEnPassantTest {
         Move white2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
         Move white4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
-        Figure figureW1 = new Pawn(board, true, white1.getFrom());
-        Figure figureW2 = new Pawn(board, true, white2.getFrom());
-        Figure figureW3 = new Pawn(board, true, white3.getFrom());
-        Figure figureW4 = new Pawn(board, true, white4.getFrom());
+        Figure figureW1 = new Pawn(ms, board, true, white1.getFrom());
+        Figure figureW2 = new Pawn(ms, board, true, white2.getFrom());
+        Figure figureW3 = new Pawn(ms, board, true, white3.getFrom());
+        Figure figureW4 = new Pawn(ms, board, true, white4.getFrom());
 
         board.setFigure(figureB2);
         board.setFigure(figureW1);
@@ -229,8 +229,8 @@ public class MoveSystemPawnEnPassantTest {
 
     @Test
     public void testIsCorrectPawnEnPassant_whitePawnAttack_3() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Move black3 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c7"), Cell.parse("d6"));
-        Figure figureB3 = new Pawn(board, false, black3.getTo());
+        Move black3 = new Move(MoveType.ATTACK, Cell.parse("c7"), Cell.parse("d6"));
+        Figure figureB3 = new Pawn(ms, board, false, black3.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
         field.set(ms, black3);
@@ -239,10 +239,10 @@ public class MoveSystemPawnEnPassantTest {
         Move white2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
         Move white4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
-        Figure figureW1 = new Pawn(board, true, white1.getFrom());
-        Figure figureW2 = new Pawn(board, true, white2.getFrom());
-        Figure figureW3 = new Pawn(board, true, white3.getFrom());
-        Figure figureW4 = new Pawn(board, true, white4.getFrom());
+        Figure figureW1 = new Pawn(ms, board, true, white1.getFrom());
+        Figure figureW2 = new Pawn(ms, board, true, white2.getFrom());
+        Figure figureW3 = new Pawn(ms, board, true, white3.getFrom());
+        Figure figureW4 = new Pawn(ms, board, true, white4.getFrom());
 
         board.setFigure(figureB3);
         board.setFigure(figureW1);

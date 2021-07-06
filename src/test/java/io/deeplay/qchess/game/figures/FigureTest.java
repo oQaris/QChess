@@ -1,22 +1,28 @@
 package io.deeplay.qchess.game.figures;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.figures.interfaces.Figure;
+import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class FigureTest {
 
     private Board board;
+    private MoveSystem ms;
 
     @Before
     public void setUp() throws Exception {
         board = new Board();
+        ms = new MoveSystem(board);
     }
 
     @Test
@@ -43,7 +49,7 @@ public class FigureTest {
         //--- Слон с вражесткой пешкой ---//
 
         Board testBoard = new Board();
-        var pawn = new Pawn(testBoard, false, Cell.parse("e3"));
+        var pawn = new Pawn(ms, testBoard, false, Cell.parse("e3"));
         var bishop = new Bishop(testBoard, true, Cell.parse("c1"));
         testBoard.setFigure(pawn);
         testBoard.setFigure(bishop);
@@ -56,7 +62,7 @@ public class FigureTest {
     public void testBishopWithFriendPawn() throws ChessException {
         //--- Слон с дружеской пешкой ---//
         Board testBoard = new Board();
-        var pawn = new Pawn(testBoard, true, Cell.parse("e3"));
+        var pawn = new Pawn(ms, testBoard, true, Cell.parse("e3"));
         var bishop = new Bishop(testBoard, true, Cell.parse("c1"));
         testBoard.setFigure(pawn);
         testBoard.setFigure(bishop);
@@ -126,9 +132,9 @@ public class FigureTest {
         //--- Конь с дружественными пешками вокруг коня, но не закрывающие ход ---//
         Board testBoard = new Board();
         var knight = new Knight(testBoard, true, Cell.parse("a1"));
-        var pawn1 = new Pawn(testBoard, true, Cell.parse("a2"));
-        var pawn2 = new Pawn(testBoard, true, Cell.parse("b2"));
-        var pawn3 = new Pawn(testBoard, true, Cell.parse("b1"));
+        var pawn1 = new Pawn(ms, testBoard, true, Cell.parse("a2"));
+        var pawn2 = new Pawn(ms, testBoard, true, Cell.parse("b2"));
+        var pawn3 = new Pawn(ms, testBoard, true, Cell.parse("b1"));
 
         testBoard.setFigure(knight);
         testBoard.setFigure(pawn1);
@@ -142,7 +148,7 @@ public class FigureTest {
     @Test
     public void testPawn() throws ChessException {
         //--- Пешка ---//
-        var pawn = new Pawn(board, true, Cell.parse("c2"));
+        var pawn = new Pawn(ms, board, true, Cell.parse("c2"));
         var enemy = new Queen(board, false, Cell.parse("d3"));
         board.setFigure(pawn);
         board.setFigure(enemy);
@@ -154,7 +160,7 @@ public class FigureTest {
     @Test
     public void testPawnForEnemyRespawn() throws ChessException {
         //--- Пешка дошедшая до конца поля ---//
-        var pawn = new Pawn(board, false, Cell.parse("d1"));
+        var pawn = new Pawn(ms, board, false, Cell.parse("d1"));
         board.setFigure(pawn);
         Assert.assertEquals(
                 new HashSet<Cell>(),
@@ -165,13 +171,13 @@ public class FigureTest {
     public void testPawnWithXEnemy() throws ChessException {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
-        var pawn = new Pawn(testBoard, true, Cell.parse("c5"));
+        var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
         pawn.madeFirstMove();
-        var pawn1 = new Pawn(testBoard, false, Cell.parse("b6"));
-        var pawn2 = new Pawn(testBoard, false, Cell.parse("d6"));
-        var pawn3 = new Pawn(testBoard, false, Cell.parse("b4"));
-        var pawn4 = new Pawn(testBoard, false, Cell.parse("d4"));
-        var pawn5 = new Pawn(testBoard, false, Cell.parse("c6"));
+        var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
+        var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
+        var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
+        var pawn4 = new Pawn(ms, testBoard, false, Cell.parse("d4"));
+        var pawn5 = new Pawn(ms, testBoard, false, Cell.parse("c6"));
         testBoard.setFigure(pawn);
         testBoard.setFigure(pawn1);
         testBoard.setFigure(pawn2);
@@ -187,12 +193,12 @@ public class FigureTest {
     public void testPawnWithXEnemy2() throws ChessException {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
-        var pawn = new Pawn(testBoard, true, Cell.parse("c5"));
+        var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
         pawn.madeFirstMove();
-        var pawn1 = new Pawn(testBoard, false, Cell.parse("b6"));
-        var pawn2 = new Pawn(testBoard, false, Cell.parse("d6"));
-        var pawn3 = new Pawn(testBoard, false, Cell.parse("b4"));
-        var pawn4 = new Pawn(testBoard, false, Cell.parse("d4"));
+        var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
+        var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
+        var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
+        var pawn4 = new Pawn(ms, testBoard, false, Cell.parse("d4"));
         testBoard.setFigure(pawn);
         testBoard.setFigure(pawn1);
         testBoard.setFigure(pawn2);
@@ -201,6 +207,25 @@ public class FigureTest {
         Assert.assertEquals(
                 toCellsSet("B6", "D6", "c6"),
                 pawn.getAllMovePositions());
+    }
+
+    @Test
+    public void testPawnEnPassant() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
+        Figure figureW1 = new Pawn(ms, board, true, white1.getTo());
+        Field field = MoveSystem.class.getDeclaredField("prevMove");
+        field.setAccessible(true);
+        field.set(ms, white1);
+
+        Figure figureB1 = new Pawn(ms, board, false, Cell.parse("b4"));
+        figureB1.madeFirstMove();
+        Figure figureW2 = new Pawn(ms, board, true, Cell.parse("a4"));
+
+        board.setFigure(figureW1);
+        board.setFigure(figureB1);
+        board.setFigure(figureW2);
+
+        Assert.assertEquals(toCellsSet("b3", "c3"), figureB1.getAllMovePositions());
     }
 
     private Set<Cell> toCellsSet(String... pos) {

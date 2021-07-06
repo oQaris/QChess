@@ -25,7 +25,7 @@ public class Game {
     public void start() throws ChessException {
         // TODO: сделать условие выхода
         while (true) {
-            // TODO: отправлять json доски (или не отправлять), получать json Move
+            // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
 
             if (moveSystem.isCorrectMove(move)) {

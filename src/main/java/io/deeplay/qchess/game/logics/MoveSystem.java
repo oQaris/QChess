@@ -59,7 +59,7 @@ public class MoveSystem {
                     : new Cell(cellDown.getCol(), cellDown.getRow() - 1);
 
             return cellDoubleDown.equals(prevMove.getFrom()) && cellDown.equals(to);
-        } catch (ChessException | ClassCastException e) {
+        } catch (ChessException | ClassCastException | NullPointerException e) {
             return false;
         }
     }
