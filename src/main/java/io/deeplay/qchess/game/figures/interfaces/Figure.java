@@ -3,13 +3,13 @@ package io.deeplay.qchess.game.figures.interfaces;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public abstract class Figure {
+
     protected static List<Cell> xMove = Arrays.asList(
             new Cell(-1, -1),
             new Cell(-1, 1),
@@ -40,6 +40,9 @@ public abstract class Figure {
         this.pos = pos;
     }
 
+    /**
+     * @return все варианты для перемещения фигуры, не выходящие за границы доски, учитывая уже занятые клетки
+     */
     public abstract Set<Cell> getAllMovePositions();
 
     public Board getBoard() {
