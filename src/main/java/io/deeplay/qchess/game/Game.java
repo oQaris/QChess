@@ -7,17 +7,18 @@ import io.deeplay.qchess.game.player.IPlayer;
 
 public class Game {
 
-    private MoveSystem moveControl;
+    public Game(IPlayer firstPlayer, IPlayer secondPlayer) {
+        this.firstPlayer = firstPlayer;
+        this.secondPlayer = secondPlayer;
+        this.currentPlayerToMove = firstPlayer;
+        this.moveSystem = new MoveSystem();
+    }
+
+    private MoveSystem moveSystem;
     private Board board = new Board();
     private IPlayer firstPlayer;
     private IPlayer secondPlayer;
     private IPlayer currentPlayerToMove;
-    public Game(IPlayer firstPlayer, IPlayer secondPlayer /* , TODO: одно из правил игры (enum?) */) {
-        this.firstPlayer = firstPlayer;
-        this.secondPlayer = secondPlayer;
-        this.currentPlayerToMove = firstPlayer;
-        this.moveControl = new MoveSystem(/* TODO: правила игры */);
-    }
 
     public void start() {
         // TODO: сделать условие выхода
@@ -25,8 +26,8 @@ public class Game {
             // TODO: отправлять json доски (или не отправлять), получать json Move
             Move move = currentPlayerToMove.getMove(board);
 
-            if (moveControl.isCorrectMove(board, move)) {
-                board.moveFigure(move);
+            if (moveSystem.isCorrectMove(board, move)) {
+                moveSystem.move(board, move);
                 currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ, что ход некорректный

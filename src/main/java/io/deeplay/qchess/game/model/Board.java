@@ -24,14 +24,32 @@ public final class Board {
         return cells[x][y];
     }
 
-    // для тестов
-    public Figure setFigure(Figure figure) throws ChessException {
+    /**
+     * Устанавливает фигуру на доску
+     */
+    public void setFigure(Figure figure) throws ChessException {
         int x = figure.getCurrentPosition().getCol();
         int y = figure.getCurrentPosition().getRow();
         if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
         }
-        return cells[x][y] = figure;
+        cells[x][y] = figure;
+    }
+
+    /**
+     * Убирает фигуру с доски
+     *
+     * @return удаленную фигуру
+     */
+    public Figure removeFigure(Figure figure) throws ChessException {
+        int x = figure.getCurrentPosition().getCol();
+        int y = figure.getCurrentPosition().getRow();
+        if (!isCorrectCell(x, y)) {
+            throw new ChessException("Координаты выходят за границу доски");
+        }
+        Figure old = cells[x][y];
+        cells[x][y] = null;
+        return old;
     }
 
     public boolean isEmptyCell(Cell cell) {
@@ -50,8 +68,15 @@ public final class Board {
     /**
      * @return true, если клетка принадлежит доске
      */
-    private boolean isCorrectCell(int x, int y) {
-        return x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE;
+    public boolean isCorrectCell(int col, int row) {
+        return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
+    }
+
+    /**
+     * @return true, если клетка принадлежит доске
+     */
+    public boolean isCorrectCell(Cell cell) {
+        return isCorrectCell(cell.getCol(), cell.getRow());
     }
 
     /**
