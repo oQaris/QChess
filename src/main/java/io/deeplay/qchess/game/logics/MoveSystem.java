@@ -26,7 +26,7 @@ public class MoveSystem {
     /**
      * Делает ход без проверок
      */
-    public void move(Move move) {
+    public void move(Move move) throws ChessException {
         // взятие на проходе
         if (move.getMoveType().equals(MoveType.ATTACK) && isCorrectPawnEnPassant(move.getFrom(), move.getTo())) {
             try {
@@ -80,7 +80,9 @@ public class MoveSystem {
      * @return true если ход корректный
      */
     public boolean isCorrectMove(Move move) throws ChessException {
-        boolean isCorrect = inCorrectMoves(move);
+        if (!inCorrectMoves(move)) {
+            return false;
+        }
 
         Figure virtualKilled = board.moveFigure(move);
         if (virtualKilled.getClass() == King.class) {
@@ -95,7 +97,7 @@ public class MoveSystem {
         } catch (ChessException e) {
             return false;
         }
-        return isCorrect && !isCheck;
+        return !isCheck;
     }
 
     private boolean inCorrectMoves(Move move) {
