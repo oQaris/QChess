@@ -32,8 +32,8 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        // TODO: сделать условие выхода
-        while (!moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
+        boolean notDraw = true;
+        while (!moveSystem.isCheckmate(currentPlayerToMove.getColor()) && notDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
             try {
@@ -42,7 +42,7 @@ public class Game {
             }
 
             if (moveSystem.isCorrectMove(move)) {
-                tryMove(move);
+                notDraw = tryMove(move);
                 currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ, что ход некорректный
@@ -51,12 +51,13 @@ public class Game {
         // TODO: конец игры
     }
 
-    private void tryMove(Move move) {
+    private boolean tryMove(Move move) {
         try {
-            moveSystem.move(move);
+            return moveSystem.move(move);
         } catch (ChessException e) {
             logger.error("Проверенный ход выдал ошибку при перемещении фигуры: {}", e.getMessage());
             // TODO: выкинуть из комнаты
+            return false;
         }
     }
 }

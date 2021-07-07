@@ -23,6 +23,7 @@ public class MoveSystem {
     private static final Logger logger = LoggerFactory.getLogger(MoveSystem.class);
     private Board board;
     private Move prevMove;
+    private int pieceMoveCount = 0;
 
     public MoveSystem(Board board) {
         this.board = board;
@@ -30,8 +31,10 @@ public class MoveSystem {
 
     /**
      * Делает ход без проверок
+     *
+     * @return true, если ход выполнен, false, если ход последний (ничья)
      */
-    public void move(Move move) throws ChessException {
+    public boolean move(Move move) throws ChessException, ChessError {
         // взятие на проходе
         if (move.getMoveType().equals(MoveType.EN_PASSANT) && isPawnEnPassant(move.getFrom(), move.getTo())) {
             board.removeFigure(prevMove.getTo());
@@ -39,12 +42,26 @@ public class MoveSystem {
 
         // превращение пешки
         if (move.getMoveType().equals(MoveType.TURN_INTO)) {
+            if (move.getTurnInto() == null) {
+                logger.error("Пешка заменилась на null");
+                throw new ChessError("Пешка заменилась на null");
+            }
             board.setFigure(move.getTurnInto());
         }
 
         // ход
-        board.moveFigure(move);
+        Figure removedFigure = board.moveFigure(move);
         prevMove = move;
+
+        // условия ничьи:
+        // пешка не ходит 50 ходов
+        // никто не рубит
+        if (removedFigure != null || board.getFigure(move.getTo()).getClass() == Pawn.class) {
+            pieceMoveCount = 0;
+        } else {
+            ++pieceMoveCount;
+        }
+        return pieceMoveCount != 50;
     }
 
     /**
