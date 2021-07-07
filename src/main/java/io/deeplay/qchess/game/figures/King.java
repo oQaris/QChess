@@ -1,6 +1,5 @@
 package io.deeplay.qchess.game.figures;
 
-import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
@@ -8,6 +7,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,14 +31,14 @@ public class King extends Figure {
     }
 
     @Override
-    public Set<Move> getAllMoves() throws ChessError {
+    public Set<Move> getAllMoves() {
         Set<Move> res = getSimpleMoves();
         // рокировка
         if (isCorrectCastling(true)) {
-            res.add(new Move(MoveType.CASTLING, pos, pos.createAdd(new Cell(2, 0))));
+            res.add(new Move(MoveType.SHORT_CASTLING, pos, pos.createAdd(new Cell(2, 0))));
         }
         if (isCorrectCastling(false)) {
-            res.add(new Move(MoveType.CASTLING, pos, pos.createAdd(new Cell(-2, 0))));
+            res.add(new Move(MoveType.LONG_CASTLING, pos, pos.createAdd(new Cell(-2, 0))));
         }
         return res;
     }
@@ -54,8 +54,11 @@ public class King extends Figure {
     /**
      * @return true, если рокировка возможна
      */
-    private boolean isCorrectCastling(boolean shortCastling) throws ChessError {
+    private boolean isCorrectCastling(boolean shortCastling) {
         if (wasMoved
+                || !board.isEmptyCell(pos.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
+                || !board.isEmptyCell(pos.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
+                || !shortCastling && !board.isEmptyCell(pos.createAdd(new Cell(-3, 0)))
                 || ms.isAttackedCell(pos, !white)
                 || ms.isAttackedCell(pos.createAdd(new Cell(shortCastling ? 1 : -1, 0)), !white)
                 || ms.isAttackedCell(pos.createAdd(new Cell(shortCastling ? 2 : -2, 0)), !white)) {

@@ -10,7 +10,8 @@ public enum MoveType {
     // Для взятия на проходе
     EN_PASSANT,
     // Для рокировки
-    CASTLING,
+    SHORT_CASTLING,
+    LONG_CASTLING,
     // Для последнего хода-превращения пешки
     TURN_INTO
 }

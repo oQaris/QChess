@@ -1,14 +1,14 @@
 package io.deeplay.qchess.game.figures.interfaces;
 
-import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public abstract class Figure {
 
@@ -53,7 +53,7 @@ public abstract class Figure {
     /**
      * @return все возможные ходы фигуры, не учитывая шаха
      */
-    public abstract Set<Move> getAllMoves() throws ChessError;
+    public abstract Set<Move> getAllMoves();
 
     public Board getBoard() {
         return board;
@@ -119,8 +119,8 @@ public abstract class Figure {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 97 * hash + (this.white ? 1 : 0);
-        hash = 97 * hash + Objects.hashCode(this.pos);
+        hash = 97 * hash + (white ? 1 : 0);
+        hash = 97 * hash + Objects.hashCode(pos);
         return hash;
     }
 

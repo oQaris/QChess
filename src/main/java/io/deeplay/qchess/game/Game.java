@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
@@ -19,8 +18,8 @@ public class Game {
     private Player currentPlayerToMove;
 
     public Game(Board.BoardFilling boardType, Player firstPlayer, Player secondPlayer) throws ChessError {
-        this.board = new Board();
-        this.moveSystem = new MoveSystem(board);
+        board = new Board();
+        moveSystem = new MoveSystem(board);
         board.initBoard(moveSystem, boardType);
 
         firstPlayer.init(moveSystem, board, true);
@@ -28,7 +27,7 @@ public class Game {
 
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
-        this.currentPlayerToMove = firstPlayer;
+        currentPlayerToMove = firstPlayer;
     }
 
     public void run() throws ChessError {
@@ -48,14 +47,12 @@ public class Game {
     }
 
     private boolean tryMove(Move move) throws ChessError {
+        boolean notDraw = moveSystem.move(move);
         try {
             logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
             logger.info(board.toString());
-            return moveSystem.move(move);
-        } catch (ChessException e) {
-            logger.error("Проверенный ход выдал ошибку при перемещении фигуры: {}", e.getMessage());
-            // TODO: выкинуть из комнаты
-            return false;
+        } finally {
+            return notDraw;
         }
     }
 }

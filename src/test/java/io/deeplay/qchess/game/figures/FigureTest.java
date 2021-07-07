@@ -8,13 +8,14 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class FigureTest {
 
@@ -132,6 +133,31 @@ public class FigureTest {
         var king2 = new King(ms, board, false, Cell.parse("e8"));
         board.setFigure(king1);
         board.setFigure(king2);
+
+        Assert.assertEquals(
+                toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                extractCellTo(king2.getAllMoves()));
+
+        var rookW1 = new Rook(board, true, Cell.parse("h1"));
+        var rookW2 = new Rook(board, true, Cell.parse("a1"));
+        var rookB1 = new Rook(board, false, Cell.parse("h8"));
+        var rookB2 = new Rook(board, false, Cell.parse("a8"));
+        board.setFigure(rookW1);
+        board.setFigure(rookW2);
+        board.setFigure(rookB1);
+        board.setFigure(rookB2);
+
+        var pawnB1 = new Pawn(ms, board, false, Cell.parse("b1"));
+        var pawnB2 = new Pawn(ms, board, false, Cell.parse("g1"));
+        var pawnW1 = new Pawn(ms, board, true, Cell.parse("b8"));
+        var pawnW2 = new Pawn(ms, board, true, Cell.parse("g8"));
+        board.setFigure(pawnB1);
+        board.setFigure(pawnB2);
+        board.setFigure(pawnW1);
+        board.setFigure(pawnW2);
 
         Assert.assertEquals(
                 toCellsSet("D1", "D2", "E2", "F2", "F1"),

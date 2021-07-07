@@ -9,11 +9,12 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Хранит различные данные об игре для контроля специфичных ситуаций
@@ -34,39 +35,54 @@ public class MoveSystem {
      *
      * @return true, если ход выполнен, false, если ход последний (ничья)
      */
-    public boolean move(Move move) throws ChessException, ChessError {
-        // взятие на проходе
-        if (move.getMoveType().equals(MoveType.EN_PASSANT) && isPawnEnPassant(move.getFrom(), move.getTo())) {
-            board.removeFigure(prevMove.getTo());
-        }
-
-        // превращение пешки
-        if (move.getMoveType().equals(MoveType.TURN_INTO)) {
-            if (move.getTurnInto() == null) {
-                logger.error("Пешка заменилась на null");
-                throw new ChessError("Пешка заменилась на null");
+    public boolean move(Move move) throws ChessError {
+        try {
+            // взятие на проходе
+            if (move.getMoveType().equals(MoveType.EN_PASSANT) && isPawnEnPassant(move.getFrom(), move.getTo())) {
+                board.removeFigure(prevMove.getTo());
             }
-            board.setFigure(move.getTurnInto());
-        }
 
-        // рокировка
-        if (move.getMoveType().equals(MoveType.CASTLING)) {
-            // TODO
-        }
+            // превращение пешки
+            if (move.getMoveType().equals(MoveType.TURN_INTO)) {
+                if (move.getTurnInto() == null) {
+                    logger.error("Пешка заменилась на null");
+                    throw new ChessError("Пешка заменилась на null");
+                }
+                board.setFigure(move.getTurnInto());
+            }
 
-        // ход
-        Figure removedFigure = board.moveFigure(move);
-        prevMove = move;
+            // рокировка
+            if (move.getMoveType().equals(MoveType.SHORT_CASTLING)) {
+                ((King) board.getFigure(move.getFrom())).setWasMoved();
+                Cell from = move.getFrom().createAdd(new Cell(3, 0));
+                Cell to = move.getFrom().createAdd(new Cell(1, 0));
+                ((King) board.getFigure(from)).setWasMoved();
+                board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
+            }
+            if (move.getMoveType().equals(MoveType.LONG_CASTLING)) {
+                ((King) board.getFigure(move.getFrom())).setWasMoved();
+                Cell from = move.getFrom().createAdd(new Cell(-4, 0));
+                Cell to = move.getFrom().createAdd(new Cell(-1, 0));
+                ((King) board.getFigure(from)).setWasMoved();
+                board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
+            }
 
-        // условия ничьи:
-        // пешка не ходит 50 ходов
-        // никто не рубит
-        if (removedFigure != null || board.getFigure(move.getTo()).getClass() == Pawn.class) {
-            pieceMoveCount = 0;
-        } else {
-            ++pieceMoveCount;
+            // ход
+            Figure removedFigure = board.moveFigure(move);
+            prevMove = move;
+
+            // условия ничьи:
+            // пешка не ходит 50 ходов
+            // никто не рубит
+            if (removedFigure != null || board.getFigure(move.getTo()).getClass() == Pawn.class) {
+                pieceMoveCount = 0;
+            } else {
+                ++pieceMoveCount;
+            }
+            return pieceMoveCount != 50;
+        } catch (ChessException e) {
+            throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры");
         }
-        return pieceMoveCount != 50;
     }
 
     /**
@@ -137,7 +153,7 @@ public class MoveSystem {
     /**
      * @return true если ход лежит в доступных
      */
-    private boolean inCorrectMoves(Move move) throws ChessError {
+    private boolean inCorrectMoves(Move move) {
         try {
             Figure figure = board.getFigure(move.getFrom());
             Set<Move> allMoves = figure.getAllMoves();
@@ -193,7 +209,7 @@ public class MoveSystem {
      * @param color true - белый, false - черный
      * @return true, если клетка cell атакуется цветом color
      */
-    public boolean isAttackedCell(Cell cell, boolean color) throws ChessError {
+    public boolean isAttackedCell(Cell cell, boolean color) {
         for (Figure f : board.getFigures(color)) {
             for (Move m : f.getClass() == King.class ? ((King) f).getSimpleMoves() : f.getAllMoves()) {
                 if (m.getTo().equals(cell)) {
