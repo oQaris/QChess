@@ -3,9 +3,8 @@ package io.deeplay.qchess.game.player;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
-import io.deeplay.qchess.game.logics.MoveSystem;
-import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +36,8 @@ public class Bot extends Player {
         for (Move move : ms.getAllCorrectMoves(color)) {
             try {
                 var fig = board.getFigure(move.getTo());
-                var curGrade = grades.get(fig.getClass());
+
+                var curGrade = fig != null ? grades.get(fig.getClass()) : 0;
                 if (curGrade > maxGrade) {
                     maxGrade = curGrade;
                     topMoves.clear();
