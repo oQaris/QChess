@@ -72,7 +72,8 @@ public class MoveSystem {
         List<Figure> list = board.getFigures(white);
         Cell kingCell = board.findKingCell(!white);
         for (Figure f : list) {
-            if (f.getAllMovePositions().contains(kingCell)) {
+            //todo исправить
+            if (f.getAllMove().contains(kingCell)) {
                 return true;
             }
         }
@@ -115,8 +116,8 @@ public class MoveSystem {
     private boolean inCorrectMoves(Move move) {
         try {
             Figure figure = board.getFigure(move.getFrom());
-            Set<Cell> allMoves = figure.getAllMovePositions();
-            return allMoves.contains(move.getTo());
+            Set<Move> allMoves = figure.getAllMove();
+            return allMoves.contains(move);
         } catch (ChessException e) {
             return false;
         }

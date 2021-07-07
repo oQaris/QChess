@@ -3,12 +3,15 @@ package io.deeplay.qchess.game.figures.interfaces;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class Figure {
 
@@ -37,10 +40,10 @@ public abstract class Figure {
     protected final Board board;
     protected final boolean white;
     protected Cell pos;
-    protected boolean isFirstMove = true;
+    protected int countMoves = 0;
 
-    public void madeFirstMove() {
-        isFirstMove = false;
+    public void addMove() {
+        countMoves++;
     }
 
     public Figure(Board board, boolean white, Cell pos) {
@@ -52,7 +55,7 @@ public abstract class Figure {
     /**
      * @return все варианты для перемещения фигуры, не выходящие за границы доски, учитывая уже занятые клетки
      */
-    public abstract Set<Cell> getAllMovePositions();
+    public abstract Set<Move> getAllMove();
 
     public Board getBoard() {
         return board;
@@ -70,21 +73,37 @@ public abstract class Figure {
         this.pos = pos;
     }
 
-    protected Set<Cell> rayTrace(List<Cell> moves) {
+    protected Set<Move> rayTrace(List<Cell> directions) {
         log.info("Запущен рэйтрейс фигуры {} из точки {}", this, pos);
+        if (directions == null) {
+            throw new NullPointerException("Список ходов не может быть null");
+        }
+        var result = new HashSet<Move>();
+        for (Cell shift : directions) {
+            Cell cord = pos.add(shift);
+            while (board.isEmptyCell(cord)) {
+                result.add(new Move(MoveType.SIMPLE_STEP, pos, cord));
+                cord = cord.add(shift);
+            }
+            if (isEnemyFigureOn(cord)) {
+                result.add(new Move(MoveType.ATTACK, pos, cord));
+            }
+        }
+        return result;
+    }
+
+    protected Set<Move> stepForEach(List<Cell> moves) {
+        log.info("Запущено нахождение ходов фигуры {} из точки {}", this, pos);
         if (moves == null) {
             throw new NullPointerException("Список ходов не может быть null");
         }
-        var result = new HashSet<Cell>();
+        var result = new HashSet<Move>();
         for (Cell shift : moves) {
             Cell cord = pos.add(shift);
-            while (board.isEmptyCell(cord)) {
-                result.add(cord);
-                cord = cord.add(shift);
-            }
-            //todo можно сделать добавление в другое множество
-            if (isEnemyFigureOn(cord)) {
-                result.add(cord);
+            if (board.isEmptyCell(cord)) {
+                result.add(new Move(MoveType.SIMPLE_STEP, pos, cord));
+            } else if (isEnemyFigureOn(cord)) {
+                result.add(new Move(MoveType.ATTACK, pos, cord));
             }
         }
         return result;

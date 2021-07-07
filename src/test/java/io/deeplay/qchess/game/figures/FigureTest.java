@@ -10,6 +10,8 @@ import io.deeplay.qchess.game.model.MoveType;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,14 +36,14 @@ public class FigureTest {
 
         Assert.assertEquals(
                 toCellsSet("D8", "F8", "D6", "F6", "C5", "G5", "B4", "H4", "A3"),
-                bishop1.getAllMovePositions());
+                extractCellTo(bishop1.getAllMove()));
 
         var bishop2 = new Bishop(board, true, Cell.parse("b3"));
         board.setFigure(bishop2);
 
         Assert.assertEquals(
                 toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8"),
-                bishop2.getAllMovePositions());
+                extractCellTo(bishop2.getAllMove()));
     }
 
     @Test
@@ -55,7 +57,7 @@ public class FigureTest {
         testBoard.setFigure(bishop);
 
         Assert.assertEquals(toCellsSet("A3", "B2", "D2", "E3"),
-                bishop.getAllMovePositions());
+                extractCellTo(bishop.getAllMove()));
     }
 
     @Test
@@ -68,7 +70,7 @@ public class FigureTest {
         testBoard.setFigure(bishop);
 
         Assert.assertEquals(toCellsSet("A3", "B2", "D2"),
-                bishop.getAllMovePositions());
+                extractCellTo(bishop.getAllMove()));
     }
 
     @Test
@@ -78,7 +80,7 @@ public class FigureTest {
         board.setFigure(rook);
         Assert.assertEquals(
                 toCellsSet("A8", "A7", "A5", "A4", "A3", "A2", "A1", "B6", "C6", "D6", "E6", "F6", "G6", "H6"),
-                rook.getAllMovePositions());
+                extractCellTo(rook.getAllMove()));
     }
 
     @Test
@@ -93,7 +95,7 @@ public class FigureTest {
         testBoard.setFigure(rook2);
         Assert.assertEquals(
                 toCellsSet("b8", "a7", "a6", "c8"),
-                rook.getAllMovePositions());
+                extractCellTo(rook.getAllMove()));
     }
 
     @Test
@@ -104,7 +106,7 @@ public class FigureTest {
         Assert.assertEquals(
                 toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8", "B8", "B7", "B6", "B5",
                         "B4", "B2", "B1", "A3", "C3", "D3", "E3", "F3", "G3", "H3"),
-                queen.getAllMovePositions());
+                extractCellTo(queen.getAllMove()));
     }
 
     @Test
@@ -114,7 +116,7 @@ public class FigureTest {
         board.setFigure(king);
         Assert.assertEquals(
                 toCellsSet(/*"B1", */"D1", "D2", "E2", "F2", "F1" /*"G1"*/),
-                king.getAllMovePositions());
+                extractCellTo(king.getAllMove()));
     }
 
     @Test
@@ -124,7 +126,7 @@ public class FigureTest {
         board.setFigure(knight);
         Assert.assertEquals(
                 toCellsSet("E6", "G6", "D5", "D3", "E2", "G2", "H3", "H5"),
-                knight.getAllMovePositions());
+                extractCellTo(knight.getAllMove()));
     }
 
     @Test
@@ -142,7 +144,7 @@ public class FigureTest {
         testBoard.setFigure(pawn3);
         Assert.assertEquals(
                 toCellsSet("b3", "c2"),
-                knight.getAllMovePositions());
+                extractCellTo(knight.getAllMove()));
     }
 
     @Test
@@ -154,7 +156,7 @@ public class FigureTest {
         board.setFigure(enemy);
         Assert.assertEquals(
                 toCellsSet("C3", "C4", "D3"),
-                pawn.getAllMovePositions());
+                extractCellTo(pawn.getAllMove()));
     }
 
     @Test
@@ -164,7 +166,7 @@ public class FigureTest {
         board.setFigure(pawn);
         Assert.assertEquals(
                 new HashSet<Cell>(),
-                pawn.getAllMovePositions());
+                extractCellTo(pawn.getAllMove()));
     }
 
     @Test
@@ -172,7 +174,7 @@ public class FigureTest {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
         var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
-        pawn.madeFirstMove();
+        pawn.addMove();
         var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
         var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
         var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
@@ -186,7 +188,7 @@ public class FigureTest {
         testBoard.setFigure(pawn5);
         Assert.assertEquals(
                 toCellsSet("B6", "D6"),
-                pawn.getAllMovePositions());
+                extractCellTo(pawn.getAllMove()));
     }
 
     @Test
@@ -194,7 +196,7 @@ public class FigureTest {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
         var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
-        pawn.madeFirstMove();
+        pawn.addMove();
         var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
         var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
         var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
@@ -206,7 +208,7 @@ public class FigureTest {
         testBoard.setFigure(pawn4);
         Assert.assertEquals(
                 toCellsSet("B6", "D6", "c6"),
-                pawn.getAllMovePositions());
+                extractCellTo(pawn.getAllMove()));
     }
 
     @Test
@@ -218,14 +220,15 @@ public class FigureTest {
         field.set(ms, white1);
 
         Figure figureB1 = new Pawn(ms, board, false, Cell.parse("b4"));
-        figureB1.madeFirstMove();
+        figureB1.addMove();
         Figure figureW2 = new Pawn(ms, board, true, Cell.parse("a4"));
 
         board.setFigure(figureW1);
         board.setFigure(figureB1);
         board.setFigure(figureW2);
 
-        Assert.assertEquals(toCellsSet("b3", "c3"), figureB1.getAllMovePositions());
+        Assert.assertEquals(toCellsSet("b3", "c3"),
+                extractCellTo(figureB1.getAllMove()));
     }
 
     private Set<Cell> toCellsSet(String... pos) {
@@ -237,5 +240,9 @@ public class FigureTest {
             result.add(Cell.parse(p));
         }
         return result;
+    }
+
+    private Set<Cell> extractCellTo(Set<Move> moves){
+        return moves.stream().map(Move::getTo).collect(Collectors.toSet());
     }
 }

@@ -4,13 +4,13 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.player.IPlayer;
+import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Game {
 
-    public Game(Board.BoardFilling boardType, IPlayer firstPlayer, IPlayer secondPlayer) {
+    public Game(Board.BoardFilling boardType, Player firstPlayer, Player secondPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.currentPlayerToMove = firstPlayer;
@@ -22,9 +22,9 @@ public class Game {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
     private Board board;
     private MoveSystem moveSystem;
-    private IPlayer firstPlayer;
-    private IPlayer secondPlayer;
-    private IPlayer currentPlayerToMove;
+    private Player firstPlayer;
+    private Player secondPlayer;
+    private Player currentPlayerToMove;
 
     public void start() {
         // TODO: сделать условие выхода

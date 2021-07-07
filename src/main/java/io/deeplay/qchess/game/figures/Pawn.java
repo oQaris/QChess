@@ -4,6 +4,9 @@ import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,8 +20,8 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public Set<Cell> getAllMovePositions() {
-        var result = new HashSet<Cell>();
+    public Set<Move> getAllMove() {
+        var result = new HashSet<Move>();
 
         Cell shift;
         if (white) {
@@ -28,21 +31,26 @@ public class Pawn extends Figure {
         }
 
         var move = pos.add(shift);
+        var specOrSimpMoveType = countMoves == Board.BOARD_SIZE - 3
+                ? MoveType.SPECIAL_MOVE : MoveType.SIMPLE_STEP;
         if (board.isEmptyCell(move)) {
-            result.add(move);
+            result.add(new Move(specOrSimpMoveType, pos, move));
         }
         var moveLong = move.add(shift);
-        if (isFirstMove && board.isEmptyCell(moveLong)) {
-            result.add(moveLong);
+        if (countMoves == 0 && board.isEmptyCell(moveLong)) {
+            result.add(new Move(specOrSimpMoveType, pos, moveLong));
+            countMoves++;
         }
 
         var cellLeft = move.add(new Cell(-1, 0));
         var cellRight = move.add(new Cell(1, 0));
+        var isEnPassant = ms.isPawnEnPassant(pos, cellLeft) || ms.isPawnEnPassant(pos, cellRight);
+        var specOrAttackMoveType = isEnPassant ? MoveType.SPECIAL_MOVE : MoveType.ATTACK;
         if (isEnemyFigureOn(cellLeft) || ms.isPawnEnPassant(pos, cellLeft)) {
-            result.add(cellLeft);
+            result.add(new Move(specOrAttackMoveType, pos, cellLeft));
         }
         if (isEnemyFigureOn(cellRight) || ms.isPawnEnPassant(pos, cellRight)) {
-            result.add(cellRight);
+            result.add(new Move(specOrAttackMoveType, pos, cellRight));
         }
 
         return result;

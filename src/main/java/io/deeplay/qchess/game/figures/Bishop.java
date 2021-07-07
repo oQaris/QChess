@@ -3,6 +3,7 @@ package io.deeplay.qchess.game.figures;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Move;
 
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public class Bishop extends Figure {
     }
 
     @Override
-    public Set<Cell> getAllMovePositions() {
+    public Set<Move> getAllMove() {
         return rayTrace(xMove);
     }
 

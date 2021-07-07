@@ -187,7 +187,7 @@ public final class Board /*implements Iterable<Figure>*/ {
     public Set<Move> getAllMoves(boolean color) {
         // TODO: изменить getAllMovePositions на getAllMoves в Figure
         return getFigures(color).stream()
-                .flatMap(f -> f.getAllMovePositions().stream())
+                .flatMap(f -> f.getAllMove().stream())
                 .collect(Collectors.toSet());
     }
 
