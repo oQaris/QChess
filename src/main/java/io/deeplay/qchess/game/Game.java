@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
@@ -43,16 +44,23 @@ public class Game {
                 // TODO: отправлять ответ, что ход некорректный
             }
         }
+        if (!notDraw) {
+            logger.info("Игра окончена: ничья");
+        } else if (moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
+            logger.info("Игра окончена: мат {}", currentPlayerToMove.getColor() ? "белым" : "черным");
+        } else {
+            logger.info("Игра окончена: пат {}", currentPlayerToMove.getColor() ? "белым" : "черным");
+        }
         // TODO: конец игры
     }
 
     private boolean tryMove(Move move) throws ChessError {
-        boolean notDraw = moveSystem.move(move);
         try {
             logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
             logger.info(board.toString());
-        } finally {
-            return notDraw;
+            return moveSystem.move(move);
+        } catch (ChessException e) {
+            throw new ChessError("Не удалось записать в лог");
         }
     }
 }

@@ -4,13 +4,12 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
+import io.deeplay.qchess.game.figures.Rook;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +20,7 @@ import java.util.Set;
  */
 public class MoveSystem {
 
-    private static final Logger logger = LoggerFactory.getLogger(MoveSystem.class);
-    private Board board;
+    private final Board board;
     private Move prevMove;
     private int pieceMoveCount = 0;
 
@@ -44,10 +42,6 @@ public class MoveSystem {
 
             // превращение пешки
             if (move.getMoveType().equals(MoveType.TURN_INTO)) {
-                if (move.getTurnInto() == null) {
-                    logger.error("Пешка заменилась на null");
-                    throw new ChessError("Пешка заменилась на null");
-                }
                 board.setFigure(move.getTurnInto());
             }
 
@@ -56,14 +50,14 @@ public class MoveSystem {
                 ((King) board.getFigure(move.getFrom())).setWasMoved();
                 Cell from = move.getFrom().createAdd(new Cell(3, 0));
                 Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                ((King) board.getFigure(from)).setWasMoved();
+                ((Rook) board.getFigure(from)).setWasMoved();
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
             if (move.getMoveType().equals(MoveType.LONG_CASTLING)) {
                 ((King) board.getFigure(move.getFrom())).setWasMoved();
                 Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                 Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                ((King) board.getFigure(from)).setWasMoved();
+                ((Rook) board.getFigure(from)).setWasMoved();
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
 
@@ -113,7 +107,7 @@ public class MoveSystem {
 
     /**
      * @param color true - белые, false - черные
-     * @return true, если установленному цвету поставили пат (нет доступных ходов)
+     * @return true, если установленному цвету поставили мат
      */
     public boolean isCheckmate(boolean color) throws ChessError {
         return isStalemate(color) && isCheck(color);
@@ -147,20 +141,30 @@ public class MoveSystem {
      * @return true если ход корректный
      */
     public boolean isCorrectMove(Move move) throws ChessError {
-        return inCorrectMoves(move) && isCorrectVirtualMove(move);
+        return inAvailableMoves(move) && isCorrectVirtualMove(move);
     }
 
     /**
      * @return true если ход лежит в доступных
      */
-    private boolean inCorrectMoves(Move move) {
+    private boolean inAvailableMoves(Move move) {
         try {
             Figure figure = board.getFigure(move.getFrom());
             Set<Move> allMoves = figure.getAllMoves();
-            return allMoves.contains(move);
+            return isCorrectSpecificMove(move) && allMoves.contains(move);
         } catch (ChessException e) {
             return false;
         }
+    }
+
+    /**
+     * Проверяет специфичные ситуации
+     *
+     * @return true если move корректный
+     */
+    private boolean isCorrectSpecificMove(Move move) {
+        // превращение пешки
+        return !move.getMoveType().equals(MoveType.TURN_INTO) || move.getTurnInto() != null;
     }
 
     /**
@@ -169,7 +173,6 @@ public class MoveSystem {
     private boolean isCorrectVirtualMove(Move move) throws ChessError {
         Figure virtualKilled = tryVirtualMove(move);
         if (virtualKilled != null && virtualKilled.getClass() == King.class) {
-            logger.error("Возникла невозможная ситуация: срубили короля");
             throw new ChessError("Срубили короля");
         }
         boolean isCheck;

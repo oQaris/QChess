@@ -65,9 +65,7 @@ public class King extends Figure {
             return false;
         }
         try {
-            return white
-                    ? !((Rook) board.getFigure(Cell.parse(shortCastling ? "h1" : "a1"))).wasMoved()
-                    : !((Rook) board.getFigure(Cell.parse(shortCastling ? "h8" : "a8"))).wasMoved();
+            return !((Rook) board.getFigure(pos.createAdd(new Cell(shortCastling ? 3 : -4, 0)))).wasMoved();
         } catch (ChessException | ClassCastException | NullPointerException e) {
             return false;
         }

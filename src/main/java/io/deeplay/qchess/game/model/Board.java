@@ -5,10 +5,11 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import java.util.ArrayList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Board {
 
@@ -28,7 +29,6 @@ public final class Board {
     public void initBoard(MoveSystem ms, BoardFilling bf) throws ChessError {
         switch (bf) {
             case EMPTY -> {
-                break;
             }
             case STANDARD -> {
                 try {
@@ -71,10 +71,8 @@ public final class Board {
                     logger.error("Стандартное заполнение доски некорректное: {}", e.getMessage());
                     throw new ChessError("Стандартное заполнение доски некорректное");
                 }
-                break;
             }
             default -> {
-                break;
             }
         }
     }
@@ -207,6 +205,6 @@ public final class Board {
     }
 
     public static enum BoardFilling {
-        EMPTY, STANDARD;
+        EMPTY, STANDARD
     }
 }
