@@ -12,12 +12,16 @@ import org.slf4j.LoggerFactory;
 public class Game {
 
     public Game(Board.BoardFilling boardType, Player firstPlayer, Player secondPlayer) throws ChessError {
-        this.firstPlayer = firstPlayer;
-        this.secondPlayer = secondPlayer;
-        this.currentPlayerToMove = firstPlayer;
         this.board = new Board();
         this.moveSystem = new MoveSystem(board);
         board.initBoard(moveSystem, boardType);
+
+        firstPlayer.init(moveSystem, board, true);
+        secondPlayer.init(moveSystem, board, true);
+
+        this.firstPlayer = firstPlayer;
+        this.secondPlayer = secondPlayer;
+        this.currentPlayerToMove = firstPlayer;
     }
 
     private static final Logger logger = LoggerFactory.getLogger(Game.class);

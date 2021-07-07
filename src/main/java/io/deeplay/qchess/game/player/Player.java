@@ -14,34 +14,22 @@ public abstract class Player {
     public Player() {
     }
 
-    public Player(MoveSystem ms, Board board, boolean color) {
+    public void init(MoveSystem ms, Board board, boolean color) {
         this.ms = ms;
         this.board = board;
         this.color = color;
-    }
-
-    public MoveSystem getMoveSystem() {
-        return ms;
-    }
-
-    public void setMoveSystem(MoveSystem ms) {
-        this.ms = ms;
     }
 
     public Board getBoard() {
         return board;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
+    public MoveSystem getMs() {
+        return ms;
     }
 
     public boolean isWhite() {
         return color;
-    }
-
-    public void setColor(boolean isWhite) {
-        this.color = isWhite;
     }
 
     /**
