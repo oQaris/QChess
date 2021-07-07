@@ -130,10 +130,12 @@ public final class Board {
      */
     public Figure moveFigure(Move move) throws ChessException {
         Figure figure = getFigure(move.getFrom());
+        Figure old = getFigure(move.getTo());
         figure.setCurrentPosition(move.getTo());
         setFigure(figure);
         figure.addMove(1);
-        return removeFigure(move.getFrom());
+        removeFigure(move.getFrom());
+        return old;
     }
 
     /**

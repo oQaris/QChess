@@ -86,7 +86,6 @@ public class MoveSystem {
      * @return все возможные ходы
      */
     public Set<Move> getAllCorrectMoves(boolean color) throws ChessError {
-        // TODO: изменить getAllMovePositions на getAllMoves в Figure
         Set<Move> set = board.getFigures(color).stream()
                 .flatMap(f -> f.getAllMoves().stream())
                 .collect(Collectors.toSet());
@@ -129,7 +128,9 @@ public class MoveSystem {
             isCheck = isCheck(board.getFigure(move.getTo()).isWhite());
             // отмена виртуального хода
             board.moveFigure(new Move(MoveType.SIMPLE_STEP, move.getTo(), move.getFrom()));
-            board.setFigure(virtualKilled);
+            if (virtualKilled != null) {
+                board.setFigure(virtualKilled);
+            }
             board.getFigure(move.getFrom()).addMove(-2);
         } catch (ChessException e) {
             return false;

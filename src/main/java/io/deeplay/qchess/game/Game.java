@@ -17,7 +17,7 @@ public class Game {
         board.initBoard(moveSystem, boardType);
 
         firstPlayer.init(moveSystem, board, true);
-        secondPlayer.init(moveSystem, board, true);
+        secondPlayer.init(moveSystem, board, false);
 
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
