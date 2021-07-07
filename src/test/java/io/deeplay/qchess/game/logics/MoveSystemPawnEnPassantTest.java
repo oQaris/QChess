@@ -8,26 +8,26 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import java.lang.reflect.Field;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.lang.reflect.Field;
 
 public class MoveSystemPawnEnPassantTest {
 
     private Board board;
     private MoveSystem ms;
+    private Move move1;
+    private Move move2;
+    private Move move3;
+    private Move move4;
 
     @Before
     public void setUp() {
         board = new Board();
         ms = new MoveSystem(board);
     }
-
-    private Move move1;
-    private Move move2;
-    private Move move3;
-    private Move move4;
 
     private void setBlackPawns() throws ChessException {
         move1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));

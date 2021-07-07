@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.figures.interfaces.Figure;
+
 import java.util.Objects;
 
 public class Move {
@@ -16,12 +17,12 @@ public class Move {
         this.to = to;
     }
 
-    public void setTurnInto(Figure turnInto) {
-        this.turnInto = turnInto;
-    }
-
     public Figure getTurnInto() {
         return turnInto;
+    }
+
+    public void setTurnInto(Figure turnInto) {
+        this.turnInto = turnInto;
     }
 
     public MoveType getMoveType() {
@@ -58,10 +59,6 @@ public class Move {
 
     @Override
     public String toString() {
-        return "Move{"
-                + "moveType=" + moveType
-                + ", from=" + from
-                + ", to=" + to
-                + '}';
+        return from.toString() + "-" + to + " (" + moveType + ")";
     }
 }

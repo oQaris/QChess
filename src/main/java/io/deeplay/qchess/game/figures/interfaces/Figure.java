@@ -5,13 +5,10 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public abstract class Figure {
 
@@ -42,14 +39,14 @@ public abstract class Figure {
     protected Cell pos;
     protected int countMoves = 0;
 
-    public void addMove(int count) {
-        countMoves += count;
-    }
-
     public Figure(Board board, boolean white, Cell pos) {
         this.board = board;
         this.white = white;
         this.pos = pos;
+    }
+
+    public void addMove(int count) {
+        countMoves += count;
     }
 
     /**

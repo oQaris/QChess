@@ -6,8 +6,6 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Knight extends Figure {
 

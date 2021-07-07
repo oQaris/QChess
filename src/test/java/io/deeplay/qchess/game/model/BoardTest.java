@@ -6,12 +6,13 @@ import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class BoardTest {
 

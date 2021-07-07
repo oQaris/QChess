@@ -5,20 +5,17 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import java.util.ArrayList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class Board {
 
-    private static final Logger logger = LoggerFactory.getLogger(Board.class);
     public final static int BOARD_SIZE = 8;
+    private static final Logger logger = LoggerFactory.getLogger(Board.class);
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
-
-    public static enum BoardFilling {
-        EMPTY, STANDARD;
-    }
 
     /**
      * Создает пустую доску
@@ -85,8 +82,8 @@ public final class Board {
 
     /**
      * @param white цвет фигур, true - белые, false - черные
-     * @throws ChessError если король не был найден
      * @return позиция короля определенного цвета
+     * @throws ChessError если король не был найден
      */
     public Cell findKingCell(boolean white) throws ChessError {
         Cell kingCell = null;
@@ -139,8 +136,8 @@ public final class Board {
     }
 
     /**
-     * @throws ChessException если клетка не лежит в пределах доски
      * @return фигура или null, если клетка пуста
+     * @throws ChessException если клетка не лежит в пределах доски
      */
     public Figure getFigure(Cell cell) throws ChessException {
         int x = cell.getCol();
@@ -190,5 +187,9 @@ public final class Board {
      */
     public boolean isCorrectCell(int col, int row) {
         return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
+    }
+
+    public static enum BoardFilling {
+        EMPTY, STANDARD;
     }
 }

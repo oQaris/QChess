@@ -10,8 +10,8 @@ import io.deeplay.qchess.game.player.Player;
 public class Main {
 
     public static void main(String[] args) throws ChessError {
-        Player firstPlayer = new Bot();
-        Player secondPlayer = new ConsolePlayer();
+        Player firstPlayer = new ConsolePlayer();
+        Player secondPlayer = new Bot();
         Game game = new Game(Board.BoardFilling.STANDARD, firstPlayer, secondPlayer);
         game.run();
     }
