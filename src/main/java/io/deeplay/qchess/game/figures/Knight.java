@@ -3,9 +3,11 @@ package io.deeplay.qchess.game.figures;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Move;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Knight extends Figure {
 
@@ -14,11 +16,8 @@ public class Knight extends Figure {
     }
 
     @Override
-    public Set<Cell> getAllMovePositions() {
-        return knightMove.stream()
-                .map(shift -> pos.add(shift))
-                .filter(cell -> board.isEmptyCell(cell) || isEnemyFigureOn(cell))
-                .collect(Collectors.toSet());
+    public Set<Move> getAllMoves() {
+        return stepForEach(knightMove);
     }
 
     @Override

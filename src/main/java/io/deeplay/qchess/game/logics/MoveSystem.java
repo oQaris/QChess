@@ -70,6 +70,31 @@ public class MoveSystem {
     }
 
     /**
+     * @param color true - белые, false - черные
+     * @return true, если установленному цвету поставили мат/пат (нет доступных ходов)
+     */
+    public boolean isCheckmate(boolean color) throws ChessError {
+        return getAllCorrectMoves(color).isEmpty();
+    }
+
+    /**
+     * @param color true - белые, false - черные
+     * @return все возможные ходы
+     */
+    public Set<Move> getAllCorrectMoves(boolean color) throws ChessError {
+        // TODO: изменить getAllMovePositions на getAllMoves в Figure
+        Set<Move> set = board.getFigures(color).stream()
+                .flatMap(f -> f.getAllMoves().stream())
+                .collect(Collectors.toSet());
+        for (Move move : set) {
+            if (!isCorrectVirtualMove(move)) {
+                set.remove(move);
+            }
+        }
+        return set;
+    }
+
+    /**
      * @return true если ход корректный
      */
     public boolean isCorrectMove(Move move) throws ChessError {
@@ -82,8 +107,8 @@ public class MoveSystem {
     private boolean inCorrectMoves(Move move) {
         try {
             Figure figure = board.getFigure(move.getFrom());
-            Set<Cell> allMoves = figure.getAllMovePositions();
-            return allMoves.contains(move.getTo());
+            Set<Move> allMoves = figure.getAllMoves();
+            return allMoves.contains(move);
         } catch (ChessException e) {
             return false;
         }
@@ -126,30 +151,13 @@ public class MoveSystem {
         List<Figure> list = board.getFigures(white);
         Cell kingCell = board.findKingCell(!white);
         for (Figure f : list) {
-            if (f.getAllMovePositions().contains(kingCell)) {
+            if (f.getAllMoves().stream()
+                    .map(move -> move.getTo())
+                    .collect(Collectors.toSet())
+                    .contains(kingCell)) {
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * @param color true - белые, false - черные
-     * @return true, если установленному цвету поставили мат/пат (нет доступных ходов)
-     */
-    public boolean isCheckmate(boolean color) {
-        return getAllCorrectMoves(color).isEmpty();
-    }
-
-    /**
-     * @param color true - белые, false - черные
-     * @return все возможные ходы
-     */
-    public Set<Move> getAllCorrectMoves(boolean color) {
-        // TODO: изменить getAllMovePositions на getAllMoves в Figure
-        return board.getFigures(color).stream()
-                .flatMap(f -> f.getAllMovePositions().stream())
-                .filter(move -> isCorrectVirtualMove(move))
-                .collect(Collectors.toSet());
     }
 }
