@@ -11,8 +11,8 @@ import java.util.Scanner;
 
 public class ConsolePlayer extends Player {
 
-    public ConsolePlayer(MoveSystem ms, Board board, boolean color) {
-        super(ms, board, color);
+    public ConsolePlayer() {
+        super();
     }
 
     @Override
