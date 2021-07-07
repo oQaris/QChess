@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +49,9 @@ public class Bot extends Player {
             } catch (ChessException ignored) {
             }
         }
-        return topMoves.get(new Random().nextInt(topMoves.size()));
+        var move = topMoves.get(new Random().nextInt(topMoves.size()));
+        if (move.getMoveType() == MoveType.TURN_INTO)
+            move.setTurnInto(new Queen(board, color, move.getTo()));
+        return move;
     }
 }
