@@ -5,11 +5,10 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Board {
 
@@ -144,7 +143,7 @@ public final class Board {
         if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
         }
-        return cells[x][y];
+        return cells[y][x];
     }
 
     /**
@@ -156,7 +155,7 @@ public final class Board {
         if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
         }
-        cells[x][y] = figure;
+        cells[y][x] = figure;
     }
 
     /**
@@ -170,15 +169,15 @@ public final class Board {
         if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
         }
-        Figure old = cells[x][y];
-        cells[x][y] = null;
+        Figure old = cells[y][x];
+        cells[y][x] = null;
         return old;
     }
 
     public boolean isEmptyCell(Cell cell) {
         int x = cell.getCol();
         int y = cell.getRow();
-        return isCorrectCell(x, y) && cells[x][y] == null;
+        return isCorrectCell(x, y) && cells[y][x] == null;
     }
 
     /**
@@ -195,8 +194,11 @@ public final class Board {
         for (Figure[] line : cells) {
             sb.append('|');
             for (Figure figure : line) {
-                if (figure == null) sb.append("  ");
-                else sb.append(figure.getShortName());
+                if (figure == null) {
+                    sb.append("  ");
+                } else {
+                    sb.append(figure.getShortName());
+                }
                 sb.append('|');
             }
             sb.append("\n").append(" - ".repeat(Board.BOARD_SIZE)).append("\n");
