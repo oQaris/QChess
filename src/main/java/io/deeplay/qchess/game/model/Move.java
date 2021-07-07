@@ -39,4 +39,13 @@ public class Move {
     public int hashCode() {
         return Objects.hash(moveType, from, to);
     }
+
+    @Override
+    public String toString() {
+        return "Move{" +
+                "moveType=" + moveType +
+                ", from=" + from +
+                ", to=" + to +
+                '}';
+    }
 }
