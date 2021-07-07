@@ -13,18 +13,13 @@ public class ConsolePlayer extends Player {
     }
 
     @Override
-    public Move getNextMove() {
+    public Move getNextMove() throws ChessError {
         System.out.println("Выберите ход:");
         List<Move> moves;
-        try {
-            moves = new ArrayList<>(ms.getAllCorrectMoves(color));
-            int i = 1;
-            for (Move move : moves) {
-                System.out.println(i + " - " + move);
-            }
-        } catch (ChessError e) {
-            e.printStackTrace();
-            return null;
+        moves = new ArrayList<>(ms.getAllCorrectMoves(color));
+        int i = 1;
+        for (Move move : moves) {
+            System.out.println(i + " - " + move);
         }
         Scanner in = new Scanner(System.in);
         int numMove = in.nextInt();
