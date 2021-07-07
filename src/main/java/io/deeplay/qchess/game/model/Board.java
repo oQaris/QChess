@@ -47,8 +47,8 @@ public final class Board {
 
                     setFigure(new Queen(this, true, Cell.parse("d1")));
                     setFigure(new Queen(this, false, Cell.parse("d8")));
-                    setFigure(new King(this, true, Cell.parse("e1")));
-                    setFigure(new King(this, false, Cell.parse("e8")));
+                    setFigure(new King(ms, this, true, Cell.parse("e1")));
+                    setFigure(new King(ms, this, false, Cell.parse("e8")));
 
                     setFigure(new Pawn(ms, this, true, Cell.parse("a2")));
                     setFigure(new Pawn(ms, this, true, Cell.parse("b2")));

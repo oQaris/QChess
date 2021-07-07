@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.figures;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
@@ -114,7 +115,7 @@ public class FigureTest {
         var queen = new Queen(board, true, Cell.parse("c6"));
         board.setFigure(queen);
         board.setFigure(new Queen(board, false, Cell.parse("d7")));
-        board.setFigure(new King(board, false, Cell.parse("e8")));
+        board.setFigure(new King(ms, board, false, Cell.parse("e8")));
         board.setFigure(new Pawn(ms, board, true, Cell.parse("c7")));
         board.setFigure(new Pawn(ms, board, true, Cell.parse("c5")));
         board.setFigure(new Pawn(ms, board, true, Cell.parse("b6")));
@@ -125,13 +126,177 @@ public class FigureTest {
     }
 
     @Test
-    public void testKing() throws ChessException {
+    public void testKing() throws ChessException, ChessError {
         //--- Король ---//
-        var king = new King(board, false, Cell.parse("e1"));
-        board.setFigure(king);
+        var king1 = new King(ms, board, true, Cell.parse("e1"));
+        var king2 = new King(ms, board, false, Cell.parse("e8"));
+        board.setFigure(king1);
+        board.setFigure(king2);
+
         Assert.assertEquals(
-                toCellsSet(/*"B1", */"D1", "D2", "E2", "F2", "F1" /*"G1"*/),
-                extractCellTo(king.getAllMoves()));
+                toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                extractCellTo(king2.getAllMoves()));
+    }
+
+    @Test
+    public void testKingCastling_1() throws ChessException, ChessError {
+        //--- Король ---//
+        var king1 = new King(ms, board, true, Cell.parse("e1"));
+        var king2 = new King(ms, board, false, Cell.parse("e8"));
+        var rookW1 = new Rook(board, true, Cell.parse("h1"));
+        var rookW2 = new Rook(board, true, Cell.parse("a1"));
+        var rookB1 = new Rook(board, false, Cell.parse("h8"));
+        var rookB2 = new Rook(board, false, Cell.parse("a8"));
+        board.setFigure(king1);
+        board.setFigure(king2);
+        board.setFigure(rookW1);
+        board.setFigure(rookW2);
+        board.setFigure(rookB1);
+        board.setFigure(rookB2);
+
+        Assert.assertEquals(
+                toCellsSet("C1", "D1", "D2", "E2", "F2", "F1", "G1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("C8", "D8", "D7", "E7", "F7", "F8", "G8"),
+                extractCellTo(king2.getAllMoves()));
+
+        rookW1.setWasMoved();
+        rookW2.setWasMoved();
+        rookB1.setWasMoved();
+        rookB2.setWasMoved();
+
+        Assert.assertEquals(
+                toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                extractCellTo(king2.getAllMoves()));
+    }
+
+    @Test
+    public void testKingCastling_2() throws ChessException, ChessError {
+        //--- Король ---//
+        var king1 = new King(ms, board, true, Cell.parse("e1"));
+        var king2 = new King(ms, board, false, Cell.parse("e8"));
+        var rookW1 = new Rook(board, true, Cell.parse("h1"));
+        var rookW2 = new Rook(board, true, Cell.parse("a1"));
+        var rookB1 = new Rook(board, false, Cell.parse("h8"));
+        var rookB2 = new Rook(board, false, Cell.parse("a8"));
+        board.setFigure(king1);
+        board.setFigure(king2);
+        board.setFigure(rookW1);
+        board.setFigure(rookW2);
+        board.setFigure(rookB1);
+        board.setFigure(rookB2);
+
+        king1.setWasMoved();
+        king2.setWasMoved();
+
+        Assert.assertEquals(
+                toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                extractCellTo(king2.getAllMoves()));
+    }
+
+    @Test
+    public void testKingCastling_3() throws ChessException, ChessError {
+        //--- Король ---//
+        var king1 = new King(ms, board, true, Cell.parse("e1"));
+        var king2 = new King(ms, board, false, Cell.parse("e8"));
+        var rookW1 = new Rook(board, true, Cell.parse("h1"));
+        var rookW2 = new Rook(board, true, Cell.parse("a1"));
+        var rookB1 = new Rook(board, false, Cell.parse("h8"));
+        var rookB2 = new Rook(board, false, Cell.parse("a8"));
+        board.setFigure(king1);
+        board.setFigure(king2);
+        board.setFigure(rookW1);
+        board.setFigure(rookW2);
+        board.setFigure(rookB1);
+        board.setFigure(rookB2);
+
+        var queenB = new Queen(board, false, Cell.parse("e4"));
+        var queenW = new Queen(board, true, Cell.parse("e5"));
+        board.setFigure(queenB);
+        board.setFigure(queenW);
+
+        Assert.assertEquals(
+                toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                extractCellTo(king2.getAllMoves()));
+    }
+
+    @Test
+    public void testKingCastling_4() throws ChessException, ChessError {
+        //--- Король ---//
+        var king1 = new King(ms, board, true, Cell.parse("e1"));
+        var king2 = new King(ms, board, false, Cell.parse("e8"));
+        var rookW1 = new Rook(board, true, Cell.parse("h1"));
+        var rookW2 = new Rook(board, true, Cell.parse("a1"));
+        var rookB1 = new Rook(board, false, Cell.parse("h8"));
+        var rookB2 = new Rook(board, false, Cell.parse("a8"));
+        board.setFigure(king1);
+        board.setFigure(king2);
+        board.setFigure(rookW1);
+        board.setFigure(rookW2);
+        board.setFigure(rookB1);
+        board.setFigure(rookB2);
+
+        var queenB1 = new Queen(board, false, Cell.parse("f4"));
+        var queenB2 = new Queen(board, false, Cell.parse("d4"));
+        var queenW1 = new Queen(board, true, Cell.parse("f5"));
+        var queenW2 = new Queen(board, true, Cell.parse("d5"));
+        board.setFigure(queenB1);
+        board.setFigure(queenB2);
+        board.setFigure(queenW1);
+        board.setFigure(queenW2);
+
+        Assert.assertEquals(
+                toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                extractCellTo(king2.getAllMoves()));
+    }
+
+    @Test
+    public void testKingCastling_5() throws ChessException, ChessError {
+        //--- Король ---//
+        var king1 = new King(ms, board, true, Cell.parse("e1"));
+        var king2 = new King(ms, board, false, Cell.parse("e8"));
+        var rookW1 = new Rook(board, true, Cell.parse("h1"));
+        var rookW2 = new Rook(board, true, Cell.parse("a1"));
+        var rookB1 = new Rook(board, false, Cell.parse("h8"));
+        var rookB2 = new Rook(board, false, Cell.parse("a8"));
+        board.setFigure(king1);
+        board.setFigure(king2);
+        board.setFigure(rookW1);
+        board.setFigure(rookW2);
+        board.setFigure(rookB1);
+        board.setFigure(rookB2);
+
+        var queenB1 = new Queen(board, false, Cell.parse("g4"));
+        var queenB2 = new Queen(board, false, Cell.parse("c4"));
+        var queenW1 = new Queen(board, true, Cell.parse("g5"));
+        var queenW2 = new Queen(board, true, Cell.parse("c5"));
+        board.setFigure(queenB1);
+        board.setFigure(queenB2);
+        board.setFigure(queenW1);
+        board.setFigure(queenW2);
+
+        Assert.assertEquals(
+                toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                extractCellTo(king2.getAllMoves()));
     }
 
     @Test
@@ -189,8 +354,6 @@ public class FigureTest {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
         var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
-        // todo ?
-        //pawn.addMove(1);
         var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
         var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
         var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
@@ -212,8 +375,6 @@ public class FigureTest {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
         var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
-        // todo ?
-        //pawn.addMove(1);
         var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
         var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
         var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
@@ -229,7 +390,7 @@ public class FigureTest {
     }
 
     @Test
-    public void testPawnEnPassant() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testPawnEnPassant() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, ChessError {
         Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(ms, board, true, white1.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
@@ -237,8 +398,6 @@ public class FigureTest {
         field.set(ms, white1);
 
         Figure figureB1 = new Pawn(ms, board, false, Cell.parse("b4"));
-        // todo ?
-        //figureB1.addMove(1);
         Figure figureW2 = new Pawn(ms, board, true, Cell.parse("a4"));
 
         board.setFigure(figureW1);

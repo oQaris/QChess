@@ -3,6 +3,7 @@ package io.deeplay.qchess.game.model;
 import java.util.Objects;
 
 public class Cell {
+
     private int col, row;
 
     public Cell(int col, int row) {
@@ -39,7 +40,10 @@ public class Cell {
         this.row = row;
     }
 
-    public Cell add(Cell shiftCell) {
+    /**
+     * @return создает новую клетку, суммируя с текущей
+     */
+    public Cell createAdd(Cell shiftCell) {
         return new Cell(col + shiftCell.col, row + shiftCell.row);
     }
 

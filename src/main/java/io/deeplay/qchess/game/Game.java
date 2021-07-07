@@ -33,14 +33,9 @@ public class Game {
 
     public void run() throws ChessError {
         boolean notDraw = true;
-        while (!moveSystem.isCheckmate(currentPlayerToMove.getColor()) && notDraw) {
+        while (!moveSystem.isStalemate(currentPlayerToMove.getColor()) && notDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
-            try {
-                logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
-                logger.info(board.toString());
-            } catch (ChessException ignored) {
-            }
 
             if (moveSystem.isCorrectMove(move)) {
                 notDraw = tryMove(move);
@@ -54,6 +49,8 @@ public class Game {
 
     private boolean tryMove(Move move) throws ChessError {
         try {
+            logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
+            logger.info(board.toString());
             return moveSystem.move(move);
         } catch (ChessException e) {
             logger.error("Проверенный ход выдал ошибку при перемещении фигуры: {}", e.getMessage());

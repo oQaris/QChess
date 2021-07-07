@@ -6,13 +6,12 @@ import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class BoardTest {
 
@@ -27,7 +26,7 @@ public class BoardTest {
 
     @Test
     public void testFindKingCell() throws ChessException, ChessError {
-        Figure whiteKing = new King(board, true, Cell.parse("c1"));
+        Figure whiteKing = new King(ms, board, true, Cell.parse("c1"));
         Figure whitePawn = new Pawn(ms, board, true, Cell.parse("a1"));
         Figure blackPawn = new Pawn(ms, board, false, Cell.parse("e7"));
         board.setFigure(whiteKing);

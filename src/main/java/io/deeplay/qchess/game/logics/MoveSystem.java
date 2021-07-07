@@ -49,6 +49,11 @@ public class MoveSystem {
             board.setFigure(move.getTurnInto());
         }
 
+        // рокировка
+        if (move.getMoveType().equals(MoveType.CASTLING)) {
+            // TODO
+        }
+
         // ход
         Figure removedFigure = board.moveFigure(move);
         prevMove = move;
@@ -92,9 +97,17 @@ public class MoveSystem {
 
     /**
      * @param color true - белые, false - черные
-     * @return true, если установленному цвету поставили мат/пат (нет доступных ходов)
+     * @return true, если установленному цвету поставили пат (нет доступных ходов)
      */
     public boolean isCheckmate(boolean color) throws ChessError {
+        return isStalemate(color) && isCheck(color);
+    }
+
+    /**
+     * @param color true - белые, false - черные
+     * @return true, если установленному цвету поставили пат (нет доступных ходов)
+     */
+    public boolean isStalemate(boolean color) throws ChessError {
         return getAllCorrectMoves(color).isEmpty();
     }
 
@@ -124,7 +137,7 @@ public class MoveSystem {
     /**
      * @return true если ход лежит в доступных
      */
-    private boolean inCorrectMoves(Move move) {
+    private boolean inCorrectMoves(Move move) throws ChessError {
         try {
             Figure figure = board.getFigure(move.getFrom());
             Set<Move> allMoves = figure.getAllMoves();
@@ -173,10 +186,17 @@ public class MoveSystem {
      * @return true если игроку с указанным цветом ставят шах
      */
     public boolean isCheck(boolean color) throws ChessError {
-        Cell kingCell = board.findKingCell(color);
-        for (Figure f : board.getFigures(!color)) {
+        return isAttackedCell(board.findKingCell(color), !color);
+    }
+
+    /**
+     * @param color true - белый, false - черный
+     * @return true, если клетка cell атакуется цветом color
+     */
+    public boolean isAttackedCell(Cell cell, boolean color) throws ChessError {
+        for (Figure f : board.getFigures(color)) {
             for (Move m : f.getAllMoves()) {
-                if (m.getTo().equals(kingCell)) {
+                if (m.getTo().equals(cell)) {
                     return true;
                 }
             }

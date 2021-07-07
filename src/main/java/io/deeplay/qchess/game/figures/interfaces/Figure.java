@@ -1,14 +1,14 @@
 package io.deeplay.qchess.game.figures.interfaces;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 public abstract class Figure {
 
@@ -38,8 +38,6 @@ public abstract class Figure {
     protected final boolean white;
     protected final String shortName;
     protected Cell pos;
-    // жаль удалять, вдруг понадобится...
-    /*protected int countMoves = 0;*/
 
     public Figure(Board board, boolean white, Cell pos, String shortName) {
         this.board = board;
@@ -48,18 +46,14 @@ public abstract class Figure {
         this.shortName = shortName;
     }
 
-    /*public void addMove(int count) {
-        countMoves += count;
-    }*/
-
     public String getShortName() {
         return shortName;
     }
 
     /**
-     * @return все варианты для перемещения фигуры, не выходящие за границы доски, учитывая уже занятые клетки
+     * @return все возможные ходы фигуры, не учитывая шаха
      */
-    public abstract Set<Move> getAllMoves();
+    public abstract Set<Move> getAllMoves() throws ChessError;
 
     public Board getBoard() {
         return board;
@@ -77,7 +71,6 @@ public abstract class Figure {
         this.pos = pos;
     }
 
-
     protected Set<Move> rayTrace(List<Cell> directions) {
         log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, pos);
         if (directions == null) {
@@ -85,10 +78,10 @@ public abstract class Figure {
         }
         var result = new HashSet<Move>();
         for (Cell shift : directions) {
-            Cell cord = pos.add(shift);
+            Cell cord = pos.createAdd(shift);
             while (board.isEmptyCell(cord)) {
                 result.add(new Move(MoveType.SIMPLE_STEP, pos, cord));
-                cord = cord.add(shift);
+                cord = cord.createAdd(shift);
             }
             if (isEnemyFigureOn(cord)) {
                 result.add(new Move(MoveType.ATTACK, pos, cord));
@@ -104,7 +97,7 @@ public abstract class Figure {
         }
         var result = new HashSet<Move>();
         for (Cell shift : moves) {
-            Cell cord = pos.add(shift);
+            Cell cord = pos.createAdd(shift);
             if (board.isEmptyCell(cord)) {
                 result.add(new Move(MoveType.SIMPLE_STEP, pos, cord));
             } else if (isEnemyFigureOn(cord)) {

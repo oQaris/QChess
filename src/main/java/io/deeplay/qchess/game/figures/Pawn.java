@@ -30,19 +30,19 @@ public class Pawn extends Figure {
             shift = new Cell(0, 1);
         }
 
-        var move = pos.add(shift);
+        var move = pos.createAdd(shift);
         if (board.isEmptyCell(move)) {
             result.add(new Move(move.getRow() == (white ? 0 : Board.BOARD_SIZE)
                     ? MoveType.TURN_INTO
                     : MoveType.SIMPLE_STEP, pos, move));
         }
-        var moveLong = move.add(shift);
+        var moveLong = move.createAdd(shift);
         if (pos.getRow() == (white ? Board.BOARD_SIZE - 2 : 1) && board.isEmptyCell(moveLong)) {
             result.add(new Move(MoveType.LONG_MOVE, pos, moveLong));
         }
 
-        var cellLeft = move.add(new Cell(-1, 0));
-        var cellRight = move.add(new Cell(1, 0));
+        var cellLeft = move.createAdd(new Cell(-1, 0));
+        var cellRight = move.createAdd(new Cell(1, 0));
         var isEnPassant = ms.isPawnEnPassant(pos, cellLeft) || ms.isPawnEnPassant(pos, cellRight);
         var specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
         if (isEnemyFigureOn(cellLeft) || ms.isPawnEnPassant(pos, cellLeft)) {
