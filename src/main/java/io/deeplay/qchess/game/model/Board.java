@@ -5,11 +5,10 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Board {
 
@@ -130,7 +129,6 @@ public final class Board {
         Figure old = getFigure(move.getTo());
         figure.setCurrentPosition(move.getTo());
         setFigure(figure);
-        figure.addMove(1);
         removeFigure(move.getFrom());
         return old;
     }
