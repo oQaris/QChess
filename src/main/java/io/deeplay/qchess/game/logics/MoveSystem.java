@@ -9,6 +9,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -86,12 +87,12 @@ public class MoveSystem {
      * @return все возможные ходы
      */
     public Set<Move> getAllCorrectMoves(boolean color) throws ChessError {
-        Set<Move> set = board.getFigures(color).stream()
-                .flatMap(f -> f.getAllMoves().stream())
-                .collect(Collectors.toSet());
-        for (Move move : set) {
-            if (!isCorrectVirtualMove(move)) {
-                set.remove(move);
+        Set<Move> set = new HashSet<>();
+        for (Figure f : board.getFigures(color)) {
+            for (Move m : f.getAllMoves()) {
+                if (isCorrectVirtualMove(m)) {
+                    set.add(m);
+                }
             }
         }
         return set;

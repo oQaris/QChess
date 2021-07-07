@@ -15,14 +15,14 @@ public class ConsolePlayer extends Player {
     @Override
     public Move getNextMove() throws ChessError {
         System.out.println("Выберите ход:");
-        List<Move> moves;
-        moves = new ArrayList<>(ms.getAllCorrectMoves(color));
+        List<Move> allMoves = new ArrayList<>(ms.getAllCorrectMoves(color));
         int i = 1;
-        for (Move move : moves) {
+        for (Move move : allMoves) {
             System.out.println(i + " - " + move);
+            ++i;
         }
         Scanner in = new Scanner(System.in);
         int numMove = in.nextInt();
-        return moves.get(numMove);
+        return allMoves.get(numMove - 1);
     }
 }
