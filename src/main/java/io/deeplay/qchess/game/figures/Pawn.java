@@ -44,7 +44,7 @@ public class Pawn extends Figure {
         var cellLeft = move.add(new Cell(-1, 0));
         var cellRight = move.add(new Cell(1, 0));
         var isEnPassant = ms.isPawnEnPassant(pos, cellLeft) || ms.isPawnEnPassant(pos, cellRight);
-        var specOrAttackMoveType = isEnPassant ? MoveType.SPECIAL_MOVE : MoveType.ATTACK;
+        var specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
         if (isEnemyFigureOn(cellLeft) || ms.isPawnEnPassant(pos, cellLeft)) {
             result.add(new Move(specOrAttackMoveType, pos, cellLeft));
         }
