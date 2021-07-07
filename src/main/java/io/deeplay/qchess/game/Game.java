@@ -38,6 +38,7 @@ public class Game {
             Move move = currentPlayerToMove.getNextMove();
             try {
                 logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
+                logger.info(board.toString());
             } catch (ChessException ignored) {
             }
 
@@ -51,7 +52,7 @@ public class Game {
         // TODO: конец игры
     }
 
-    private boolean tryMove(Move move) {
+    private boolean tryMove(Move move) throws ChessError {
         try {
             return moveSystem.move(move);
         } catch (ChessException e) {

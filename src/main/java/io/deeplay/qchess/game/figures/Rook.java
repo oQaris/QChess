@@ -10,7 +10,7 @@ import java.util.Set;
 public class Rook extends Figure {
 
     public Rook(Board board, boolean white, Cell pos) {
-        super(board, white, pos);
+        super(board, white, pos, white ? "♖" : "♜");
     }
 
     @Override

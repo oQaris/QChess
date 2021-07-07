@@ -5,10 +5,11 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import java.util.ArrayList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Board {
 
@@ -185,6 +186,22 @@ public final class Board {
      */
     public boolean isCorrectCell(int col, int row) {
         return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
+    }
+
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        sb.append(" - ".repeat(Board.BOARD_SIZE)).append("\n");
+        for (Figure[] line : cells) {
+            sb.append('|');
+            for (Figure figure : line) {
+                if (figure == null) sb.append("  ");
+                else sb.append(figure.getShortName());
+                sb.append('|');
+            }
+            sb.append("\n").append(" - ".repeat(Board.BOARD_SIZE)).append("\n");
+        }
+        return sb.toString();
     }
 
     public static enum BoardFilling {

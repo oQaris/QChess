@@ -36,19 +36,25 @@ public abstract class Figure {
 
     protected final Board board;
     protected final boolean white;
+    protected final String shortName;
     protected Cell pos;
     // жаль удалять, вдруг понадобится...
     /*protected int countMoves = 0;*/
 
-    public Figure(Board board, boolean white, Cell pos) {
+    public Figure(Board board, boolean white, Cell pos, String shortName) {
         this.board = board;
         this.white = white;
         this.pos = pos;
+        this.shortName = shortName;
     }
 
     /*public void addMove(int count) {
         countMoves += count;
     }*/
+
+    public String getShortName() {
+        return shortName;
+    }
 
     /**
      * @return все варианты для перемещения фигуры, не выходящие за границы доски, учитывая уже занятые клетки
@@ -70,6 +76,7 @@ public abstract class Figure {
     public void setCurrentPosition(Cell pos) {
         this.pos = pos;
     }
+
 
     protected Set<Move> rayTrace(List<Cell> directions) {
         log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, pos);

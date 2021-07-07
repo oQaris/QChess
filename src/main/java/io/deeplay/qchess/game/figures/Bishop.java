@@ -10,7 +10,7 @@ import java.util.Set;
 public class Bishop extends Figure {
 
     public Bishop(Board board, boolean white, Cell pos) {
-        super(board, white, pos);
+        super(board, white, pos, white ? "♗" : "♝");
     }
 
     @Override
