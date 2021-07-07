@@ -1,18 +1,15 @@
 package io.deeplay.qchess.game.player;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.logics.MoveSystem;
-import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class ConsolePlayer extends Player {
 
-    public ConsolePlayer(MoveSystem ms, Board board, boolean color) {
-        super(ms, board, color);
+    public ConsolePlayer() {
+        super();
     }
 
     @Override

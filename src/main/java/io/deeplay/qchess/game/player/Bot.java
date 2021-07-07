@@ -26,8 +26,8 @@ public class Bot extends Player {
         return res;
     }
 
-    public Bot(MoveSystem ms, Board board, boolean isWhite) {
-        super(ms, board, isWhite);
+    public Bot() {
+        super();
     }
 
     @Override

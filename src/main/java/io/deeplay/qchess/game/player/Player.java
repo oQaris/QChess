@@ -7,14 +7,41 @@ import io.deeplay.qchess.game.model.Move;
 
 public abstract class Player {
 
-    protected final MoveSystem ms;
-    protected final Board board;
-    protected final boolean color;
+    protected MoveSystem ms;
+    protected Board board;
+    protected boolean color;
+
+    public Player() {
+    }
 
     public Player(MoveSystem ms, Board board, boolean color) {
         this.ms = ms;
         this.board = board;
         this.color = color;
+    }
+
+    public MoveSystem getMoveSystem() {
+        return ms;
+    }
+
+    public void setMoveSystem(MoveSystem ms) {
+        this.ms = ms;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public boolean isWhite() {
+        return color;
+    }
+
+    public void setColor(boolean isWhite) {
+        this.color = isWhite;
     }
 
     /**
