@@ -24,6 +24,43 @@ public class MoveSystemPawnEnPassantTest {
         ms = new MoveSystem(board);
     }
 
+    private Move move1;
+    private Move move2;
+    private Move move3;
+    private Move move4;
+
+    private void setBlackPawns() throws ChessException {
+        move1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
+        move2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
+        move3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
+        move4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
+        Figure figureB1 = new Pawn(ms, board, false, move1.getFrom());
+        Figure figureB2 = new Pawn(ms, board, false, move2.getFrom());
+        Figure figureB3 = new Pawn(ms, board, false, move3.getFrom());
+        Figure figureB4 = new Pawn(ms, board, false, move4.getFrom());
+
+        board.setFigure(figureB1);
+        board.setFigure(figureB2);
+        board.setFigure(figureB3);
+        board.setFigure(figureB4);
+    }
+
+    private void setWhitePawns() throws ChessException {
+        move1 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c6"));
+        move2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
+        move3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
+        move4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
+        Figure figureW1 = new Pawn(ms, board, true, move1.getFrom());
+        Figure figureW2 = new Pawn(ms, board, true, move2.getFrom());
+        Figure figureW3 = new Pawn(ms, board, true, move3.getFrom());
+        Figure figureW4 = new Pawn(ms, board, true, move4.getFrom());
+
+        board.setFigure(figureW1);
+        board.setFigure(figureW2);
+        board.setFigure(figureW3);
+        board.setFigure(figureW4);
+    }
+
     @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_1() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
@@ -32,25 +69,13 @@ public class MoveSystemPawnEnPassantTest {
         field.setAccessible(true);
         field.set(ms, white1);
 
-        Move black1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
-        Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
-        Move black3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
-        Move black4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(ms, board, false, black1.getFrom());
-        Figure figureB2 = new Pawn(ms, board, false, black2.getFrom());
-        Figure figureB3 = new Pawn(ms, board, false, black3.getFrom());
-        Figure figureB4 = new Pawn(ms, board, false, black4.getFrom());
-
         board.setFigure(figureW1);
-        board.setFigure(figureB1);
-        board.setFigure(figureB2);
-        board.setFigure(figureB3);
-        board.setFigure(figureB4);
+        setBlackPawns();
 
-        Assert.assertTrue(ms.isPawnEnPassant(black1.getFrom(), black1.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black2.getFrom(), black2.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black3.getFrom(), black3.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black4.getFrom(), black4.getTo()));
+        Assert.assertTrue(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -61,25 +86,13 @@ public class MoveSystemPawnEnPassantTest {
         field.setAccessible(true);
         field.set(ms, white2);
 
-        Move black1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
-        Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
-        Move black3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
-        Move black4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(ms, board, false, black1.getFrom());
-        Figure figureB2 = new Pawn(ms, board, false, black2.getFrom());
-        Figure figureB3 = new Pawn(ms, board, false, black3.getFrom());
-        Figure figureB4 = new Pawn(ms, board, false, black4.getFrom());
-
         board.setFigure(figureW2);
-        board.setFigure(figureB1);
-        board.setFigure(figureB2);
-        board.setFigure(figureB3);
-        board.setFigure(figureB4);
+        setBlackPawns();
 
-        Assert.assertFalse(ms.isPawnEnPassant(black1.getFrom(), black1.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black2.getFrom(), black2.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black3.getFrom(), black3.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black4.getFrom(), black4.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -90,25 +103,13 @@ public class MoveSystemPawnEnPassantTest {
         field.setAccessible(true);
         field.set(ms, white3);
 
-        Move black1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
-        Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
-        Move black3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
-        Move black4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(ms, board, false, black1.getFrom());
-        Figure figureB2 = new Pawn(ms, board, false, black2.getFrom());
-        Figure figureB3 = new Pawn(ms, board, false, black3.getFrom());
-        Figure figureB4 = new Pawn(ms, board, false, black4.getFrom());
-
         board.setFigure(figureW3);
-        board.setFigure(figureB1);
-        board.setFigure(figureB2);
-        board.setFigure(figureB3);
-        board.setFigure(figureB4);
+        setBlackPawns();
 
-        Assert.assertFalse(ms.isPawnEnPassant(black1.getFrom(), black1.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black2.getFrom(), black2.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black3.getFrom(), black3.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black4.getFrom(), black4.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -119,25 +120,13 @@ public class MoveSystemPawnEnPassantTest {
         field.setAccessible(true);
         field.set(ms, white1);
 
-        Move black1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
-        Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
-        Move black3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
-        Move black4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(ms, board, false, black1.getFrom());
-        Figure figureB2 = new Pawn(ms, board, false, black2.getFrom());
-        Figure figureB3 = new Pawn(ms, board, false, black3.getFrom());
-        Figure figureB4 = new Pawn(ms, board, false, black4.getFrom());
-
         board.setFigure(figureW1);
-        board.setFigure(figureB1);
-        board.setFigure(figureB2);
-        board.setFigure(figureB3);
-        board.setFigure(figureB4);
+        setBlackPawns();
 
-        Assert.assertFalse(ms.isPawnEnPassant(black1.getFrom(), black1.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black2.getFrom(), black2.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black3.getFrom(), black3.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(black4.getFrom(), black4.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -177,25 +166,13 @@ public class MoveSystemPawnEnPassantTest {
         field.setAccessible(true);
         field.set(ms, black1);
 
-        Move white1 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c6"));
-        Move white2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
-        Move white3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
-        Move white4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
-        Figure figureW1 = new Pawn(ms, board, true, white1.getFrom());
-        Figure figureW2 = new Pawn(ms, board, true, white2.getFrom());
-        Figure figureW3 = new Pawn(ms, board, true, white3.getFrom());
-        Figure figureW4 = new Pawn(ms, board, true, white4.getFrom());
-
         board.setFigure(figureB1);
-        board.setFigure(figureW1);
-        board.setFigure(figureW2);
-        board.setFigure(figureW3);
-        board.setFigure(figureW4);
+        setWhitePawns();
 
-        Assert.assertTrue(ms.isPawnEnPassant(white1.getFrom(), white1.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white2.getFrom(), white2.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white3.getFrom(), white3.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white4.getFrom(), white4.getTo()));
+        Assert.assertTrue(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -206,25 +183,13 @@ public class MoveSystemPawnEnPassantTest {
         field.setAccessible(true);
         field.set(ms, black2);
 
-        Move white1 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c6"));
-        Move white2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
-        Move white3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
-        Move white4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
-        Figure figureW1 = new Pawn(ms, board, true, white1.getFrom());
-        Figure figureW2 = new Pawn(ms, board, true, white2.getFrom());
-        Figure figureW3 = new Pawn(ms, board, true, white3.getFrom());
-        Figure figureW4 = new Pawn(ms, board, true, white4.getFrom());
-
         board.setFigure(figureB2);
-        board.setFigure(figureW1);
-        board.setFigure(figureW2);
-        board.setFigure(figureW3);
-        board.setFigure(figureW4);
+        setWhitePawns();
 
-        Assert.assertFalse(ms.isPawnEnPassant(white1.getFrom(), white1.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white2.getFrom(), white2.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white3.getFrom(), white3.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white4.getFrom(), white4.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -235,24 +200,12 @@ public class MoveSystemPawnEnPassantTest {
         field.setAccessible(true);
         field.set(ms, black3);
 
-        Move white1 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c6"));
-        Move white2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
-        Move white3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
-        Move white4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
-        Figure figureW1 = new Pawn(ms, board, true, white1.getFrom());
-        Figure figureW2 = new Pawn(ms, board, true, white2.getFrom());
-        Figure figureW3 = new Pawn(ms, board, true, white3.getFrom());
-        Figure figureW4 = new Pawn(ms, board, true, white4.getFrom());
-
         board.setFigure(figureB3);
-        board.setFigure(figureW1);
-        board.setFigure(figureW2);
-        board.setFigure(figureW3);
-        board.setFigure(figureW4);
+        setWhitePawns();
 
-        Assert.assertFalse(ms.isPawnEnPassant(white1.getFrom(), white1.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white2.getFrom(), white2.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white3.getFrom(), white3.getTo()));
-        Assert.assertFalse(ms.isPawnEnPassant(white4.getFrom(), white4.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
     }
 }
