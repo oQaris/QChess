@@ -7,14 +7,13 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class FigureTest {
 
@@ -106,6 +105,22 @@ public class FigureTest {
         Assert.assertEquals(
                 toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8", "B8", "B7", "B6", "B5",
                         "B4", "B2", "B1", "A3", "C3", "D3", "E3", "F3", "G3", "H3"),
+                extractCellTo(queen.getAllMoves()));
+    }
+
+    @Test
+    public void testQueen_jumpBlack() throws ChessException {
+        //--- Ферзь ---//
+        var queen = new Queen(board, true, Cell.parse("c6"));
+        board.setFigure(queen);
+        board.setFigure(new Queen(board, false, Cell.parse("d7")));
+        board.setFigure(new King(board, false, Cell.parse("e8")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("c7")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("c5")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("b6")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("d6")));
+        Assert.assertEquals(
+                toCellsSet("D7", "B7", "A8", "B5", "A4", "D5", "E4", "F3", "G2", "H1"),
                 extractCellTo(queen.getAllMoves()));
     }
 
