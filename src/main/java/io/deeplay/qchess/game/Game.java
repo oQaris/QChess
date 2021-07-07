@@ -11,6 +11,13 @@ import org.slf4j.LoggerFactory;
 
 public class Game {
 
+    private static final Logger logger = LoggerFactory.getLogger(Game.class);
+    private Board board;
+    private MoveSystem moveSystem;
+    private Player firstPlayer;
+    private Player secondPlayer;
+    private Player currentPlayerToMove;
+
     public Game(Board.BoardFilling boardType, Player firstPlayer, Player secondPlayer) throws ChessError {
         this.board = new Board();
         this.moveSystem = new MoveSystem(board);
@@ -24,18 +31,12 @@ public class Game {
         this.currentPlayerToMove = firstPlayer;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(Game.class);
-    private Board board;
-    private MoveSystem moveSystem;
-    private Player firstPlayer;
-    private Player secondPlayer;
-    private Player currentPlayerToMove;
-
     public void run() throws ChessError {
         // TODO: сделать условие выхода
         while (!moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
+            logger.info("{} сделал ход: {}", currentPlayerToMove, move);
 
             if (moveSystem.isCorrectMove(move)) {
                 tryMove(move);

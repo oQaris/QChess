@@ -12,5 +12,5 @@ public enum MoveType {
     // Для рокировки
     CASTLING,
     // Для последнего хода-превращения пешки
-    TURN_INTO;
+    TURN_INTO
 }

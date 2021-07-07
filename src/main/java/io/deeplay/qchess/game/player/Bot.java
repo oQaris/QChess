@@ -12,7 +12,11 @@ import java.util.Random;
 
 public class Bot extends Player {
 
-    private static Map<Class<?>, Integer> grades = preparedGrades();
+    private static final Map<Class<?>, Integer> grades = preparedGrades();
+
+    public Bot() {
+        super();
+    }
 
     private static Map<Class<?>, Integer> preparedGrades() {
         var res = new HashMap<Class<?>, Integer>();
@@ -23,10 +27,6 @@ public class Bot extends Player {
         res.put(Queen.class, 9);
         res.put(King.class, 100);
         return res;
-    }
-
-    public Bot() {
-        super();
     }
 
     @Override

@@ -43,4 +43,9 @@ public abstract class Player {
     public boolean getColor() {
         return color;
     }
+
+    @Override
+    public String toString() {
+        return (color ? "White" : "Black") + " " + getClass().getSimpleName();
+    }
 }
