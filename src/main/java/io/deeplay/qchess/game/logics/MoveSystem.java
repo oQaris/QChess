@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.logics;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
@@ -10,12 +11,16 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Хранит различные данные об игре для контроля специфичных ситуаций
  */
 public class MoveSystem {
 
+    private static final Logger logger = LoggerFactory.getLogger(MoveSystem.class);
     private Board board;
     private Move prevMove;
 
@@ -65,32 +70,30 @@ public class MoveSystem {
     }
 
     /**
-     * @param white цвет игрока
-     * @return true если игрок с указанным цветом ставит шах
+     * @return true если ход корректный
      */
-    public boolean isCheck(boolean white) {
-        List<Figure> list = board.getFigures(white);
-        Cell kingCell = board.findKingCell(!white);
-        for (Figure f : list) {
-            if (f.getAllMovePositions().contains(kingCell)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean isCorrectMove(Move move) throws ChessError {
+        return inCorrectMoves(move) && isCorrectVirtualMove(move);
     }
 
     /**
-     * @throws ChessException если срубили короля
-     * @return true если ход корректный
+     * @return true если ход лежит в доступных
      */
-    public boolean isCorrectMove(Move move) throws ChessException {
-        if (!inCorrectMoves(move)) {
+    private boolean inCorrectMoves(Move move) {
+        try {
+            Figure figure = board.getFigure(move.getFrom());
+            Set<Cell> allMoves = figure.getAllMovePositions();
+            return allMoves.contains(move.getTo());
+        } catch (ChessException e) {
             return false;
         }
+    }
 
+    private boolean isCorrectVirtualMove(Move move) throws ChessError {
         Figure virtualKilled = tryVirtualMove(move);
         if (virtualKilled != null && virtualKilled.getClass() == King.class) {
-            throw new ChessException("Срубили короля!");
+            logger.error("Возникла невозможная ситуация: срубили короля");
+            throw new ChessError("Срубили короля");
         }
         boolean isCheck;
         try {
@@ -104,6 +107,9 @@ public class MoveSystem {
         return !isCheck;
     }
 
+    /**
+     * @return возвращает удаленную фигуру
+     */
     private Figure tryVirtualMove(Move move) {
         try {
             return board.moveFigure(move);
@@ -112,13 +118,38 @@ public class MoveSystem {
         }
     }
 
-    private boolean inCorrectMoves(Move move) {
-        try {
-            Figure figure = board.getFigure(move.getFrom());
-            Set<Cell> allMoves = figure.getAllMovePositions();
-            return allMoves.contains(move.getTo());
-        } catch (ChessException e) {
-            return false;
+    /**
+     * @param white цвет игрока
+     * @return true если игрок с указанным цветом ставит шах
+     */
+    public boolean isCheck(boolean white) throws ChessError {
+        List<Figure> list = board.getFigures(white);
+        Cell kingCell = board.findKingCell(!white);
+        for (Figure f : list) {
+            if (f.getAllMovePositions().contains(kingCell)) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    /**
+     * @param color true - белые, false - черные
+     * @return true, если установленному цвету поставили мат/пат (нет доступных ходов)
+     */
+    public boolean isCheckmate(boolean color) {
+        return getAllCorrectMoves(color).isEmpty();
+    }
+
+    /**
+     * @param color true - белые, false - черные
+     * @return все возможные ходы
+     */
+    public Set<Move> getAllCorrectMoves(boolean color) {
+        // TODO: изменить getAllMovePositions на getAllMoves в Figure
+        return board.getFigures(color).stream()
+                .flatMap(f -> f.getAllMovePositions().stream())
+                .filter(move -> isCorrectVirtualMove(move))
+                .collect(Collectors.toSet());
     }
 }

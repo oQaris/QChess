@@ -1,20 +1,18 @@
 package io.deeplay.qchess.game.model;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class Board /*implements Iterable<Figure>*/ {
+public final class Board {
 
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
-    private MoveSystem ms;
     public final static int BOARD_SIZE = 8;
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
@@ -22,11 +20,16 @@ public final class Board /*implements Iterable<Figure>*/ {
         EMPTY, STANDARD;
     }
 
+    /**
+     * Создает пустую доску
+     */
     public Board() {
     }
 
-    public void initBoard(MoveSystem ms, BoardFilling bf) {
-        this.ms = ms;
+    /**
+     * Заполняет доску
+     */
+    public void initBoard(MoveSystem ms, BoardFilling bf) throws ChessError {
         switch (bf) {
             case EMPTY -> {
                 break;
@@ -70,6 +73,7 @@ public final class Board /*implements Iterable<Figure>*/ {
                     setFigure(new Pawn(ms, this, false, Cell.parse("h7")));
                 } catch (ChessException e) {
                     logger.error("Стандартное заполнение доски некорректное: {}", e.getMessage());
+                    throw new ChessError("Стандартное заполнение доски некорректное");
                 }
                 break;
             }
@@ -81,9 +85,10 @@ public final class Board /*implements Iterable<Figure>*/ {
 
     /**
      * @param white цвет фигур, true - белые, false - черные
-     * @return позиция короля определенного цвета или null, если короля нет
+     * @throws ChessError если король не был найден
+     * @return позиция короля определенного цвета
      */
-    public Cell findKingCell(boolean white) {
+    public Cell findKingCell(boolean white) throws ChessError {
         Cell kingCell = null;
         for (Figure[] f : cells) {
             for (Figure ff : f) {
@@ -92,6 +97,10 @@ public final class Board /*implements Iterable<Figure>*/ {
                     break;
                 }
             }
+        }
+        if (kingCell == null) {
+            logger.error("Возникла невозможная ситуация: король не найден");
+            throw new ChessError("Король не найден");
         }
         return kingCell;
     }
@@ -110,6 +119,20 @@ public final class Board /*implements Iterable<Figure>*/ {
             }
         }
         return list;
+    }
+
+    /**
+     * Перемещает фигуру с заменой старой, даже если ход некорректный.
+     * При срублении фигуры, возвращается эта фигура без изменения собственных координат.
+     *
+     * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
+     * @throws ChessException если ход выходит за пределы доски
+     */
+    public Figure moveFigure(Move move) throws ChessException {
+        Figure figure = getFigure(move.getFrom());
+        figure.setCurrentPosition(move.getTo());
+        setFigure(figure);
+        return removeFigure(move.getFrom());
     }
 
     /**
@@ -165,56 +188,4 @@ public final class Board /*implements Iterable<Figure>*/ {
     public boolean isCorrectCell(int col, int row) {
         return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
     }
-
-    /**
-     * Перемещает фигуру с заменой старой, даже если ход некорректный.
-     * При срублении фигуры, возвращается эта фигура без изменения собственных координат.
-     *
-     * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
-     * @throws ChessException если ход выходит за пределы доски
-     */
-    public Figure moveFigure(Move move) throws ChessException {
-        Figure figure = getFigure(move.getFrom());
-        figure.setCurrentPosition(move.getTo());
-        setFigure(figure);
-        return removeFigure(move.getFrom());
-    }
-
-    /**
-     * @param color true - белые, false - черные
-     * @return все возможные ходы
-     */
-    public Set<Move> getAllMoves(boolean color) {
-        // TODO: изменить getAllMovePositions на getAllMoves в Figure
-        return getFigures(color).stream()
-                .flatMap(f -> f.getAllMovePositions().stream())
-                .collect(Collectors.toSet());
-    }
-
-    // не, это отстой какой то, надо хранить множество фигур
-    /*@Override
-    public Iterator<Figure> iterator() {
-        return null;
-    }
-
-    private class FigIterator implements Iterator<Figure> {
-        private Cell curPos = new Cell(0, 0);
-
-        @Override
-        public boolean hasNext() {
-            if (curPos.getCol() == BOARD_SIZE)
-                return false;
-        }
-
-        @Override
-        public Figure next() {
-            try {
-                return getFigure(curPos);
-                curPos = curPos.add(new Cell(0, 1));
-                if (curPos.getCol() == BOARD_SIZE)
-            } catch (ChessException ignored) {
-            }
-            return null;
-        }
-    }*/
 }

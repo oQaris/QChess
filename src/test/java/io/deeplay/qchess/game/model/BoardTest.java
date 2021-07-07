@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.model;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
@@ -24,7 +25,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testFindKingCell() throws ChessException {
+    public void testFindKingCell() throws ChessException, ChessError {
         Figure whiteKing = new King(board, true, Cell.parse("c1"));
         Figure whitePawn = new Pawn(ms, board, true, Cell.parse("a1"));
         Figure blackPawn = new Pawn(ms, board, false, Cell.parse("e7"));
@@ -35,7 +36,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testSetGetFigures() throws ChessException {
+    public void testSetGetFigures() throws ChessException, ChessError {
         // нет фигур
         Assert.assertEquals(List.of(), board.getFigures(true));
         Assert.assertEquals(List.of(), board.getFigures(false));

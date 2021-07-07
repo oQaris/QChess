@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
@@ -10,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class Game {
 
-    public Game(Board.BoardFilling boardType, IPlayer firstPlayer, IPlayer secondPlayer) {
+    public Game(Board.BoardFilling boardType, IPlayer firstPlayer, IPlayer secondPlayer) throws ChessError {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.currentPlayerToMove = firstPlayer;
@@ -26,13 +27,13 @@ public class Game {
     private IPlayer secondPlayer;
     private IPlayer currentPlayerToMove;
 
-    public void start() {
+    public void run() throws ChessError {
         // TODO: сделать условие выхода
         while (true) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
 
-            if (tryIsCorrectMove(move)) {
+            if (moveSystem.isCorrectMove(move)) {
                 tryMove(move);
                 currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
@@ -41,20 +42,12 @@ public class Game {
         }
     }
 
-    private boolean tryIsCorrectMove(Move move) {
-        try {
-            return moveSystem.isCorrectMove(move);
-        } catch (ChessException e) {
-            logger.error("Возникла невозможная ситуация: {}", e.getMessage());
-            return false;
-        }
-    }
-
     private void tryMove(Move move) {
         try {
             moveSystem.move(move);
         } catch (ChessException e) {
             logger.error("Проверенный ход выдал ошибку при перемещении фигуры: {}", e.getMessage());
+            // TODO: выкинуть из комнаты
         }
     }
 }

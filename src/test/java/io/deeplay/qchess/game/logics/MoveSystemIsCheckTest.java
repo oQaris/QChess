@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.logics;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,8 +17,8 @@ public class MoveSystemIsCheckTest {
         ms = new MoveSystem(board);
     }
 
-    @Test
-    public void testIsCheck_zeroFigures() {
+    @Test(expected = ChessError.class)
+    public void testIsCheck_zeroFigures() throws ChessError {
         Assert.assertFalse(ms.isCheck(true));
         Assert.assertFalse(ms.isCheck(false));
     }
