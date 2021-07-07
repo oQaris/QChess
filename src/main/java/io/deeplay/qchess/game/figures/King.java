@@ -32,8 +32,7 @@ public class King extends Figure {
 
     @Override
     public Set<Move> getAllMoves() throws ChessError {
-        Set<Move> res = stepForEach(Stream.concat(xMove.stream(), plusMove.stream())
-                .collect(Collectors.toList()));
+        Set<Move> res = getSimpleMoves();
         // рокировка
         if (isCorrectCastling(true)) {
             res.add(new Move(MoveType.CASTLING, pos, pos.createAdd(new Cell(2, 0))));
@@ -42,6 +41,14 @@ public class King extends Figure {
             res.add(new Move(MoveType.CASTLING, pos, pos.createAdd(new Cell(-2, 0))));
         }
         return res;
+    }
+
+    /**
+     * @return ходы без рокировки
+     */
+    public Set<Move> getSimpleMoves() {
+        return stepForEach(Stream.concat(xMove.stream(), plusMove.stream())
+                .collect(Collectors.toList()));
     }
 
     /**

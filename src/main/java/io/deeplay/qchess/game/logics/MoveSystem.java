@@ -195,7 +195,7 @@ public class MoveSystem {
      */
     public boolean isAttackedCell(Cell cell, boolean color) throws ChessError {
         for (Figure f : board.getFigures(color)) {
-            for (Move m : f.getAllMoves()) {
+            for (Move m : f.getClass() == King.class ? ((King) f).getSimpleMoves() : f.getAllMoves()) {
                 if (m.getTo().equals(cell)) {
                     return true;
                 }
