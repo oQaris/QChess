@@ -46,6 +46,6 @@ public abstract class Player {
 
     @Override
     public String toString() {
-        return (color ? "White" : "Black") + " " + getClass().getName();
+        return (color ? "White" : "Black") + " " + getClass().getSimpleName();
     }
 }

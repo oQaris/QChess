@@ -71,7 +71,7 @@ public abstract class Figure {
     }
 
     protected Set<Move> rayTrace(List<Cell> directions) {
-        log.info("Запущен рэйтрейс фигуры {} из точки {}", this, pos);
+        log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, pos);
         if (directions == null) {
             throw new NullPointerException("Список ходов не может быть null");
         }
@@ -90,7 +90,7 @@ public abstract class Figure {
     }
 
     protected Set<Move> stepForEach(List<Cell> moves) {
-        log.info("Запущено нахождение ходов фигуры {} из точки {}", this, pos);
+        log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, pos);
         if (moves == null) {
             throw new NullPointerException("Список ходов не может быть null");
         }
