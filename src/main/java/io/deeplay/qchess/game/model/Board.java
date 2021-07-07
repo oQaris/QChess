@@ -5,14 +5,15 @@ import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class Board /*implements Iterable<Figure>*/ {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Figure.class);
+    private static final Logger logger = LoggerFactory.getLogger(Board.class);
     private MoveSystem ms;
     public final static int BOARD_SIZE = 8;
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
@@ -179,9 +180,15 @@ public final class Board /*implements Iterable<Figure>*/ {
         return removeFigure(move.getFrom());
     }
 
+    /**
+     * @param color true - белые, false - черные
+     * @return все возможные ходы
+     */
     public Set<Move> getAllMoves(boolean color) {
-        //todo надо сделать как то
-        return new HashSet<>();
+        // TODO: изменить getAllMovePositions на getAllMoves в Figure
+        return getFigures(color).stream()
+                .flatMap(f -> f.getAllMovePositions().stream())
+                .collect(Collectors.toSet());
     }
 
     // не, это отстой какой то, надо хранить множество фигур

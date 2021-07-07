@@ -1,16 +1,15 @@
 package io.deeplay.qchess.game.player;
 
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class Bot implements IPlayer {
+
     private final Board board;
     private final boolean color;
 
@@ -33,20 +32,22 @@ public class Bot implements IPlayer {
     }
 
     @Override
-    public Move getNextMove() throws ChessException {
+    public Move getNextMove() {
         var topMoves = new ArrayList<Move>();
         int maxGrade = 0;
         for (Move move : board.getAllMoves(color)) {
             var fig = board.getFigure(move.getTo());
-            if (fig == null)
+            if (fig == null) {
                 continue;
+            }
             var curGrade = grades.get(fig.getClass());
             if (curGrade > maxGrade) {
                 maxGrade = curGrade;
                 topMoves.clear();
             }
-            if (curGrade >= maxGrade)
+            if (curGrade >= maxGrade) {
                 topMoves.add(move);
+            }
         }
         return topMoves.get(new Random().nextInt(topMoves.size()));
     }

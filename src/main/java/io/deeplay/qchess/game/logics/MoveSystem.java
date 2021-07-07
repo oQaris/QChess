@@ -80,6 +80,7 @@ public class MoveSystem {
     }
 
     /**
+     * @throws ChessException если срубили короля
      * @return true если ход корректный
      */
     public boolean isCorrectMove(Move move) throws ChessException {
