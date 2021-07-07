@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class King extends Figure {
 
     public King(Board board, boolean white, Cell pos) {
-        super(board, white, pos);
+        super(board, white, pos, white ? "♔" : "♚");
     }
 
     @Override

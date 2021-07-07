@@ -38,6 +38,7 @@ public class Game {
             Move move = currentPlayerToMove.getNextMove();
             try {
                 logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
+                logger.info(board.toString());
             } catch (ChessException ignored) {
             }
 
