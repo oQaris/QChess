@@ -31,15 +31,14 @@ public class Pawn extends Figure {
         }
 
         var move = pos.add(shift);
-        var turnIntoOrSimpMoveType = countMoves == Board.BOARD_SIZE - 3
-                ? MoveType.TURN_INTO : MoveType.SIMPLE_STEP;
         if (board.isEmptyCell(move)) {
-            result.add(new Move(turnIntoOrSimpMoveType, pos, move));
+            result.add(new Move(countMoves == Board.BOARD_SIZE - 3
+                    ? MoveType.TURN_INTO
+                    : MoveType.SIMPLE_STEP, pos, move));
         }
         var moveLong = move.add(shift);
         if (countMoves == 0 && board.isEmptyCell(moveLong)) {
-            result.add(new Move(turnIntoOrSimpMoveType, pos, moveLong));
-            countMoves++;
+            result.add(new Move(MoveType.SPECIAL_MOVE, pos, moveLong));
         }
 
         var cellLeft = move.add(new Cell(-1, 0));
