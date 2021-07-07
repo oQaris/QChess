@@ -3,15 +3,15 @@ package io.deeplay.qchess.game.figures.interfaces;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Figure {
+
     protected static final Logger log = LoggerFactory.getLogger(Figure.class);
 
     protected static List<Cell> xMove = Arrays.asList(

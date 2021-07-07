@@ -5,6 +5,9 @@ import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,15 +35,42 @@ public class BoardTest {
     }
 
     @Test
-    public void testGetFigures() {
-    }
+    public void testSetGetFigures() throws ChessException {
+        // нет фигур
+        Assert.assertEquals(List.of(), board.getFigures(true));
+        Assert.assertEquals(List.of(), board.getFigures(false));
 
-    @Test
-    public void testGetFigure() {
-    }
+        board.initBoard(ms, Board.BoardFilling.STANDARD);
 
-    @Test
-    public void testSetFigure() {
+        List<Figure> black = new ArrayList<>();
+        List<Figure> white = new ArrayList<>();
+
+        for (Character first : "abcdefgh".toCharArray()) {
+            black.add(board.getFigure(Cell.parse(first.toString() + "7")));
+            black.add(board.getFigure(Cell.parse(first.toString() + "8")));
+            white.add(board.getFigure(Cell.parse(first.toString() + "1")));
+            white.add(board.getFigure(Cell.parse(first.toString() + "2")));
+        }
+
+        Comparator<Figure> figureComparator = (o1, o2) -> {
+            int x1 = o1.getCurrentPosition().getCol();
+            int y1 = o1.getCurrentPosition().getRow();
+            int x2 = o2.getCurrentPosition().getCol();
+            int y2 = o2.getCurrentPosition().getRow();
+            return x1 != x2 ? x1 - x2 : y1 - y2;
+        };
+
+        black.sort(figureComparator);
+        white.sort(figureComparator);
+
+        List<Figure> ansBlack = board.getFigures(false);
+        List<Figure> ansWhite = board.getFigures(true);
+
+        ansBlack.sort(figureComparator);
+        ansWhite.sort(figureComparator);
+
+        Assert.assertEquals(black, ansBlack);
+        Assert.assertEquals(white, ansWhite);
     }
 
     @Test

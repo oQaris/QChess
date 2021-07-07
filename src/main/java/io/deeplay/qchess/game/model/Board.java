@@ -1,17 +1,81 @@
 package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.King;
+import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
-
-import java.util.*;
+import io.deeplay.qchess.game.logics.MoveSystem;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.slf4j.LoggerFactory;
 
 public final class Board /*implements Iterable<Figure>*/ {
 
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Figure.class);
+    private MoveSystem ms;
     public final static int BOARD_SIZE = 8;
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
+    public static enum BoardFilling {
+        EMPTY, STANDARD;
+    }
+
     public Board() {
+    }
+
+    public void initBoard(MoveSystem ms, BoardFilling bf) {
+        this.ms = ms;
+        switch (bf) {
+            case EMPTY -> {
+                break;
+            }
+            case STANDARD -> {
+                try {
+                    setFigure(new Rook(this, true, Cell.parse("a1")));
+                    setFigure(new Rook(this, true, Cell.parse("h1")));
+                    setFigure(new Rook(this, false, Cell.parse("a8")));
+                    setFigure(new Rook(this, false, Cell.parse("h8")));
+                    setFigure(new Knight(this, true, Cell.parse("b1")));
+                    setFigure(new Knight(this, true, Cell.parse("g1")));
+                    setFigure(new Knight(this, false, Cell.parse("b8")));
+                    setFigure(new Knight(this, false, Cell.parse("g8")));
+                    setFigure(new Bishop(this, true, Cell.parse("c1")));
+                    setFigure(new Bishop(this, true, Cell.parse("f1")));
+                    setFigure(new Bishop(this, false, Cell.parse("c8")));
+                    setFigure(new Bishop(this, false, Cell.parse("f8")));
+
+                    setFigure(new Queen(this, true, Cell.parse("d1")));
+                    setFigure(new Queen(this, false, Cell.parse("d8")));
+                    setFigure(new King(this, true, Cell.parse("e1")));
+                    setFigure(new King(this, false, Cell.parse("e8")));
+
+                    setFigure(new Pawn(ms, this, true, Cell.parse("a2")));
+                    setFigure(new Pawn(ms, this, true, Cell.parse("b2")));
+                    setFigure(new Pawn(ms, this, true, Cell.parse("c2")));
+                    setFigure(new Pawn(ms, this, true, Cell.parse("d2")));
+                    setFigure(new Pawn(ms, this, true, Cell.parse("e2")));
+                    setFigure(new Pawn(ms, this, true, Cell.parse("f2")));
+                    setFigure(new Pawn(ms, this, true, Cell.parse("g2")));
+                    setFigure(new Pawn(ms, this, true, Cell.parse("h2")));
+
+                    setFigure(new Pawn(ms, this, false, Cell.parse("a7")));
+                    setFigure(new Pawn(ms, this, false, Cell.parse("b7")));
+                    setFigure(new Pawn(ms, this, false, Cell.parse("c7")));
+                    setFigure(new Pawn(ms, this, false, Cell.parse("d7")));
+                    setFigure(new Pawn(ms, this, false, Cell.parse("e7")));
+                    setFigure(new Pawn(ms, this, false, Cell.parse("f7")));
+                    setFigure(new Pawn(ms, this, false, Cell.parse("g7")));
+                    setFigure(new Pawn(ms, this, false, Cell.parse("h7")));
+                } catch (ChessException e) {
+                    logger.error("Стандартное заполнение доски некорректное: {}", e.getMessage());
+                }
+                break;
+            }
+            default -> {
+                break;
+            }
+        }
     }
 
     /**
@@ -22,10 +86,7 @@ public final class Board /*implements Iterable<Figure>*/ {
         Cell kingCell = null;
         for (Figure[] f : cells) {
             for (Figure ff : f) {
-                if (ff == null) {
-                    continue;
-                }
-                if (ff.isWhite() == white && ff.getClass() == King.class) {
+                if (ff != null && ff.isWhite() == white && ff.getClass() == King.class) {
                     kingCell = ff.getCurrentPosition();
                     break;
                 }
@@ -42,10 +103,7 @@ public final class Board /*implements Iterable<Figure>*/ {
         List<Figure> list = new ArrayList<>();
         for (Figure[] f : cells) {
             for (Figure ff : f) {
-                if (ff == null) {
-                    continue;
-                }
-                if (ff.isWhite() == white) {
+                if (ff != null && ff.isWhite() == white) {
                     list.add(ff);
                 }
             }
@@ -121,7 +179,7 @@ public final class Board /*implements Iterable<Figure>*/ {
         return removeFigure(move.getFrom());
     }
 
-    public Set<Move> getAllMoves(boolean color){
+    public Set<Move> getAllMoves(boolean color) {
         //todo надо сделать как то
         return new HashSet<>();
     }

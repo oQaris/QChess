@@ -8,12 +8,13 @@ import io.deeplay.qchess.game.player.IPlayer;
 
 public class Game {
 
-    public Game(IPlayer firstPlayer, IPlayer secondPlayer) {
+    public Game(Board.BoardFilling boardType, IPlayer firstPlayer, IPlayer secondPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.currentPlayerToMove = firstPlayer;
         this.board = new Board();
         this.moveSystem = new MoveSystem(board);
+        board.initBoard(moveSystem, boardType);
     }
 
     private Board board;
