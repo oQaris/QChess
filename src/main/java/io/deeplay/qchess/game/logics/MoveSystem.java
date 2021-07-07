@@ -9,12 +9,16 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Хранит различные данные об игре для контроля специфичных ситуаций
@@ -112,6 +116,9 @@ public class MoveSystem {
         }
     }
 
+    /**
+     * @param move корректный ход
+     */
     private boolean isCorrectVirtualMove(Move move) throws ChessError {
         Figure virtualKilled = tryVirtualMove(move);
         if (virtualKilled != null && virtualKilled.getClass() == King.class) {
@@ -126,8 +133,6 @@ public class MoveSystem {
             if (virtualKilled != null) {
                 board.setFigure(virtualKilled);
             }
-            // todo ?
-            //board.getFigure(move.getFrom()).addMove(-2);
         } catch (ChessException e) {
             return false;
         }
@@ -146,18 +151,16 @@ public class MoveSystem {
     }
 
     /**
-     * @param white цвет игрока
-     * @return true если игрок с указанным цветом ставит шах
+     * @param color true - белый, false - черный
+     * @return true если игроку с указанным цветом ставят шах
      */
-    public boolean isCheck(boolean white) throws ChessError {
-        List<Figure> list = board.getFigures(white);
-        Cell kingCell = board.findKingCell(!white);
-        for (Figure f : list) {
-            if (f.getAllMoves().stream()
-                    .map(Move::getTo)
-                    .collect(Collectors.toSet())
-                    .contains(kingCell)) {
-                return true;
+    public boolean isCheck(boolean color) throws ChessError {
+        Cell kingCell = board.findKingCell(color);
+        for (Figure f : board.getFigures(color)) {
+            for (Move m : f.getAllMoves()) {
+                if (m.getTo().equals(kingCell)) {
+                    return true;
+                }
             }
         }
         return false;
