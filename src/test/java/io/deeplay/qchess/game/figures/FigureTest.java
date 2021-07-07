@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -174,7 +173,7 @@ public class FigureTest {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
         var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
-        pawn.addMove();
+        pawn.addMove(1);
         var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
         var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
         var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
@@ -196,7 +195,7 @@ public class FigureTest {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
         var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
-        pawn.addMove();
+        pawn.addMove(1);
         var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
         var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
         var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
@@ -220,7 +219,7 @@ public class FigureTest {
         field.set(ms, white1);
 
         Figure figureB1 = new Pawn(ms, board, false, Cell.parse("b4"));
-        figureB1.addMove();
+        figureB1.addMove(1);
         Figure figureW2 = new Pawn(ms, board, true, Cell.parse("a4"));
 
         board.setFigure(figureW1);
@@ -242,7 +241,7 @@ public class FigureTest {
         return result;
     }
 
-    private Set<Cell> extractCellTo(Set<Move> moves){
+    private Set<Cell> extractCellTo(Set<Move> moves) {
         return moves.stream().map(Move::getTo).collect(Collectors.toSet());
     }
 }

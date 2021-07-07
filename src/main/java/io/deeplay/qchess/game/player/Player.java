@@ -21,4 +21,11 @@ public abstract class Player {
      * @return возвращает проверенный ход
      */
     public abstract Move getNextMove() throws ChessError;
+
+    /**
+     * @return true - белый, false - черный
+     */
+    public boolean getColor() {
+        return color;
+    }
 }

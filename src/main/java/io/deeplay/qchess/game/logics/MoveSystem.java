@@ -33,11 +33,15 @@ public class MoveSystem {
      */
     public void move(Move move) throws ChessException {
         // взятие на проходе
-        if (move.getMoveType().equals(MoveType.ATTACK) && isPawnEnPassant(move.getFrom(), move.getTo())) {
+        if (move.getMoveType().equals(MoveType.SPECIAL_MOVE) && isPawnEnPassant(move.getFrom(), move.getTo())) {
             board.removeFigure(prevMove.getTo());
         }
 
-        // TODO: рокировка
+        // превращение пешки
+        if (move.getMoveType().equals(MoveType.TURN_INTO)) {
+            board.setFigure(move.getTurnInto());
+        }
+
         // ход
         board.moveFigure(move);
         prevMove = move;
@@ -126,6 +130,7 @@ public class MoveSystem {
             // отмена виртуального хода
             board.moveFigure(new Move(MoveType.SIMPLE_STEP, move.getTo(), move.getFrom()));
             board.setFigure(virtualKilled);
+            board.getFigure(move.getFrom()).addMove(-2);
         } catch (ChessException e) {
             return false;
         }

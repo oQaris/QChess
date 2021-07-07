@@ -1,5 +1,12 @@
 package io.deeplay.qchess.game.model;
 
 public enum MoveType {
-    ATTACK, SIMPLE_STEP, SPECIAL_MOVE /*Для взятия на проходе, длинного первого хода пешки и последнего хода-превращения, рокировка*/
+    // Атака фигуры
+    ATTACK,
+    // Обычный ход
+    SIMPLE_STEP,
+    // Для взятия на проходе, длинного первого хода пешки и рокировки
+    SPECIAL_MOVE,
+    // Для последнего хода-превращения пешки
+    TURN_INTO;
 }

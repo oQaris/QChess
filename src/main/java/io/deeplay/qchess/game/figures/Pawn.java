@@ -6,7 +6,6 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,14 +30,14 @@ public class Pawn extends Figure {
         }
 
         var move = pos.add(shift);
-        var specOrSimpMoveType = countMoves == Board.BOARD_SIZE - 3
-                ? MoveType.SPECIAL_MOVE : MoveType.SIMPLE_STEP;
+        var turnIntoOrSimpMoveType = countMoves == Board.BOARD_SIZE - 3
+                ? MoveType.TURN_INTO : MoveType.SIMPLE_STEP;
         if (board.isEmptyCell(move)) {
-            result.add(new Move(specOrSimpMoveType, pos, move));
+            result.add(new Move(turnIntoOrSimpMoveType, pos, move));
         }
         var moveLong = move.add(shift);
         if (countMoves == 0 && board.isEmptyCell(moveLong)) {
-            result.add(new Move(specOrSimpMoveType, pos, moveLong));
+            result.add(new Move(turnIntoOrSimpMoveType, pos, moveLong));
             countMoves++;
         }
 

@@ -29,7 +29,7 @@ public class Game {
 
     public void run() throws ChessError {
         // TODO: сделать условие выхода
-        while (true) {
+        while (!moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
 
@@ -40,6 +40,7 @@ public class Game {
                 // TODO: отправлять ответ, что ход некорректный
             }
         }
+        // TODO: конец игры
     }
 
     private void tryMove(Move move) {

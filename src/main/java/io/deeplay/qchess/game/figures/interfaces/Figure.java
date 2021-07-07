@@ -5,13 +5,13 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Figure {
 
@@ -42,8 +42,8 @@ public abstract class Figure {
     protected Cell pos;
     protected int countMoves = 0;
 
-    public void addMove() {
-        countMoves++;
+    public void addMove(int count) {
+        countMoves += count;
     }
 
     public Figure(Board board, boolean white, Cell pos) {
@@ -116,5 +116,25 @@ public abstract class Figure {
         } catch (ChessException ignored) {
         }
         return enemyFigure != null && white != enemyFigure.isWhite();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + (this.white ? 1 : 0);
+        hash = 97 * hash + Objects.hashCode(this.pos);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Figure f = (Figure) o;
+        return white == f.white && Objects.equals(pos, f.pos);
     }
 }

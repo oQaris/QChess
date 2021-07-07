@@ -132,12 +132,13 @@ public final class Board {
         Figure figure = getFigure(move.getFrom());
         figure.setCurrentPosition(move.getTo());
         setFigure(figure);
+        figure.addMove(1);
         return removeFigure(move.getFrom());
     }
 
     /**
-     * @return фигура или null, если клетка пуста
      * @throws ChessException если клетка не лежит в пределах доски
+     * @return фигура или null, если клетка пуста
      */
     public Figure getFigure(Cell cell) throws ChessException {
         int x = cell.getCol();
