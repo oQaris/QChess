@@ -38,7 +38,7 @@ public class Pawn extends Figure {
         }
         var moveLong = move.add(shift);
         if (pos.getRow() == (white ? Board.BOARD_SIZE - 2 : 1) && board.isEmptyCell(moveLong)) {
-            result.add(new Move(MoveType.SPECIAL_MOVE, pos, moveLong));
+            result.add(new Move(MoveType.LONG_MOVE, pos, moveLong));
         }
 
         var cellLeft = move.add(new Cell(-1, 0));

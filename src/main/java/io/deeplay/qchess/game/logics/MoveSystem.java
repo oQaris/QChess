@@ -34,7 +34,7 @@ public class MoveSystem {
      */
     public void move(Move move) throws ChessException {
         // взятие на проходе
-        if (move.getMoveType().equals(MoveType.SPECIAL_MOVE) && isPawnEnPassant(move.getFrom(), move.getTo())) {
+        if (move.getMoveType().equals(MoveType.EN_PASSANT) && isPawnEnPassant(move.getFrom(), move.getTo())) {
             board.removeFigure(prevMove.getTo());
         }
 
