@@ -21,7 +21,7 @@ public class FigureTest {
     private MoveSystem ms;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         board = new Board();
         ms = new MoveSystem(board);
     }
