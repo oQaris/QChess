@@ -81,15 +81,15 @@ public final class Board {
     }
 
     /**
-     * @param white цвет фигур, true - белые, false - черные
+     * @param color true - белые, false - черные
      * @return позиция короля определенного цвета
      * @throws ChessError если король не был найден
      */
-    public Cell findKingCell(boolean white) throws ChessError {
+    public Cell findKingCell(boolean color) throws ChessError {
         Cell kingCell = null;
         for (Figure[] f : cells) {
             for (Figure ff : f) {
-                if (ff != null && ff.isWhite() == white && ff.getClass() == King.class) {
+                if (ff != null && ff.isWhite() == color && ff.getClass() == King.class) {
                     kingCell = ff.getCurrentPosition();
                     break;
                 }
@@ -103,14 +103,14 @@ public final class Board {
     }
 
     /**
-     * @param white цвет фигур, true - белые, false - черные
+     * @param color true - белые, false - черные
      * @return фигуры определенного цвета
      */
-    public List<Figure> getFigures(boolean white) {
-        List<Figure> list = new ArrayList<>();
+    public List<Figure> getFigures(boolean color) {
+        List<Figure> list = new ArrayList<>(16);
         for (Figure[] f : cells) {
             for (Figure ff : f) {
-                if (ff != null && ff.isWhite() == white) {
+                if (ff != null && ff.isWhite() == color) {
                     list.add(ff);
                 }
             }

@@ -9,12 +9,11 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Хранит различные данные об игре для контроля специфичных ситуаций
@@ -87,9 +86,15 @@ public class MoveSystem {
      * @return все возможные ходы
      */
     public List<Move> getAllCorrectMoves(boolean color) throws ChessError {
-        return board.getFigures(color).stream()
-                .flatMap(f -> f.getAllMoves().stream())
-                .collect(Collectors.toList());
+        List<Move> res = new ArrayList<>(64);
+        for (Figure f : board.getFigures(color)) {
+            for (Move m : f.getAllMoves()) {
+                if (isCorrectVirtualMove(m)) {
+                    res.add(m);
+                }
+            }
+        }
+        return res;
     }
 
     /**
@@ -152,7 +157,7 @@ public class MoveSystem {
      */
     public boolean isCheck(boolean color) throws ChessError {
         Cell kingCell = board.findKingCell(color);
-        for (Figure f : board.getFigures(color)) {
+        for (Figure f : board.getFigures(!color)) {
             for (Move m : f.getAllMoves()) {
                 if (m.getTo().equals(kingCell)) {
                     return true;
