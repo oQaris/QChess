@@ -190,18 +190,18 @@ public final class Board {
     @Override
     public String toString() {
         var sb = new StringBuilder();
-        sb.append(" - ".repeat(Board.BOARD_SIZE)).append("\n");
+        sb/*.append(" - ".repeat(Board.BOARD_SIZE))*/.append("\n");
         for (Figure[] line : cells) {
             sb.append('|');
             for (Figure figure : line) {
                 if (figure == null) {
-                    sb.append("  ");
+                    sb.append("_");
                 } else {
                     sb.append(figure.getShortName());
                 }
                 sb.append('|');
             }
-            sb.append("\n").append(" - ".repeat(Board.BOARD_SIZE)).append("\n");
+            sb.append("\n")/*.append(" - ".repeat(Board.BOARD_SIZE)).append("\n")*/;
         }
         return sb.toString();
     }

@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
+import io.deeplay.qchess.game.figures.Rook;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import java.util.ArrayList;
@@ -75,26 +76,43 @@ public class BoardTest {
     }
 
     @Test
-    public void testRemoveFigure() {
+    public void testRemoveFigure() throws ChessException {
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("a2")));
+        board.removeFigure(Cell.parse("a2"));
+        Assert.assertNull(board.getFigure(Cell.parse("a2")));
     }
 
     @Test
     public void testIsEmptyCell() {
+        Assert.assertTrue(board.isEmptyCell(Cell.parse("a1")));
     }
 
     @Test
-    public void testIsNotMakeMoves() {
+    public void testNotEmptyCell() throws ChessException {
+        board.setFigure(new Rook(board, true, Cell.parse("a1")));
+        Assert.assertFalse(board.isEmptyCell(Cell.parse("a1")));
     }
 
     @Test
     public void testIsCorrectCell() {
+        Assert.assertTrue(board.isCorrectCell(0,0));
+        Assert.assertFalse(board.isCorrectCell(0,-1));
+        Assert.assertTrue(board.isCorrectCell(7,7));
+        Assert.assertFalse(board.isCorrectCell(100,100));
     }
 
     @Test
-    public void testTestIsCorrectCell() {
+    public void testMoveFigureEmpty() throws ChessException {
+        board.setFigure(new Rook(board, true, Cell.parse("a1")));
+        Assert.assertNull(board.moveFigure(new Move(MoveType.SIMPLE_STEP, Cell.parse("a1"), Cell.parse("a5"))));
+        Assert.assertNull(board.getFigure(Cell.parse("a1")));
+        Assert.assertEquals(board.getFigure(Cell.parse("a5")), new Rook(board, true, Cell.parse("a5")));
     }
 
     @Test
-    public void testMoveFigure() {
+    public void testMoveFigureAttack() throws ChessException {
+        board.setFigure(new Rook(board, true, Cell.parse("a1")));
+        board.setFigure(new Rook(board, false, Cell.parse("a5")));
+        Assert.assertNotNull(board.moveFigure(new Move(MoveType.SIMPLE_STEP, Cell.parse("a1"), Cell.parse("a5"))));
     }
 }
