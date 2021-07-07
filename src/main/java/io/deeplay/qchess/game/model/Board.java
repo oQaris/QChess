@@ -130,7 +130,8 @@ public final class Board {
         Figure old = getFigure(move.getTo());
         figure.setCurrentPosition(move.getTo());
         setFigure(figure);
-        figure.addMove(1);
+        //todo ?
+        //figure.addMove(1);
         removeFigure(move.getFrom());
         return old;
     }

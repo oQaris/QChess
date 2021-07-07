@@ -12,7 +12,6 @@ import io.deeplay.qchess.game.model.MoveType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -88,15 +87,9 @@ public class MoveSystem {
      * @return все возможные ходы
      */
     public List<Move> getAllCorrectMoves(boolean color) throws ChessError {
-        List<Move> set = new ArrayList<>(64);
-        for (Figure f : board.getFigures(color)) {
-            for (Move m : f.getAllMoves()) {
-                if (isCorrectVirtualMove(m)) {
-                    set.add(m);
-                }
-            }
-        }
-        return set;
+        return board.getFigures(color).stream()
+                .flatMap(f -> f.getAllMoves().stream())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -133,7 +126,8 @@ public class MoveSystem {
             if (virtualKilled != null) {
                 board.setFigure(virtualKilled);
             }
-            board.getFigure(move.getFrom()).addMove(-2);
+            // todo ?
+            //board.getFigure(move.getFrom()).addMove(-2);
         } catch (ChessException e) {
             return false;
         }
@@ -160,7 +154,7 @@ public class MoveSystem {
         Cell kingCell = board.findKingCell(!white);
         for (Figure f : list) {
             if (f.getAllMoves().stream()
-                    .map(move -> move.getTo())
+                    .map(Move::getTo)
                     .collect(Collectors.toSet())
                     .contains(kingCell)) {
                 return true;

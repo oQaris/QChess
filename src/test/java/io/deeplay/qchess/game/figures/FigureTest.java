@@ -174,7 +174,8 @@ public class FigureTest {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
         var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
-        pawn.addMove(1);
+        // todo ?
+        //pawn.addMove(1);
         var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
         var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
         var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
@@ -196,7 +197,8 @@ public class FigureTest {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Board testBoard = new Board();
         var pawn = new Pawn(ms, testBoard, true, Cell.parse("c5"));
-        pawn.addMove(1);
+        // todo ?
+        //pawn.addMove(1);
         var pawn1 = new Pawn(ms, testBoard, false, Cell.parse("b6"));
         var pawn2 = new Pawn(ms, testBoard, false, Cell.parse("d6"));
         var pawn3 = new Pawn(ms, testBoard, false, Cell.parse("b4"));
@@ -220,7 +222,8 @@ public class FigureTest {
         field.set(ms, white1);
 
         Figure figureB1 = new Pawn(ms, board, false, Cell.parse("b4"));
-        figureB1.addMove(1);
+        // todo ?
+        //figureB1.addMove(1);
         Figure figureW2 = new Pawn(ms, board, true, Cell.parse("a4"));
 
         board.setFigure(figureW1);

@@ -36,7 +36,10 @@ public class Game {
         while (!moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
-            logger.info("{} сделал ход: {}", currentPlayerToMove, move);
+            try {
+                logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
+            } catch (ChessException ignored) {
+            }
 
             if (moveSystem.isCorrectMove(move)) {
                 tryMove(move);

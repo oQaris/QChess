@@ -37,7 +37,8 @@ public abstract class Figure {
     protected final Board board;
     protected final boolean white;
     protected Cell pos;
-    protected int countMoves = 0;
+    // жаль удалять, вдруг понадобится...
+    /*protected int countMoves = 0;*/
 
     public Figure(Board board, boolean white, Cell pos) {
         this.board = board;
@@ -45,9 +46,9 @@ public abstract class Figure {
         this.pos = pos;
     }
 
-    public void addMove(int count) {
+    /*public void addMove(int count) {
         countMoves += count;
-    }
+    }*/
 
     /**
      * @return все варианты для перемещения фигуры, не выходящие за границы доски, учитывая уже занятые клетки

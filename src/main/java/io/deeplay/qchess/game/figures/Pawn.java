@@ -32,12 +32,12 @@ public class Pawn extends Figure {
 
         var move = pos.add(shift);
         if (board.isEmptyCell(move)) {
-            result.add(new Move(countMoves == Board.BOARD_SIZE - 3
+            result.add(new Move(move.getRow() == (white ? 0 : Board.BOARD_SIZE)
                     ? MoveType.TURN_INTO
                     : MoveType.SIMPLE_STEP, pos, move));
         }
         var moveLong = move.add(shift);
-        if (countMoves == 0 && board.isEmptyCell(moveLong)) {
+        if (pos.getRow() == (white ? Board.BOARD_SIZE - 2 : 1) && board.isEmptyCell(moveLong)) {
             result.add(new Move(MoveType.SPECIAL_MOVE, pos, moveLong));
         }
 
