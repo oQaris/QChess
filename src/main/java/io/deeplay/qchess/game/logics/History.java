@@ -7,11 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class History {
     private static final Logger log = LoggerFactory.getLogger(History.class);
 
+    private final Map<Character, Character> notation = new HashMap<>();
     private List<String> recordsList;
     private Board board;
 
@@ -19,6 +22,19 @@ public class History {
         this.board = board;
         recordsList = new ArrayList<>(50);
         log.debug("История инициализирована");
+
+        notation.put('♔', 'K');
+        notation.put('♕', 'Q');
+        notation.put('♖', 'R');
+        notation.put('♗', 'B');
+        notation.put('♘', 'N');
+        notation.put('♙', 'P');
+        notation.put('♚', 'k');
+        notation.put('♛', 'q');
+        notation.put('♜', 'r');
+        notation.put('♝', 'b');
+        notation.put('♞', 'n');
+        notation.put('♟', 'p');
     }
 
     public String addRecord() throws ChessException {
@@ -41,6 +57,7 @@ public class History {
                     if(emptySlots != 0) {
                         record.append(emptySlots);
                     }
+                    record.append(notation.get(currentFigure.getCharIcon()));
                     emptySlots = 0;
                 }
             }
@@ -49,6 +66,7 @@ public class History {
             }
             record.append('/');
         }
-        return record.toString();
+
+        return record.deleteCharAt(record.length() - 1).toString();
     }
 }
