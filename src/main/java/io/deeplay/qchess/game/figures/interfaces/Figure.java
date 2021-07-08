@@ -47,18 +47,23 @@ public abstract class Figure {
         this.charIcon = charIcon;
     }
 
-    public void setWasMoved() {
-        wasMoved = true;
-    }
-
+    /**
+     * Устанавливает, делала ли фигура хотя бы один ход
+     */
     public void setWasMoved(boolean wasMoved) {
         this.wasMoved = wasMoved;
     }
 
+    /**
+     * @return true, если фигура делала ход
+     */
     public boolean wasMoved() {
         return wasMoved;
     }
 
+    /**
+     * @return представление фигуры в виде символа для TUI
+     */
     public Character getCharIcon() {
         return charIcon;
     }
@@ -67,10 +72,6 @@ public abstract class Figure {
      * @return все возможные ходы фигуры, не учитывая шаха
      */
     public abstract Set<Move> getAllMoves();
-
-    public Board getBoard() {
-        return board;
-    }
 
     public boolean isWhite() {
         return white;
@@ -120,6 +121,9 @@ public abstract class Figure {
         return result;
     }
 
+    /**
+     * @return true, если клетка лежит на доске и на этой клетке есть фигура, иначе false
+     */
     protected boolean isEnemyFigureOn(Cell cell) {
         Figure enemyFigure = null;
         try {

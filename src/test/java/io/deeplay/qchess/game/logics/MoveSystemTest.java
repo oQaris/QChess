@@ -64,14 +64,17 @@ public class MoveSystemTest {
 
     @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_1() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
+        Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(ms, board, true, white1.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, white1);
 
         board.setFigure(figureW1);
         setBlackPawns();
+
+        Assert.assertFalse(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+
+        Field field = MoveSystem.class.getDeclaredField("prevMove");
+        field.setAccessible(true);
+        field.set(ms, white1);
 
         Assert.assertTrue(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
         Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
@@ -115,7 +118,7 @@ public class MoveSystemTest {
 
     @Test
     public void testIsCorrectPawnEnPassant_notPawnDefense() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
+        Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Knight(board, true, white1.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
@@ -132,7 +135,7 @@ public class MoveSystemTest {
 
     @Test
     public void testIsCorrectPawnEnPassant_notPawnAttack() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
+        Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(ms, board, true, white1.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
@@ -161,14 +164,17 @@ public class MoveSystemTest {
 
     @Test
     public void testIsCorrectPawnEnPassant_whitePawnAttack_1() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Move black1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c7"), Cell.parse("c5"));
+        Move black1 = new Move(MoveType.LONG_MOVE, Cell.parse("c7"), Cell.parse("c5"));
         Figure figureB1 = new Pawn(ms, board, false, black1.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, black1);
 
         board.setFigure(figureB1);
         setWhitePawns();
+
+        Assert.assertFalse(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
+
+        Field field = MoveSystem.class.getDeclaredField("prevMove");
+        field.setAccessible(true);
+        field.set(ms, black1);
 
         Assert.assertTrue(ms.isPawnEnPassant(move1.getFrom(), move1.getTo()));
         Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
@@ -208,6 +214,22 @@ public class MoveSystemTest {
         Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
         Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
         Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
+    }
+
+    @Test
+    public void testIsCorrectPawnEnPassant_sameColors() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
+        Move white2 = new Move(MoveType.ATTACK, Cell.parse("b2"), Cell.parse("c3"));
+        Figure figure1 = new Pawn(ms, board, true, white1.getTo());
+        Figure figure2 = new Pawn(ms, board, true, white2.getFrom());
+        Field field = MoveSystem.class.getDeclaredField("prevMove");
+        field.setAccessible(true);
+        field.set(ms, white1);
+
+        board.setFigure(figure1);
+        board.setFigure(figure2);
+
+        Assert.assertFalse(ms.isPawnEnPassant(white2.getFrom(), white2.getTo()));
     }
 
     @Test(expected = ChessError.class)
@@ -296,6 +318,20 @@ public class MoveSystemTest {
         Move move = new Move(MoveType.ATTACK, Cell.parse("e4"), Cell.parse("e1"));
 
         ms.isCorrectMove(move);
+    }
+
+    @Test
+    public void testIsCorrectMove_3() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("e1")));
+        Move move = new Move(MoveType.ATTACK, Cell.parse("e4"), Cell.parse("e1"));
+        Assert.assertFalse(ms.isCorrectMove(move));
+    }
+
+    @Test
+    public void testIsCorrectMove_4() throws ChessException, ChessError {
+        board.setFigure(new Rook(board, false, Cell.parse("e4")));
+        Move move = new Move(MoveType.ATTACK, Cell.parse("e4"), Cell.parse("e1"));
+        Assert.assertFalse(ms.isCorrectMove(move));
     }
 
     @Test

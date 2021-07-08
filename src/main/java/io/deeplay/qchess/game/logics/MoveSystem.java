@@ -48,13 +48,13 @@ public class MoveSystem {
             if (move.getMoveType().equals(MoveType.SHORT_CASTLING)) {
                 Cell from = move.getFrom().createAdd(new Cell(3, 0));
                 Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                board.getFigure(from).setWasMoved();
+                board.getFigure(from).setWasMoved(true);
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
             if (move.getMoveType().equals(MoveType.LONG_CASTLING)) {
                 Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                 Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                board.getFigure(from).setWasMoved();
+                board.getFigure(from).setWasMoved(true);
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
 
@@ -68,15 +68,13 @@ public class MoveSystem {
 
     /**
      * Проверяет, является ли атака пешки взятием на проходе.
-     * Входные данные гарантированно являются диагональным ходом пешки противоположного цвета!
+     * Входные данные должны гарантировать, что это именно атака пешки (диагональный ход)
      *
      * @return true если это взятие на проходе
      */
     public boolean isPawnEnPassant(Cell from, Cell to) {
         try {
-            if (board.getFigure(from).getClass() != Pawn.class) {
-                return false;
-            }
+            Pawn currentPawn = (Pawn) board.getFigure(from);
             Pawn pawn = (Pawn) board.getFigure(prevMove.getTo());
 
             Cell cellDown = pawn.isWhite()
@@ -86,7 +84,9 @@ public class MoveSystem {
                     ? new Cell(cellDown.getCol(), cellDown.getRow() + 1)
                     : new Cell(cellDown.getCol(), cellDown.getRow() - 1);
 
-            return cellDoubleDown.equals(prevMove.getFrom()) && cellDown.equals(to);
+            return currentPawn.isWhite() != pawn.isWhite()
+                    && cellDoubleDown.equals(prevMove.getFrom())
+                    && cellDown.equals(to);
         } catch (ChessException | ClassCastException | NullPointerException e) {
             return false;
         }

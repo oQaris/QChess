@@ -6,7 +6,12 @@ import java.util.Objects;
 
 public class Move {
 
+    // не должно влиять на equals и hashCode,
+    // чтобы, проверяя корректность ходов, у пешек не возникали дополнительные условия,
+    // т.к. пешки на доске не знают во что превратиться без запроса игрока.
+    // проверка вынесена в MoveSystem
     private Figure turnInto;
+
     private MoveType moveType;
     private Cell from;
     private Cell to;
