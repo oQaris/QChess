@@ -51,6 +51,10 @@ public abstract class Figure {
         wasMoved = true;
     }
 
+    public void setWasMoved(boolean wasMoved) {
+        this.wasMoved = wasMoved;
+    }
+
     public boolean wasMoved() {
         return wasMoved;
     }

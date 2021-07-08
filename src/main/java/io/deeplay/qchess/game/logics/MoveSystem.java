@@ -2,8 +2,7 @@ package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.King;
-import io.deeplay.qchess.game.figures.Pawn;
+import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -34,13 +33,15 @@ public class MoveSystem {
     public Figure move(Move move) throws ChessError {
         try {
             // взятие на проходе
-            if (move.getMoveType().equals(MoveType.EN_PASSANT) && isPawnEnPassant(move.getFrom(), move.getTo())) {
+            if (move.getMoveType().equals(MoveType.EN_PASSANT)) {
                 board.removeFigure(prevMove.getTo());
             }
 
             // превращение пешки
             if (move.getMoveType().equals(MoveType.TURN_INTO)) {
-                board.setFigure(move.getTurnInto());
+                Figure turnIntoFigure = move.getTurnInto();
+                turnIntoFigure.setCurrentPosition(move.getTo());
+                board.setFigure(turnIntoFigure);
             }
 
             // рокировка
@@ -115,7 +116,7 @@ public class MoveSystem {
         List<Move> res = new ArrayList<>(64);
         for (Figure f : board.getFigures(color)) {
             for (Move m : f.getAllMoves()) {
-                if (isCorrectVirtualMove(m)) {
+                if (isCorrectMove(m)) {
                     res.add(m);
                 }
             }
@@ -127,18 +128,11 @@ public class MoveSystem {
      * @return true если ход корректный
      */
     public boolean isCorrectMove(Move move) throws ChessError {
-        return inAvailableMoves(move) && isCorrectVirtualMove(move);
-    }
-
-    /**
-     * @return true если ход лежит в доступных
-     */
-    private boolean inAvailableMoves(Move move) {
         try {
-            Figure figure = board.getFigure(move.getFrom());
-            Set<Move> allMoves = figure.getAllMoves();
-            return isCorrectSpecificMove(move) && allMoves.contains(move);
-        } catch (ChessException e) {
+            return checkCorrectnessIfSpecificMove(move)
+                    && inAvailableMoves(move)
+                    && isCorrectVirtualMove(move);
+        } catch (ChessException | NullPointerException e) {
             return false;
         }
     }
@@ -146,44 +140,51 @@ public class MoveSystem {
     /**
      * Проверяет специфичные ситуации
      *
-     * @return true если move корректный
+     * @param move ход для этой фигуры
+     * @return true если move специфичный и корректный либо move не специфичный, иначе false
      */
-    private boolean isCorrectSpecificMove(Move move) {
+    private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
-        return !move.getMoveType().equals(MoveType.TURN_INTO) || move.getTurnInto() != null;
+        if (move.getMoveType().equals(MoveType.TURN_INTO)) {
+            return move.getTurnInto().isWhite() == board.getFigure(move.getFrom()).isWhite()
+                    && move.getTurnInto().getCurrentPosition().equals(move.getTo())
+                    && (move.getTurnInto().getClass() == Bishop.class
+                    || move.getTurnInto().getClass() == Knight.class
+                    || move.getTurnInto().getClass() == Queen.class
+                    || move.getTurnInto().getClass() == Rook.class);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return true если ход лежит в доступных
+     */
+    private boolean inAvailableMoves(Move move) throws ChessException {
+        Figure figure = board.getFigure(move.getFrom());
+        Set<Move> allMoves = figure.getAllMoves();
+        return allMoves.contains(move);
     }
 
     /**
      * @param move корректный ход
      */
-    private boolean isCorrectVirtualMove(Move move) throws ChessError {
-        Figure virtualKilled = tryVirtualMove(move);
+    private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
+        Figure figureToMove = board.getFigure(move.getFrom());
+        boolean hasBeenMoved = figureToMove.wasMoved();
+        // виртуальный ход
+        Figure virtualKilled = board.moveFigure(move);
         if (virtualKilled != null && virtualKilled.getClass() == King.class) {
             throw new ChessError("Срубили короля");
         }
-        boolean isCheck;
-        try {
-            isCheck = isCheck(board.getFigure(move.getTo()).isWhite());
-            // отмена виртуального хода
-            board.moveFigure(new Move(MoveType.SIMPLE_STEP, move.getTo(), move.getFrom()));
-            if (virtualKilled != null) {
-                board.setFigure(virtualKilled);
-            }
-        } catch (ChessException e) {
-            return false;
+        boolean isCheck = isCheck(figureToMove.isWhite());
+        // отмена виртуального хода
+        board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
+        figureToMove.setWasMoved(hasBeenMoved);
+        if (virtualKilled != null) {
+            board.setFigure(virtualKilled);
         }
         return !isCheck;
-    }
-
-    /**
-     * @return возвращает удаленную фигуру
-     */
-    private Figure tryVirtualMove(Move move) {
-        try {
-            return board.moveFigure(move);
-        } catch (ChessException e) {
-            return null;
-        }
     }
 
     /**

@@ -1,8 +1,8 @@
 package io.deeplay.qchess.game.logics;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.Knight;
-import io.deeplay.qchess.game.figures.Pawn;
+import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -10,11 +10,12 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-public class MoveSystemPawnEnPassantTest {
+public class MoveSystemTest {
 
     private Board board;
     private MoveSystem ms;
@@ -207,5 +208,180 @@ public class MoveSystemPawnEnPassantTest {
         Assert.assertFalse(ms.isPawnEnPassant(move2.getFrom(), move2.getTo()));
         Assert.assertFalse(ms.isPawnEnPassant(move3.getFrom(), move3.getTo()));
         Assert.assertFalse(ms.isPawnEnPassant(move4.getFrom(), move4.getTo()));
+    }
+
+    @Test(expected = ChessError.class)
+    public void testIsCheck_zeroFigures() throws ChessError {
+        Assert.assertFalse(ms.isCheck(true));
+        Assert.assertFalse(ms.isCheck(false));
+    }
+
+    @Test
+    public void testIsStalemate_black() throws ChessException, ChessError {
+        board.setFigure(new Pawn(ms, board, false, Cell.parse("b5")));
+        board.setFigure(new Pawn(ms, board, false, Cell.parse("c6")));
+        board.setFigure(new King(ms, board, false, Cell.parse("h8")));
+
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("b4")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("c5")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("h7")));
+        board.setFigure(new King(ms, board, true, Cell.parse("f6")));
+        board.setFigure(new Bishop(board, true, Cell.parse("c2")));
+
+        Assert.assertTrue(ms.isStalemate(false));
+
+        board.setFigure(new Pawn(ms, board, false, Cell.parse("g3")));
+
+        Assert.assertFalse(ms.isStalemate(false));
+    }
+
+    @Test
+    public void testIsStalemate_white() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("h1")));
+        board.setFigure(new King(ms, board, false, Cell.parse("h3")));
+        board.setFigure(new Rook(board, false, Cell.parse("g7")));
+
+        Assert.assertTrue(ms.isStalemate(true));
+        Assert.assertFalse(ms.isCheckmate(true));
+
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("g3")));
+
+        Assert.assertFalse(ms.isStalemate(true));
+    }
+
+    @Test
+    public void testIsCheckmate() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("f8")));
+        board.setFigure(new King(ms, board, false, Cell.parse("e6")));
+
+        Assert.assertFalse(ms.isCheckmate(true));
+        Assert.assertFalse(ms.isCheckmate(false));
+
+        board.setFigure(new Queen(board, false, Cell.parse("f7")));
+
+        Assert.assertTrue(ms.isCheckmate(true));
+
+        board.setFigure(new Rook(board, true, Cell.parse("h7")));
+
+        Assert.assertFalse(ms.isCheckmate(true));
+    }
+
+    @Test
+    public void testIsCorrectMove_1() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("e1")));
+        board.setFigure(new Rook(board, true, Cell.parse("e4")));
+
+        Move move1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("e4"), Cell.parse("e7"));
+        Move move2 = new Move(MoveType.SIMPLE_STEP, Cell.parse("e4"), Cell.parse("d3"));
+        Move move3 = new Move(MoveType.ATTACK, Cell.parse("e4"), Cell.parse("e1"));
+
+        Assert.assertTrue(ms.isCorrectMove(move1));
+        Assert.assertFalse(ms.isCorrectMove(move2));
+        Assert.assertFalse(ms.isCorrectMove(move3));
+
+        board.setFigure(new Queen(board, false, Cell.parse("e8")));
+        Move move4 = new Move(MoveType.SIMPLE_STEP, Cell.parse("e4"), Cell.parse("c4"));
+
+        Assert.assertTrue(ms.isCorrectMove(move1));
+        Assert.assertFalse(ms.isCorrectMove(move2));
+        Assert.assertFalse(ms.isCorrectMove(move3));
+        Assert.assertFalse(ms.isCorrectMove(move4));
+    }
+
+    @Test(expected = ChessError.class)
+    public void testIsCorrectMove_2() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("e1")));
+        board.setFigure(new Rook(board, false, Cell.parse("e4")));
+
+        Move move = new Move(MoveType.ATTACK, Cell.parse("e4"), Cell.parse("e1"));
+
+        ms.isCorrectMove(move);
+    }
+
+    @Test
+    public void testIsCorrectPawnTurnInto_1() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("h1")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("c7")));
+
+        Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
+
+        // в разные фигуры
+        move1.setTurnInto(new Bishop(board, true, Cell.parse("c8")));
+        Assert.assertTrue(ms.isCorrectMove(move1));
+
+        move1.setTurnInto(new King(ms, board, true, Cell.parse("c8")));
+        Assert.assertFalse(ms.isCorrectMove(move1));
+
+        move1.setTurnInto(new Knight(board, true, Cell.parse("c8")));
+        Assert.assertTrue(ms.isCorrectMove(move1));
+
+        move1.setTurnInto(new Pawn(ms, board, true, Cell.parse("c8")));
+        Assert.assertFalse(ms.isCorrectMove(move1));
+
+        move1.setTurnInto(new Queen(board, true, Cell.parse("c8")));
+        Assert.assertTrue(ms.isCorrectMove(move1));
+
+        move1.setTurnInto(new Rook(board, true, Cell.parse("c8")));
+        Assert.assertTrue(ms.isCorrectMove(move1));
+    }
+
+    @Test
+    public void testIsCorrectPawnTurnInto_2() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("h1")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("c7")));
+
+        Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
+
+        // в другой цвет
+        move1.setTurnInto(new Queen(board, false, Cell.parse("c8")));
+        Assert.assertFalse(ms.isCorrectMove(move1));
+    }
+
+    @Test
+    public void testIsCorrectPawnTurnInto_3() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("h1")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("c7")));
+
+        Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
+
+        // в другую клетку
+        move1.setTurnInto(new Queen(board, true, Cell.parse("d8")));
+        Assert.assertFalse(ms.isCorrectMove(move1));
+
+        Move move2 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("d8"));
+
+        move2.setTurnInto(new Queen(board, true, Cell.parse("c8")));
+        Assert.assertFalse(ms.isCorrectMove(move2));
+
+        move2.setTurnInto(new Queen(board, true, Cell.parse("d8")));
+        Assert.assertFalse(ms.isCorrectMove(move2));
+    }
+
+    @Test
+    public void testIsCorrectPawnTurnInto_4() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("h1")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("c7")));
+
+        // из другой фигуры
+        board.setFigure(new Rook(board, true, Cell.parse("g7")));
+        Move move3 = new Move(MoveType.TURN_INTO, Cell.parse("g7"), Cell.parse("g8"));
+        move3.setTurnInto(new Queen(board, true, Cell.parse("g8")));
+        Assert.assertFalse(ms.isCorrectMove(move3));
+    }
+
+    @Ignore
+    @Test
+    public void testIsCorrectPawnTurnInto_5() throws ChessException, ChessError {
+        board.setFigure(new King(ms, board, true, Cell.parse("h1")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("c7")));
+
+        // атакующим перемещением
+        Move move4 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("d8"));
+        move4.setTurnInto(new Queen(board, true, Cell.parse("d8")));
+        Assert.assertFalse(ms.isCorrectMove(move4));
+
+        board.setFigure(new Rook(board, false, Cell.parse("d8")));
+
+        Assert.assertTrue(ms.isCorrectMove(move4));
     }
 }

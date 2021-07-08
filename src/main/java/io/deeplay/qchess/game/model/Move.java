@@ -48,13 +48,12 @@ public class Move {
         Move move = (Move) o;
         return moveType == move.moveType
                 && Objects.equals(from, move.from)
-                && Objects.equals(to, move.to)
-                && Objects.equals(turnInto, move.turnInto);
+                && Objects.equals(to, move.to);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moveType, from, to, turnInto);
+        return Objects.hash(moveType, from, to);
     }
 
     @Override
