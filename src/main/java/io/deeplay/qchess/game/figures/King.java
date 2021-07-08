@@ -17,7 +17,7 @@ public class King extends Figure {
     private MoveSystem ms;
 
     public King(MoveSystem ms, Board board, boolean white, Cell pos) {
-        super(board, white, pos, white ? "♔" : "♚");
+        super(board, white, pos, white ? "♔".toCharArray()[0] : "♚".toCharArray()[0]);
         this.ms = ms;
     }
 
@@ -64,6 +64,6 @@ public class King extends Figure {
 
     @Override
     public String toString() {
-        return "King " + (white ? "White" : "Black");
+        return (white ? "White" : "Black") + " King";
     }
 }
