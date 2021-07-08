@@ -15,7 +15,7 @@ public class Pawn extends Figure {
     private MoveSystem ms;
 
     public Pawn(MoveSystem ms, Board board, boolean white, Cell pos) {
-        super(board, white, pos, white ? "♙" : "♟");
+        super(board, white, pos, white ? "♙".toCharArray()[0] : "♟".toCharArray()[0]);
         this.ms = ms;
     }
 

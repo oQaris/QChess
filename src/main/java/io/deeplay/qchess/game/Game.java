@@ -32,6 +32,7 @@ public class Game {
     }
 
     public void run() throws ChessError {
+        logger.info(board.toString());
         boolean notDraw = true;
         while (!moveSystem.isStalemate(currentPlayerToMove.getColor()) && notDraw) {
             // TODO: получать json Move
@@ -56,9 +57,10 @@ public class Game {
 
     private boolean tryMove(Move move) throws ChessError {
         try {
-            logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
+            boolean notDraw = moveSystem.move(move);
+            logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getTo()));
             logger.info(board.toString());
-            return moveSystem.move(move);
+            return notDraw;
         } catch (ChessException e) {
             throw new ChessError("Не удалось записать в лог", e);
         }

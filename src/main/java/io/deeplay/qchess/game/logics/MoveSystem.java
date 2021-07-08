@@ -4,7 +4,6 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
-import io.deeplay.qchess.game.figures.Rook;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -47,14 +46,12 @@ public class MoveSystem {
 
             // рокировка
             if (move.getMoveType().equals(MoveType.SHORT_CASTLING)) {
-                board.getFigure(move.getFrom()).setWasMoved();
                 Cell from = move.getFrom().createAdd(new Cell(3, 0));
                 Cell to = move.getFrom().createAdd(new Cell(1, 0));
                 board.getFigure(from).setWasMoved();
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
             if (move.getMoveType().equals(MoveType.LONG_CASTLING)) {
-                board.getFigure(move.getFrom()).setWasMoved();
                 Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                 Cell to = move.getFrom().createAdd(new Cell(-1, 0));
                 board.getFigure(from).setWasMoved();
@@ -74,7 +71,7 @@ public class MoveSystem {
                 ++pieceMoveCount;
             }
             return pieceMoveCount != 50;
-        } catch (ChessException | ClassCastException | NullPointerException e) {
+        } catch (ChessException | NullPointerException e) {
             throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры", e);
         }
     }
