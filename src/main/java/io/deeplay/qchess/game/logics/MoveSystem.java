@@ -47,17 +47,17 @@ public class MoveSystem {
 
             // рокировка
             if (move.getMoveType().equals(MoveType.SHORT_CASTLING)) {
-                ((King) board.getFigure(move.getFrom())).setWasMoved();
+                board.getFigure(move.getFrom()).setWasMoved();
                 Cell from = move.getFrom().createAdd(new Cell(3, 0));
                 Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                ((Rook) board.getFigure(from)).setWasMoved();
+                board.getFigure(from).setWasMoved();
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
             if (move.getMoveType().equals(MoveType.LONG_CASTLING)) {
-                ((King) board.getFigure(move.getFrom())).setWasMoved();
+                board.getFigure(move.getFrom()).setWasMoved();
                 Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                 Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                ((Rook) board.getFigure(from)).setWasMoved();
+                board.getFigure(from).setWasMoved();
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
 

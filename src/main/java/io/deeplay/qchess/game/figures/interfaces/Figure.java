@@ -38,6 +38,15 @@ public abstract class Figure {
     protected final boolean white;
     protected final String shortName;
     protected Cell pos;
+    protected boolean wasMoved = false;
+
+    public void setWasMoved() {
+        wasMoved = true;
+    }
+
+    public boolean wasMoved() {
+        return wasMoved;
+    }
 
     public Figure(Board board, boolean white, Cell pos, String shortName) {
         this.board = board;

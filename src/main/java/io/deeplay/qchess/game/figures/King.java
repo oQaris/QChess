@@ -15,19 +15,10 @@ import java.util.stream.Stream;
 public class King extends Figure {
 
     private MoveSystem ms;
-    private boolean wasMoved = false;
 
     public King(MoveSystem ms, Board board, boolean white, Cell pos) {
         super(board, white, pos, white ? "♔" : "♚");
         this.ms = ms;
-    }
-
-    public void setWasMoved() {
-        wasMoved = true;
-    }
-
-    public boolean wasMoved() {
-        return wasMoved;
     }
 
     @Override
