@@ -36,7 +36,7 @@ public class MoveSystem {
     public boolean move(Move move) throws ChessError {
         try {
             // взятие на проходе
-            if (move.getMoveType().equals(MoveType.EN_PASSANT) && isPawnEnPassant(move.getFrom(), move.getTo())) {
+            if (move.getMoveType().equals(MoveType.EN_PASSANT)) {
                 board.removeFigure(prevMove.getTo());
             }
 

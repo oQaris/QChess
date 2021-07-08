@@ -10,9 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Board {
-
     public final static int BOARD_SIZE = 8;
-    private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
+    private final Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
     /**
      * Создает пустую доску

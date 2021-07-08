@@ -5,11 +5,10 @@ import io.deeplay.qchess.game.figures.interfaces.Figure;
 import java.util.Objects;
 
 public class Move {
-
     private Figure turnInto;
-    private MoveType moveType;
-    private Cell from;
-    private Cell to;
+    private final MoveType moveType;
+    private final Cell from;
+    private final Cell to;
 
     public Move(MoveType moveType, Cell from, Cell to) {
         this.moveType = moveType;

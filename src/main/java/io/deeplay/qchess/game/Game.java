@@ -10,12 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Game {
-
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
-    private Board board;
-    private MoveSystem moveSystem;
-    private Player firstPlayer;
-    private Player secondPlayer;
+    private final Board board;
+    private final MoveSystem moveSystem;
+    private final Player firstPlayer;
+    private final Player secondPlayer;
     private Player currentPlayerToMove;
 
     public Game(Board.BoardFilling boardType, Player firstPlayer, Player secondPlayer) throws ChessError {
@@ -57,8 +56,9 @@ public class Game {
     private boolean tryMove(Move move) throws ChessError {
         try {
             logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getFrom()));
+            var ok =  moveSystem.move(move);
             logger.info(board.toString());
-            return moveSystem.move(move);
+            return ok;
         } catch (ChessException e) {
             throw new ChessError("Не удалось записать в лог", e);
         }
