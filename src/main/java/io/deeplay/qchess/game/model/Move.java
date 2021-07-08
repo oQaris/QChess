@@ -59,6 +59,12 @@ public class Move {
 
     @Override
     public String toString() {
-        return from.toString() + "-" + to + " (" + moveType + ")";
+        StringBuilder sb = new StringBuilder()
+                .append(from).append("-").append(to)
+                .append(" (").append(moveType).append(")");
+        if (moveType.equals(MoveType.TURN_INTO)) {
+            sb.append(" turn into ").append(turnInto);
+        }
+        return sb.toString();
     }
 }

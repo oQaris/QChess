@@ -121,6 +121,7 @@ public final class Board {
         Figure figure = getFigure(move.getFrom());
         Figure old = getFigure(move.getTo());
         figure.setCurrentPosition(move.getTo());
+        figure.setWasMoved();
         setFigure(figure);
         removeFigure(move.getFrom());
         return old;
@@ -201,7 +202,7 @@ public final class Board {
                 if (figure == null) {
                     sb.append("_");
                 } else {
-                    sb.append(figure.getShortName());
+                    sb.append(figure.getCharIcon());
                 }
                 sb.append('|');
             }
