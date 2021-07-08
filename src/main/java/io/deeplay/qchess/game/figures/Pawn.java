@@ -57,6 +57,6 @@ public class Pawn extends Figure {
 
     @Override
     public String toString() {
-        return "Pawn " + (white ? "White" : "Black");
+        return (white ? "White" : "Black") + " Pawn";
     }
 }

@@ -21,7 +21,6 @@ public class MoveSystem {
 
     private final Board board;
     private Move prevMove;
-    private int pieceMoveCount = 0;
 
     public MoveSystem(Board board) {
         this.board = board;
@@ -30,9 +29,9 @@ public class MoveSystem {
     /**
      * Делает ход без проверок
      *
-     * @return true, если ход выполнен, false, если ход последний (ничья)
+     * @return удаленная фигура или null, если клетка была пуста
      */
-    public boolean move(Move move) throws ChessError {
+    public Figure move(Move move) throws ChessError {
         try {
             // взятие на проходе
             if (move.getMoveType().equals(MoveType.EN_PASSANT) && isPawnEnPassant(move.getFrom(), move.getTo())) {
@@ -59,18 +58,8 @@ public class MoveSystem {
             }
 
             // ход
-            Figure removedFigure = board.moveFigure(move);
             prevMove = move;
-
-            // условия ничьи:
-            // пешка не ходит 50 ходов
-            // никто не рубит
-            if (removedFigure != null || board.getFigure(move.getTo()).getClass() == Pawn.class) {
-                pieceMoveCount = 0;
-            } else {
-                ++pieceMoveCount;
-            }
-            return pieceMoveCount != 50;
+            return board.moveFigure(move);
         } catch (ChessException | NullPointerException e) {
             throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры", e);
         }

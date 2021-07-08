@@ -20,6 +20,6 @@ public class Rook extends Figure {
 
     @Override
     public String toString() {
-        return "Rook " + (white ? "White" : "Black");
+        return (white ? "White" : "Black") + " Rook";
     }
 }
