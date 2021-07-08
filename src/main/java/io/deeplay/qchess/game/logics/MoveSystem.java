@@ -74,8 +74,8 @@ public class MoveSystem {
                 ++pieceMoveCount;
             }
             return pieceMoveCount != 50;
-        } catch (ChessException e) {
-            throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры");
+        } catch (ChessException | ClassCastException | NullPointerException e) {
+            throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры", e);
         }
     }
 

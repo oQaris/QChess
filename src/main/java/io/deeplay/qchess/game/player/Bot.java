@@ -46,12 +46,14 @@ public class Bot extends Player {
                 if (curGrade >= maxGrade) {
                     topMoves.add(move);
                 }
-            } catch (ChessException ignored) {
+            } catch (ChessException e) {
+                throw new ChessError("В боте возникло исключение", e);
             }
         }
         var move = topMoves.get(new Random().nextInt(topMoves.size()));
-        if (move.getMoveType() == MoveType.TURN_INTO)
+        if (move.getMoveType() == MoveType.TURN_INTO) {
             move.setTurnInto(new Queen(board, color, move.getTo()));
+        }
         return move;
     }
 }

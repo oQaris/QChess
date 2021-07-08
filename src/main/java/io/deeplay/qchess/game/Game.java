@@ -60,7 +60,7 @@ public class Game {
             logger.info(board.toString());
             return moveSystem.move(move);
         } catch (ChessException e) {
-            throw new ChessError("Не удалось записать в лог");
+            throw new ChessError("Не удалось записать в лог", e);
         }
     }
 }

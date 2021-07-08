@@ -5,8 +5,6 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +12,6 @@ import java.util.List;
 public final class Board {
 
     public final static int BOARD_SIZE = 8;
-    private static final Logger logger = LoggerFactory.getLogger(Board.class);
     private Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
     /**
@@ -68,8 +65,7 @@ public final class Board {
                     setFigure(new Pawn(ms, this, false, Cell.parse("g7")));
                     setFigure(new Pawn(ms, this, false, Cell.parse("h7")));
                 } catch (ChessException e) {
-                    logger.error("Стандартное заполнение доски некорректное: {}", e.getMessage());
-                    throw new ChessError("Стандартное заполнение доски некорректное");
+                    throw new ChessError("Стандартное заполнение доски некорректное", e);
                 }
             }
             default -> {
@@ -93,7 +89,6 @@ public final class Board {
             }
         }
         if (kingCell == null) {
-            logger.error("Возникла невозможная ситуация: король не найден");
             throw new ChessError("Король не найден");
         }
         return kingCell;
