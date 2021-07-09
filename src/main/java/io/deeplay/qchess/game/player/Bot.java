@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.player;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Move;
@@ -15,8 +16,8 @@ public class Bot extends Player {
 
     private static final Map<Class<?>, Integer> grades = preparedGrades();
 
-    public Bot() {
-        super();
+    public Bot(GameSettings roomSettings, boolean color) {
+        super(roomSettings, color);
     }
 
     private static Map<Class<?>, Integer> preparedGrades() {

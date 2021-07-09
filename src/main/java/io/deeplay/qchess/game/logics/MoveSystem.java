@@ -33,25 +33,25 @@ public class MoveSystem {
     public Figure move(Move move) throws ChessError {
         try {
             // взятие на проходе
-            if (move.getMoveType().equals(MoveType.EN_PASSANT)) {
+            if (move.getMoveType() == MoveType.EN_PASSANT) {
                 board.removeFigure(prevMove.getTo());
             }
 
             // превращение пешки
-            if (move.getMoveType().equals(MoveType.TURN_INTO)) {
+            if (move.getMoveType() == MoveType.TURN_INTO) {
                 Figure turnIntoFigure = move.getTurnInto();
                 turnIntoFigure.setCurrentPosition(move.getTo());
                 board.setFigure(turnIntoFigure);
             }
 
             // рокировка
-            if (move.getMoveType().equals(MoveType.SHORT_CASTLING)) {
+            if (move.getMoveType() == MoveType.SHORT_CASTLING) {
                 Cell from = move.getFrom().createAdd(new Cell(3, 0));
                 Cell to = move.getFrom().createAdd(new Cell(1, 0));
                 board.getFigure(from).setWasMoved(true);
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
-            if (move.getMoveType().equals(MoveType.LONG_CASTLING)) {
+            if (move.getMoveType() == MoveType.LONG_CASTLING) {
                 Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                 Cell to = move.getFrom().createAdd(new Cell(-1, 0));
                 board.getFigure(from).setWasMoved(true);
@@ -145,7 +145,7 @@ public class MoveSystem {
      */
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
-        if (move.getMoveType().equals(MoveType.TURN_INTO)) {
+        if (move.getMoveType() == MoveType.TURN_INTO) {
             return move.getTurnInto().isWhite() == board.getFigure(move.getFrom()).isWhite()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
                     && (move.getTurnInto().getClass() == Bishop.class

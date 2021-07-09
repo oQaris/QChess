@@ -187,7 +187,7 @@ public final class Board {
     @Override
     public String toString() {
         var sb = new StringBuilder();
-        sb/*.append(" - ".repeat(Board.BOARD_SIZE))*/.append("\n");
+        sb.append("\n");
         for (Figure[] line : cells) {
             sb.append('|');
             for (Figure figure : line) {
@@ -198,7 +198,7 @@ public final class Board {
                 }
                 sb.append('|');
             }
-            sb.append("\n")/*.append(" - ".repeat(Board.BOARD_SIZE)).append("\n")*/;
+            sb.append("\n");
         }
         return sb.toString();
     }

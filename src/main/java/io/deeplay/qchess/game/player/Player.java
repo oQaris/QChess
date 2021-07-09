@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.player;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
@@ -11,12 +12,9 @@ public abstract class Player {
     protected Board board;
     protected boolean color;
 
-    public Player() {
-    }
-
-    public void init(MoveSystem ms, Board board, boolean color) {
-        this.ms = ms;
-        this.board = board;
+    public Player(GameSettings roomSettings, boolean color) {
+        ms = roomSettings.moveSystem;
+        board = roomSettings.board;
         this.color = color;
     }
 

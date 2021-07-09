@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.player;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
@@ -22,8 +23,8 @@ public class ConsolePlayer extends Player {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
     private BufferedReader in;
 
-    public ConsolePlayer(BufferedReader in) {
-        super();
+    public ConsolePlayer(GameSettings roomSettings, boolean color, BufferedReader in) {
+        super(roomSettings, color);
         this.in = in;
     }
 

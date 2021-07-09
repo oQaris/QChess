@@ -1,6 +1,7 @@
 package io.deeplay.qchess;
 
 import io.deeplay.qchess.game.Game;
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.player.Bot;
@@ -16,9 +17,10 @@ public class Main {
         // TODO: при создании комнаты
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-        Player firstPlayer = new ConsolePlayer(in);
-        Player secondPlayer = new Bot();
-        Game game = new Game(Board.BoardFilling.STANDARD, firstPlayer, secondPlayer);
+        GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+        Player firstPlayer = new ConsolePlayer(roomSettings, true, in);
+        Player secondPlayer = new Bot(roomSettings, false);
+        Game game = new Game(roomSettings, firstPlayer, secondPlayer);
         game.run();
     }
 }

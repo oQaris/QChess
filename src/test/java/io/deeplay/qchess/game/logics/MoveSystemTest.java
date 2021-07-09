@@ -10,7 +10,6 @@ import io.deeplay.qchess.game.model.figures.*;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -233,9 +232,32 @@ public class MoveSystemTest {
     }
 
     @Test(expected = ChessError.class)
-    public void testIsCheck_zeroFigures() throws ChessError {
+    public void testIsCheck_zeroFigures_1() throws ChessError {
+        ms.isCheck(true);
+    }
+
+    @Test(expected = ChessError.class)
+    public void testIsCheck_zeroFigures_2() throws ChessError {
+        ms.isCheck(false);
+    }
+
+    @Test
+    public void testIsCheck() throws ChessError, ChessException {
+        board.setFigure(new King(ms, board, true, Cell.parse("e1")));
+        board.setFigure(new King(ms, board, false, Cell.parse("e8")));
+
+        board.setFigure(new Pawn(ms, board, false, Cell.parse("e2")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("e7")));
+
+        ms.isCheck(true);
         Assert.assertFalse(ms.isCheck(true));
         Assert.assertFalse(ms.isCheck(false));
+
+        board.setFigure(new Pawn(ms, board, false, Cell.parse("f2")));
+        board.setFigure(new Pawn(ms, board, true, Cell.parse("f7")));
+
+        Assert.assertTrue(ms.isCheck(true));
+        Assert.assertTrue(ms.isCheck(false));
     }
 
     @Test
@@ -405,7 +427,6 @@ public class MoveSystemTest {
         Assert.assertFalse(ms.isCorrectMove(move3));
     }
 
-    @Ignore
     @Test
     public void testIsCorrectPawnTurnInto_5() throws ChessException, ChessError {
         board.setFigure(new King(ms, board, true, Cell.parse("h1")));
