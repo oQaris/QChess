@@ -167,6 +167,14 @@ public class History implements Iterable<String> {
         return result.toString();
     }
 
+    /**
+     * @return true - если было repetition-кратное повторение, false - если не было
+     */
+    public boolean checkThreefoldRepetition(int repetition) {
+        Set<String> set = new HashSet<>(recordsList);
+        return recordsList.size() - set.size() >= repetition - 1;
+    }
+
     public Move getPrevMove() {
         return prevMove;
     }
