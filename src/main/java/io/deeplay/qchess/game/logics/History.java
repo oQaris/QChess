@@ -41,6 +41,12 @@ public class History implements Iterable<String> {
         addRecord();
     }
 
+    /**
+     * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные приписки
+     *
+     * @return Строка - только что добавленная запись
+     * @throws ChessException если convertBoardToStringForsytheEdwards() выбросит это исключение
+     */
     public String addRecord() throws ChessException {
         String record = convertBoardToStringForsytheEdwards();
         recordsList.add(record);
@@ -49,10 +55,18 @@ public class History implements Iterable<String> {
         return record;
     }
 
+    /**
+     * @return Строка - последняя запись в списке
+     */
     public String getLastRecord() {
         return recordsList.get(recordsList.size() - 1);
     }
 
+    /**
+     * @return Строка - запись в виде нотации Форсайта-Эдвардса
+     * @throws ChessException если getConvertingFigurePosition(), getCastlingPossibility() или
+     * getPawnEnPassantPossibility() выбросит это исключение
+     */
     private String convertBoardToStringForsytheEdwards() throws ChessException {
         StringBuilder record = new StringBuilder(70);
 
@@ -70,6 +84,10 @@ public class History implements Iterable<String> {
         return record.toString();
     }
 
+    /**
+     * @return Строка - часть записи отвечающая за позиционирование фигур на доске
+     * @throws ChessException если getFigure() выбросит это исключение
+     */
     private String getConvertingFigurePosition() throws ChessException {
         StringBuilder result = new StringBuilder();
         Figure currentFigure = null;
@@ -102,6 +120,10 @@ public class History implements Iterable<String> {
         return result.toString();
     }
 
+    /**
+     * @return Строка - часть записи отвечающая, то можно ли использовать рокировки
+     * @throws ChessException если getFigure() выбросит это исключение
+     */
     private String getCastlingPossibility() throws ChessException {
         StringBuilder result = new StringBuilder(4);
         Figure shortRook = null;
@@ -132,6 +154,10 @@ public class History implements Iterable<String> {
         return result.toString();
     }
 
+    /**
+     * @return Строка - часть записи отвечающая за то, доступно ли взятие на проходе следующим ходом
+     * @throws ChessException если getFigure() выбросит это исключение
+     */
     private String getPawnEnPassantPossibility() throws ChessException {
         StringBuilder result = new StringBuilder();
         if(prevMove.getMoveType() == MoveType.LONG_MOVE) {
