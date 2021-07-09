@@ -50,13 +50,13 @@ public class MoveSystem {
                 Cell from = move.getFrom().createAdd(new Cell(3, 0));
                 Cell to = move.getFrom().createAdd(new Cell(1, 0));
                 board.getFigure(from).setWasMoved(true);
-                board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
+                board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
             }
             if (move.getMoveType() == MoveType.LONG_CASTLING) {
                 Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                 Cell to = move.getFrom().createAdd(new Cell(-1, 0));
                 board.getFigure(from).setWasMoved(true);
-                board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
+                board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
             }
 
             // ход
