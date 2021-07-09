@@ -12,8 +12,7 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.lang.reflect.Field;
+import org.mockito.Mockito;
 
 public class MoveSystemTest {
     private Board board;
@@ -71,9 +70,8 @@ public class MoveSystemTest {
 
         Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
 
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, white1);
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(white1);
 
         Assert.assertTrue(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
         Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
@@ -83,11 +81,11 @@ public class MoveSystemTest {
 
     @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_2() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Move white2 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c3"));
+        Move white2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c2"), Cell.parse("c3"));
         Figure figureW2 = new Pawn(Color.WHITE, white2.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, white2);
+
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(white2);
 
         board.setFigure(figureW2);
         setBlackPawns();
@@ -102,9 +100,9 @@ public class MoveSystemTest {
     public void testIsCorrectPawnEnPassant_blackPawnAttack_3() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("c2"), Cell.parse("d3"));
         Figure figureW3 = new Pawn(Color.WHITE, white3.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, white3);
+
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(white3);
 
         board.setFigure(figureW3);
         setBlackPawns();
@@ -119,9 +117,9 @@ public class MoveSystemTest {
     public void testIsCorrectPawnEnPassant_notPawnDefense() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Knight(Color.WHITE, white1.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, white1);
+
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(white1);
 
         board.setFigure(figureW1);
         setBlackPawns();
@@ -136,9 +134,9 @@ public class MoveSystemTest {
     public void testIsCorrectPawnEnPassant_notPawnAttack() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, white1);
+
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(white1);
 
         Move black1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
         Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
@@ -171,9 +169,8 @@ public class MoveSystemTest {
 
         Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
 
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, black1);
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(black1);
 
         Assert.assertTrue(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
         Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
@@ -183,11 +180,11 @@ public class MoveSystemTest {
 
     @Test
     public void testIsCorrectPawnEnPassant_whitePawnAttack_2() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Move black2 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c7"), Cell.parse("c6"));
+        Move black2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c7"), Cell.parse("c6"));
         Figure figureB2 = new Pawn(Color.BLACK, black2.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, black2);
+
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(black2);
 
         board.setFigure(figureB2);
         setWhitePawns();
@@ -202,9 +199,9 @@ public class MoveSystemTest {
     public void testIsCorrectPawnEnPassant_whitePawnAttack_3() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("c7"), Cell.parse("d6"));
         Figure figureB3 = new Pawn(Color.BLACK, black3.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, black3);
+
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(black3);
 
         board.setFigure(figureB3);
         setWhitePawns();
@@ -221,9 +218,9 @@ public class MoveSystemTest {
         Move white2 = new Move(MoveType.ATTACK, Cell.parse("b2"), Cell.parse("c3"));
         Figure figure1 = new Pawn(Color.WHITE, white1.getTo());
         Figure figure2 = new Pawn(Color.WHITE, white2.getFrom());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, white1);
+
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(white1);
 
         board.setFigure(figure1);
         board.setFigure(figure2);
@@ -315,8 +312,8 @@ public class MoveSystemTest {
         board.setFigure(new King(Color.WHITE, Cell.parse("e1")));
         board.setFigure(new Rook(Color.WHITE, Cell.parse("e4")));
 
-        Move move1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("e4"), Cell.parse("e7"));
-        Move move2 = new Move(MoveType.SIMPLE_STEP, Cell.parse("e4"), Cell.parse("d3"));
+        Move move1 = new Move(MoveType.QUIET_MOVE, Cell.parse("e4"), Cell.parse("e7"));
+        Move move2 = new Move(MoveType.QUIET_MOVE, Cell.parse("e4"), Cell.parse("d3"));
         Move move3 = new Move(MoveType.ATTACK, Cell.parse("e4"), Cell.parse("e1"));
 
         Assert.assertTrue(ms.isCorrectMove(move1));
@@ -324,7 +321,7 @@ public class MoveSystemTest {
         Assert.assertFalse(ms.isCorrectMove(move3));
 
         board.setFigure(new Queen(Color.BLACK, Cell.parse("e8")));
-        Move move4 = new Move(MoveType.SIMPLE_STEP, Cell.parse("e4"), Cell.parse("c4"));
+        Move move4 = new Move(MoveType.QUIET_MOVE, Cell.parse("e4"), Cell.parse("c4"));
 
         Assert.assertTrue(ms.isCorrectMove(move1));
         Assert.assertFalse(ms.isCorrectMove(move2));

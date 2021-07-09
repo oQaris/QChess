@@ -53,9 +53,9 @@ public class BoardTest {
         }
 
         Comparator<Figure> figureComparator = (o1, o2) -> {
-            int x1 = o1.getCurrentPosition().getCol();
+            int x1 = o1.getCurrentPosition().getColumn();
             int y1 = o1.getCurrentPosition().getRow();
-            int x2 = o2.getCurrentPosition().getCol();
+            int x2 = o2.getCurrentPosition().getColumn();
             int y2 = o2.getCurrentPosition().getRow();
             return x1 != x2 ? x1 - x2 : y1 - y2;
         };
@@ -101,16 +101,18 @@ public class BoardTest {
 
     @Test
     public void testMoveFigureEmpty() throws ChessException {
-        board.setFigure(new Rook(Color.WHITE, Cell.parse("a1")));
-        Assert.assertNull(board.moveFigure(new Move(MoveType.SIMPLE_STEP, Cell.parse("a1"), Cell.parse("a5"))));
+        Figure rook = new Rook(Color.WHITE, Cell.parse("a1"));
+        board.setFigure(rook);
+        Assert.assertNull(board.moveFigure(new Move(MoveType.QUIET_MOVE, Cell.parse("a1"), Cell.parse("a5"))));
         Assert.assertNull(board.getFigure(Cell.parse("a1")));
-        Assert.assertEquals(board.getFigure(Cell.parse("a5")), new Rook(Color.WHITE, Cell.parse("a5")));
+        Assert.assertNotNull(board.getFigure(Cell.parse("a5")));
+        Assert.assertEquals(rook, board.getFigure(Cell.parse("a5")));
     }
 
     @Test
     public void testMoveFigureAttack() throws ChessException {
         board.setFigure(new Rook(Color.WHITE, Cell.parse("a1")));
         board.setFigure(new Rook(Color.BLACK, Cell.parse("a5")));
-        Assert.assertNotNull(board.moveFigure(new Move(MoveType.SIMPLE_STEP, Cell.parse("a1"), Cell.parse("a5"))));
+        Assert.assertNotNull(board.moveFigure(new Move(MoveType.QUIET_MOVE, Cell.parse("a1"), Cell.parse("a5"))));
     }
 }

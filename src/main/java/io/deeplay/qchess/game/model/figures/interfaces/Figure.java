@@ -78,7 +78,7 @@ public abstract class Figure {
      * @return цвет фигуры
      */
     public Color getColor() {
-        return Color.WHITE;
+        return color;
     }
 
     protected Set<Move> rayTrace(Board board, List<Cell> directions) {
@@ -120,11 +120,10 @@ public abstract class Figure {
         Figure enemyFigure;
         try {
             enemyFigure = board.getFigure(cell);
-        } catch (ChessException e) {
-            log.error(e.toString());
+        } catch (ChessException e) {// тут лог не нужен, это не ошибка
             return false;
         }
-        return color != enemyFigure.getColor();
+        return enemyFigure != null && color != enemyFigure.getColor();
     }
 
     @Override
@@ -136,11 +135,13 @@ public abstract class Figure {
             return false;
         }
         Figure figure = (Figure) o;
-        return wasMoved == figure.wasMoved && color == figure.color;
+        return wasMoved == figure.wasMoved
+                && color == figure.color
+                && position.equals(figure.position);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, wasMoved);
+        return Objects.hash(color, wasMoved, position);
     }
 }

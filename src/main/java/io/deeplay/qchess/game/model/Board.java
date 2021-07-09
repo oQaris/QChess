@@ -9,7 +9,7 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Board {
+public class Board {
 
     public static final int BOARD_SIZE = 8;
     private final Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
@@ -81,7 +81,6 @@ public final class Board {
         return false;
     }
 
-
     /**
      * @param color цвет игрока
      * @return позиция короля определенного цвета
@@ -141,7 +140,7 @@ public final class Board {
      * @throws ChessException если клетка не лежит в пределах доски
      */
     public Figure getFigure(Cell cell) throws ChessException {
-        int x = cell.getCol();
+        int x = cell.getColumn();
         int y = cell.getRow();
         if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
@@ -153,7 +152,7 @@ public final class Board {
      * Устанавливает фигуру на доску
      */
     public void setFigure(Figure figure) throws ChessException {
-        int x = figure.getCurrentPosition().getCol();
+        int x = figure.getCurrentPosition().getColumn();
         int y = figure.getCurrentPosition().getRow();
         if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
@@ -167,7 +166,7 @@ public final class Board {
      * @return удаленную фигуру или null, если клетка была пуста
      */
     public Figure removeFigure(Cell cell) throws ChessException {
-        int x = cell.getCol();
+        int x = cell.getColumn();
         int y = cell.getRow();
         if (!isCorrectCell(x, y)) {
             throw new ChessException("Координаты выходят за границу доски");
@@ -181,7 +180,7 @@ public final class Board {
      * @return true, если клетка лежит на доске и она пустая, иначе false
      */
     public boolean isEmptyCell(Cell cell) {
-        int x = cell.getCol();
+        int x = cell.getColumn();
         int y = cell.getRow();
         return isCorrectCell(x, y) && cells[y][x] == null;
     }
@@ -214,22 +213,21 @@ public final class Board {
 
     private char figureToIcon(Figure figure) {
         return switch (figure.getColor()) {
-            // todo вставить норм символы
             case WHITE -> switch (figure.getType()) {
-                case BISHOP -> '1';
-                case KING -> '2';
-                case KNIGHT -> '3';
-                case PAWN -> '4';
-                case QUEEN -> '5';
-                case ROOK -> '6';
+                case BISHOP -> "♝".toCharArray()[0];
+                case KING -> "♚".toCharArray()[0];
+                case KNIGHT -> "♞".toCharArray()[0];
+                case PAWN -> "♟".toCharArray()[0];
+                case QUEEN -> "♛".toCharArray()[0];
+                case ROOK -> "♜".toCharArray()[0];
             };
             case BLACK -> switch (figure.getType()) {
-                case BISHOP -> '7';
-                case KING -> '8';
-                case KNIGHT -> '9';
-                case PAWN -> '0';
-                case QUEEN -> '-';
-                case ROOK -> '=';
+                case BISHOP -> "♗".toCharArray()[0];
+                case KING -> "♔".toCharArray()[0];
+                case KNIGHT -> "♘".toCharArray()[0];
+                case PAWN -> "♙".toCharArray()[0];
+                case QUEEN -> "♕".toCharArray()[0];
+                case ROOK -> "♖".toCharArray()[0];
             };
         };
     }

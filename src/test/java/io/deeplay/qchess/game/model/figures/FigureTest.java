@@ -2,7 +2,6 @@ package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
@@ -12,8 +11,8 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -22,12 +21,10 @@ import java.util.stream.Collectors;
 public class FigureTest {
 
     private Board board;
-    private MoveSystem ms;
 
     @Before
     public void setUp() throws ChessError {
         board = new Board(Board.BoardFilling.EMPTY);
-        ms = new MoveSystem(board);
     }
 
     @Test
@@ -50,30 +47,28 @@ public class FigureTest {
     }
 
     @Test
-    public void testBishopWithEnemyPawn() throws ChessException, ChessError {
+    public void testBishopWithEnemyPawn() throws ChessException {
         //--- Слон с вражесткой пешкой ---//
 
-        Board testBoard = new Board(Board.BoardFilling.EMPTY);
         var pawn = new Pawn(Color.BLACK, Cell.parse("e3"));
         var bishop = new Bishop(Color.WHITE, Cell.parse("c1"));
-        testBoard.setFigure(pawn);
-        testBoard.setFigure(bishop);
+        board.setFigure(pawn);
+        board.setFigure(bishop);
 
         Assert.assertEquals(toCellsSet("A3", "B2", "D2", "E3"),
                 extractCellTo(bishop.getAllMoves(board)));
     }
 
     @Test
-    public void testBishopWithFriendPawn() throws ChessException, ChessError {
+    public void testBishopWithFriendPawn() throws ChessException {
         //--- Слон с дружеской пешкой ---//
-        Board testBoard = new Board(Board.BoardFilling.EMPTY);
         var pawn = new Pawn(Color.WHITE, Cell.parse("e3"));
         var bishop = new Bishop(Color.WHITE, Cell.parse("c1"));
-        testBoard.setFigure(pawn);
-        testBoard.setFigure(bishop);
+        board.setFigure(pawn);
+        board.setFigure(bishop);
 
         Assert.assertEquals(toCellsSet("A3", "B2", "D2"),
-                extractCellTo(bishop.getAllMoves(testBoard)));
+                extractCellTo(bishop.getAllMoves(board)));
     }
 
     @Test
@@ -87,18 +82,17 @@ public class FigureTest {
     }
 
     @Test
-    public void testCornerBlockedRook() throws ChessException, ChessError {
+    public void testCornerBlockedRook() throws ChessException {
         //--- Ладья в углу с противниками на пути---//
-        Board testBoard = new Board(Board.BoardFilling.EMPTY);
         var rook = new Rook(Color.WHITE, Cell.parse("a8"));
         var rook1 = new Rook(Color.BLACK, Cell.parse("a6"));
         var rook2 = new Rook(Color.BLACK, Cell.parse("c8"));
-        testBoard.setFigure(rook);
-        testBoard.setFigure(rook1);
-        testBoard.setFigure(rook2);
+        board.setFigure(rook);
+        board.setFigure(rook1);
+        board.setFigure(rook2);
         Assert.assertEquals(
                 toCellsSet("b8", "a7", "a6", "c8"),
-                extractCellTo(rook.getAllMoves(testBoard)));
+                extractCellTo(rook.getAllMoves(board)));
     }
 
     @Test
@@ -362,21 +356,20 @@ public class FigureTest {
     }
 
     @Test
-    public void testKnightWithFriendPawns() throws ChessException, ChessError {
+    public void testKnightWithFriendPawns() throws ChessException {
         //--- Конь с дружественными пешками вокруг коня, но не закрывающие ход ---//
-        Board testBoard = new Board(Board.BoardFilling.EMPTY);
         var knight = new Knight(Color.WHITE, Cell.parse("a1"));
         var pawn1 = new Pawn(Color.WHITE, Cell.parse("a2"));
         var pawn2 = new Pawn(Color.WHITE, Cell.parse("b2"));
         var pawn3 = new Pawn(Color.WHITE, Cell.parse("b1"));
 
-        testBoard.setFigure(knight);
-        testBoard.setFigure(pawn1);
-        testBoard.setFigure(pawn2);
-        testBoard.setFigure(pawn3);
+        board.setFigure(knight);
+        board.setFigure(pawn1);
+        board.setFigure(pawn2);
+        board.setFigure(pawn3);
         Assert.assertEquals(
                 toCellsSet("b3", "c2"),
-                extractCellTo(knight.getAllMoves(testBoard)));
+                extractCellTo(knight.getAllMoves(board)));
     }
 
     @Test
@@ -386,8 +379,15 @@ public class FigureTest {
         var enemy = new Queen(Color.BLACK, Cell.parse("d3"));
         board.setFigure(pawn);
         board.setFigure(enemy);
+
         Assert.assertEquals(
                 toCellsSet("C3", "C4", "D3"),
+                extractCellTo(pawn.getAllMoves(board)));
+
+        board.setFigure(new Pawn(Color.BLACK, Cell.parse("c3")));
+
+        Assert.assertEquals(
+                toCellsSet("D3"),
                 extractCellTo(pawn.getAllMoves(board)));
     }
 
@@ -402,52 +402,50 @@ public class FigureTest {
     }
 
     @Test
-    public void testPawnWithXEnemy() throws ChessException, ChessError {
+    public void testPawnWithXEnemy() throws ChessException {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
-        Board testBoard = new Board(Board.BoardFilling.EMPTY);
         var pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
         var pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
         var pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
         var pawn3 = new Pawn(Color.BLACK, Cell.parse("b4"));
         var pawn4 = new Pawn(Color.BLACK, Cell.parse("d4"));
         var pawn5 = new Pawn(Color.BLACK, Cell.parse("c6"));
-        testBoard.setFigure(pawn);
-        testBoard.setFigure(pawn1);
-        testBoard.setFigure(pawn2);
-        testBoard.setFigure(pawn3);
-        testBoard.setFigure(pawn4);
-        testBoard.setFigure(pawn5);
+        board.setFigure(pawn);
+        board.setFigure(pawn1);
+        board.setFigure(pawn2);
+        board.setFigure(pawn3);
+        board.setFigure(pawn4);
+        board.setFigure(pawn5);
         Assert.assertEquals(
                 toCellsSet("B6", "D6"),
-                extractCellTo(pawn.getAllMoves(testBoard)));
+                extractCellTo(pawn.getAllMoves(board)));
     }
 
     @Test
-    public void testPawnWithXEnemy2() throws ChessException, ChessError {
+    public void testPawnWithXEnemy2() throws ChessException {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
-        Board testBoard = new Board(Board.BoardFilling.EMPTY);
         var pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
         var pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
         var pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
         var pawn3 = new Pawn(Color.BLACK, Cell.parse("b4"));
         var pawn4 = new Pawn(Color.BLACK, Cell.parse("d4"));
-        testBoard.setFigure(pawn);
-        testBoard.setFigure(pawn1);
-        testBoard.setFigure(pawn2);
-        testBoard.setFigure(pawn3);
-        testBoard.setFigure(pawn4);
+        board.setFigure(pawn);
+        board.setFigure(pawn1);
+        board.setFigure(pawn2);
+        board.setFigure(pawn3);
+        board.setFigure(pawn4);
         Assert.assertEquals(
                 toCellsSet("B6", "D6", "c6"),
-                extractCellTo(pawn.getAllMoves(testBoard)));
+                extractCellTo(pawn.getAllMoves(board)));
     }
 
     @Test
     public void testPawnEnPassant() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
-        Field field = MoveSystem.class.getDeclaredField("prevMove");
-        field.setAccessible(true);
-        field.set(ms, white1);
+
+        board = Mockito.spy(board);
+        Mockito.when(board.getPrevMove()).thenReturn(white1);
 
         Figure figureB1 = new Pawn(Color.BLACK, Cell.parse("b4"));
         Figure figureW2 = new Pawn(Color.WHITE, Cell.parse("a4"));

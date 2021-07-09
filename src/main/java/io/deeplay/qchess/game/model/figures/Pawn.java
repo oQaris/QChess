@@ -22,30 +22,27 @@ public class Pawn extends Figure {
     public Set<Move> getAllMoves(Board board) {
         Set<Move> result = new HashSet<>();
 
-        Cell shift;
-        if (color == Color.WHITE) {
-            shift = new Cell(0, -1);
-        } else {
-            shift = new Cell(0, 1);
-        }
+        Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
 
-        Cell move = position.createAdd(shift);
+        Cell move = position.createAdd(forwardShift);
         if (board.isEmptyCell(move)) {
             result.add(new Move(isTurnInto(move)
                     ? MoveType.TURN_INTO
                     : MoveType.QUIET_MOVE, position, move));
-        }
-        Cell moveLong = move.createAdd(shift);
-        if (isStartPosition(position) && board.isEmptyCell(moveLong)) {
-            result.add(new Move(MoveType.LONG_MOVE, position, moveLong));
+
+            Cell longMove = move.createAdd(forwardShift);
+            if (isStartPosition(position) && board.isEmptyCell(longMove)) {
+                result.add(new Move(MoveType.LONG_MOVE, position, longMove));
+            }
         }
 
         Cell leftAttack = move.createAdd(new Cell(-1, 0));
         Cell rightAttack = move.createAdd(new Cell(1, 0));
+
         boolean isEnPassant = isPawnEnPassant(board, position, leftAttack)
                 || isPawnEnPassant(board, position, rightAttack);
-
         MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
+
         if (isEnemyFigureOn(board, leftAttack) || isPawnEnPassant(board, position, leftAttack)) {
             result.add(new Move(isTurnInto(leftAttack)
                     ? MoveType.TURN_INTO
@@ -56,6 +53,7 @@ public class Pawn extends Figure {
                     ? MoveType.TURN_INTO
                     : specOrAttackMoveType, position, rightAttack));
         }
+
         return result;
     }
 
@@ -64,7 +62,7 @@ public class Pawn extends Figure {
     }
 
     private boolean isStartPosition(Cell start) {
-        return start.getRow() == (color == Color.WHITE ? 0 : Board.BOARD_SIZE - 1);
+        return start.getRow() == (color == Color.BLACK ? 1 : Board.BOARD_SIZE - 2);
     }
 
     /**
@@ -80,11 +78,11 @@ public class Pawn extends Figure {
             Pawn pawn = (Pawn) board.getFigure(prevMove.getTo());
 
             Cell cellDown = pawn.getColor() == Color.WHITE
-                    ? new Cell(prevMove.getTo().getCol(), prevMove.getTo().getRow() + 1)
-                    : new Cell(prevMove.getTo().getCol(), prevMove.getTo().getRow() - 1);
+                    ? new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() + 1)
+                    : new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() - 1);
             Cell cellDoubleDown = pawn.getColor() == Color.WHITE
-                    ? new Cell(cellDown.getCol(), cellDown.getRow() + 1)
-                    : new Cell(cellDown.getCol(), cellDown.getRow() - 1);
+                    ? new Cell(cellDown.getColumn(), cellDown.getRow() + 1)
+                    : new Cell(cellDown.getColumn(), cellDown.getRow() - 1);
 
             return currentPawn.getColor() != pawn.getColor()
                     && cellDoubleDown.equals(prevMove.getFrom())
