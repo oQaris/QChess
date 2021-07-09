@@ -164,7 +164,6 @@ public class MoveSystem {
      * @return true если игроку с указанным цветом ставят шах
      */
     public boolean isCheck(Color color) throws ChessError {
-        return board.isAttackedCell(board.findKingCell(color),
-                color == Color.BLACK ? Color.WHITE : Color.BLACK);
+        return board.isAttackedCell(board.findKingCell(color), color.inverse());
     }
 }
