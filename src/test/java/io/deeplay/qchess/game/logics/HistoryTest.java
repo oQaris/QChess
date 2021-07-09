@@ -4,10 +4,12 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class HistoryTest {
 
+    @Ignore
     @Test
     public void testBoardNotation() throws ChessError, ChessException {
         Board board = new Board();
