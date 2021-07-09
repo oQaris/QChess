@@ -9,47 +9,93 @@ import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConsolePlayer extends Player {
 
-    public ConsolePlayer() {
+    private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
+    private BufferedReader in;
+
+    public ConsolePlayer(BufferedReader in) {
         super();
+        this.in = in;
     }
 
     @Override
     public Move getNextMove() throws ChessError {
-        System.out.println("Выберите ход:");
-        List<Move> allMoves = ms.getAllCorrectMoves(color);
-        int i = 1;
-        for (Move move : allMoves) {
-            System.out.println(i + ": " + move);
-            i++;
+        try {
+            List<Move> allMoves = ms.getAllCorrectMoves(color);
+            printMoves(allMoves);
+            Move choosenMove = inputMoveNumber(allMoves);
+            specificMoveModification(choosenMove);
+            return choosenMove;
+        } catch (ChessError e) {
+            throw new ChessError("Произошла ошибка в классе игрока", e);
         }
-        Scanner in = new Scanner(System.in);
-        int numMove = in.nextInt();
-        var move = allMoves.get(numMove - 1);
-        if (move.getMoveType() == MoveType.TURN_INTO)
-            move.setTurnInto(readTurnInto(move.getTo()));
+    }
+
+    private void printMoves(List<Move> allMoves) throws ChessError {
+        System.out.println("Выберите ход:");
+        allMoves.sort(Comparator.comparing(Move::toString));
+        int number = 1;
+        for (Move move : allMoves) {
+            System.out.println(number + ": " + move);
+            ++number;
+        }
+    }
+
+    private Move inputMoveNumber(List<Move> allMoves) throws ChessError {
+        Move move = null;
+        while (move == null) {
+            try {
+                int numMove = Integer.parseInt(in.readLine());
+                move = allMoves.get(numMove - 1);
+            } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
+                logger.info("Неправильный ход, повторите попытку");
+            }
+        }
         return move;
     }
 
-    private Figure readTurnInto(Cell to) {
+    private void specificMoveModification(Move choosenMove) throws ChessError {
+        if (choosenMove.getMoveType() == MoveType.TURN_INTO) {
+            printMoveTypes();
+            choosenMove.setTurnInto(readTurnInto(choosenMove.getTo()));
+        }
+    }
+
+    private void printMoveTypes() {
         System.out.println("Выберите фигуру для превращения:\n" +
                 "1 - Конь\n" +
                 "2 - Слон\n" +
                 "3 - Ладья\n" +
                 "4 - Ферзь");
-        Scanner in = new Scanner(System.in);
-        int numTurnIntoFig = in.nextInt();
-        new Queen(board, color, to);
+    }
+
+    private Figure readTurnInto(Cell to) throws ChessError {
+        int numTurnIntoFig = 0;
+        while (numTurnIntoFig == 0) {
+            try {
+                numTurnIntoFig = Integer.parseInt(in.readLine());
+                if (numTurnIntoFig < 0 || numTurnIntoFig > 4) {
+                    numTurnIntoFig = 0;
+                }
+            } catch (IOException | NumberFormatException e) {
+                logger.info("Неправильный номер фигуры, повторите попытку");
+            }
+        }
         return switch (numTurnIntoFig) {
             case 1 -> new Knight(board, color, to);
             case 2 -> new Bishop(board, color, to);
             case 3 -> new Rook(board, color, to);
-            default -> new Queen(board, color, to);
+            case 4 -> new Queen(board, color, to);
+            default -> throw new ChessError("Выбрана неизвестная фигура");
         };
     }
 }

@@ -4,7 +4,6 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.King;
 import io.deeplay.qchess.game.figures.Pawn;
-import io.deeplay.qchess.game.figures.Rook;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -22,7 +21,6 @@ public class MoveSystem {
 
     private final Board board;
     private Move prevMove;
-    private int pieceMoveCount = 0;
 
     public MoveSystem(Board board) {
         this.board = board;
@@ -31,9 +29,9 @@ public class MoveSystem {
     /**
      * Делает ход без проверок
      *
-     * @return true, если ход выполнен, false, если ход последний (ничья)
+     * @return удаленная фигура или null, если клетка была пуста
      */
-    public boolean move(Move move) throws ChessError {
+    public Figure move(Move move) throws ChessError {
         try {
             // взятие на проходе
             if (move.getMoveType().equals(MoveType.EN_PASSANT) && isPawnEnPassant(move.getFrom(), move.getTo())) {
@@ -47,14 +45,12 @@ public class MoveSystem {
 
             // рокировка
             if (move.getMoveType().equals(MoveType.SHORT_CASTLING)) {
-                board.getFigure(move.getFrom()).setWasMoved();
                 Cell from = move.getFrom().createAdd(new Cell(3, 0));
                 Cell to = move.getFrom().createAdd(new Cell(1, 0));
                 board.getFigure(from).setWasMoved();
                 board.moveFigure(new Move(MoveType.SIMPLE_STEP, from, to));
             }
             if (move.getMoveType().equals(MoveType.LONG_CASTLING)) {
-                board.getFigure(move.getFrom()).setWasMoved();
                 Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                 Cell to = move.getFrom().createAdd(new Cell(-1, 0));
                 board.getFigure(from).setWasMoved();
@@ -62,19 +58,9 @@ public class MoveSystem {
             }
 
             // ход
-            Figure removedFigure = board.moveFigure(move);
             prevMove = move;
-
-            // условия ничьи:
-            // пешка не ходит 50 ходов
-            // никто не рубит
-            if (removedFigure != null || board.getFigure(move.getTo()).getClass() == Pawn.class) {
-                pieceMoveCount = 0;
-            } else {
-                ++pieceMoveCount;
-            }
-            return pieceMoveCount != 50;
-        } catch (ChessException | ClassCastException | NullPointerException e) {
+            return board.moveFigure(move);
+        } catch (ChessException | NullPointerException e) {
             throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры", e);
         }
     }

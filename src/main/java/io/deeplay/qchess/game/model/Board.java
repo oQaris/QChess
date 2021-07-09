@@ -121,9 +121,21 @@ public final class Board {
         Figure figure = getFigure(move.getFrom());
         Figure old = getFigure(move.getTo());
         figure.setCurrentPosition(move.getTo());
+        figure.setWasMoved();
         setFigure(figure);
         removeFigure(move.getFrom());
         return old;
+    }
+
+    /**
+     * @return фигура или null, если клетка пуста
+     * @throws ChessException если клетка не лежит в пределах доски
+     */
+    public Figure getFigure(int y, int x) throws ChessException {
+        if (!isCorrectCell(x, y)) {
+            throw new ChessException("Координаты выходят за границу доски");
+        }
+        return cells[y][x];
     }
 
     /**
@@ -190,7 +202,7 @@ public final class Board {
                 if (figure == null) {
                     sb.append("_");
                 } else {
-                    sb.append(figure.getShortName());
+                    sb.append(figure.getCharIcon());
                 }
                 sb.append('|');
             }

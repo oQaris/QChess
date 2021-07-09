@@ -36,9 +36,16 @@ public abstract class Figure {
 
     protected final Board board;
     protected final boolean white;
-    protected final String shortName;
+    protected final Character charIcon;
     protected Cell pos;
     protected boolean wasMoved = false;
+
+    public Figure(Board board, boolean white, Cell pos, Character charIcon) {
+        this.board = board;
+        this.white = white;
+        this.pos = pos;
+        this.charIcon = charIcon;
+    }
 
     public void setWasMoved() {
         wasMoved = true;
@@ -48,15 +55,8 @@ public abstract class Figure {
         return wasMoved;
     }
 
-    public Figure(Board board, boolean white, Cell pos, String shortName) {
-        this.board = board;
-        this.white = white;
-        this.pos = pos;
-        this.shortName = shortName;
-    }
-
-    public String getShortName() {
-        return shortName;
+    public Character getCharIcon() {
+        return charIcon;
     }
 
     /**

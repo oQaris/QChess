@@ -10,7 +10,7 @@ import java.util.Set;
 public class Rook extends Figure {
 
     public Rook(Board board, boolean white, Cell pos) {
-        super(board, white, pos, white ? "♖" : "♜");
+        super(board, white, pos, white ? "♖".toCharArray()[0] : "♜".toCharArray()[0]);
     }
 
     @Override
@@ -20,6 +20,6 @@ public class Rook extends Figure {
 
     @Override
     public String toString() {
-        return "Rook " + (white ? "White" : "Black");
+        return (white ? "White" : "Black") + " Rook";
     }
 }

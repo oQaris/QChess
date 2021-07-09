@@ -10,7 +10,7 @@ import java.util.Set;
 public class Knight extends Figure {
 
     public Knight(Board board, boolean white, Cell pos) {
-        super(board, white, pos, white ? "♘" : "♞");
+        super(board, white, pos, white ? "♘".toCharArray()[0] : "♞".toCharArray()[0]);
     }
 
     @Override
@@ -20,6 +20,6 @@ public class Knight extends Figure {
 
     @Override
     public String toString() {
-        return "Knight " + (white ? "White" : "Black");
+        return (white ? "White" : "Black") + " Knight";
     }
 }
