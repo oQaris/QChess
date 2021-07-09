@@ -33,7 +33,7 @@ public class Pawn extends Figure {
         if (board.isEmptyCell(move)) {
             result.add(new Move(isTurnInto(move)
                     ? MoveType.TURN_INTO
-                    : MoveType.SIMPLE_STEP, position, move));
+                    : MoveType.QUIET_MOVE, position, move));
         }
         Cell moveLong = move.createAdd(shift);
         if (isStartPosition(position) && board.isEmptyCell(moveLong)) {

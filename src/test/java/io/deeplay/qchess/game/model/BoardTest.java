@@ -105,7 +105,7 @@ public class BoardTest {
     @Test
     public void testMoveFigureEmpty() throws ChessException {
         board.setFigure(new Rook(board, true, Cell.parse("a1")));
-        Assert.assertNull(board.moveFigure(new Move(MoveType.SIMPLE_STEP, Cell.parse("a1"), Cell.parse("a5"))));
+        Assert.assertNull(board.moveFigure(new Move(MoveType.QUIET_MOVE, Cell.parse("a1"), Cell.parse("a5"))));
         Assert.assertNull(board.getFigure(Cell.parse("a1")));
         Assert.assertEquals(board.getFigure(Cell.parse("a5")), new Rook(board, true, Cell.parse("a5")));
     }
@@ -114,6 +114,6 @@ public class BoardTest {
     public void testMoveFigureAttack() throws ChessException {
         board.setFigure(new Rook(board, true, Cell.parse("a1")));
         board.setFigure(new Rook(board, false, Cell.parse("a5")));
-        Assert.assertNotNull(board.moveFigure(new Move(MoveType.SIMPLE_STEP, Cell.parse("a1"), Cell.parse("a5"))));
+        Assert.assertNotNull(board.moveFigure(new Move(MoveType.QUIET_MOVE, Cell.parse("a1"), Cell.parse("a5"))));
     }
 }

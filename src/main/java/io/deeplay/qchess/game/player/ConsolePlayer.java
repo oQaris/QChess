@@ -73,11 +73,11 @@ public class ConsolePlayer extends Player {
     }
 
     private void printMoveTypes() {
-        System.out.println("Выберите фигуру для превращения:\n" +
-                "1 - Конь\n" +
-                "2 - Слон\n" +
-                "3 - Ладья\n" +
-                "4 - Ферзь");
+        System.out.println(new StringBuilder("Выберите фигуру для превращения:")
+                .append(System.lineSeparator()).append("1 - Конь")
+                .append(System.lineSeparator()).append("2 - Слон")
+                .append(System.lineSeparator()).append("3 - Ладья")
+                .append(System.lineSeparator()).append("4 - Ферзь"));
     }
 
     private Figure readTurnInto(Cell to) throws ChessError {

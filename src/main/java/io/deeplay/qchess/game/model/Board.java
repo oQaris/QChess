@@ -196,7 +196,7 @@ public final class Board {
     @Override
     public String toString() {
         var sb = new StringBuilder();
-        sb.append("\n");
+        sb.append(System.lineSeparator());
         for (Figure[] line : cells) {
             sb.append('|');
             for (Figure figure : line) {
@@ -207,7 +207,7 @@ public final class Board {
                 }
                 sb.append('|');
             }
-            sb.append("\n");
+            sb.append(System.lineSeparator());
         }
         return sb.toString();
     }

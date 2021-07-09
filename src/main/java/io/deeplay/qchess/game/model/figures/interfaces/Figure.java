@@ -88,7 +88,7 @@ public abstract class Figure {
         for (Cell shift : directions) {
             Cell cord = position.createAdd(shift);
             while (board.isEmptyCell(cord)) {
-                result.add(new Move(MoveType.SIMPLE_STEP, position, cord));
+                result.add(new Move(MoveType.QUIET_MOVE, position, cord));
                 cord = cord.createAdd(shift);
             }
             if (isEnemyFigureOn(board, cord)) {
@@ -105,7 +105,7 @@ public abstract class Figure {
         for (Cell shift : moves) {
             Cell cord = position.createAdd(shift);
             if (board.isEmptyCell(cord)) {
-                result.add(new Move(MoveType.SIMPLE_STEP, position, cord));
+                result.add(new Move(MoveType.QUIET_MOVE, position, cord));
             } else if (isEnemyFigureOn(board, cord)) {
                 result.add(new Move(MoveType.ATTACK, position, cord));
             }
