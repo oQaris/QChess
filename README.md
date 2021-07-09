@@ -1,3 +1,2 @@
 # QChess
-
 Deeplay internship
