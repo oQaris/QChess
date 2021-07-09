@@ -14,12 +14,12 @@ import java.util.Set;
 
 public class Pawn extends Figure {
 
-    public Pawn(Color color) {
-        super(color);
+    public Pawn(Color color, Cell position) {
+        super(color, position);
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board, Cell position) {
+    public Set<Move> getAllMoves(Board board) {
         Set<Move> result = new HashSet<>();
 
         Cell shift;

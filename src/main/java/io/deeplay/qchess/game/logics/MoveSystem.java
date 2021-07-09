@@ -7,6 +7,7 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.*;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
 import java.util.ArrayList;
@@ -67,29 +68,27 @@ public class MoveSystem {
     }
 
     /**
-     * @param color true - белые, false - черные
      * @return true, если установленному цвету поставили мат
      */
-    public boolean isCheckmate(boolean color) throws ChessError {
+    public boolean isCheckmate(Color color) throws ChessError {
         return isStalemate(color) && isCheck(color);
     }
 
     /**
-     * @param color true - белые, false - черные
      * @return true, если установленному цвету поставили пат (нет доступных ходов)
      */
-    public boolean isStalemate(boolean color) throws ChessError {
+    public boolean isStalemate(Color color) throws ChessError {
         return getAllCorrectMoves(color).isEmpty();
     }
 
     /**
-     * @param color true - белые, false - черные
+     * @param color цвет фигур
      * @return все возможные ходы
      */
-    public List<Move> getAllCorrectMoves(boolean color) throws ChessError {
+    public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(64);
         for (Figure f : board.getFigures(color)) {
-            for (Move m : f.getAllMoves()) {
+            for (Move m : f.getAllMoves(board)) {
                 if (isCorrectMove(m)) {
                     res.add(m);
                 }
@@ -120,7 +119,7 @@ public class MoveSystem {
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
         if (move.getMoveType() == MoveType.TURN_INTO) {
-            return move.getTurnInto().isWhite() == board.getFigure(move.getFrom()).isWhite()
+            return move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
                     && (move.getTurnInto().getClass() == Bishop.class
                     || move.getTurnInto().getClass() == Knight.class
@@ -136,7 +135,7 @@ public class MoveSystem {
      */
     private boolean inAvailableMoves(Move move) throws ChessException {
         Figure figure = board.getFigure(move.getFrom());
-        Set<Move> allMoves = figure.getAllMoves();
+        Set<Move> allMoves = figure.getAllMoves(board);
         return allMoves.contains(move);
     }
 
@@ -151,7 +150,7 @@ public class MoveSystem {
         if (virtualKilled != null && virtualKilled.getClass() == King.class) {
             throw new ChessError("Срубили короля");
         }
-        boolean isCheck = isCheck(figureToMove.isWhite());
+        boolean isCheck = isCheck(figureToMove.getColor());
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
         figureToMove.setWasMoved(hasBeenMoved);
@@ -162,10 +161,10 @@ public class MoveSystem {
     }
 
     /**
-     * @param color true - белый, false - черный
      * @return true если игроку с указанным цветом ставят шах
      */
-    public boolean isCheck(boolean color) throws ChessError {
-        return isAttackedCell(board.findKingCell(color), !color);
+    public boolean isCheck(Color color) throws ChessError {
+        return board.isAttackedCell(board.findKingCell(color),
+                color == Color.BLACK ? Color.WHITE : Color.BLACK);
     }
 }

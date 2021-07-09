@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.model.figures;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
@@ -23,8 +24,8 @@ public class FigureTest {
     private MoveSystem ms;
 
     @Before
-    public void setUp() {
-        board = new Board();
+    public void setUp() throws ChessError {
+        board = new Board(Board.BoardFilling.EMPTY);
         ms = new MoveSystem(board);
     }
 

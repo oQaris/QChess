@@ -24,8 +24,8 @@ public class MoveSystemTest {
     private Move move4;
 
     @Before
-    public void setUp() {
-        board = new Board();
+    public void setUp() throws ChessError {
+        board = new Board(Board.BoardFilling.EMPTY);
         ms = new MoveSystem(board);
     }
 

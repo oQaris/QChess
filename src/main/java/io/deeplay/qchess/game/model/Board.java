@@ -2,7 +2,6 @@ package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.figures.*;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
@@ -15,10 +14,49 @@ public final class Board {
     public static final int BOARD_SIZE = 8;
     private final Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
-    /**
-     * Создает пустую доску
-     */
-    public Board() {
+    public Board(BoardFilling bf) throws ChessError {
+        if (bf != BoardFilling.STANDARD) {
+            return;
+        }
+        try {
+            setFigure(new Rook(Color.WHITE, Cell.parse("a1")));
+            setFigure(new Rook(Color.WHITE, Cell.parse("h1")));
+            setFigure(new Rook(Color.BLACK, Cell.parse("a8")));
+            setFigure(new Rook(Color.BLACK, Cell.parse("h8")));
+            setFigure(new Knight(Color.WHITE, Cell.parse("b1")));
+            setFigure(new Knight(Color.WHITE, Cell.parse("g1")));
+            setFigure(new Knight(Color.BLACK, Cell.parse("b8")));
+            setFigure(new Knight(Color.BLACK, Cell.parse("g8")));
+            setFigure(new Bishop(Color.WHITE, Cell.parse("c1")));
+            setFigure(new Bishop(Color.WHITE, Cell.parse("f1")));
+            setFigure(new Bishop(Color.BLACK, Cell.parse("c8")));
+            setFigure(new Bishop(Color.BLACK, Cell.parse("f8")));
+
+            setFigure(new Queen(Color.WHITE, Cell.parse("d1")));
+            setFigure(new Queen(Color.BLACK, Cell.parse("d8")));
+            setFigure(new King(Color.WHITE, Cell.parse("e1")));
+            setFigure(new King(Color.BLACK, Cell.parse("e8")));
+
+            setFigure(new Pawn(Color.WHITE, Cell.parse("a2")));
+            setFigure(new Pawn(Color.WHITE, Cell.parse("b2")));
+            setFigure(new Pawn(Color.WHITE, Cell.parse("c2")));
+            setFigure(new Pawn(Color.WHITE, Cell.parse("d2")));
+            setFigure(new Pawn(Color.WHITE, Cell.parse("e2")));
+            setFigure(new Pawn(Color.WHITE, Cell.parse("f2")));
+            setFigure(new Pawn(Color.WHITE, Cell.parse("g2")));
+            setFigure(new Pawn(Color.WHITE, Cell.parse("h2")));
+
+            setFigure(new Pawn(Color.BLACK, Cell.parse("a7")));
+            setFigure(new Pawn(Color.BLACK, Cell.parse("b7")));
+            setFigure(new Pawn(Color.BLACK, Cell.parse("c7")));
+            setFigure(new Pawn(Color.BLACK, Cell.parse("d7")));
+            setFigure(new Pawn(Color.BLACK, Cell.parse("e7")));
+            setFigure(new Pawn(Color.BLACK, Cell.parse("f7")));
+            setFigure(new Pawn(Color.BLACK, Cell.parse("g7")));
+            setFigure(new Pawn(Color.BLACK, Cell.parse("h7")));
+        } catch (ChessException e) {
+            throw new ChessError("Стандартное заполнение доски некорректное", e);
+        }
     }
 
     public Move getPrevMove() {
@@ -27,12 +65,14 @@ public final class Board {
     }
 
     /**
-     * @param color true - белый, false - черный
      * @return true, если клетка cell атакуется цветом color
      */
     public boolean isAttackedCell(Cell cell, Color color) {
         for (Figure f : getFigures(color)) {
-            for (Move m : f.getClass() == King.class ? ((King) f).getAttackedMoves() : f.getAllMoves()) {
+            for (Move m :
+                    f.getClass() == King.class
+                            ? ((King) f).getAttackedMoves(this)
+                            : f.getAllMoves(this)) {
                 if (m.getTo().equals(cell)) {
                     return true;
                 }
@@ -41,58 +81,6 @@ public final class Board {
         return false;
     }
 
-    /**
-     * Заполняет доску
-     */
-    public void initBoard(MoveSystem ms, BoardFilling bf) throws ChessError {
-        switch (bf) {
-            case EMPTY -> {
-            }
-            case STANDARD -> {
-                try {
-                    setFigure(new Rook(this, true, Cell.parse("a1")));
-                    setFigure(new Rook(this, true, Cell.parse("h1")));
-                    setFigure(new Rook(this, false, Cell.parse("a8")));
-                    setFigure(new Rook(this, false, Cell.parse("h8")));
-                    setFigure(new Knight(this, true, Cell.parse("b1")));
-                    setFigure(new Knight(this, true, Cell.parse("g1")));
-                    setFigure(new Knight(this, false, Cell.parse("b8")));
-                    setFigure(new Knight(this, false, Cell.parse("g8")));
-                    setFigure(new Bishop(this, true, Cell.parse("c1")));
-                    setFigure(new Bishop(this, true, Cell.parse("f1")));
-                    setFigure(new Bishop(this, false, Cell.parse("c8")));
-                    setFigure(new Bishop(this, false, Cell.parse("f8")));
-
-                    setFigure(new Queen(this, true, Cell.parse("d1")));
-                    setFigure(new Queen(this, false, Cell.parse("d8")));
-                    setFigure(new King(ms, this, true, Cell.parse("e1")));
-                    setFigure(new King(ms, this, false, Cell.parse("e8")));
-
-                    setFigure(new Pawn(ms, this, true, Cell.parse("a2")));
-                    setFigure(new Pawn(ms, this, true, Cell.parse("b2")));
-                    setFigure(new Pawn(ms, this, true, Cell.parse("c2")));
-                    setFigure(new Pawn(ms, this, true, Cell.parse("d2")));
-                    setFigure(new Pawn(ms, this, true, Cell.parse("e2")));
-                    setFigure(new Pawn(ms, this, true, Cell.parse("f2")));
-                    setFigure(new Pawn(ms, this, true, Cell.parse("g2")));
-                    setFigure(new Pawn(ms, this, true, Cell.parse("h2")));
-
-                    setFigure(new Pawn(ms, this, false, Cell.parse("a7")));
-                    setFigure(new Pawn(ms, this, false, Cell.parse("b7")));
-                    setFigure(new Pawn(ms, this, false, Cell.parse("c7")));
-                    setFigure(new Pawn(ms, this, false, Cell.parse("d7")));
-                    setFigure(new Pawn(ms, this, false, Cell.parse("e7")));
-                    setFigure(new Pawn(ms, this, false, Cell.parse("f7")));
-                    setFigure(new Pawn(ms, this, false, Cell.parse("g7")));
-                    setFigure(new Pawn(ms, this, false, Cell.parse("h7")));
-                } catch (ChessException e) {
-                    throw new ChessError("Стандартное заполнение доски некорректное", e);
-                }
-            }
-            default -> {
-            }
-        }
-    }
 
     /**
      * @param color цвет игрока
@@ -101,10 +89,10 @@ public final class Board {
      */
     public Cell findKingCell(Color color) throws ChessError {
         Cell kingCell = null;
-        for (Figure[] f : cells) {
-            for (Figure ff : f) {
-                if (ff != null && ff.getColor() == color && ff.getClass() == King.class) {
-                    kingCell = ff.getCurrentPosition();
+        for (Figure[] figures : cells) {
+            for (Figure f : figures) {
+                if (f != null && f.getColor() == color && f.getClass() == King.class) {
+                    kingCell = f.getCurrentPosition();
                     break;
                 }
             }

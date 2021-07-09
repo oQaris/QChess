@@ -10,8 +10,7 @@ public class GameSettings {
     public final MoveSystem moveSystem;
 
     public GameSettings(Board.BoardFilling boardType) throws ChessError {
-        board = new Board();
+        board = new Board(boardType);
         moveSystem = new MoveSystem(board);
-        board.initBoard(moveSystem, boardType);
     }
 }

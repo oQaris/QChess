@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
@@ -43,9 +44,9 @@ public class Game {
         if (!notDraw) {
             logger.info("Игра окончена: ничья");
         } else if (roomSettings.moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
-            logger.info("Игра окончена: мат {}", currentPlayerToMove.getColor() ? "белым" : "черным");
+            logger.info("Игра окончена: мат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         } else {
-            logger.info("Игра окончена: пат {}", currentPlayerToMove.getColor() ? "белым" : "черным");
+            logger.info("Игра окончена: пат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         }
         // TODO: конец игры
     }

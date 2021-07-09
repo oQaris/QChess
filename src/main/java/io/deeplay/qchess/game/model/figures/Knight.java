@@ -11,8 +11,8 @@ import java.util.Set;
 
 public class Knight extends Figure {
 
-    public Knight(Color color) {
-        super(color);
+    public Knight(Color color, Cell position) {
+        super(color, position);
     }
 
     @Override
@@ -21,8 +21,8 @@ public class Knight extends Figure {
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board, Cell position) {
-        return stepForEach(board, position, knightMove);
+    public Set<Move> getAllMoves(Board board) {
+        return stepForEach(board, knightMove);
     }
 
     @Override

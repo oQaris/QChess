@@ -21,8 +21,8 @@ public class BoardTest {
     private MoveSystem ms;
 
     @Before
-    public void setUp() {
-        board = new Board();
+    public void setUp() throws ChessError {
+        board = new Board(Board.BoardFilling.EMPTY);
         ms = new MoveSystem(board);
     }
 
