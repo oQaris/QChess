@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.figures.*;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
 import java.util.ArrayList;
@@ -18,6 +19,11 @@ public final class Board {
      * Создает пустую доску
      */
     public Board() {
+    }
+
+    public Move getPrevMove(){
+        //todo
+        return null;
     }
 
     /**
@@ -74,15 +80,15 @@ public final class Board {
     }
 
     /**
-     * @param color true - белые, false - черные
+     * @param color цвет игрока
      * @return позиция короля определенного цвета
      * @throws ChessError если король не был найден
      */
-    public Cell findKingCell(boolean color) throws ChessError {
+    public Cell findKingCell(Color color) throws ChessError {
         Cell kingCell = null;
         for (Figure[] f : cells) {
             for (Figure ff : f) {
-                if (ff != null && ff.isWhite() == color && ff.getClass() == King.class) {
+                if (ff != null && ff.getColor() == color && ff.getClass() == King.class) {
                     kingCell = ff.getCurrentPosition();
                     break;
                 }
@@ -95,14 +101,14 @@ public final class Board {
     }
 
     /**
-     * @param color true - белые, false - черные
+     * @param color цвет игрока
      * @return фигуры определенного цвета
      */
-    public List<Figure> getFigures(boolean color) {
+    public List<Figure> getFigures(Color color) {
         List<Figure> list = new ArrayList<>(16);
         for (Figure[] figures : cells) {
             for (Figure figure : figures) {
-                if (figure != null && figure.isWhite() == color) {
+                if (figure != null && figure.getColor() == color) {
                     list.add(figure);
                 }
             }
@@ -201,6 +207,28 @@ public final class Board {
             sb.append("\n")/*.append(" - ".repeat(Board.BOARD_SIZE)).append("\n")*/;
         }
         return sb.toString();
+    }
+
+    private char figureToIcon(Figure figure){
+        if(figure.getColor()==Color.WHITE){
+
+            if (figure.getClass()==Bishop.class){
+
+            }if (figure.getClass()==Bishop.class){
+
+            }if (figure.getClass()==Bishop.class){
+
+            }if (figure.getClass()==Bishop.class){
+
+            }if (figure.getClass()==Bishop.class){
+
+            }if (figure.getClass()==Bishop.class){
+
+            }
+        }
+        else{
+
+        }
     }
 
     public static enum BoardFilling {

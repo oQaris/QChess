@@ -67,32 +67,6 @@ public class MoveSystem {
     }
 
     /**
-     * Проверяет, является ли атака пешки взятием на проходе.
-     * Входные данные должны гарантировать, что это именно атака пешки (диагональный ход)
-     *
-     * @return true если это взятие на проходе
-     */
-    public boolean isPawnEnPassant(Cell from, Cell to) {
-        try {
-            Pawn currentPawn = (Pawn) board.getFigure(from);
-            Pawn pawn = (Pawn) board.getFigure(prevMove.getTo());
-
-            Cell cellDown = pawn.isWhite()
-                    ? new Cell(prevMove.getTo().getCol(), prevMove.getTo().getRow() + 1)
-                    : new Cell(prevMove.getTo().getCol(), prevMove.getTo().getRow() - 1);
-            Cell cellDoubleDown = pawn.isWhite()
-                    ? new Cell(cellDown.getCol(), cellDown.getRow() + 1)
-                    : new Cell(cellDown.getCol(), cellDown.getRow() - 1);
-
-            return currentPawn.isWhite() != pawn.isWhite()
-                    && cellDoubleDown.equals(prevMove.getFrom())
-                    && cellDown.equals(to);
-        } catch (ChessException | ClassCastException | NullPointerException e) {
-            return false;
-        }
-    }
-
-    /**
      * @param color true - белые, false - черные
      * @return true, если установленному цвету поставили мат
      */
