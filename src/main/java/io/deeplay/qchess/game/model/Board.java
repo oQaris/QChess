@@ -121,7 +121,7 @@ public final class Board {
         Figure figure = getFigure(move.getFrom());
         Figure old = getFigure(move.getTo());
         figure.setCurrentPosition(move.getTo());
-        figure.setWasMoved();
+        figure.setWasMoved(true);
         setFigure(figure);
         removeFigure(move.getFrom());
         return old;
@@ -168,6 +168,9 @@ public final class Board {
         return old;
     }
 
+    /**
+     * @return true, если клетка лежит на доске и она пустая, иначе false
+     */
     public boolean isEmptyCell(Cell cell) {
         int x = cell.getCol();
         int y = cell.getRow();
