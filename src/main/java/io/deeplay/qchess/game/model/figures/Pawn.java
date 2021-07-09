@@ -73,7 +73,7 @@ public class Pawn extends Figure {
      *
      * @return true если это взятие на проходе
      */
-    public boolean isPawnEnPassant(Board board, Cell from, Cell to) {
+    public static boolean isPawnEnPassant(Board board, Cell from, Cell to) {
         try {
             Pawn currentPawn = (Pawn) board.getFigure(from);
             Move prevMove = board.getPrevMove();
