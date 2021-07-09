@@ -6,7 +6,12 @@ import java.util.Objects;
 
 public class Move {
 
+    // не должно влиять на equals и hashCode,
+    // чтобы, проверяя корректность ходов, у пешек не возникали дополнительные условия,
+    // т.к. пешки на доске не знают во что превратиться без запроса игрока.
+    // проверка вынесена в MoveSystem
     private Figure turnInto;
+
     private MoveType moveType;
     private Cell from;
     private Cell to;
@@ -48,13 +53,12 @@ public class Move {
         Move move = (Move) o;
         return moveType == move.moveType
                 && Objects.equals(from, move.from)
-                && Objects.equals(to, move.to)
-                && Objects.equals(turnInto, move.turnInto);
+                && Objects.equals(to, move.to);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moveType, from, to, turnInto);
+        return Objects.hash(moveType, from, to);
     }
 
     @Override

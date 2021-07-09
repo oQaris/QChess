@@ -1,6 +1,5 @@
 package io.deeplay.qchess.game.figures;
 
-import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
@@ -127,7 +126,7 @@ public class FigureTest {
     }
 
     @Test
-    public void testKing() throws ChessException, ChessError {
+    public void testKing() throws ChessException {
         //--- Король ---//
         var king1 = new King(ms, board, true, Cell.parse("e1"));
         var king2 = new King(ms, board, false, Cell.parse("e8"));
@@ -168,7 +167,31 @@ public class FigureTest {
     }
 
     @Test
-    public void testKingCastling_1() throws ChessException, ChessError {
+    public void testKingCastling_falseRook() throws ChessException {
+        //--- Король ---//
+        var king1 = new King(ms, board, true, Cell.parse("e1"));
+        var king2 = new King(ms, board, false, Cell.parse("e8"));
+        var knightW1 = new Knight(board, true, Cell.parse("h1"));
+        var knightW2 = new Knight(board, true, Cell.parse("a1"));
+        var knightB1 = new Knight(board, false, Cell.parse("h8"));
+        var knightB2 = new Knight(board, false, Cell.parse("a8"));
+        board.setFigure(king1);
+        board.setFigure(king2);
+        board.setFigure(knightW1);
+        board.setFigure(knightW2);
+        board.setFigure(knightB1);
+        board.setFigure(knightB2);
+
+        Assert.assertEquals(
+                toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                extractCellTo(king1.getAllMoves()));
+        Assert.assertEquals(
+                toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                extractCellTo(king2.getAllMoves()));
+    }
+
+    @Test
+    public void testKingCastling_1() throws ChessException {
         //--- Король ---//
         var king1 = new King(ms, board, true, Cell.parse("e1"));
         var king2 = new King(ms, board, false, Cell.parse("e8"));
@@ -190,10 +213,10 @@ public class FigureTest {
                 toCellsSet("C8", "D8", "D7", "E7", "F7", "F8", "G8"),
                 extractCellTo(king2.getAllMoves()));
 
-        rookW1.setWasMoved();
-        rookW2.setWasMoved();
-        rookB1.setWasMoved();
-        rookB2.setWasMoved();
+        rookW1.setWasMoved(true);
+        rookW2.setWasMoved(true);
+        rookB1.setWasMoved(true);
+        rookB2.setWasMoved(true);
 
         Assert.assertEquals(
                 toCellsSet("D1", "D2", "E2", "F2", "F1"),
@@ -204,7 +227,7 @@ public class FigureTest {
     }
 
     @Test
-    public void testKingCastling_2() throws ChessException, ChessError {
+    public void testKingCastling_2() throws ChessException {
         //--- Король ---//
         var king1 = new King(ms, board, true, Cell.parse("e1"));
         var king2 = new King(ms, board, false, Cell.parse("e8"));
@@ -219,8 +242,8 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        king1.setWasMoved();
-        king2.setWasMoved();
+        king1.setWasMoved(true);
+        king2.setWasMoved(true);
 
         Assert.assertEquals(
                 toCellsSet("D1", "D2", "E2", "F2", "F1"),
@@ -231,7 +254,7 @@ public class FigureTest {
     }
 
     @Test
-    public void testKingCastling_3() throws ChessException, ChessError {
+    public void testKingCastling_3() throws ChessException {
         //--- Король ---//
         var king1 = new King(ms, board, true, Cell.parse("e1"));
         var king2 = new King(ms, board, false, Cell.parse("e8"));
@@ -246,10 +269,10 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        var queenB = new Queen(board, false, Cell.parse("e4"));
-        var queenW = new Queen(board, true, Cell.parse("e5"));
-        board.setFigure(queenB);
-        board.setFigure(queenW);
+        var FrookB = new Rook(board, false, Cell.parse("e4"));
+        var FrookW = new Rook(board, true, Cell.parse("e5"));
+        board.setFigure(FrookB);
+        board.setFigure(FrookW);
 
         Assert.assertEquals(
                 toCellsSet("D1", "D2", "E2", "F2", "F1"),
@@ -260,7 +283,7 @@ public class FigureTest {
     }
 
     @Test
-    public void testKingCastling_4() throws ChessException, ChessError {
+    public void testKingCastling_4() throws ChessException {
         //--- Король ---//
         var king1 = new King(ms, board, true, Cell.parse("e1"));
         var king2 = new King(ms, board, false, Cell.parse("e8"));
@@ -275,14 +298,14 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        var queenB1 = new Queen(board, false, Cell.parse("f4"));
-        var queenB2 = new Queen(board, false, Cell.parse("d4"));
-        var queenW1 = new Queen(board, true, Cell.parse("f5"));
-        var queenW2 = new Queen(board, true, Cell.parse("d5"));
-        board.setFigure(queenB1);
-        board.setFigure(queenB2);
-        board.setFigure(queenW1);
-        board.setFigure(queenW2);
+        var FrookB1 = new Rook(board, false, Cell.parse("f4"));
+        var FrookB2 = new Rook(board, false, Cell.parse("d4"));
+        var FrookW1 = new Rook(board, true, Cell.parse("f5"));
+        var FrookW2 = new Rook(board, true, Cell.parse("d5"));
+        board.setFigure(FrookB1);
+        board.setFigure(FrookB2);
+        board.setFigure(FrookW1);
+        board.setFigure(FrookW2);
 
         Assert.assertEquals(
                 toCellsSet("D1", "D2", "E2", "F2", "F1"),
@@ -293,7 +316,7 @@ public class FigureTest {
     }
 
     @Test
-    public void testKingCastling_5() throws ChessException, ChessError {
+    public void testKingCastling_5() throws ChessException {
         //--- Король ---//
         var king1 = new King(ms, board, true, Cell.parse("e1"));
         var king2 = new King(ms, board, false, Cell.parse("e8"));
@@ -308,14 +331,14 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        var queenB1 = new Queen(board, false, Cell.parse("g4"));
-        var queenB2 = new Queen(board, false, Cell.parse("c4"));
-        var queenW1 = new Queen(board, true, Cell.parse("g5"));
-        var queenW2 = new Queen(board, true, Cell.parse("c5"));
-        board.setFigure(queenB1);
-        board.setFigure(queenB2);
-        board.setFigure(queenW1);
-        board.setFigure(queenW2);
+        var FrookB1 = new Queen(board, false, Cell.parse("g4"));
+        var FrookB2 = new Queen(board, false, Cell.parse("c4"));
+        var FrookW1 = new Queen(board, true, Cell.parse("g5"));
+        var FrookW2 = new Queen(board, true, Cell.parse("c5"));
+        board.setFigure(FrookB1);
+        board.setFigure(FrookB2);
+        board.setFigure(FrookW1);
+        board.setFigure(FrookW2);
 
         Assert.assertEquals(
                 toCellsSet("D1", "D2", "E2", "F2", "F1"),
@@ -416,8 +439,8 @@ public class FigureTest {
     }
 
     @Test
-    public void testPawnEnPassant() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, ChessError {
-        Move white1 = new Move(MoveType.SIMPLE_STEP, Cell.parse("c2"), Cell.parse("c4"));
+    public void testPawnEnPassant() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(ms, board, true, white1.getTo());
         Field field = MoveSystem.class.getDeclaredField("prevMove");
         field.setAccessible(true);
@@ -425,13 +448,17 @@ public class FigureTest {
 
         Figure figureB1 = new Pawn(ms, board, false, Cell.parse("b4"));
         Figure figureW2 = new Pawn(ms, board, true, Cell.parse("a4"));
+        Figure figureW3 = new Pawn(ms, board, true, Cell.parse("b2"));
 
         board.setFigure(figureW1);
         board.setFigure(figureB1);
         board.setFigure(figureW2);
+        board.setFigure(figureW3);
 
         Assert.assertEquals(toCellsSet("b3", "c3"),
                 extractCellTo(figureB1.getAllMoves()));
+        Assert.assertEquals(toCellsSet("b3"),
+                extractCellTo(figureW3.getAllMoves()));
     }
 
     private Set<Cell> toCellsSet(String... pos) {
