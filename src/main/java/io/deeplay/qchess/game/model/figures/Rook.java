@@ -3,23 +3,31 @@ package io.deeplay.qchess.game.model.figures;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
 import java.util.Set;
 
 public class Rook extends Figure {
 
-    public Rook(Board board, boolean white, Cell pos) {
-        super(board, white, pos, white ? "♖".toCharArray()[0] : "♜".toCharArray()[0]);
+    public Rook(Color color) {
+        super(color);
     }
 
     @Override
-    public Set<Move> getAllMoves() {
-        return rayTrace(plusMove);
+    public Set<Move> getAllMoves(Board board, Cell position) {
+        return rayTrace(board, position, plusMove);
     }
+
+    @Override
+    public TypeFigure getType() {
+        return TypeFigure.ROOK;
+    }
+
 
     @Override
     public String toString() {
-        return (white ? "White" : "Black") + " Rook";
+        return color + " Rook";
     }
 }

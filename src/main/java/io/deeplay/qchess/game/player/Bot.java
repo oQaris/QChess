@@ -4,41 +4,40 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.*;
+import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Bot extends Player {
 
-    private static final Map<Class<?>, Integer> grades = preparedGrades();
+    private static final Map<TypeFigure, Integer> grades = preparedGrades();
 
     public Bot() {
         super();
     }
 
-    private static Map<Class<?>, Integer> preparedGrades() {
-        var res = new HashMap<Class<?>, Integer>();
-        res.put(Pawn.class, 1);
-        res.put(Knight.class, 3);
-        res.put(Bishop.class, 3);
-        res.put(Rook.class, 5);
-        res.put(Queen.class, 9);
-        res.put(King.class, 100);
+    private static Map<TypeFigure, Integer> preparedGrades() {
+        Map<TypeFigure, Integer> res = new HashMap<>();
+        res.put(TypeFigure.PAWN, 1);
+        res.put(TypeFigure.KNIGHT, 3);
+        res.put(TypeFigure.BISHOP, 3);
+        res.put(TypeFigure.ROOK, 5);
+        res.put(TypeFigure.QUEEN, 9);
+        res.put(TypeFigure.KING, 100);
         return res;
     }
 
     @Override
     public Move getNextMove() throws ChessError {
-        var topMoves = new ArrayList<Move>();
+        List<Move> topMoves = new ArrayList<>();
         int maxGrade = 0;
         for (Move move : ms.getAllCorrectMoves(color)) {
             try {
-                var fig = board.getFigure(move.getTo());
+                Figure fig = board.getFigure(move.getTo());
 
-                var curGrade = fig != null ? grades.get(fig.getClass()) : 0;
+                int curGrade = fig != null ? grades.get(fig.getType()) : 0;
                 if (curGrade > maxGrade) {
                     maxGrade = curGrade;
                     topMoves.clear();
@@ -50,9 +49,9 @@ public class Bot extends Player {
                 throw new ChessError("В боте возникло исключение", e);
             }
         }
-        var move = topMoves.get(new Random().nextInt(topMoves.size()));
+        Move move = topMoves.get(new Random().nextInt(topMoves.size()));
         if (move.getMoveType() == MoveType.TURN_INTO) {
-            move.setTurnInto(new Queen(board, color, move.getTo()));
+            move.setTurnInto(new Queen(color));
         }
         return move;
     }
