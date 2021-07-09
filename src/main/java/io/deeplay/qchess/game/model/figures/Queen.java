@@ -28,9 +28,4 @@ public class Queen extends Figure {
     public TypeFigure getType() {
         return TypeFigure.QUEEN;
     }
-
-    @Override
-    public String toString() {
-        return color + " Queen";
-    }
 }

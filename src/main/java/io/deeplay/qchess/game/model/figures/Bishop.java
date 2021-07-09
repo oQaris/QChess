@@ -24,10 +24,4 @@ public class Bishop extends Figure {
     public TypeFigure getType() {
         return TypeFigure.BISHOP;
     }
-
-
-    @Override
-    public String toString() {
-        return color.toString() + " Bishop";
-    }
 }

@@ -12,4 +12,12 @@ public class ChessError extends Exception {
     public ChessError(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public ChessError(ChessErrorCode code, Throwable cause) {
+        super(code.getMessage(), cause);
+    }
+
+    public ChessError(ChessErrorCode code) {
+        super(code.getMessage());
+    }
 }

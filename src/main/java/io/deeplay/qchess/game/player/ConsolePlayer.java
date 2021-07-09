@@ -19,9 +19,17 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
-public class ConsolePlayer extends Player {
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.CONSOLE_PLAYER_ERROR;
 
+public class ConsolePlayer extends Player {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
+    private static final String turnIntoInvite =
+            "Выберите фигуру для превращения:" +
+                    System.lineSeparator() + "1 - Конь" +
+                    System.lineSeparator() + "2 - Слон" +
+                    System.lineSeparator() + "3 - Ладья" +
+                    System.lineSeparator() + "4 - Ферзь";
+
     private final BufferedReader in;
 
     public ConsolePlayer(GameSettings roomSettings, Color color, BufferedReader in) {
@@ -38,7 +46,7 @@ public class ConsolePlayer extends Player {
             specificMoveModification(choosenMove);
             return choosenMove;
         } catch (ChessError e) {
-            throw new ChessError("Произошла ошибка в классе игрока", e);
+            throw new ChessError(CONSOLE_PLAYER_ERROR, e);
         }
     }
 
@@ -67,17 +75,9 @@ public class ConsolePlayer extends Player {
 
     private void specificMoveModification(Move choosenMove) throws ChessError {
         if (choosenMove.getMoveType() == MoveType.TURN_INTO) {
-            printMoveTypes();
+            System.out.println(turnIntoInvite);
             choosenMove.setTurnInto(readTurnInto(choosenMove.getTo()));
         }
-    }
-
-    private void printMoveTypes() {
-        System.out.println(new StringBuilder("Выберите фигуру для превращения:")
-                .append(System.lineSeparator()).append("1 - Конь")
-                .append(System.lineSeparator()).append("2 - Слон")
-                .append(System.lineSeparator()).append("3 - Ладья")
-                .append(System.lineSeparator()).append("4 - Ферзь"));
     }
 
     private Figure readTurnInto(Cell to) throws ChessError {
@@ -97,6 +97,7 @@ public class ConsolePlayer extends Player {
             case 2 -> new Bishop(color, to);
             case 3 -> new Rook(color, to);
             case 4 -> new Queen(color, to);
+            // почему бы по-умолчанию ферзя не выбирать? или хотя бы повторить запрос
             default -> throw new ChessError("Выбрана неизвестная фигура");
         };
     }

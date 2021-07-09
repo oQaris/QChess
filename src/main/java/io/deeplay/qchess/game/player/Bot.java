@@ -12,6 +12,8 @@ import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
 import java.util.*;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.BOT_ERROR;
+
 public class Bot extends Player {
 
     private static final Map<TypeFigure, Integer> grades = preparedGrades();
@@ -48,7 +50,7 @@ public class Bot extends Player {
                     topMoves.add(move);
                 }
             } catch (ChessException e) {
-                throw new ChessError("В боте возникло исключение", e);
+                throw new ChessError(BOT_ERROR, e);
             }
         }
         Move move = topMoves.get(new Random().nextInt(topMoves.size()));

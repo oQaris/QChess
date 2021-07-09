@@ -3,8 +3,8 @@ package io.deeplay.qchess.game.model;
 import java.util.Objects;
 
 public class Cell {
-    private int column;
-    private int row;
+    private final int column;
+    private final int row;
 
     public Cell(int column, int row) {
         this.column = column;
@@ -28,16 +28,8 @@ public class Cell {
         return column;
     }
 
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
     public int getRow() {
         return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
     }
 
     /**
@@ -53,15 +45,11 @@ public class Cell {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (obj == null || obj.getClass() != getClass()) {
-            return false;
-        }
-        Cell o = (Cell) obj;
-        return column == o.column && row == o.row;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cell)) return false;
+        Cell cell = (Cell) o;
+        return getColumn() == cell.getColumn() && getRow() == cell.getRow();
     }
 
     @Override

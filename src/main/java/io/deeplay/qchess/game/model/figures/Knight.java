@@ -16,11 +16,6 @@ public class Knight extends Figure {
     }
 
     @Override
-    public String toString() {
-        return color + " Knight";
-    }
-
-    @Override
     public Set<Move> getAllMoves(Board board) {
         return stepForEach(board, knightMove);
     }

@@ -144,4 +144,8 @@ public abstract class Figure {
     public int hashCode() {
         return Objects.hash(color, wasMoved, position);
     }
+
+    public String toString() {
+        return color.toString() + " " + getType();
+    }
 }

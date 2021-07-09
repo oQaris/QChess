@@ -30,6 +30,6 @@ public abstract class Player {
 
     @Override
     public String toString() {
-        return (color == Color.WHITE ? "White player" : "Black player");
+        return color + " PLAYER";
     }
 }

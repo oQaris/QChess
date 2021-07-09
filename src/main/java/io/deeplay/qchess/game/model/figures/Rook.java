@@ -24,10 +24,4 @@ public class Rook extends Figure {
     public TypeFigure getType() {
         return TypeFigure.ROOK;
     }
-
-
-    @Override
-    public String toString() {
-        return color + " Rook";
-    }
 }

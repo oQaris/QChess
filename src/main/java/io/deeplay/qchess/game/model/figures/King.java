@@ -68,9 +68,4 @@ public class King extends Figure {
             return false;
         }
     }
-
-    @Override
-    public String toString() {
-        return color + " King";
-    }
 }
