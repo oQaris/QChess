@@ -1,12 +1,12 @@
-package io.deeplay.qchess.game.figures;
+package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,10 +26,10 @@ public class King extends Figure {
         Set<Move> res = getSimpleMoves();
         // рокировка
         if (isCorrectCastling(true)) {
-            res.add(new Move(MoveType.SHORT_CASTLING, pos, pos.createAdd(new Cell(2, 0))));
+            res.add(new Move(MoveType.SHORT_CASTLING, position, position.createAdd(new Cell(2, 0))));
         }
         if (isCorrectCastling(false)) {
-            res.add(new Move(MoveType.LONG_CASTLING, pos, pos.createAdd(new Cell(-2, 0))));
+            res.add(new Move(MoveType.LONG_CASTLING, position, position.createAdd(new Cell(-2, 0))));
         }
         return res;
     }
@@ -47,16 +47,16 @@ public class King extends Figure {
      */
     private boolean isCorrectCastling(boolean shortCastling) {
         if (wasMoved
-                || !board.isEmptyCell(pos.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
-                || !board.isEmptyCell(pos.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
-                || !shortCastling && !board.isEmptyCell(pos.createAdd(new Cell(-3, 0)))
-                || ms.isAttackedCell(pos, !white)
-                || ms.isAttackedCell(pos.createAdd(new Cell(shortCastling ? 1 : -1, 0)), !white)
-                || ms.isAttackedCell(pos.createAdd(new Cell(shortCastling ? 2 : -2, 0)), !white)) {
+                || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
+                || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
+                || !shortCastling && !board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
+                || ms.isAttackedCell(position, !white)
+                || ms.isAttackedCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)), !white)
+                || ms.isAttackedCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)), !white)) {
             return false;
         }
         try {
-            Figure rook = board.getFigure(pos.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
+            Figure rook = board.getFigure(position.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
             return !rook.wasMoved() && rook.getClass() == Rook.class;
         } catch (ChessException | NullPointerException e) {
             return false;

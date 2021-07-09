@@ -1,4 +1,4 @@
-package io.deeplay.qchess.game.figures;
+package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.model.Cell;
 import org.junit.Assert;

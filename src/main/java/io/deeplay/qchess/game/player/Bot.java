@@ -2,9 +2,9 @@ package io.deeplay.qchess.game.player;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.*;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

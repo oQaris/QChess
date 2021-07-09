@@ -1,18 +1,19 @@
-package io.deeplay.qchess.game.figures;
+package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -462,9 +463,7 @@ public class FigureTest {
     }
 
     private Set<Cell> toCellsSet(String... pos) {
-        if (pos == null) {
-            throw new NullPointerException("Массив строк не может быть null");
-        }
+        Objects.requireNonNull(pos, "Массив строк не может быть null");
         var result = new HashSet<Cell>();
         for (String p : pos) {
             result.add(Cell.parse(p));

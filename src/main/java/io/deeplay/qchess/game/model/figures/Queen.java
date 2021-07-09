@@ -1,9 +1,9 @@
-package io.deeplay.qchess.game.figures;
+package io.deeplay.qchess.game.model.figures;
 
-import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
 import java.util.Set;
 import java.util.stream.Collectors;
