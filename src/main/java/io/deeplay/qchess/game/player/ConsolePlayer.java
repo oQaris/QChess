@@ -1,14 +1,14 @@
 package io.deeplay.qchess.game.player;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.figures.Bishop;
-import io.deeplay.qchess.game.figures.Knight;
-import io.deeplay.qchess.game.figures.Queen;
-import io.deeplay.qchess.game.figures.Rook;
-import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.Rook;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

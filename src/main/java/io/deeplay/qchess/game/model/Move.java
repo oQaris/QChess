@@ -1,6 +1,6 @@
 package io.deeplay.qchess.game.model;
 
-import io.deeplay.qchess.game.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
 import java.util.Objects;
 
