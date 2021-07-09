@@ -155,14 +155,14 @@ public class History implements Iterable<String> {
     }
 
     /**
-     * @return Строка - часть записи отвечающая за то, доступно ли взятие на проходе следующим ходом
+     * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на проходе следующим ходом
      * @throws ChessException если getFigure() выбросит это исключение
      */
     private String getPawnEnPassantPossibility() throws ChessException {
         StringBuilder result = new StringBuilder();
-        if(prevMove.getMoveType() == MoveType.LONG_MOVE) {
+        if(prevMove != null && prevMove.getMoveType() == MoveType.LONG_MOVE) {
             result.append(' ').append(prevMove.getTo().toString().charAt(0));
-            result.append(board.getFigure(prevMove.getTo()).isWhite()? '2' : '7');
+            result.append(board.getFigure(prevMove.getTo()).isWhite()? '3' : '6');
         }
         return result.toString();
     }
