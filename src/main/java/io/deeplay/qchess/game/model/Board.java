@@ -2,15 +2,16 @@ package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.*;
-import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
+import io.deeplay.qchess.game.model.figures.*;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class Board {
-    public final static int BOARD_SIZE = 8;
+
+    public static final int BOARD_SIZE = 8;
     private final Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
     /**
@@ -99,10 +100,10 @@ public final class Board {
      */
     public List<Figure> getFigures(boolean color) {
         List<Figure> list = new ArrayList<>(16);
-        for (Figure[] f : cells) {
-            for (Figure ff : f) {
-                if (ff != null && ff.isWhite() == color) {
-                    list.add(ff);
+        for (Figure[] figures : cells) {
+            for (Figure figure : figures) {
+                if (figure != null && figure.isWhite() == color) {
+                    list.add(figure);
                 }
             }
         }
@@ -120,6 +121,7 @@ public final class Board {
         Figure figure = getFigure(move.getFrom());
         Figure old = getFigure(move.getTo());
         figure.setCurrentPosition(move.getTo());
+        figure.setWasMoved(true);
         setFigure(figure);
         removeFigure(move.getFrom());
         return old;
@@ -166,6 +168,9 @@ public final class Board {
         return old;
     }
 
+    /**
+     * @return true, если клетка лежит на доске и она пустая, иначе false
+     */
     public boolean isEmptyCell(Cell cell) {
         int x = cell.getCol();
         int y = cell.getRow();
@@ -189,7 +194,7 @@ public final class Board {
                 if (figure == null) {
                     sb.append("_");
                 } else {
-                    sb.append(figure.getShortName());
+                    sb.append(figure.getCharIcon());
                 }
                 sb.append('|');
             }

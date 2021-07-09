@@ -2,17 +2,18 @@ package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.King;
-import io.deeplay.qchess.game.figures.Pawn;
-import io.deeplay.qchess.game.figures.Rook;
-import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.logics.MoveSystem;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.model.figures.Rook;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class BoardTest {
 
@@ -48,10 +49,10 @@ public class BoardTest {
         List<Figure> white = new ArrayList<>();
 
         for (Character first : "abcdefgh".toCharArray()) {
-            black.add(board.getFigure(Cell.parse(first.toString() + "7")));
-            black.add(board.getFigure(Cell.parse(first.toString() + "8")));
-            white.add(board.getFigure(Cell.parse(first.toString() + "1")));
-            white.add(board.getFigure(Cell.parse(first.toString() + "2")));
+            black.add(board.getFigure(Cell.parse(first + "7")));
+            black.add(board.getFigure(Cell.parse(first + "8")));
+            white.add(board.getFigure(Cell.parse(first + "1")));
+            white.add(board.getFigure(Cell.parse(first + "2")));
         }
 
         Comparator<Figure> figureComparator = (o1, o2) -> {
@@ -95,10 +96,10 @@ public class BoardTest {
 
     @Test
     public void testIsCorrectCell() {
-        Assert.assertTrue(board.isCorrectCell(0,0));
-        Assert.assertFalse(board.isCorrectCell(0,-1));
-        Assert.assertTrue(board.isCorrectCell(7,7));
-        Assert.assertFalse(board.isCorrectCell(100,100));
+        Assert.assertTrue(board.isCorrectCell(0, 0));
+        Assert.assertFalse(board.isCorrectCell(0, -1));
+        Assert.assertTrue(board.isCorrectCell(7, 7));
+        Assert.assertFalse(board.isCorrectCell(100, 100));
     }
 
     @Test

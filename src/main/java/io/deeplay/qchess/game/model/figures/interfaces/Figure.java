@@ -1,4 +1,4 @@
-package io.deeplay.qchess.game.figures.interfaces;
+package io.deeplay.qchess.game.model.figures.interfaces;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
@@ -36,27 +36,36 @@ public abstract class Figure {
 
     protected final Board board;
     protected final boolean white;
-    protected final String shortName;
-    protected Cell pos;
+    protected final Character charIcon;
+    protected Cell position;
     protected boolean wasMoved = false;
 
-    public void setWasMoved() {
-        wasMoved = true;
+    public Figure(Board board, boolean white, Cell pos, Character charIcon) {
+        this.board = board;
+        this.white = white;
+        position = pos;
+        this.charIcon = charIcon;
     }
 
+    /**
+     * Устанавливает, делала ли фигура хотя бы один ход
+     */
+    public void setWasMoved(boolean wasMoved) {
+        this.wasMoved = wasMoved;
+    }
+
+    /**
+     * @return true, если фигура делала ход
+     */
     public boolean wasMoved() {
         return wasMoved;
     }
 
-    public Figure(Board board, boolean white, Cell pos, String shortName) {
-        this.board = board;
-        this.white = white;
-        this.pos = pos;
-        this.shortName = shortName;
-    }
-
-    public String getShortName() {
-        return shortName;
+    /**
+     * @return представление фигуры в виде символа для TUI
+     */
+    public Character getCharIcon() {
+        return charIcon;
     }
 
     /**
@@ -64,58 +73,53 @@ public abstract class Figure {
      */
     public abstract Set<Move> getAllMoves();
 
-    public Board getBoard() {
-        return board;
-    }
-
     public boolean isWhite() {
         return white;
     }
 
     public Cell getCurrentPosition() {
-        return pos;
+        return position;
     }
 
     public void setCurrentPosition(Cell pos) {
-        this.pos = pos;
+        position = pos;
     }
 
     protected Set<Move> rayTrace(List<Cell> directions) {
-        log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, pos);
-        if (directions == null) {
-            throw new NullPointerException("Список ходов не может быть null");
-        }
+        log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, position);
+        Objects.requireNonNull(directions, "Список ходов не может быть null");
         var result = new HashSet<Move>();
         for (Cell shift : directions) {
-            Cell cord = pos.createAdd(shift);
+            Cell cord = position.createAdd(shift);
             while (board.isEmptyCell(cord)) {
-                result.add(new Move(MoveType.SIMPLE_STEP, pos, cord));
+                result.add(new Move(MoveType.SIMPLE_STEP, position, cord));
                 cord = cord.createAdd(shift);
             }
             if (isEnemyFigureOn(cord)) {
-                result.add(new Move(MoveType.ATTACK, pos, cord));
+                result.add(new Move(MoveType.ATTACK, position, cord));
             }
         }
         return result;
     }
 
     protected Set<Move> stepForEach(List<Cell> moves) {
-        log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, pos);
-        if (moves == null) {
-            throw new NullPointerException("Список ходов не может быть null");
-        }
+        log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, position);
+        Objects.requireNonNull(moves, "Список ходов не может быть null");
         var result = new HashSet<Move>();
         for (Cell shift : moves) {
-            Cell cord = pos.createAdd(shift);
+            Cell cord = position.createAdd(shift);
             if (board.isEmptyCell(cord)) {
-                result.add(new Move(MoveType.SIMPLE_STEP, pos, cord));
+                result.add(new Move(MoveType.SIMPLE_STEP, position, cord));
             } else if (isEnemyFigureOn(cord)) {
-                result.add(new Move(MoveType.ATTACK, pos, cord));
+                result.add(new Move(MoveType.ATTACK, position, cord));
             }
         }
         return result;
     }
 
+    /**
+     * @return true, если клетка лежит на доске и на этой клетке есть фигура, иначе false
+     */
     protected boolean isEnemyFigureOn(Cell cell) {
         Figure enemyFigure = null;
         try {
@@ -129,7 +133,7 @@ public abstract class Figure {
     public int hashCode() {
         int hash = 3;
         hash = 97 * hash + (white ? 1 : 0);
-        hash = 97 * hash + Objects.hashCode(pos);
+        hash = 97 * hash + Objects.hashCode(position);
         return hash;
     }
 
@@ -142,6 +146,6 @@ public abstract class Figure {
             return false;
         }
         Figure f = (Figure) o;
-        return white == f.white && Objects.equals(pos, f.pos);
+        return white == f.white && Objects.equals(position, f.position);
     }
 }

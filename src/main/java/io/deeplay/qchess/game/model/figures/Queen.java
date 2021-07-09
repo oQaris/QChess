@@ -1,9 +1,9 @@
-package io.deeplay.qchess.game.figures;
+package io.deeplay.qchess.game.model.figures;
 
-import io.deeplay.qchess.game.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class Queen extends Figure {
 
     public Queen(Board board, boolean white, Cell pos) {
-        super(board, white, pos, white ? "♕" : "♛");
+        super(board, white, pos, white ? "♕".toCharArray()[0] : "♛".toCharArray()[0]);
     }
 
     @Override
@@ -23,6 +23,6 @@ public class Queen extends Figure {
 
     @Override
     public String toString() {
-        return "Queen " + (white ? "White" : "Black");
+        return (white ? "White" : "Black") + " Queen";
     }
 }
