@@ -11,13 +11,13 @@ import java.util.Set;
 
 public class Bishop extends Figure {
 
-    public Bishop(Color color) {
-        super(color);
+    public Bishop(Color color, Cell position) {
+        super(color, position);
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board, Cell position) {
-        return rayTrace(board, position, xMove);
+    public Set<Move> getAllMoves(Board board) {
+        return rayTrace(board, xMove);
     }
 
     @Override

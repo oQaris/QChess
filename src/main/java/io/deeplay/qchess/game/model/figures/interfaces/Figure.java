@@ -8,7 +8,6 @@ import io.deeplay.qchess.game.model.MoveType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.PortUnreachableException;
 import java.util.*;
 
 public abstract class Figure {
@@ -36,9 +35,19 @@ public abstract class Figure {
 
     protected final Color color;
     protected boolean wasMoved = false;
+    protected Cell position;
 
-    public Figure(Color color) {
+    public Figure(Color color, Cell position) {
         this.color = color;
+        this.position = position;
+    }
+
+    public Cell getCurrentPosition() {
+        return position;
+    }
+
+    public void setCurrentPosition(Cell position) {
+        this.position = position;
     }
 
     /**
@@ -58,12 +67,12 @@ public abstract class Figure {
     /**
      * @return все возможные ходы фигуры, не учитывая шаха
      */
-    public abstract Set<Move> getAllMoves(Board board, Cell position);
+    public abstract Set<Move> getAllMoves(Board board);
 
     /**
      * @return тип фигуры
      */
-    public  abstract TypeFigure getType();
+    public abstract TypeFigure getType();
 
     /**
      * @return цвет фигуры
@@ -72,7 +81,7 @@ public abstract class Figure {
         return Color.WHITE;
     }
 
-    protected Set<Move> rayTrace(Board board, Cell position, List<Cell> directions) {
+    protected Set<Move> rayTrace(Board board, List<Cell> directions) {
         log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, position);
         Objects.requireNonNull(directions, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
@@ -89,7 +98,7 @@ public abstract class Figure {
         return result;
     }
 
-    protected Set<Move> stepForEach(Board board, Cell position, List<Cell> moves) {
+    protected Set<Move> stepForEach(Board board, List<Cell> moves) {
         log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, position);
         Objects.requireNonNull(moves, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
@@ -120,8 +129,12 @@ public abstract class Figure {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Figure figure = (Figure) o;
         return wasMoved == figure.wasMoved && color == figure.color;
     }

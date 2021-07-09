@@ -2,10 +2,9 @@ package io.deeplay.qchess.game;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.logics.MoveSystem;
-import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
@@ -14,34 +13,27 @@ import org.slf4j.LoggerFactory;
 public class Game {
 
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
-    private Board board;
-    private MoveSystem moveSystem;
-    private Player firstPlayer;
-    private Player secondPlayer;
+    public final Player firstPlayer;
+    public final Player secondPlayer;
+    private final GameSettings roomSettings;
     private Player currentPlayerToMove;
     private int pieceMoveCount = 0;
 
-    public Game(Board.BoardFilling boardType, Player firstPlayer, Player secondPlayer) throws ChessError {
-        board = new Board();
-        moveSystem = new MoveSystem(board);
-        board.initBoard(moveSystem, boardType);
-
-        firstPlayer.init(moveSystem, board, true);
-        secondPlayer.init(moveSystem, board, false);
-
+    public Game(GameSettings roomSettings, Player firstPlayer, Player secondPlayer) {
+        this.roomSettings = roomSettings;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         currentPlayerToMove = firstPlayer;
     }
 
     public void run() throws ChessError {
-        logger.info(board.toString());
+        logger.info(roomSettings.board.toString());
         boolean notDraw = true;
-        while (!moveSystem.isStalemate(currentPlayerToMove.getColor()) && notDraw) {
+        while (!roomSettings.moveSystem.isStalemate(currentPlayerToMove.getColor()) && notDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
 
-            if (moveSystem.isCorrectMove(move)) {
+            if (roomSettings.moveSystem.isCorrectMove(move)) {
                 Figure removedFigure = tryMove(move);
                 notDraw = isNotDraw(removedFigure, move);
                 currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
@@ -51,10 +43,10 @@ public class Game {
         }
         if (!notDraw) {
             logger.info("Игра окончена: ничья");
-        } else if (moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
-            logger.info("Игра окончена: мат {}", currentPlayerToMove.getColor() ? "белым" : "черным");
+        } else if (roomSettings.moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
+            logger.info("Игра окончена: мат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         } else {
-            logger.info("Игра окончена: пат {}", currentPlayerToMove.getColor() ? "белым" : "черным");
+            logger.info("Игра окончена: пат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         }
         // TODO: конец игры
     }
@@ -64,9 +56,9 @@ public class Game {
      */
     private Figure tryMove(Move move) throws ChessError {
         try {
-            Figure removedFigure = moveSystem.move(move);
-            logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, board.getFigure(move.getTo()));
-            logger.info(board.toString());
+            Figure removedFigure = roomSettings.moveSystem.move(move);
+            logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, roomSettings.board.getFigure(move.getTo()));
+            logger.info(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException e) {
             throw new ChessError("Не удалось записать в лог", e);
@@ -78,7 +70,7 @@ public class Game {
             // условия ничьи:
             // пешка не ходит 50 ходов
             // никто не рубит
-            if (removedFigure != null || board.getFigure(move.getTo()).getClass() == Pawn.class) {
+            if (removedFigure != null || roomSettings.board.getFigure(move.getTo()).getClass() == Pawn.class) {
                 pieceMoveCount = 0;
             } else {
                 ++pieceMoveCount;

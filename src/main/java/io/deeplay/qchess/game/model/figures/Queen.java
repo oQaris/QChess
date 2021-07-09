@@ -13,13 +13,13 @@ import java.util.stream.Stream;
 
 public class Queen extends Figure {
 
-    public Queen(Color color) {
-        super(color);
+    public Queen(Color color, Cell position) {
+        super(color, position);
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board, Cell position) {
-        return rayTrace(board, position,
+    public Set<Move> getAllMoves(Board board) {
+        return rayTrace(board,
                 Stream.concat(xMove.stream(), plusMove.stream())
                         .collect(Collectors.toList()));
     }

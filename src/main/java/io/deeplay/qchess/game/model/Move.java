@@ -26,6 +26,9 @@ public class Move {
         return turnInto;
     }
 
+    /**
+     * @param turnInto указывать from = this.to и to = this.to, как у этого мува, но необязательно
+     */
     public void setTurnInto(Figure turnInto) {
         this.turnInto = turnInto;
     }
@@ -66,7 +69,7 @@ public class Move {
         StringBuilder sb = new StringBuilder()
                 .append(from).append("-").append(to)
                 .append(" (").append(moveType).append(")");
-        if (moveType.equals(MoveType.TURN_INTO)) {
+        if (moveType == MoveType.TURN_INTO) {
             sb.append(" turn into ").append(turnInto);
         }
         return sb.toString();

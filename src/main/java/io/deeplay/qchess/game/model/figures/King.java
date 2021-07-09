@@ -15,19 +15,19 @@ import java.util.stream.Stream;
 
 public class King extends Figure {
 
-    public King(Color color) {
-        super(color);
+    public King(Color color, Cell position) {
+        super(color, position);
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board, Cell position) {
-        Set<Move> res = getAttackedMoves(board, position);
+    public Set<Move> getAllMoves(Board board) {
+        Set<Move> res = getAttackedMoves(board);
         // рокировка
-        if (isCorrectCastling(board,position,  true)) {
+        if (isCorrectCastling(board, true)) {
             res.add(new Move(MoveType.SHORT_CASTLING, position,
                     position.createAdd(new Cell(2, 0))));
         }
-        if (isCorrectCastling(board, position,false)) {
+        if (isCorrectCastling(board, false)) {
             res.add(new Move(MoveType.LONG_CASTLING, position,
                     position.createAdd(new Cell(-2, 0))));
         }
@@ -42,8 +42,8 @@ public class King extends Figure {
     /**
      * @return ходы без рокировки
      */
-    public Set<Move> getAttackedMoves(Board board, Cell position) {
-        return stepForEach(board, position,
+    public Set<Move> getAttackedMoves(Board board) {
+        return stepForEach(board,
                 Stream.concat(xMove.stream(), plusMove.stream())
                         .collect(Collectors.toList()));
     }
@@ -51,7 +51,7 @@ public class King extends Figure {
     /**
      * @return true, если рокировка возможна
      */
-    private boolean isCorrectCastling(Board board,Cell position,  boolean shortCastling) {
+    private boolean isCorrectCastling(Board board, boolean shortCastling) {
         if (wasMoved
                 || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
                 || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))

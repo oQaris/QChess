@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.player;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
@@ -8,6 +9,7 @@ import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +22,10 @@ import java.util.List;
 public class ConsolePlayer extends Player {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
-    private BufferedReader in;
+    private final BufferedReader in;
 
-    public ConsolePlayer(BufferedReader in) {
-        super();
+    public ConsolePlayer(GameSettings roomSettings, Color color, BufferedReader in) {
+        super(roomSettings, color);
         this.in = in;
     }
 
@@ -91,10 +93,10 @@ public class ConsolePlayer extends Player {
             }
         }
         return switch (numTurnIntoFig) {
-            case 1 -> new Knight(board, color, to);
-            case 2 -> new Bishop(board, color, to);
-            case 3 -> new Rook(board, color, to);
-            case 4 -> new Queen(board, color, to);
+            case 1 -> new Knight(color, to);
+            case 2 -> new Bishop(color, to);
+            case 3 -> new Rook(color, to);
+            case 4 -> new Queen(color, to);
             default -> throw new ChessError("Выбрана неизвестная фигура");
         };
     }

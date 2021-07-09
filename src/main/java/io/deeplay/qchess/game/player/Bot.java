@@ -1,10 +1,12 @@
 package io.deeplay.qchess.game.player;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
@@ -14,8 +16,8 @@ public class Bot extends Player {
 
     private static final Map<TypeFigure, Integer> grades = preparedGrades();
 
-    public Bot() {
-        super();
+    public Bot(GameSettings roomSettings, Color color) {
+        super(roomSettings, color);
     }
 
     private static Map<TypeFigure, Integer> preparedGrades() {
@@ -51,7 +53,7 @@ public class Bot extends Player {
         }
         Move move = topMoves.get(new Random().nextInt(topMoves.size()));
         if (move.getMoveType() == MoveType.TURN_INTO) {
-            move.setTurnInto(new Queen(color));
+            move.setTurnInto(new Queen(color, move.getTo()));
         }
         return move;
     }

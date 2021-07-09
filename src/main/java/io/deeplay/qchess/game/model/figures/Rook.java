@@ -11,13 +11,13 @@ import java.util.Set;
 
 public class Rook extends Figure {
 
-    public Rook(Color color) {
-        super(color);
+    public Rook(Color color, Cell position) {
+        super(color, position);
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board, Cell position) {
-        return rayTrace(board, position, plusMove);
+    public Set<Move> getAllMoves(Board board) {
+        return rayTrace(board, plusMove);
     }
 
     @Override
