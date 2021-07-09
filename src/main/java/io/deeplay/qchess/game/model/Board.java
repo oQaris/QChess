@@ -21,9 +21,24 @@ public final class Board {
     public Board() {
     }
 
-    public Move getPrevMove(){
+    public Move getPrevMove() {
         //todo
         return null;
+    }
+
+    /**
+     * @param color true - белый, false - черный
+     * @return true, если клетка cell атакуется цветом color
+     */
+    public boolean isAttackedCell(Cell cell, Color color) {
+        for (Figure f : getFigures(color)) {
+            for (Move m : f.getClass() == King.class ? ((King) f).getAttackedMoves() : f.getAllMoves()) {
+                if (m.getTo().equals(cell)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -200,7 +215,7 @@ public final class Board {
                 if (figure == null) {
                     sb.append("_");
                 } else {
-                    sb.append(figure.getCharIcon());
+                    sb.append(figureToIcon(figure));
                 }
                 sb.append('|');
             }
@@ -209,26 +224,26 @@ public final class Board {
         return sb.toString();
     }
 
-    private char figureToIcon(Figure figure){
-        if(figure.getColor()==Color.WHITE){
-
-            if (figure.getClass()==Bishop.class){
-
-            }if (figure.getClass()==Bishop.class){
-
-            }if (figure.getClass()==Bishop.class){
-
-            }if (figure.getClass()==Bishop.class){
-
-            }if (figure.getClass()==Bishop.class){
-
-            }if (figure.getClass()==Bishop.class){
-
-            }
-        }
-        else{
-
-        }
+    private char figureToIcon(Figure figure) {
+        return switch (figure.getColor()) {
+            // todo вставить норм символы
+            case WHITE -> switch (figure.getType()) {
+                case BISHOP -> '1';
+                case KING -> '2';
+                case KNIGHT -> '3';
+                case PAWN -> '4';
+                case QUEEN -> '5';
+                case ROOK -> '6';
+            };
+            case BLACK -> switch (figure.getType()) {
+                case BISHOP -> '7';
+                case KING -> '8';
+                case KNIGHT -> '9';
+                case PAWN -> '0';
+                case QUEEN -> '-';
+                case ROOK -> '=';
+            };
+        };
     }
 
     public static enum BoardFilling {

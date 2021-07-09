@@ -21,7 +21,7 @@ public class King extends Figure {
 
     @Override
     public Set<Move> getAllMoves(Board board, Cell position) {
-        Set<Move> res = getSimpleMoves(board, position);
+        Set<Move> res = getAttackedMoves(board, position);
         // рокировка
         if (isCorrectCastling(board,position,  true)) {
             res.add(new Move(MoveType.SHORT_CASTLING, position,
@@ -42,7 +42,7 @@ public class King extends Figure {
     /**
      * @return ходы без рокировки
      */
-    public Set<Move> getSimpleMoves(Board board, Cell position) {
+    public Set<Move> getAttackedMoves(Board board, Cell position) {
         return stepForEach(board, position,
                 Stream.concat(xMove.stream(), plusMove.stream())
                         .collect(Collectors.toList()));
@@ -56,9 +56,9 @@ public class King extends Figure {
                 || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
                 || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
                 || !shortCastling && !board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
-                || isAttackedCell(position, color==Color.BLACK)
-                || isAttackedCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)), color==Color.BLACK)
-                || isAttackedCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)), color==Color.BLACK)) {
+                || board.isAttackedCell(position, color.inverse())
+                || board.isAttackedCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)), color.inverse())
+                || board.isAttackedCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)), color.inverse())) {
             return false;
         }
         try {

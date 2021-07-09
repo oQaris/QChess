@@ -75,7 +75,7 @@ public abstract class Figure {
     protected Set<Move> rayTrace(Board board, Cell position, List<Cell> directions) {
         log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, position);
         Objects.requireNonNull(directions, "Список ходов не может быть null");
-        var result = new HashSet<Move>();
+        Set<Move> result = new HashSet<>();
         for (Cell shift : directions) {
             Cell cord = position.createAdd(shift);
             while (board.isEmptyCell(cord)) {
@@ -92,7 +92,7 @@ public abstract class Figure {
     protected Set<Move> stepForEach(Board board, Cell position, List<Cell> moves) {
         log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, position);
         Objects.requireNonNull(moves, "Список ходов не может быть null");
-        var result = new HashSet<Move>();
+        Set<Move> result = new HashSet<>();
         for (Cell shift : moves) {
             Cell cord = position.createAdd(shift);
             if (board.isEmptyCell(cord)) {

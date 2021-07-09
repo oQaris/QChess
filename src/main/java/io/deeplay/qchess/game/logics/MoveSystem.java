@@ -168,19 +168,4 @@ public class MoveSystem {
     public boolean isCheck(boolean color) throws ChessError {
         return isAttackedCell(board.findKingCell(color), !color);
     }
-
-    /**
-     * @param color true - белый, false - черный
-     * @return true, если клетка cell атакуется цветом color
-     */
-    public boolean isAttackedCell(Cell cell, boolean color) {
-        for (Figure f : board.getFigures(color)) {
-            for (Move m : f.getClass() == King.class ? ((King) f).getSimpleMoves() : f.getAllMoves()) {
-                if (m.getTo().equals(cell)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 }
