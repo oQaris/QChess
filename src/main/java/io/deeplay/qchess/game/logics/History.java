@@ -9,23 +9,20 @@ import io.deeplay.qchess.game.model.MoveType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class History {
+public class History implements Iterable<String> {
     private static final Logger log = LoggerFactory.getLogger(History.class);
 
     private final Map<Character, Character> notation = new HashMap<>();
-    private List<String> recordsList;
-    private Board board;
+    private final List<String> recordsList;
+    private final Board board;
     private boolean whiteStep = true;
     private Move prevMove;
 
     public History(Board board) throws ChessException {
         this.board = board;
-        recordsList = new ArrayList<>(50);
+        recordsList = new ArrayList<>(200);
         log.debug("История инициализирована");
 
         notation.put('♔', 'K');
@@ -52,8 +49,29 @@ public class History {
         return record;
     }
 
+    public String getLastRecord() {
+        return recordsList.get(recordsList.size() - 1);
+    }
+
     private String convertBoardToStringForsytheEdwards() throws ChessException {
         StringBuilder record = new StringBuilder(70);
+
+        record.append(getConvertingFigurePosition());
+
+        record.append(' ').append(whiteStep ? 'w' : 'b');
+
+        String castlingPossibility = getCastlingPossibility();
+        if(!"".equals(castlingPossibility)) {
+            record.append(' ').append(castlingPossibility);
+        }
+
+        record.append(getPawnEnPassantPossibility());
+
+        return record.toString();
+    }
+
+    private String getConvertingFigurePosition() throws ChessException {
+        StringBuilder result = new StringBuilder();
         Figure currentFigure = null;
 
         for(int y = 0; y < Board.BOARD_SIZE; y++) {
@@ -66,33 +84,22 @@ public class History {
                     emptySlots++;
                 } else {
                     if(emptySlots != 0) {
-                        record.append(emptySlots);
+                        result.append(emptySlots);
                     }
-                    record.append(notation.get(currentFigure.getCharIcon()));
+                    result.append(notation.get(currentFigure.getCharIcon()));
                     emptySlots = 0;
                 }
             }
 
             if(emptySlots != 0) {
-                record.append(emptySlots);
+                result.append(emptySlots);
             }
-            record.append('/');
+            result.append('/');
         }
 
-        record.deleteCharAt(record.length() - 1);
-        record.append(' ').append(whiteStep ? 'w' : 'b');
+        result.deleteCharAt(result.length() - 1);
 
-        String castlingPossibility = getCastlingPossibility();
-        if(!"".equals(castlingPossibility)) {
-            record.append(' ').append(castlingPossibility);
-        }
-
-        if(prevMove.getMoveType() == MoveType.LONG_MOVE) {
-            record.append(' ').append(prevMove.getTo().toString().charAt(0));
-            record.append(board.getFigure(prevMove.getTo()).isWhite()? '2' : '7');
-        }
-
-        return record.toString();
+        return result.toString();
     }
 
     private String getCastlingPossibility() throws ChessException {
@@ -125,11 +132,25 @@ public class History {
         return result.toString();
     }
 
+    private String getPawnEnPassantPossibility() throws ChessException {
+        StringBuilder result = new StringBuilder();
+        if(prevMove.getMoveType() == MoveType.LONG_MOVE) {
+            result.append(' ').append(prevMove.getTo().toString().charAt(0));
+            result.append(board.getFigure(prevMove.getTo()).isWhite()? '2' : '7');
+        }
+        return result.toString();
+    }
+
     public Move getPrevMove() {
         return prevMove;
     }
 
     public void setPrevMove(Move prevMove) {
         this.prevMove = prevMove;
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return recordsList.iterator();
     }
 }
