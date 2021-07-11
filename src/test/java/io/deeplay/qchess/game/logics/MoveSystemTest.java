@@ -61,7 +61,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_blackPawnAttack_1() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_blackPawnAttack_1() throws ChessException, IllegalArgumentException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
@@ -80,7 +80,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_blackPawnAttack_2() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_blackPawnAttack_2() throws ChessException, IllegalArgumentException {
         Move white2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c2"), Cell.parse("c3"));
         Figure figureW2 = new Pawn(Color.WHITE, white2.getTo());
 
@@ -97,7 +97,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_blackPawnAttack_3() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_blackPawnAttack_3() throws ChessException, IllegalArgumentException {
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("c2"), Cell.parse("d3"));
         Figure figureW3 = new Pawn(Color.WHITE, white3.getTo());
 
@@ -114,7 +114,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_notPawnDefense() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_notPawnDefense() throws ChessException, IllegalArgumentException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Knight(Color.WHITE, white1.getTo());
 
@@ -131,7 +131,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_notPawnAttack() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_notPawnAttack() throws ChessException, IllegalArgumentException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
@@ -160,7 +160,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_whitePawnAttack_1() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_whitePawnAttack_1() throws ChessException, IllegalArgumentException {
         Move black1 = new Move(MoveType.LONG_MOVE, Cell.parse("c7"), Cell.parse("c5"));
         Figure figureB1 = new Pawn(Color.BLACK, black1.getTo());
 
@@ -179,7 +179,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_whitePawnAttack_2() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_whitePawnAttack_2() throws ChessException, IllegalArgumentException {
         Move black2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c7"), Cell.parse("c6"));
         Figure figureB2 = new Pawn(Color.BLACK, black2.getTo());
 
@@ -196,7 +196,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_whitePawnAttack_3() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_whitePawnAttack_3() throws ChessException, IllegalArgumentException {
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("c7"), Cell.parse("d6"));
         Figure figureB3 = new Pawn(Color.BLACK, black3.getTo());
 
@@ -213,7 +213,7 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_sameColors() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_sameColors() throws ChessException, IllegalArgumentException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Move white2 = new Move(MoveType.ATTACK, Cell.parse("b2"), Cell.parse("c3"));
         Figure figure1 = new Pawn(Color.WHITE, white1.getTo());

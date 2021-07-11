@@ -62,7 +62,7 @@ public class Board {
     }
 
     public Move getPrevMove() {
-        //todo
+        //todo простите, а как у нас тогда взятие на проходе работает без предыдущего хода?
         return null;
     }
 
@@ -128,13 +128,13 @@ public class Board {
      * @throws ChessException если ход выходит за пределы доски
      */
     public Figure moveFigure(Move move) throws ChessException {
-        Figure figure = getFigure(move.getFrom());
-        Figure old = getFigure(move.getTo());
-        figure.setCurrentPosition(move.getTo());
-        figure.setWasMoved(true);
-        setFigure(figure);
+        var figureFrom = getFigure(move.getFrom());
+        var figureTo = getFigure(move.getTo());
+        figureFrom.setCurrentPosition(move.getTo());
+        figureFrom.setWasMoved(true);
+        setFigure(figureFrom);
         removeFigure(move.getFrom());
-        return old;
+        return figureTo;
     }
 
     /**

@@ -26,9 +26,9 @@ public class Pawn extends Figure {
      */
     public static boolean isPawnEnPassant(Board board, Cell from, Cell to) {
         try {
-            Pawn currentPawn = (Pawn) board.getFigure(from);
-            Move prevMove = board.getPrevMove();
-            Pawn pawn = (Pawn) board.getFigure(prevMove.getTo());
+            var currentPawn = (Pawn) board.getFigure(from);
+            var prevMove = board.getPrevMove();
+            var pawn = (Pawn) board.getFigure(prevMove.getTo());
 
             Cell cellDown = pawn.getColor() == Color.WHITE
                     ? new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() + 1)

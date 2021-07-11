@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Game {
-
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
     public final Player firstPlayer;
     public final Player secondPlayer;
@@ -27,14 +26,14 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        logger.info(roomSettings.board.toString());
-        boolean notDraw = true;
+        logger.info(roomSettings.board.toString());     //todo SonarLint ругается
+        var notDraw = true;
         while (!roomSettings.moveSystem.isStalemate(currentPlayerToMove.getColor()) && notDraw) {
             // TODO: получать json Move
-            Move move = currentPlayerToMove.getNextMove();
+            var move = currentPlayerToMove.getNextMove();
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
-                Figure removedFigure = tryMove(move);
+                var removedFigure = tryMove(move);
                 notDraw = isNotDraw(removedFigure, move);
                 currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
@@ -56,9 +55,9 @@ public class Game {
      */
     private Figure tryMove(Move move) throws ChessError {
         try {
-            Figure removedFigure = roomSettings.moveSystem.move(move);
+            var removedFigure = roomSettings.moveSystem.move(move);
             logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, roomSettings.board.getFigure(move.getTo()));
-            logger.info(roomSettings.board.toString());
+            logger.info(roomSettings.board.toString());     //todo SonarLint ругается
             return removedFigure;
         } catch (ChessException e) {
             throw new ChessError("Не удалось записать в лог", e);

@@ -440,7 +440,7 @@ public class FigureTest {
     }
 
     @Test
-    public void testPawnEnPassant() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testPawnEnPassant() throws ChessException, IllegalArgumentException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 

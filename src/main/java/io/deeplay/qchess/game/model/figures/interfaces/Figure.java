@@ -37,7 +37,7 @@ public abstract class Figure {
     protected boolean wasMoved = false;
     protected Cell position;
 
-    public Figure(Color color, Cell position) {
+    protected Figure(Color color, Cell position) {
         this.color = color;
         this.position = position;
     }
@@ -134,7 +134,7 @@ public abstract class Figure {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Figure figure = (Figure) o;
+        var figure = (Figure) o;
         return wasMoved == figure.wasMoved
                 && color == figure.color
                 && position.equals(figure.position);

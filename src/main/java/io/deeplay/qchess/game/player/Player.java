@@ -13,7 +13,7 @@ public abstract class Player {
     protected Board board;
     protected Color color;
 
-    public Player(GameSettings roomSettings, Color color) {
+    protected Player(GameSettings roomSettings, Color color) {
         ms = roomSettings.moveSystem;
         board = roomSettings.board;
         this.color = color;

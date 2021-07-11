@@ -62,7 +62,7 @@ public class King extends Figure {
             return false;
         }
         try {
-            Figure rook = board.getFigure(position.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
+            var rook = board.getFigure(position.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
             return !rook.wasMoved() && rook.getClass() == Rook.class;
         } catch (ChessException | NullPointerException e) {
             return false;

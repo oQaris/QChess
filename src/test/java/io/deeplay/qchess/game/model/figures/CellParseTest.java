@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class CellParseTest {
+    //todo Подобные тесты следует сгруппировать в один параметризованный тест.
 
     @Test(expected = IllegalArgumentException.class)
     public void testParseFail1() {

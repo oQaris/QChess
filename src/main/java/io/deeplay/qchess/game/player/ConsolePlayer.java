@@ -23,7 +23,7 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.CONSOLE_PLAYER_ER
 
 public class ConsolePlayer extends Player {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
-    private static final String turnIntoInvite =
+    private static final String TURN_INTO_INVITE =
             "Выберите фигуру для превращения:" +
                     System.lineSeparator() + "1 - Конь" +
                     System.lineSeparator() + "2 - Слон" +
@@ -42,7 +42,7 @@ public class ConsolePlayer extends Player {
         try {
             List<Move> allMoves = ms.getAllCorrectMoves(color);
             printMoves(allMoves);
-            Move choosenMove = inputMoveNumber(allMoves);
+            var choosenMove = inputMoveNumber(allMoves);
             specificMoveModification(choosenMove);
             return choosenMove;
         } catch (ChessError e) {
@@ -50,21 +50,21 @@ public class ConsolePlayer extends Player {
         }
     }
 
-    private void printMoves(List<Move> allMoves) throws ChessError {
+    private void printMoves(List<Move> allMoves) {
         System.out.println("Выберите ход:");
         allMoves.sort(Comparator.comparing(Move::toString));
-        int number = 1;
+        var number = 1;
         for (Move move : allMoves) {
             System.out.println(number + ": " + move);
             ++number;
         }
     }
 
-    private Move inputMoveNumber(List<Move> allMoves) throws ChessError {
+    private Move inputMoveNumber(List<Move> allMoves) {
         Move move = null;
         while (move == null) {
             try {
-                int numMove = Integer.parseInt(in.readLine());
+                var numMove = Integer.parseInt(in.readLine());
                 move = allMoves.get(numMove - 1);
             } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
                 logger.info("Неправильный ход, повторите попытку");
@@ -75,13 +75,13 @@ public class ConsolePlayer extends Player {
 
     private void specificMoveModification(Move choosenMove) throws ChessError {
         if (choosenMove.getMoveType() == MoveType.TURN_INTO) {
-            System.out.println(turnIntoInvite);
+            System.out.println(TURN_INTO_INVITE);
             choosenMove.setTurnInto(readTurnInto(choosenMove.getTo()));
         }
     }
 
     private Figure readTurnInto(Cell to) throws ChessError {
-        int numTurnIntoFig = 0;
+        var numTurnIntoFig = 0;
         while (numTurnIntoFig == 0) {
             try {
                 numTurnIntoFig = Integer.parseInt(in.readLine());
@@ -97,7 +97,7 @@ public class ConsolePlayer extends Player {
             case 2 -> new Bishop(color, to);
             case 3 -> new Rook(color, to);
             case 4 -> new Queen(color, to);
-            // почему бы по-умолчанию ферзя не выбирать? или хотя бы повторить запрос
+            //todo почему бы по-умолчанию ферзя не выбирать? или хотя бы повторить запрос
             default -> throw new ChessError("Выбрана неизвестная фигура");
         };
     }

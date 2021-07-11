@@ -40,7 +40,7 @@ public class MoveSystem {
 
             // превращение пешки
             if (move.getMoveType() == MoveType.TURN_INTO) {
-                Figure turnIntoFigure = move.getTurnInto();
+                var turnIntoFigure = move.getTurnInto();
                 turnIntoFigure.setCurrentPosition(move.getTo());
                 board.setFigure(turnIntoFigure);
             }
@@ -134,7 +134,7 @@ public class MoveSystem {
      * @return true если ход лежит в доступных
      */
     private boolean inAvailableMoves(Move move) throws ChessException {
-        Figure figure = board.getFigure(move.getFrom());
+        var figure = board.getFigure(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(board);
         return allMoves.contains(move);
     }
@@ -143,10 +143,10 @@ public class MoveSystem {
      * @param move корректный ход
      */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
-        Figure figureToMove = board.getFigure(move.getFrom());
+        var figureToMove = board.getFigure(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
-        Figure virtualKilled = board.moveFigure(move);
+        var virtualKilled = board.moveFigure(move);
         if (virtualKilled != null && virtualKilled.getClass() == King.class) {
             throw new ChessError("Срубили короля");
         }
