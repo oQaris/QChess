@@ -1,7 +1,7 @@
 package io.deeplay.qchess.game.exceptions;
 
 /**
- * Класс для невозможных ситуаций во время выполнения
+ * Класс для ошибок в комнате
  */
 public class ChessError extends Exception {
 
