@@ -5,9 +5,12 @@ import io.deeplay.qchess.game.model.figures.*;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
+import java.util.*;
+
 
 public class NotationService {
     public static boolean checkValidityPlacement(String placement) {
+        String[] placementRows = placement.split("/");
         return true;
     }
 
@@ -30,5 +33,23 @@ public class NotationService {
             figure = new Pawn(figureColor, figureCell);
         }
         return figure;
+    }
+
+    private boolean checkInappropriateCharacters(String placementRow) {
+        char[] list = {'1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r', 'b', 'n', 'p'};
+        //String regex="\\d{3}"
+        return true;
+    }
+
+    private boolean checkRowsNumber(String[] placementRows) {
+        return placementRows.length == 8;
+    }
+
+    private boolean checkSumInRows() {
+        return true;
+    }
+
+    private boolean checkFigureTypes() {
+        return true;
     }
 }
