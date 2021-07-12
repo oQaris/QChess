@@ -42,7 +42,7 @@ public class EndGameDetector {
         } else {
             ++pieceMoveCount;
         }
-        return pieceMoveCount != 50;
+        return pieceMoveCount == 50;
     }
 
     /**
