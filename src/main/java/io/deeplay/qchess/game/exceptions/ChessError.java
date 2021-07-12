@@ -5,10 +5,6 @@ package io.deeplay.qchess.game.exceptions;
  */
 public class ChessError extends Exception {
 
-    public ChessError(String msg) {
-        super(msg);
-    }
-
     public ChessError(ChessErrorCode code, Throwable cause) {
         super(code.getMessage(), cause);
     }

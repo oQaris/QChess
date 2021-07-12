@@ -17,12 +17,6 @@ public class CellParseTest {
         this.cellStr = cellStr;
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void paramTest() {
-        Cell.parse(cellStr);
-        Assert.fail();
-    }
-
     @Parameterized.Parameters(name = "{index}: {0}")
     public static Iterable<Object[]> dataForTest() {
         return Arrays.asList(new Object[][]{
@@ -32,5 +26,11 @@ public class CellParseTest {
                 {"а11"},
                 {""}
         });
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void paramTest() {
+        Cell.parse(cellStr);
+        Assert.fail();
     }
 }

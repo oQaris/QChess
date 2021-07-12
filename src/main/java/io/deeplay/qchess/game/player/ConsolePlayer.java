@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.CONSOLE_PLAYER_ERROR;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.UNKNOWN_FIGURE_SELECTED;
 
 public class ConsolePlayer extends Player {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
@@ -98,7 +99,7 @@ public class ConsolePlayer extends Player {
             case 3 -> new Rook(color, to);
             case 4 -> new Queen(color, to);
             //todo почему бы по-умолчанию ферзя не выбирать? или хотя бы повторить запрос
-            default -> throw new ChessError("Выбрана неизвестная фигура");
+            default -> throw new ChessError(UNKNOWN_FIGURE_SELECTED);
         };
     }
 }

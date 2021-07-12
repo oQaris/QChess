@@ -145,4 +145,9 @@ public abstract class Figure {
                 && color == figure.color
                 && position.equals(figure.position);
     }
+
+    @Override
+    public String toString() {
+        return color.toString() + " " + getType();
+    }
 }

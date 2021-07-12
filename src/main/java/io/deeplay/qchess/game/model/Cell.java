@@ -41,7 +41,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        return "" + (char) ('a' + column) + (char) ('0' + (Board.BOARD_SIZE - row));
+        return String.format("%c%c", 'a' + column, '0' + Board.BOARD_SIZE - row);
     }
 
     @Override

@@ -94,8 +94,8 @@ public class Board {
     /**
      * @return true, если клетка принадлежит доске
      */
-    public boolean isCorrectCell(int col, int row) {
-        return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
+    public boolean isCorrectCell(int column, int row) {
+        return column >= 0 && row >= 0 && column < BOARD_SIZE && row < BOARD_SIZE;
     }
 
     /**
