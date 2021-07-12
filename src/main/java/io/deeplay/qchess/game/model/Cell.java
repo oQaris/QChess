@@ -31,7 +31,7 @@ public class Cell {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getColumn(), getRow());
+        return Objects.hash(column, row);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Cell {
             return false;
         }
         Cell cell = (Cell) o;
-        return getColumn() == cell.getColumn() && getRow() == cell.getRow();
+        return column == cell.column && row == cell.row;
     }
 
     @Override
