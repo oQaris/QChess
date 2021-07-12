@@ -13,6 +13,7 @@ public class History implements Iterable<String> {
     private static final Logger log = LoggerFactory.getLogger(History.class);
 
     private final Map<TypeFigure, Character> notation = new HashMap<>();
+    private final Map<String, Integer> repetitionsMap;
     private final List<String> recordsList;
     private final Board board;
     private boolean whiteStep = true;
@@ -20,7 +21,8 @@ public class History implements Iterable<String> {
 
     public History(Board board) throws ChessException {
         this.board = board;
-        recordsList = new ArrayList<>(200);
+        recordsList = new ArrayList<>(500);
+        repetitionsMap = new HashMap<>(500);
         log.debug("История инициализирована");
 
         notation.put(TypeFigure.KING, 'K');
@@ -41,6 +43,12 @@ public class History implements Iterable<String> {
     public String addRecord() throws ChessException {
         String record = convertBoardToStringForsytheEdwards();
         recordsList.add(record);
+
+        if(!repetitionsMap.containsKey(record)) {
+            repetitionsMap.put(record, 0);
+        }
+        repetitionsMap.put(record, repetitionsMap.get(record) + 1);
+
         log.debug("Запись {} добавлена в историю", record);
         whiteStep = !whiteStep;
         return record;
@@ -159,8 +167,12 @@ public class History implements Iterable<String> {
      * @return true - если было repetition-кратное повторение, false - если не было
      */
     public boolean checkThreefoldRepetition(int repetition) {
-        Set<String> set = new HashSet<>(recordsList);
-        return recordsList.size() - set.size() >= repetition - 1;
+        for(Integer rep : repetitionsMap.values()) {
+            if(rep >= repetition) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Move getPrevMove() {
