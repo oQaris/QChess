@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.logics;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
@@ -24,40 +25,9 @@ public class MoveSystemTest {
 
     @Before
     public void setUp() throws ChessError {
-        board = new Board(Board.BoardFilling.EMPTY);
-        ms = new MoveSystem(board);
-    }
-
-    private void setBlackPawns() throws ChessException {
-        move1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
-        move2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
-        move3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
-        move4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
-        Figure figureB1 = new Pawn(Color.BLACK, move1.getFrom());
-        Figure figureB2 = new Pawn(Color.BLACK, move2.getFrom());
-        Figure figureB3 = new Pawn(Color.BLACK, move3.getFrom());
-        Figure figureB4 = new Pawn(Color.BLACK, move4.getFrom());
-
-        board.setFigure(figureB1);
-        board.setFigure(figureB2);
-        board.setFigure(figureB3);
-        board.setFigure(figureB4);
-    }
-
-    private void setWhitePawns() throws ChessException {
-        move1 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c6"));
-        move2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
-        move3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
-        move4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
-        Figure figureW1 = new Pawn(Color.WHITE, move1.getFrom());
-        Figure figureW2 = new Pawn(Color.WHITE, move2.getFrom());
-        Figure figureW3 = new Pawn(Color.WHITE, move3.getFrom());
-        Figure figureW4 = new Pawn(Color.WHITE, move4.getFrom());
-
-        board.setFigure(figureW1);
-        board.setFigure(figureW2);
-        board.setFigure(figureW3);
-        board.setFigure(figureW4);
+        GameSettings gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
+        board = gameSettings.board;
+        ms = new MoveSystem(board, gameSettings.endGameDetector);
     }
 
     @Test
@@ -77,6 +47,22 @@ public class MoveSystemTest {
         Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
         Assert.assertFalse(Pawn.isPawnEnPassant(board, move3.getFrom(), move3.getTo()));
         Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
+    }
+
+    private void setBlackPawns() throws ChessException {
+        move1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
+        move2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
+        move3 = new Move(MoveType.ATTACK, Cell.parse("b3"), Cell.parse("c2"));
+        move4 = new Move(MoveType.ATTACK, Cell.parse("c3"), Cell.parse("d2"));
+        Figure figureB1 = new Pawn(Color.BLACK, move1.getFrom());
+        Figure figureB2 = new Pawn(Color.BLACK, move2.getFrom());
+        Figure figureB3 = new Pawn(Color.BLACK, move3.getFrom());
+        Figure figureB4 = new Pawn(Color.BLACK, move4.getFrom());
+
+        board.setFigure(figureB1);
+        board.setFigure(figureB2);
+        board.setFigure(figureB3);
+        board.setFigure(figureB4);
     }
 
     @Test
@@ -178,6 +164,22 @@ public class MoveSystemTest {
         Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
     }
 
+    private void setWhitePawns() throws ChessException {
+        move1 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c6"));
+        move2 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c5"));
+        move3 = new Move(MoveType.ATTACK, Cell.parse("b6"), Cell.parse("c7"));
+        move4 = new Move(MoveType.ATTACK, Cell.parse("c6"), Cell.parse("d7"));
+        Figure figureW1 = new Pawn(Color.WHITE, move1.getFrom());
+        Figure figureW2 = new Pawn(Color.WHITE, move2.getFrom());
+        Figure figureW3 = new Pawn(Color.WHITE, move3.getFrom());
+        Figure figureW4 = new Pawn(Color.WHITE, move4.getFrom());
+
+        board.setFigure(figureW1);
+        board.setFigure(figureW2);
+        board.setFigure(figureW3);
+        board.setFigure(figureW4);
+    }
+
     @Test
     public void testIsCorrectPawnEnPassant_whitePawnAttack_2() throws ChessException, IllegalArgumentException {
         Move black2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c7"), Cell.parse("c6"));
@@ -226,85 +228,6 @@ public class MoveSystemTest {
         board.setFigure(figure2);
 
         Assert.assertFalse(Pawn.isPawnEnPassant(board, white2.getFrom(), white2.getTo()));
-    }
-
-    @Test(expected = ChessError.class)
-    public void testIsCheck_zeroFigures_1() throws ChessError {
-        ms.isCheck(Color.WHITE);
-    }
-
-    @Test(expected = ChessError.class)
-    public void testIsCheck_zeroFigures_2() throws ChessError {
-        ms.isCheck(Color.BLACK);
-    }
-
-    @Test
-    public void testIsCheck() throws ChessError, ChessException {
-        board.setFigure(new King(Color.WHITE, Cell.parse("e1")));
-        board.setFigure(new King(Color.BLACK, Cell.parse("e8")));
-
-        board.setFigure(new Pawn(Color.BLACK, Cell.parse("e2")));
-        board.setFigure(new Pawn(Color.WHITE, Cell.parse("e7")));
-
-        ms.isCheck(Color.WHITE);
-        Assert.assertFalse(ms.isCheck(Color.WHITE));
-        Assert.assertFalse(ms.isCheck(Color.BLACK));
-
-        board.setFigure(new Pawn(Color.BLACK, Cell.parse("f2")));
-        board.setFigure(new Pawn(Color.WHITE, Cell.parse("f7")));
-
-        Assert.assertTrue(ms.isCheck(Color.WHITE));
-        Assert.assertTrue(ms.isCheck(Color.BLACK));
-    }
-
-    @Test
-    public void testIsStalemate_black() throws ChessException, ChessError {
-        board.setFigure(new Pawn(Color.BLACK, Cell.parse("b5")));
-        board.setFigure(new Pawn(Color.BLACK, Cell.parse("c6")));
-        board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
-
-        board.setFigure(new Pawn(Color.WHITE, Cell.parse("b4")));
-        board.setFigure(new Pawn(Color.WHITE, Cell.parse("c5")));
-        board.setFigure(new Pawn(Color.WHITE, Cell.parse("h7")));
-        board.setFigure(new King(Color.WHITE, Cell.parse("f6")));
-        board.setFigure(new Bishop(Color.WHITE, Cell.parse("c2")));
-
-        Assert.assertTrue(ms.isStalemate(Color.BLACK));
-
-        board.setFigure(new Pawn(Color.BLACK, Cell.parse("g3")));
-
-        Assert.assertFalse(ms.isStalemate(Color.BLACK));
-    }
-
-    @Test
-    public void testIsStalemate_white() throws ChessException, ChessError {
-        board.setFigure(new King(Color.WHITE, Cell.parse("h1")));
-        board.setFigure(new King(Color.BLACK, Cell.parse("h3")));
-        board.setFigure(new Rook(Color.BLACK, Cell.parse("g7")));
-
-        Assert.assertTrue(ms.isStalemate(Color.WHITE));
-        Assert.assertFalse(ms.isCheckmate(Color.WHITE));
-
-        board.setFigure(new Pawn(Color.WHITE, Cell.parse("g3")));
-
-        Assert.assertFalse(ms.isStalemate(Color.WHITE));
-    }
-
-    @Test
-    public void testIsCheckmate() throws ChessException, ChessError {
-        board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
-        board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
-
-        Assert.assertFalse(ms.isCheckmate(Color.WHITE));
-        Assert.assertFalse(ms.isCheckmate(Color.BLACK));
-
-        board.setFigure(new Queen(Color.BLACK, Cell.parse("f7")));
-
-        Assert.assertTrue(ms.isCheckmate(Color.WHITE));
-
-        board.setFigure(new Rook(Color.WHITE, Cell.parse("h7")));
-
-        Assert.assertFalse(ms.isCheckmate(Color.WHITE));
     }
 
     @Test

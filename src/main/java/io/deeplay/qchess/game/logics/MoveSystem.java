@@ -18,12 +18,13 @@ import java.util.Set;
  * Хранит различные данные об игре для контроля специфичных ситуаций
  */
 public class MoveSystem {
-
     private final Board board;
+    private final EndGameDetector endGameDetector;
     private Move prevMove;
 
-    public MoveSystem(Board board) {
+    public MoveSystem(Board board, EndGameDetector endGameDetector) {
         this.board = board;
+        this.endGameDetector = endGameDetector;
     }
 
     /**
@@ -40,7 +41,7 @@ public class MoveSystem {
 
             // превращение пешки
             if (move.getMoveType() == MoveType.TURN_INTO) {
-                var turnIntoFigure = move.getTurnInto();
+                Figure turnIntoFigure = move.getTurnInto();
                 turnIntoFigure.setCurrentPosition(move.getTo());
                 board.setFigure(turnIntoFigure);
             }
@@ -65,20 +66,6 @@ public class MoveSystem {
         } catch (ChessException | NullPointerException e) {
             throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры", e);
         }
-    }
-
-    /**
-     * @return true, если установленному цвету поставили мат
-     */
-    public boolean isCheckmate(Color color) throws ChessError {
-        return isStalemate(color) && isCheck(color);
-    }
-
-    /**
-     * @return true, если установленному цвету поставили пат (нет доступных ходов)
-     */
-    public boolean isStalemate(Color color) throws ChessError {
-        return getAllCorrectMoves(color).isEmpty();
     }
 
     /**
@@ -134,7 +121,7 @@ public class MoveSystem {
      * @return true если ход лежит в доступных
      */
     private boolean inAvailableMoves(Move move) throws ChessException {
-        var figure = board.getFigure(move.getFrom());
+        Figure figure = board.getFigure(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(board);
         return allMoves.contains(move);
     }
@@ -143,14 +130,14 @@ public class MoveSystem {
      * @param move корректный ход
      */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
-        var figureToMove = board.getFigure(move.getFrom());
+        Figure figureToMove = board.getFigure(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
-        var virtualKilled = board.moveFigure(move);
+        Figure virtualKilled = board.moveFigure(move);
         if (virtualKilled != null && virtualKilled.getClass() == King.class) {
             throw new ChessError("Срубили короля");
         }
-        boolean isCheck = isCheck(figureToMove.getColor());
+        boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
         figureToMove.setWasMoved(hasBeenMoved);
@@ -158,12 +145,5 @@ public class MoveSystem {
             board.setFigure(virtualKilled);
         }
         return !isCheck;
-    }
-
-    /**
-     * @return true если игроку с указанным цветом ставят шах
-     */
-    public boolean isCheck(Color color) throws ChessError {
-        return board.isAttackedCell(board.findKingCell(color), color.inverse());
     }
 }
