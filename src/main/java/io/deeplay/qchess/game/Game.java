@@ -28,14 +28,16 @@ public class Game {
     public void run() throws ChessError {
         logger.info(roomSettings.board.toString());
         boolean notDraw = true;
-        while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor()) && notDraw) {
+        while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
+                && notDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 Figure removedFigure = tryMove(move);
                 notDraw = roomSettings.endGameDetector.isNotDraw(removedFigure, move);
-                currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
+                currentPlayerToMove =
+                        currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ, что ход некорректный
             }
@@ -43,20 +45,26 @@ public class Game {
         if (!notDraw) {
             logger.info("Игра окончена: ничья");
         } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor())) {
-            logger.info("Игра окончена: мат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+            logger.info(
+                    "Игра окончена: мат {}",
+                    currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         } else {
-            logger.info("Игра окончена: пат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+            logger.info(
+                    "Игра окончена: пат {}",
+                    currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         }
         // TODO: конец игры
     }
 
-    /**
-     * @return удаленная фигура или null, если клетка была пуста
-     */
+    /** @return удаленная фигура или null, если клетка была пуста */
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, roomSettings.board.getFigure(move.getTo()));
+            logger.info(
+                    "{} сделал ход: {} фигурой: {}",
+                    currentPlayerToMove,
+                    move,
+                    roomSettings.board.getFigure(move.getTo()));
             logger.info(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException e) {

@@ -22,7 +22,8 @@ public class HistoryTest {
     }
 
     @Test
-    public void testGetConvertingFigurePosition() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testGetConvertingFigurePosition()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = history.getClass().getDeclaredMethod("getConvertingFigurePosition");
         method.setAccessible(true);
 
@@ -30,7 +31,8 @@ public class HistoryTest {
     }
 
     @Test
-    public void testGetCastlingPossibility() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testGetCastlingPossibility()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = history.getClass().getDeclaredMethod("getCastlingPossibility");
         method.setAccessible(true);
 
@@ -38,7 +40,9 @@ public class HistoryTest {
     }
 
     @Test
-    public void testGetPawnEnPassantPossibilityWithoutLongMove() throws ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
+    public void testGetPawnEnPassantPossibilityWithoutLongMove()
+            throws ChessException, NoSuchMethodException, InvocationTargetException,
+                    IllegalAccessException, NoSuchFieldException {
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("a2"), Cell.parse("a3"));
         board.moveFigure(move);
 
@@ -52,7 +56,9 @@ public class HistoryTest {
     }
 
     @Test
-    public void testGetPawnEnPassantPossibilityWithLongMove() throws ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
+    public void testGetPawnEnPassantPossibilityWithLongMove()
+            throws ChessException, NoSuchMethodException, InvocationTargetException,
+                    IllegalAccessException, NoSuchFieldException {
         Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
         board.moveFigure(move);
 

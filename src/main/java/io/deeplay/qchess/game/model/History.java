@@ -43,7 +43,8 @@ public class History implements Iterable<String> {
     }
 
     /**
-     * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные приписки
+     * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные
+     * приписки
      *
      * @param prevMove предыдущий ход или null, если его не было
      * @return Строка - только что добавленная запись
@@ -61,9 +62,7 @@ public class History implements Iterable<String> {
         return record;
     }
 
-    /**
-     * @return Строка - запись в виде нотации Форсайта-Эдвардса
-     */
+    /** @return Строка - запись в виде нотации Форсайта-Эдвардса */
     private String convertBoardToStringForsytheEdwards() throws ChessException {
         StringBuilder record = new StringBuilder(70);
 
@@ -81,9 +80,7 @@ public class History implements Iterable<String> {
         return record.toString();
     }
 
-    /**
-     * @return Строка - часть записи отвечающая за позиционирование фигур на доске
-     */
+    /** @return Строка - часть записи отвечающая за позиционирование фигур на доске */
     private String getConvertingFigurePosition() throws ChessException {
         StringBuilder result = new StringBuilder();
         Figure currentFigure = null;
@@ -101,8 +98,10 @@ public class History implements Iterable<String> {
                         result.append(emptySlots);
                     }
                     Character notationFigureChar = notation.get(currentFigure.getType());
-                    result.append(currentFigure.getColor() == Color.WHITE ?
-                            notationFigureChar : Character.toLowerCase(notationFigureChar));
+                    result.append(
+                            currentFigure.getColor() == Color.WHITE
+                                    ? notationFigureChar
+                                    : Character.toLowerCase(notationFigureChar));
                     emptySlots = 0;
                 }
             }
@@ -118,9 +117,7 @@ public class History implements Iterable<String> {
         return result.toString();
     }
 
-    /**
-     * @return Строка - часть записи отвечающая, то можно ли использовать рокировки
-     */
+    /** @return Строка - часть записи отвечающая, то можно ли использовать рокировки */
     private String getCastlingPossibility() throws ChessException {
         StringBuilder result = new StringBuilder(4);
         Figure shortRook;
@@ -152,7 +149,8 @@ public class History implements Iterable<String> {
     }
 
     /**
-     * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на проходе следующим ходом
+     * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на
+     *     проходе следующим ходом
      */
     private String getPawnEnPassantPossibility() throws ChessException {
         StringBuilder result = new StringBuilder();
@@ -163,16 +161,12 @@ public class History implements Iterable<String> {
         return result.toString();
     }
 
-    /**
-     * @return Строка - последняя запись в списке
-     */
+    /** @return Строка - последняя запись в списке */
     public String getLastRecord() {
         return recordsList.get(recordsList.size() - 1);
     }
 
-    /**
-     * @return true - если было минимум repetition-кратных повторений, false - если было меньше
-     */
+    /** @return true - если было минимум repetition-кратных повторений, false - если было меньше */
     public boolean checkRepetitions(int repetition) {
         for (Integer rep : repetitionsMap.values()) {
             if (rep >= repetition) {

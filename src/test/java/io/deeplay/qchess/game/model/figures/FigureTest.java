@@ -31,7 +31,7 @@ public class FigureTest {
 
     @Test
     public void testBishop() throws ChessException {
-        //--- Слон ---//
+        // --- Слон ---//
 
         Figure bishop1 = new Bishop(Color.WHITE, Cell.parse("e7"));
         board.setFigure(bishop1);
@@ -63,42 +63,45 @@ public class FigureTest {
 
     @Test
     public void testBishopWithEnemyPawn() throws ChessException {
-        //--- Слон с вражесткой пешкой ---//
+        // --- Слон с вражесткой пешкой ---//
 
         Figure pawn = new Pawn(Color.BLACK, Cell.parse("e3"));
         Figure bishop = new Bishop(Color.WHITE, Cell.parse("c1"));
         board.setFigure(pawn);
         board.setFigure(bishop);
 
-        Assert.assertEquals(toCellsSet("A3", "B2", "D2", "E3"),
+        Assert.assertEquals(
+                toCellsSet("A3", "B2", "D2", "E3"),
                 extractCellTo(bishop.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testBishopWithFriendPawn() throws ChessException {
-        //--- Слон с дружеской пешкой ---//
+        // --- Слон с дружеской пешкой ---//
         Figure pawn = new Pawn(Color.WHITE, Cell.parse("e3"));
         Figure bishop = new Bishop(Color.WHITE, Cell.parse("c1"));
         board.setFigure(pawn);
         board.setFigure(bishop);
 
-        Assert.assertEquals(toCellsSet("A3", "B2", "D2"),
-                extractCellTo(bishop.getAllMoves(gameSettings)));
+        Assert.assertEquals(
+                toCellsSet("A3", "B2", "D2"), extractCellTo(bishop.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testRook() throws ChessException {
-        //--- Ладья ---//
+        // --- Ладья ---//
         Figure rook = new Rook(Color.BLACK, Cell.parse("a6"));
         board.setFigure(rook);
         Assert.assertEquals(
-                toCellsSet("A8", "A7", "A5", "A4", "A3", "A2", "A1", "B6", "C6", "D6", "E6", "F6", "G6", "H6"),
+                toCellsSet(
+                        "A8", "A7", "A5", "A4", "A3", "A2", "A1", "B6", "C6", "D6", "E6", "F6",
+                        "G6", "H6"),
                 extractCellTo(rook.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testCornerBlockedRook() throws ChessException {
-        //--- Ладья в углу с противниками на пути---//
+        // --- Ладья в углу с противниками на пути---//
         Figure rook = new Rook(Color.WHITE, Cell.parse("a8"));
         Figure rook1 = new Rook(Color.BLACK, Cell.parse("a6"));
         Figure rook2 = new Rook(Color.BLACK, Cell.parse("c8"));
@@ -106,24 +109,24 @@ public class FigureTest {
         board.setFigure(rook1);
         board.setFigure(rook2);
         Assert.assertEquals(
-                toCellsSet("b8", "a7", "a6", "c8"),
-                extractCellTo(rook.getAllMoves(gameSettings)));
+                toCellsSet("b8", "a7", "a6", "c8"), extractCellTo(rook.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testQueen() throws ChessException {
-        //--- Ферзь ---//
+        // --- Ферзь ---//
         Figure queen = new Queen(Color.BLACK, Cell.parse("b3"));
         board.setFigure(queen);
         Assert.assertEquals(
-                toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8", "B8", "B7", "B6", "B5",
-                        "B4", "B2", "B1", "A3", "C3", "D3", "E3", "F3", "G3", "H3"),
+                toCellsSet(
+                        "A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8", "B8", "B7", "B6",
+                        "B5", "B4", "B2", "B1", "A3", "C3", "D3", "E3", "F3", "G3", "H3"),
                 extractCellTo(queen.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testQueen_jumpBlack() throws ChessException {
-        //--- Ферзь ---//
+        // --- Ферзь ---//
         Figure queen = new Queen(Color.WHITE, Cell.parse("c6"));
         board.setFigure(queen);
         board.setFigure(new Queen(Color.BLACK, Cell.parse("d7")));
@@ -139,7 +142,7 @@ public class FigureTest {
 
     @Test
     public void testKing() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         board.setFigure(king1);
@@ -180,7 +183,7 @@ public class FigureTest {
 
     @Test
     public void testKingCastling_falseRook() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         Figure knightW1 = new Knight(Color.WHITE, Cell.parse("h1"));
@@ -204,7 +207,7 @@ public class FigureTest {
 
     @Test
     public void testKingCastling_1() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
@@ -240,7 +243,7 @@ public class FigureTest {
 
     @Test
     public void testKingCastling_2() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
@@ -267,7 +270,7 @@ public class FigureTest {
 
     @Test
     public void testKingCastling_3() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
@@ -296,7 +299,7 @@ public class FigureTest {
 
     @Test
     public void testKingCastling_4() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
@@ -329,7 +332,7 @@ public class FigureTest {
 
     @Test
     public void testKingCastling_5() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
@@ -362,7 +365,7 @@ public class FigureTest {
 
     @Test
     public void testKnight() throws ChessException {
-        //--- Конь ---//
+        // --- Конь ---//
         Figure knight = new Knight(Color.BLACK, Cell.parse("f4"));
         board.setFigure(knight);
         Assert.assertEquals(
@@ -372,7 +375,7 @@ public class FigureTest {
 
     @Test
     public void testKnightWithFriendPawns() throws ChessException {
-        //--- Конь с дружественными пешками вокруг коня, но не закрывающие ход ---//
+        // --- Конь с дружественными пешками вокруг коня, но не закрывающие ход ---//
         Figure knight = new Knight(Color.WHITE, Cell.parse("a1"));
         Figure pawn1 = new Pawn(Color.WHITE, Cell.parse("a2"));
         Figure pawn2 = new Pawn(Color.WHITE, Cell.parse("b2"));
@@ -383,42 +386,36 @@ public class FigureTest {
         board.setFigure(pawn2);
         board.setFigure(pawn3);
         Assert.assertEquals(
-                toCellsSet("b3", "c2"),
-                extractCellTo(knight.getAllMoves(gameSettings)));
+                toCellsSet("b3", "c2"), extractCellTo(knight.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testPawn() throws ChessException {
-        //--- Пешка ---//
+        // --- Пешка ---//
         Figure pawn = new Pawn(Color.WHITE, Cell.parse("c2"));
         Figure enemy = new Queen(Color.BLACK, Cell.parse("d3"));
         board.setFigure(pawn);
         board.setFigure(enemy);
 
         Assert.assertEquals(
-                toCellsSet("C3", "C4", "D3"),
-                extractCellTo(pawn.getAllMoves(gameSettings)));
+                toCellsSet("C3", "C4", "D3"), extractCellTo(pawn.getAllMoves(gameSettings)));
 
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("c3")));
 
-        Assert.assertEquals(
-                toCellsSet("D3"),
-                extractCellTo(pawn.getAllMoves(gameSettings)));
+        Assert.assertEquals(toCellsSet("D3"), extractCellTo(pawn.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testPawnForEnemyRespawn() throws ChessException {
-        //--- Пешка дошедшая до конца поля ---//
+        // --- Пешка дошедшая до конца поля ---//
         Figure pawn = new Pawn(Color.BLACK, Cell.parse("d1"));
         board.setFigure(pawn);
-        Assert.assertEquals(
-                new HashSet<Cell>(),
-                extractCellTo(pawn.getAllMoves(gameSettings)));
+        Assert.assertEquals(new HashSet<Cell>(), extractCellTo(pawn.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testPawnWithXEnemy() throws ChessException {
-        //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
+        // --- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Figure pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
         Figure pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
         Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
@@ -431,14 +428,12 @@ public class FigureTest {
         board.setFigure(pawn3);
         board.setFigure(pawn4);
         board.setFigure(pawn5);
-        Assert.assertEquals(
-                toCellsSet("B6", "D6"),
-                extractCellTo(pawn.getAllMoves(gameSettings)));
+        Assert.assertEquals(toCellsSet("B6", "D6"), extractCellTo(pawn.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testPawnWithXEnemy2() throws ChessException {
-        //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
+        // --- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
         Figure pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
         Figure pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
         Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
@@ -450,12 +445,13 @@ public class FigureTest {
         board.setFigure(pawn3);
         board.setFigure(pawn4);
         Assert.assertEquals(
-                toCellsSet("B6", "D6", "c6"),
-                extractCellTo(pawn.getAllMoves(gameSettings)));
+                toCellsSet("B6", "D6", "c6"), extractCellTo(pawn.getAllMoves(gameSettings)));
     }
 
     @Test
-    public void testPawnEnPassant() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testPawnEnPassant()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
@@ -472,9 +468,8 @@ public class FigureTest {
         board.setFigure(figureW2);
         board.setFigure(figureW3);
 
-        Assert.assertEquals(toCellsSet("b3", "c3"),
-                extractCellTo(figureB1.getAllMoves(gameSettings)));
-        Assert.assertEquals(toCellsSet("b3"),
-                extractCellTo(figureW3.getAllMoves(gameSettings)));
+        Assert.assertEquals(
+                toCellsSet("b3", "c3"), extractCellTo(figureB1.getAllMoves(gameSettings)));
+        Assert.assertEquals(toCellsSet("b3"), extractCellTo(figureW3.getAllMoves(gameSettings)));
     }
 }

@@ -19,9 +19,9 @@ public class Queen extends Figure {
 
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
-        return rayTrace(settings.board,
-                Stream.concat(xMove.stream(), plusMove.stream())
-                        .collect(Collectors.toList()));
+        return rayTrace(
+                settings.board,
+                Stream.concat(xMove.stream(), plusMove.stream()).collect(Collectors.toList()));
     }
 
     @Override

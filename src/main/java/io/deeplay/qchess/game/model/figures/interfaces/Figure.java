@@ -14,25 +14,20 @@ import java.util.*;
 public abstract class Figure {
     protected static final Logger log = LoggerFactory.getLogger(Figure.class);
 
-    protected static List<Cell> xMove = Arrays.asList(
-            new Cell(-1, -1),
-            new Cell(-1, 1),
-            new Cell(1, -1),
-            new Cell(1, 1));
-    protected static List<Cell> plusMove = Arrays.asList(
-            new Cell(-1, 0),
-            new Cell(0, -1),
-            new Cell(0, 1),
-            new Cell(1, 0));
-    protected static List<Cell> knightMove = Arrays.asList(
-            new Cell(-2, -1),
-            new Cell(-2, 1),
-            new Cell(-1, -2),
-            new Cell(-1, 2),
-            new Cell(1, -2),
-            new Cell(1, 2),
-            new Cell(2, -1),
-            new Cell(2, 1));
+    protected static List<Cell> xMove =
+            Arrays.asList(new Cell(-1, -1), new Cell(-1, 1), new Cell(1, -1), new Cell(1, 1));
+    protected static List<Cell> plusMove =
+            Arrays.asList(new Cell(-1, 0), new Cell(0, -1), new Cell(0, 1), new Cell(1, 0));
+    protected static List<Cell> knightMove =
+            Arrays.asList(
+                    new Cell(-2, -1),
+                    new Cell(-2, 1),
+                    new Cell(-1, -2),
+                    new Cell(-1, 2),
+                    new Cell(1, -2),
+                    new Cell(1, 2),
+                    new Cell(2, -1),
+                    new Cell(2, 1));
 
     protected final Color color;
     protected boolean wasMoved = false;
@@ -51,29 +46,18 @@ public abstract class Figure {
         this.position = position;
     }
 
-    /**
-     * Устанавливает, делала ли фигура хотя бы один ход
-     */
+    /** Устанавливает, делала ли фигура хотя бы один ход */
     public void setWasMoved(boolean wasMoved) {
         this.wasMoved = wasMoved;
     }
 
-    /**
-     * @return true, если фигура делала ход
-     */
+    /** @return true, если фигура делала ход */
     public boolean wasMoved() {
         return wasMoved;
     }
 
-    /**
-     * @return все возможные ходы фигуры, не учитывая шаха
-     */
+    /** @return все возможные ходы фигуры, не учитывая шаха */
     public abstract Set<Move> getAllMoves(GameSettings settings);
-
-    /**
-     * @return тип фигуры
-     */
-    public abstract TypeFigure getType();
 
     protected Set<Move> rayTrace(Board board, List<Cell> directions) {
         log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, position);
@@ -92,22 +76,18 @@ public abstract class Figure {
         return result;
     }
 
-    /**
-     * @return true, если клетка лежит на доске и на этой клетке есть фигура, иначе false
-     */
+    /** @return true, если клетка лежит на доске и на этой клетке есть фигура, иначе false */
     protected boolean isEnemyFigureOn(Board board, Cell cell) {
         Figure enemyFigure;
         try {
             enemyFigure = board.getFigure(cell);
-        } catch (ChessException e) {// тут лог не нужен, это не ошибка
+        } catch (ChessException e) { // тут лог не нужен, это не ошибка
             return false;
         }
         return enemyFigure != null && color != enemyFigure.getColor();
     }
 
-    /**
-     * @return цвет фигуры
-     */
+    /** @return цвет фигуры */
     public Color getColor() {
         return color;
     }
@@ -150,4 +130,7 @@ public abstract class Figure {
     public String toString() {
         return color.toString() + " " + getType();
     }
+
+    /** @return тип фигуры */
+    public abstract TypeFigure getType();
 }

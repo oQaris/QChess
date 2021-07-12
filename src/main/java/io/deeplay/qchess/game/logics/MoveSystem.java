@@ -15,9 +15,7 @@ import java.util.Set;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
-/**
- * Хранит различные данные об игре для контроля специфичных ситуаций
- */
+/** Хранит различные данные об игре для контроля специфичных ситуаций */
 public class MoveSystem {
     private final GameSettings roomSettings;
     private final Board board;
@@ -89,9 +87,7 @@ public class MoveSystem {
         return res;
     }
 
-    /**
-     * @return true если ход корректный
-     */
+    /** @return true если ход корректный */
     public boolean isCorrectMove(Move move) throws ChessError {
         try {
             return checkCorrectnessIfSpecificMove(move)
@@ -114,26 +110,22 @@ public class MoveSystem {
             return move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
                     && (move.getTurnInto().getType() == TypeFigure.BISHOP
-                    || move.getTurnInto().getType() == TypeFigure.KNIGHT
-                    || move.getTurnInto().getType() == TypeFigure.QUEEN
-                    || move.getTurnInto().getType() == TypeFigure.ROOK);
+                            || move.getTurnInto().getType() == TypeFigure.KNIGHT
+                            || move.getTurnInto().getType() == TypeFigure.QUEEN
+                            || move.getTurnInto().getType() == TypeFigure.ROOK);
         }
 
         return true;
     }
 
-    /**
-     * @return true если ход лежит в доступных
-     */
+    /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move) throws ChessException {
         Figure figure = board.getFigure(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(roomSettings);
         return allMoves.contains(move);
     }
 
-    /**
-     * @param move корректный ход
-     */
+    /** @param move корректный ход */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
         Figure figureToMove = board.getFigure(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();

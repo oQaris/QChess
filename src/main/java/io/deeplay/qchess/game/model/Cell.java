@@ -24,11 +24,31 @@ public class Cell {
         throw new IllegalArgumentException("Incorrect position!");
     }
 
-    /**
-     * @return создает новую клетку, суммируя с текущей
-     */
+    /** @return создает новую клетку, суммируя с текущей */
     public Cell createAdd(Cell shiftCell) {
         return new Cell(column + shiftCell.column, row + shiftCell.row);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getColumn(), getRow());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Cell)) {
+            return false;
+        }
+        Cell cell = (Cell) o;
+        return getColumn() == cell.getColumn() && getRow() == cell.getRow();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%c%c", 'a' + column, '0' + Board.BOARD_SIZE - row);
     }
 
     public int getColumn() {
@@ -37,23 +57,5 @@ public class Cell {
 
     public int getRow() {
         return row;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%c%c", 'a' + column, '0' + Board.BOARD_SIZE - row);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Cell)) return false;
-        Cell cell = (Cell) o;
-        return getColumn() == cell.getColumn() && getRow() == cell.getRow();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getColumn(), getRow());
     }
 }
