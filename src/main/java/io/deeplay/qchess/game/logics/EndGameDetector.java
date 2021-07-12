@@ -2,7 +2,6 @@ package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.exceptions.ChessErrorCode;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -11,7 +10,10 @@ import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_CHECKING_FOR_DRAW;
 
@@ -86,11 +88,14 @@ public class EndGameDetector {
   }
 
   private boolean isKingsWithSameBishop() {
-    String msg = ChessErrorCode.INCORRECT_COORDINATES.getMessage();
-    Cell whiteBishopPosition =
-        Objects.requireNonNull(getBishop(Color.WHITE), msg).getCurrentPosition();
-    Cell blackBishopPosition =
-        Objects.requireNonNull(getBishop(Color.BLACK), msg).getCurrentPosition();
+    Figure whiteBishop = getBishop(Color.WHITE);
+    Figure blackBishop = getBishop(Color.BLACK);
+
+    if (whiteBishop == null || blackBishop == null) return false;
+
+    Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
+    Cell blackBishopPosition = blackBishop.getCurrentPosition();
+
     return (whiteBishopPosition.getColumn() + whiteBishopPosition.getRow()) % 2
         == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
   }
