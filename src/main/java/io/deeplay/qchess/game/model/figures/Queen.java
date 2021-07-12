@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Queen extends Figure {
+
     public Queen(Color color, Cell position) {
         super(color, position);
     }
@@ -26,10 +27,5 @@ public class Queen extends Figure {
     @Override
     public TypeFigure getType() {
         return TypeFigure.QUEEN;
-    }
-
-    @Override
-    public String toString() {
-        return color + " Queen";
     }
 }

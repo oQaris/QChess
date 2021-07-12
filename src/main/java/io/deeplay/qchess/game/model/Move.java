@@ -44,22 +44,18 @@ public class Move {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(moveType, from, to);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Move)) return false;
+        Move move = (Move) o;
+        return getMoveType() == move.getMoveType()
+                && Objects.equals(getFrom(), move.getFrom())
+                && Objects.equals(getTo(), move.getTo());
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Move move = (Move) o;
-        return moveType == move.moveType
-                && Objects.equals(from, move.from)
-                && Objects.equals(to, move.to);
+    public int hashCode() {
+        return Objects.hash(moveType, from, to);
     }
 
     @Override
@@ -67,9 +63,8 @@ public class Move {
         StringBuilder sb = new StringBuilder()
                 .append(from).append("-").append(to)
                 .append(" (").append(moveType).append(")");
-        if (moveType == MoveType.TURN_INTO) {
+        if (moveType == MoveType.TURN_INTO)
             sb.append(" turn into ").append(turnInto);
-        }
         return sb.toString();
     }
 }

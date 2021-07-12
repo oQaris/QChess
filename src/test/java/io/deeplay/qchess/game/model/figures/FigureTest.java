@@ -33,14 +33,14 @@ public class FigureTest {
     public void testBishop() throws ChessException {
         //--- Слон ---//
 
-        var bishop1 = new Bishop(Color.WHITE, Cell.parse("e7"));
+        Figure bishop1 = new Bishop(Color.WHITE, Cell.parse("e7"));
         board.setFigure(bishop1);
 
         Assert.assertEquals(
                 toCellsSet("D8", "F8", "D6", "F6", "C5", "G5", "B4", "H4", "A3"),
                 extractCellTo(bishop1.getAllMoves(gameSettings)));
 
-        var bishop2 = new Bishop(Color.WHITE, Cell.parse("b3"));
+        Figure bishop2 = new Bishop(Color.WHITE, Cell.parse("b3"));
         board.setFigure(bishop2);
 
         Assert.assertEquals(
@@ -50,7 +50,7 @@ public class FigureTest {
 
     private Set<Cell> toCellsSet(String... pos) {
         Objects.requireNonNull(pos, "Массив строк не может быть null");
-        var result = new HashSet<Cell>();
+        Set<Cell> result = new HashSet<>();
         for (String p : pos) {
             result.add(Cell.parse(p));
         }
@@ -65,8 +65,8 @@ public class FigureTest {
     public void testBishopWithEnemyPawn() throws ChessException {
         //--- Слон с вражесткой пешкой ---//
 
-        var pawn = new Pawn(Color.BLACK, Cell.parse("e3"));
-        var bishop = new Bishop(Color.WHITE, Cell.parse("c1"));
+        Figure pawn = new Pawn(Color.BLACK, Cell.parse("e3"));
+        Figure bishop = new Bishop(Color.WHITE, Cell.parse("c1"));
         board.setFigure(pawn);
         board.setFigure(bishop);
 
@@ -77,8 +77,8 @@ public class FigureTest {
     @Test
     public void testBishopWithFriendPawn() throws ChessException {
         //--- Слон с дружеской пешкой ---//
-        var pawn = new Pawn(Color.WHITE, Cell.parse("e3"));
-        var bishop = new Bishop(Color.WHITE, Cell.parse("c1"));
+        Figure pawn = new Pawn(Color.WHITE, Cell.parse("e3"));
+        Figure bishop = new Bishop(Color.WHITE, Cell.parse("c1"));
         board.setFigure(pawn);
         board.setFigure(bishop);
 
@@ -89,7 +89,7 @@ public class FigureTest {
     @Test
     public void testRook() throws ChessException {
         //--- Ладья ---//
-        var rook = new Rook(Color.BLACK, Cell.parse("a6"));
+        Figure rook = new Rook(Color.BLACK, Cell.parse("a6"));
         board.setFigure(rook);
         Assert.assertEquals(
                 toCellsSet("A8", "A7", "A5", "A4", "A3", "A2", "A1", "B6", "C6", "D6", "E6", "F6", "G6", "H6"),
@@ -99,9 +99,9 @@ public class FigureTest {
     @Test
     public void testCornerBlockedRook() throws ChessException {
         //--- Ладья в углу с противниками на пути---//
-        var rook = new Rook(Color.WHITE, Cell.parse("a8"));
-        var rook1 = new Rook(Color.BLACK, Cell.parse("a6"));
-        var rook2 = new Rook(Color.BLACK, Cell.parse("c8"));
+        Figure rook = new Rook(Color.WHITE, Cell.parse("a8"));
+        Figure rook1 = new Rook(Color.BLACK, Cell.parse("a6"));
+        Figure rook2 = new Rook(Color.BLACK, Cell.parse("c8"));
         board.setFigure(rook);
         board.setFigure(rook1);
         board.setFigure(rook2);
@@ -113,7 +113,7 @@ public class FigureTest {
     @Test
     public void testQueen() throws ChessException {
         //--- Ферзь ---//
-        var queen = new Queen(Color.BLACK, Cell.parse("b3"));
+        Figure queen = new Queen(Color.BLACK, Cell.parse("b3"));
         board.setFigure(queen);
         Assert.assertEquals(
                 toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8", "B8", "B7", "B6", "B5",
@@ -124,7 +124,7 @@ public class FigureTest {
     @Test
     public void testQueen_jumpBlack() throws ChessException {
         //--- Ферзь ---//
-        var queen = new Queen(Color.WHITE, Cell.parse("c6"));
+        Figure queen = new Queen(Color.WHITE, Cell.parse("c6"));
         board.setFigure(queen);
         board.setFigure(new Queen(Color.BLACK, Cell.parse("d7")));
         board.setFigure(new King(Color.BLACK, Cell.parse("e8")));
@@ -140,8 +140,8 @@ public class FigureTest {
     @Test
     public void testKing() throws ChessException {
         //--- Король ---//
-        var king1 = new King(Color.WHITE, Cell.parse("e1"));
-        var king2 = new King(Color.BLACK, Cell.parse("e8"));
+        Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
+        Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         board.setFigure(king1);
         board.setFigure(king2);
 
@@ -152,19 +152,19 @@ public class FigureTest {
                 toCellsSet("D8", "D7", "E7", "F7", "F8"),
                 extractCellTo(king2.getAllMoves(gameSettings)));
 
-        var rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
-        var rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
-        var rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
-        var rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
+        Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
+        Figure rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
+        Figure rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
+        Figure rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
         board.setFigure(rookW1);
         board.setFigure(rookW2);
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        var pawnB1 = new Pawn(Color.BLACK, Cell.parse("b1"));
-        var pawnB2 = new Pawn(Color.BLACK, Cell.parse("g1"));
-        var pawnW1 = new Pawn(Color.WHITE, Cell.parse("b8"));
-        var pawnW2 = new Pawn(Color.WHITE, Cell.parse("g8"));
+        Figure pawnB1 = new Pawn(Color.BLACK, Cell.parse("b1"));
+        Figure pawnB2 = new Pawn(Color.BLACK, Cell.parse("g1"));
+        Figure pawnW1 = new Pawn(Color.WHITE, Cell.parse("b8"));
+        Figure pawnW2 = new Pawn(Color.WHITE, Cell.parse("g8"));
         board.setFigure(pawnB1);
         board.setFigure(pawnB2);
         board.setFigure(pawnW1);
@@ -181,12 +181,12 @@ public class FigureTest {
     @Test
     public void testKingCastling_falseRook() throws ChessException {
         //--- Король ---//
-        var king1 = new King(Color.WHITE, Cell.parse("e1"));
-        var king2 = new King(Color.BLACK, Cell.parse("e8"));
-        var knightW1 = new Knight(Color.WHITE, Cell.parse("h1"));
-        var knightW2 = new Knight(Color.WHITE, Cell.parse("a1"));
-        var knightB1 = new Knight(Color.BLACK, Cell.parse("h8"));
-        var knightB2 = new Knight(Color.BLACK, Cell.parse("a8"));
+        Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
+        Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
+        Figure knightW1 = new Knight(Color.WHITE, Cell.parse("h1"));
+        Figure knightW2 = new Knight(Color.WHITE, Cell.parse("a1"));
+        Figure knightB1 = new Knight(Color.BLACK, Cell.parse("h8"));
+        Figure knightB2 = new Knight(Color.BLACK, Cell.parse("a8"));
         board.setFigure(king1);
         board.setFigure(king2);
         board.setFigure(knightW1);
@@ -205,12 +205,12 @@ public class FigureTest {
     @Test
     public void testKingCastling_1() throws ChessException {
         //--- Король ---//
-        var king1 = new King(Color.WHITE, Cell.parse("e1"));
-        var king2 = new King(Color.BLACK, Cell.parse("e8"));
-        var rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
-        var rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
-        var rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
-        var rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
+        Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
+        Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
+        Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
+        Figure rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
+        Figure rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
+        Figure rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
         board.setFigure(king1);
         board.setFigure(king2);
         board.setFigure(rookW1);
@@ -241,12 +241,12 @@ public class FigureTest {
     @Test
     public void testKingCastling_2() throws ChessException {
         //--- Король ---//
-        var king1 = new King(Color.WHITE, Cell.parse("e1"));
-        var king2 = new King(Color.BLACK, Cell.parse("e8"));
-        var rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
-        var rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
-        var rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
-        var rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
+        Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
+        Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
+        Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
+        Figure rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
+        Figure rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
+        Figure rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
         board.setFigure(king1);
         board.setFigure(king2);
         board.setFigure(rookW1);
@@ -268,12 +268,12 @@ public class FigureTest {
     @Test
     public void testKingCastling_3() throws ChessException {
         //--- Король ---//
-        var king1 = new King(Color.WHITE, Cell.parse("e1"));
-        var king2 = new King(Color.BLACK, Cell.parse("e8"));
-        var rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
-        var rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
-        var rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
-        var rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
+        Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
+        Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
+        Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
+        Figure rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
+        Figure rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
+        Figure rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
         board.setFigure(king1);
         board.setFigure(king2);
         board.setFigure(rookW1);
@@ -281,8 +281,8 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        var FrookB = new Rook(Color.BLACK, Cell.parse("e4"));
-        var FrookW = new Rook(Color.WHITE, Cell.parse("e5"));
+        Figure FrookB = new Rook(Color.BLACK, Cell.parse("e4"));
+        Figure FrookW = new Rook(Color.WHITE, Cell.parse("e5"));
         board.setFigure(FrookB);
         board.setFigure(FrookW);
 
@@ -297,12 +297,12 @@ public class FigureTest {
     @Test
     public void testKingCastling_4() throws ChessException {
         //--- Король ---//
-        var king1 = new King(Color.WHITE, Cell.parse("e1"));
-        var king2 = new King(Color.BLACK, Cell.parse("e8"));
-        var rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
-        var rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
-        var rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
-        var rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
+        Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
+        Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
+        Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
+        Figure rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
+        Figure rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
+        Figure rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
         board.setFigure(king1);
         board.setFigure(king2);
         board.setFigure(rookW1);
@@ -310,10 +310,10 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        var FrookB1 = new Rook(Color.BLACK, Cell.parse("f4"));
-        var FrookB2 = new Rook(Color.BLACK, Cell.parse("d4"));
-        var FrookW1 = new Rook(Color.WHITE, Cell.parse("f5"));
-        var FrookW2 = new Rook(Color.WHITE, Cell.parse("d5"));
+        Figure FrookB1 = new Rook(Color.BLACK, Cell.parse("f4"));
+        Figure FrookB2 = new Rook(Color.BLACK, Cell.parse("d4"));
+        Figure FrookW1 = new Rook(Color.WHITE, Cell.parse("f5"));
+        Figure FrookW2 = new Rook(Color.WHITE, Cell.parse("d5"));
         board.setFigure(FrookB1);
         board.setFigure(FrookB2);
         board.setFigure(FrookW1);
@@ -330,12 +330,12 @@ public class FigureTest {
     @Test
     public void testKingCastling_5() throws ChessException {
         //--- Король ---//
-        var king1 = new King(Color.WHITE, Cell.parse("e1"));
-        var king2 = new King(Color.BLACK, Cell.parse("e8"));
-        var rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
-        var rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
-        var rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
-        var rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
+        Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
+        Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
+        Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
+        Figure rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
+        Figure rookB1 = new Rook(Color.BLACK, Cell.parse("h8"));
+        Figure rookB2 = new Rook(Color.BLACK, Cell.parse("a8"));
         board.setFigure(king1);
         board.setFigure(king2);
         board.setFigure(rookW1);
@@ -343,10 +343,10 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        var FrookB1 = new Queen(Color.BLACK, Cell.parse("g4"));
-        var FrookB2 = new Queen(Color.BLACK, Cell.parse("c4"));
-        var FrookW1 = new Queen(Color.WHITE, Cell.parse("g5"));
-        var FrookW2 = new Queen(Color.WHITE, Cell.parse("c5"));
+        Figure FrookB1 = new Queen(Color.BLACK, Cell.parse("g4"));
+        Figure FrookB2 = new Queen(Color.BLACK, Cell.parse("c4"));
+        Figure FrookW1 = new Queen(Color.WHITE, Cell.parse("g5"));
+        Figure FrookW2 = new Queen(Color.WHITE, Cell.parse("c5"));
         board.setFigure(FrookB1);
         board.setFigure(FrookB2);
         board.setFigure(FrookW1);
@@ -363,7 +363,7 @@ public class FigureTest {
     @Test
     public void testKnight() throws ChessException {
         //--- Конь ---//
-        var knight = new Knight(Color.BLACK, Cell.parse("f4"));
+        Figure knight = new Knight(Color.BLACK, Cell.parse("f4"));
         board.setFigure(knight);
         Assert.assertEquals(
                 toCellsSet("E6", "G6", "D5", "D3", "E2", "G2", "H3", "H5"),
@@ -373,10 +373,10 @@ public class FigureTest {
     @Test
     public void testKnightWithFriendPawns() throws ChessException {
         //--- Конь с дружественными пешками вокруг коня, но не закрывающие ход ---//
-        var knight = new Knight(Color.WHITE, Cell.parse("a1"));
-        var pawn1 = new Pawn(Color.WHITE, Cell.parse("a2"));
-        var pawn2 = new Pawn(Color.WHITE, Cell.parse("b2"));
-        var pawn3 = new Pawn(Color.WHITE, Cell.parse("b1"));
+        Figure knight = new Knight(Color.WHITE, Cell.parse("a1"));
+        Figure pawn1 = new Pawn(Color.WHITE, Cell.parse("a2"));
+        Figure pawn2 = new Pawn(Color.WHITE, Cell.parse("b2"));
+        Figure pawn3 = new Pawn(Color.WHITE, Cell.parse("b1"));
 
         board.setFigure(knight);
         board.setFigure(pawn1);
@@ -390,8 +390,8 @@ public class FigureTest {
     @Test
     public void testPawn() throws ChessException {
         //--- Пешка ---//
-        var pawn = new Pawn(Color.WHITE, Cell.parse("c2"));
-        var enemy = new Queen(Color.BLACK, Cell.parse("d3"));
+        Figure pawn = new Pawn(Color.WHITE, Cell.parse("c2"));
+        Figure enemy = new Queen(Color.BLACK, Cell.parse("d3"));
         board.setFigure(pawn);
         board.setFigure(enemy);
 
@@ -409,7 +409,7 @@ public class FigureTest {
     @Test
     public void testPawnForEnemyRespawn() throws ChessException {
         //--- Пешка дошедшая до конца поля ---//
-        var pawn = new Pawn(Color.BLACK, Cell.parse("d1"));
+        Figure pawn = new Pawn(Color.BLACK, Cell.parse("d1"));
         board.setFigure(pawn);
         Assert.assertEquals(
                 new HashSet<Cell>(),
@@ -419,12 +419,12 @@ public class FigureTest {
     @Test
     public void testPawnWithXEnemy() throws ChessException {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
-        var pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
-        var pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
-        var pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
-        var pawn3 = new Pawn(Color.BLACK, Cell.parse("b4"));
-        var pawn4 = new Pawn(Color.BLACK, Cell.parse("d4"));
-        var pawn5 = new Pawn(Color.BLACK, Cell.parse("c6"));
+        Figure pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
+        Figure pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
+        Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
+        Figure pawn3 = new Pawn(Color.BLACK, Cell.parse("b4"));
+        Figure pawn4 = new Pawn(Color.BLACK, Cell.parse("d4"));
+        Figure pawn5 = new Pawn(Color.BLACK, Cell.parse("c6"));
         board.setFigure(pawn);
         board.setFigure(pawn1);
         board.setFigure(pawn2);
@@ -439,11 +439,11 @@ public class FigureTest {
     @Test
     public void testPawnWithXEnemy2() throws ChessException {
         //--- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
-        var pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
-        var pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
-        var pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
-        var pawn3 = new Pawn(Color.BLACK, Cell.parse("b4"));
-        var pawn4 = new Pawn(Color.BLACK, Cell.parse("d4"));
+        Figure pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
+        Figure pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
+        Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
+        Figure pawn3 = new Pawn(Color.BLACK, Cell.parse("b4"));
+        Figure pawn4 = new Pawn(Color.BLACK, Cell.parse("d4"));
         board.setFigure(pawn);
         board.setFigure(pawn1);
         board.setFigure(pawn2);
@@ -455,7 +455,7 @@ public class FigureTest {
     }
 
     @Test
-    public void testPawnEnPassant() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testPawnEnPassant() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 

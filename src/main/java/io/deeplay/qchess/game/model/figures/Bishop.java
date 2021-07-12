@@ -10,6 +10,7 @@ import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.Set;
 
 public class Bishop extends Figure {
+
     public Bishop(Color color, Cell position) {
         super(color, position);
     }
@@ -22,10 +23,5 @@ public class Bishop extends Figure {
     @Override
     public TypeFigure getType() {
         return TypeFigure.BISHOP;
-    }
-
-    @Override
-    public String toString() {
-        return color.toString() + " Bishop";
     }
 }

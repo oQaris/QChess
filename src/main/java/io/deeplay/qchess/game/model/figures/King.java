@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class King extends Figure {
+
     public King(Color color, Cell position) {
         super(color, position);
     }
@@ -67,10 +68,5 @@ public class King extends Figure {
         } catch (ChessException | NullPointerException e) {
             return false;
         }
-    }
-
-    @Override
-    public String toString() {
-        return color + " King";
     }
 }

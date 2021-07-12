@@ -13,6 +13,7 @@ import java.util.*;
 
 public abstract class Figure {
     protected static final Logger log = LoggerFactory.getLogger(Figure.class);
+
     protected static List<Cell> xMove = Arrays.asList(
             new Cell(-1, -1),
             new Cell(-1, 1),
@@ -32,11 +33,12 @@ public abstract class Figure {
             new Cell(1, 2),
             new Cell(2, -1),
             new Cell(2, 1));
+
     protected final Color color;
     protected boolean wasMoved = false;
     protected Cell position;
 
-    public Figure(Color color, Cell position) {
+    protected Figure(Color color, Cell position) {
         this.color = color;
         this.position = position;
     }
@@ -142,5 +144,10 @@ public abstract class Figure {
         return wasMoved == figure.wasMoved
                 && color == figure.color
                 && position.equals(figure.position);
+    }
+
+    @Override
+    public String toString() {
+        return color.toString() + " " + getType();
     }
 }

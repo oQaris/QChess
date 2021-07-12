@@ -14,55 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Pawn extends Figure {
+
     public Pawn(Color color, Cell position) {
         super(color, position);
-    }
-
-    @Override
-    public Set<Move> getAllMoves(GameSettings settings) {
-        Set<Move> result = new HashSet<>();
-
-        Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
-
-        Cell move = position.createAdd(forwardShift);
-        if (settings.board.isEmptyCell(move)) {
-            result.add(new Move(isTurnInto(move)
-                    ? MoveType.TURN_INTO
-                    : MoveType.QUIET_MOVE, position, move));
-
-            Cell longMove = move.createAdd(forwardShift);
-            if (isStartPosition(position) && settings.board.isEmptyCell(longMove)) {
-                result.add(new Move(MoveType.LONG_MOVE, position, longMove));
-            }
-        }
-
-        Cell leftAttack = move.createAdd(new Cell(-1, 0));
-        Cell rightAttack = move.createAdd(new Cell(1, 0));
-
-        boolean isEnPassant = isPawnEnPassant(settings, position, leftAttack)
-                || isPawnEnPassant(settings, position, rightAttack);
-        MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
-
-        if (isEnemyFigureOn(settings.board, leftAttack) || isPawnEnPassant(settings, position, leftAttack)) {
-            result.add(new Move(isTurnInto(leftAttack)
-                    ? MoveType.TURN_INTO
-                    : specOrAttackMoveType, position, leftAttack));
-        }
-        if (isEnemyFigureOn(settings.board, rightAttack) || isPawnEnPassant(settings, position, rightAttack)) {
-            result.add(new Move(isTurnInto(rightAttack)
-                    ? MoveType.TURN_INTO
-                    : specOrAttackMoveType, position, rightAttack));
-        }
-
-        return result;
-    }
-
-    private boolean isTurnInto(Cell end) {
-        return end.getRow() == (color == Color.WHITE ? 0 : Board.BOARD_SIZE - 1);
-    }
-
-    private boolean isStartPosition(Cell start) {
-        return start.getRow() == (color == Color.BLACK ? 1 : Board.BOARD_SIZE - 2);
     }
 
     /**
@@ -93,12 +47,58 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public TypeFigure getType() {
-        return TypeFigure.PAWN;
+    public Set<Move> getAllMoves(GameSettings settings) {
+        Set<Move> result = new HashSet<>();
+        Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
+        addShortAndLongMove(settings, forwardShift, result);
+        addEnPassant(settings, forwardShift, result);
+        return result;
+    }
+
+    private void addShortAndLongMove(GameSettings settings, Cell forwardShift, Set<Move> result) {
+        Cell move = position.createAdd(forwardShift);
+        if (settings.board.isEmptyCell(move)) {
+            result.add(new Move(isTurnInto(move)
+                    ? MoveType.TURN_INTO
+                    : MoveType.QUIET_MOVE, position, move));
+
+            Cell longMove = move.createAdd(forwardShift);
+            if (isStartPosition(position) && settings.board.isEmptyCell(longMove)) {
+                result.add(new Move(MoveType.LONG_MOVE, position, longMove));
+            }
+        }
+    }
+
+    private void addEnPassant(GameSettings settings, Cell forwardShift, Set<Move> result) {
+        Cell leftAttack = position.createAdd(forwardShift).createAdd(new Cell(-1, 0));
+        Cell rightAttack = position.createAdd(forwardShift).createAdd(new Cell(1, 0));
+
+        boolean isEnPassant = isPawnEnPassant(settings, position, leftAttack)
+                || isPawnEnPassant(settings, position, rightAttack);
+        MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
+
+        if (isEnemyFigureOn(settings.board, leftAttack) || isPawnEnPassant(settings, position, leftAttack)) {
+            result.add(new Move(isTurnInto(leftAttack)
+                    ? MoveType.TURN_INTO
+                    : specOrAttackMoveType, position, leftAttack));
+        }
+        if (isEnemyFigureOn(settings.board, rightAttack) || isPawnEnPassant(settings, position, rightAttack)) {
+            result.add(new Move(isTurnInto(rightAttack)
+                    ? MoveType.TURN_INTO
+                    : specOrAttackMoveType, position, rightAttack));
+        }
+    }
+
+    private boolean isTurnInto(Cell end) {
+        return end.getRow() == (color == Color.WHITE ? 0 : Board.BOARD_SIZE - 1);
+    }
+
+    private boolean isStartPosition(Cell start) {
+        return start.getRow() == (color == Color.BLACK ? 1 : Board.BOARD_SIZE - 2);
     }
 
     @Override
-    public String toString() {
-        return color + " Pawn";
+    public TypeFigure getType() {
+        return TypeFigure.PAWN;
     }
 }
