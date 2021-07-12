@@ -139,17 +139,6 @@ public class Board {
      * @return фигура или null, если клетка пуста
      * @throws ChessException если клетка не лежит в пределах доски
      */
-    public Figure getFigure(int y, int x) throws ChessException {
-        if (!isCorrectCell(x, y)) {
-            throw new ChessException("Координаты выходят за границу доски");
-        }
-        return cells[y][x];
-    }
-
-    /**
-     * @return фигура или null, если клетка пуста
-     * @throws ChessException если клетка не лежит в пределах доски
-     */
     public Figure getFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();

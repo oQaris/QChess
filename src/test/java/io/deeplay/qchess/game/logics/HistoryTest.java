@@ -2,12 +2,8 @@ package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.*;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,9 +13,8 @@ public class HistoryTest {
 
     @Test
     public void testGetConvertingFigurePosition() throws ChessError, ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Board board = new Board();
+        Board board = new Board(Board.BoardFilling.STANDARD);
         MoveSystem ms = new MoveSystem(board);
-        board.initBoard(ms, Board.BoardFilling.STANDARD);
         History history = new History(board);
         Method method = history.getClass().getDeclaredMethod("getConvertingFigurePosition");
         method.setAccessible(true);
@@ -29,9 +24,8 @@ public class HistoryTest {
 
     @Test
     public void testGetCastlingPossibility() throws ChessError, ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Board board = new Board();
+        Board board = new Board(Board.BoardFilling.STANDARD);
         MoveSystem ms = new MoveSystem(board);
-        board.initBoard(ms, Board.BoardFilling.STANDARD);
         History history = new History(board);
         Method method = history.getClass().getDeclaredMethod("getCastlingPossibility");
         method.setAccessible(true);
@@ -41,12 +35,11 @@ public class HistoryTest {
 
     @Test
     public void testGetPawnEnPassantPossibilityWithoutLongMove() throws ChessError, ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Board board = new Board();
+        Board board = new Board(Board.BoardFilling.STANDARD);
         MoveSystem ms = new MoveSystem(board);
-        board.initBoard(ms, Board.BoardFilling.STANDARD);
         History history = new History(board);
 
-        Move move = new Move(MoveType.SIMPLE_STEP, Cell.parse("a2"), Cell.parse("a3"));
+        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("a2"), Cell.parse("a3"));
         board.moveFigure(move);
         history.setPrevMove(move);
 
@@ -58,9 +51,8 @@ public class HistoryTest {
 
     @Test
     public void testGetPawnEnPassantPossibilityWithLongMove() throws ChessError, ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Board board = new Board();
+        Board board = new Board(Board.BoardFilling.STANDARD);
         MoveSystem ms = new MoveSystem(board);
-        board.initBoard(ms, Board.BoardFilling.STANDARD);
         History history = new History(board);
 
         Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));

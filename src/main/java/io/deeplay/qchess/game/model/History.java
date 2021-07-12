@@ -1,11 +1,9 @@
-package io.deeplay.qchess.game.logics;
+package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +12,7 @@ import java.util.*;
 public class History implements Iterable<String> {
     private static final Logger log = LoggerFactory.getLogger(History.class);
 
-    private final Map<Character, Character> notation = new HashMap<>();
+    private final Map<TypeFigure, Character> notation = new HashMap<>();
     private final List<String> recordsList;
     private final Board board;
     private boolean whiteStep = true;
@@ -25,18 +23,12 @@ public class History implements Iterable<String> {
         recordsList = new ArrayList<>(200);
         log.debug("История инициализирована");
 
-        notation.put('♔', 'K');
-        notation.put('♕', 'Q');
-        notation.put('♖', 'R');
-        notation.put('♗', 'B');
-        notation.put('♘', 'N');
-        notation.put('♙', 'P');
-        notation.put('♚', 'k');
-        notation.put('♛', 'q');
-        notation.put('♜', 'r');
-        notation.put('♝', 'b');
-        notation.put('♞', 'n');
-        notation.put('♟', 'p');
+        notation.put(TypeFigure.KING, 'K');
+        notation.put(TypeFigure.QUEEN, 'Q');
+        notation.put(TypeFigure.ROOK, 'R');
+        notation.put(TypeFigure.BISHOP, 'B');
+        notation.put(TypeFigure.KNIGHT, 'N');
+        notation.put(TypeFigure.PAWN, 'P');
 
         addRecord();
     }
@@ -45,7 +37,6 @@ public class History implements Iterable<String> {
      * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные приписки
      *
      * @return Строка - только что добавленная запись
-     * @throws ChessException если convertBoardToStringForsytheEdwards() выбросит это исключение
      */
     public String addRecord() throws ChessException {
         String record = convertBoardToStringForsytheEdwards();
@@ -64,8 +55,6 @@ public class History implements Iterable<String> {
 
     /**
      * @return Строка - запись в виде нотации Форсайта-Эдвардса
-     * @throws ChessException если getConvertingFigurePosition(), getCastlingPossibility() или
-     * getPawnEnPassantPossibility() выбросит это исключение
      */
     private String convertBoardToStringForsytheEdwards() throws ChessException {
         StringBuilder record = new StringBuilder(70);
@@ -86,7 +75,6 @@ public class History implements Iterable<String> {
 
     /**
      * @return Строка - часть записи отвечающая за позиционирование фигур на доске
-     * @throws ChessException если getFigure() выбросит это исключение
      */
     private String getConvertingFigurePosition() throws ChessException {
         StringBuilder result = new StringBuilder();
@@ -96,7 +84,7 @@ public class History implements Iterable<String> {
             int emptySlots = 0;
             for(int x = 0; x < Board.BOARD_SIZE; x++) {
 
-                currentFigure = board.getFigure(y, x);
+                currentFigure = board.getFigure(new Cell(x, y));
 
                 if(currentFigure == null) {
                     emptySlots++;
@@ -104,7 +92,9 @@ public class History implements Iterable<String> {
                     if(emptySlots != 0) {
                         result.append(emptySlots);
                     }
-                    result.append(notation.get(currentFigure.getCharIcon()));
+                    Character notationFigureChar = notation.get(currentFigure.getType());
+                    result.append(currentFigure.getColor() == Color.WHITE?
+                            notationFigureChar : Character.toLowerCase(notationFigureChar));
                     emptySlots = 0;
                 }
             }
@@ -122,7 +112,6 @@ public class History implements Iterable<String> {
 
     /**
      * @return Строка - часть записи отвечающая, то можно ли использовать рокировки
-     * @throws ChessException если getFigure() выбросит это исключение
      */
     private String getCastlingPossibility() throws ChessException {
         StringBuilder result = new StringBuilder(4);
@@ -156,13 +145,12 @@ public class History implements Iterable<String> {
 
     /**
      * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на проходе следующим ходом
-     * @throws ChessException если getFigure() выбросит это исключение
      */
     private String getPawnEnPassantPossibility() throws ChessException {
         StringBuilder result = new StringBuilder();
         if(prevMove != null && prevMove.getMoveType() == MoveType.LONG_MOVE) {
             result.append(' ').append(prevMove.getTo().toString().charAt(0));
-            result.append(board.getFigure(prevMove.getTo()).isWhite()? '3' : '6');
+            result.append(board.getFigure(prevMove.getTo()).getColor() == Color.WHITE? '3' : '6');
         }
         return result.toString();
     }
