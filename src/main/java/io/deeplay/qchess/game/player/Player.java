@@ -8,7 +8,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 
 public abstract class Player {
-
     protected MoveSystem ms;
     protected Board board;
     protected Color color;

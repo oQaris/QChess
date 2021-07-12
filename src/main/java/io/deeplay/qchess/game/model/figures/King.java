@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.model.figures;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -20,14 +21,14 @@ public class King extends Figure {
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board) {
-        Set<Move> res = getAttackedMoves(board);
+    public Set<Move> getAllMoves(GameSettings settings) {
+        Set<Move> res = getAttackedMoves(settings.board);
         // рокировка
-        if (isCorrectCastling(board, true)) {
+        if (isCorrectCastling(settings, true)) {
             res.add(new Move(MoveType.SHORT_CASTLING, position,
                     position.createAdd(new Cell(2, 0))));
         }
-        if (isCorrectCastling(board, false)) {
+        if (isCorrectCastling(settings, false)) {
             res.add(new Move(MoveType.LONG_CASTLING, position,
                     position.createAdd(new Cell(-2, 0))));
         }
@@ -51,19 +52,19 @@ public class King extends Figure {
     /**
      * @return true, если рокировка возможна
      */
-    private boolean isCorrectCastling(Board board, boolean shortCastling) {
+    private boolean isCorrectCastling(GameSettings settings, boolean shortCastling) {
         if (wasMoved
-                || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
-                || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
-                || !shortCastling && !board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
-                || board.isAttackedCell(position, color.inverse())
-                || board.isAttackedCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)), color.inverse())
-                || board.isAttackedCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)), color.inverse())) {
+                || !settings.board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
+                || !settings.board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
+                || !shortCastling && !settings.board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
+                || Board.isAttackedCell(settings, position, color.inverse())
+                || Board.isAttackedCell(settings, position.createAdd(new Cell(shortCastling ? 1 : -1, 0)), color.inverse())
+                || Board.isAttackedCell(settings, position.createAdd(new Cell(shortCastling ? 2 : -2, 0)), color.inverse())) {
             return false;
         }
         try {
-            var rook = board.getFigure(position.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
-            return !rook.wasMoved() && rook.getClass() == Rook.class;
+            Figure rook = settings.board.getFigure(position.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
+            return !rook.wasMoved() && rook.getType() == TypeFigure.ROOK;
         } catch (ChessException | NullPointerException e) {
             return false;
         }

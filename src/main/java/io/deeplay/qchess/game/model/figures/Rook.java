@@ -1,6 +1,6 @@
 package io.deeplay.qchess.game.model.figures;
 
-import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
@@ -16,8 +16,8 @@ public class Rook extends Figure {
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board) {
-        return rayTrace(board, plusMove);
+    public Set<Move> getAllMoves(GameSettings settings) {
+        return rayTrace(settings.board, plusMove);
     }
 
     @Override

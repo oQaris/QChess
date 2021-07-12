@@ -14,7 +14,6 @@ import java.util.*;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.BOT_ERROR;
 
 public class Bot extends Player {
-
     private static final Map<TypeFigure, Integer> grades = preparedGrades();
 
     public Bot(GameSettings roomSettings, Color color) {

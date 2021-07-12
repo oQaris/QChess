@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.model.figures;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -46,7 +47,7 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public Set<Move> getAllMoves(Board board) {
+    public Set<Move> getAllMoves(GameSettings settings) {
         Set<Move> result = new HashSet<>();
         Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
         addShortAndLongMove(board, forwardShift, result);
@@ -56,13 +57,14 @@ public class Pawn extends Figure {
 
     private void addShortAndLongMove(Board board, Cell forwardShift, Set<Move> result) {
         Cell move = position.createAdd(forwardShift);
-        if (board.isEmptyCell(move)) {
+        if (settings.board.isEmptyCell(move)) {
             result.add(new Move(isTurnInto(move)
                     ? MoveType.TURN_INTO
                     : MoveType.QUIET_MOVE, position, move));
 
             Cell longMove = move.createAdd(forwardShift);
             if (isStartPosition(position) && board.isEmptyCell(longMove))
+            if (isStartPosition(position) && settings.board.isEmptyCell(longMove)) {
                 result.add(new Move(MoveType.LONG_MOVE, position, longMove));
         }
     }
@@ -71,16 +73,16 @@ public class Pawn extends Figure {
         Cell leftAttack = position.createAdd(forwardShift).createAdd(new Cell(-1, 0));
         Cell rightAttack = position.createAdd(forwardShift).createAdd(new Cell(1, 0));
 
-        boolean isEnPassant = isPawnEnPassant(board, position, leftAttack)
-                || isPawnEnPassant(board, position, rightAttack);
+        boolean isEnPassant = isPawnEnPassant(settings, position, leftAttack)
+                || isPawnEnPassant(settings, position, rightAttack);
         MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
 
-        if (isEnemyFigureOn(board, leftAttack) || isPawnEnPassant(board, position, leftAttack)) {
+        if (isEnemyFigureOn(settings.board, leftAttack) || isPawnEnPassant(settings, position, leftAttack)) {
             result.add(new Move(isTurnInto(leftAttack)
                     ? MoveType.TURN_INTO
                     : specOrAttackMoveType, position, leftAttack));
         }
-        if (isEnemyFigureOn(board, rightAttack) || isPawnEnPassant(board, position, rightAttack)) {
+        if (isEnemyFigureOn(settings.board, rightAttack) || isPawnEnPassant(settings, position, rightAttack)) {
             result.add(new Move(isTurnInto(rightAttack)
                     ? MoveType.TURN_INTO
                     : specOrAttackMoveType, position, rightAttack));
@@ -93,6 +95,33 @@ public class Pawn extends Figure {
 
     private boolean isStartPosition(Cell start) {
         return start.getRow() == (color == Color.BLACK ? 1 : Board.BOARD_SIZE - 2);
+    }
+
+    /**
+     * Проверяет, является ли атака пешки взятием на проходе.
+     * Входные данные должны гарантировать, что это именно атака пешки (диагональный ход)
+     *
+     * @return true если это взятие на проходе
+     */
+    public static boolean isPawnEnPassant(GameSettings settings, Cell from, Cell to) {
+        try {
+            Pawn currentPawn = (Pawn) settings.board.getFigure(from);
+            Move prevMove = settings.history.getPrevMove();
+            Pawn pawn = (Pawn) settings.board.getFigure(prevMove.getTo());
+
+            Cell cellDown = pawn.getColor() == Color.WHITE
+                    ? new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() + 1)
+                    : new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() - 1);
+            Cell cellDoubleDown = pawn.getColor() == Color.WHITE
+                    ? new Cell(cellDown.getColumn(), cellDown.getRow() + 1)
+                    : new Cell(cellDown.getColumn(), cellDown.getRow() - 1);
+
+            return currentPawn.getColor() != pawn.getColor()
+                    && cellDoubleDown.equals(prevMove.getFrom())
+                    && cellDown.equals(to);
+        } catch (ChessException | ClassCastException | NullPointerException e) {
+            return false;
+        }
     }
 
     @Override
