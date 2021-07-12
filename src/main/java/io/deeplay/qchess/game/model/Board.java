@@ -3,11 +3,13 @@ package io.deeplay.qchess.game.model;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.logics.NotationService;
 import io.deeplay.qchess.game.model.figures.*;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +59,28 @@ public class Board {
             setFigure(new Pawn(Color.BLACK, Cell.parse("h7")));
         } catch (ChessException e) {
             throw new ChessError("Стандартное заполнение доски некорректное", e);
+        }
+    }
+
+    public Board(String placement) throws ChessError {
+        if (!NotationService.checkValidityPlacement(placement)) {
+            throw new ChessError("Заполнение из доски из некорректной строки");
+        }
+        int y = 0;
+        int x = 0;
+        for (Character currentSymbol : placement.toCharArray()) {
+            if(currentSymbol.equals('/')) {
+                y++;
+                x = 0;
+            } else if(Character.isDigit(currentSymbol)) {
+                x += Integer.getInteger(String.valueOf(currentSymbol));
+            } else {
+                try {
+                    setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
+                } catch (ChessException e) {
+                    throw new ChessError("Ошибка при установке фигуры на доску");
+                }
+            }
         }
     }
 
