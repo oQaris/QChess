@@ -5,13 +5,11 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import java.util.Objects;
 
 public class Move {
-
     // не должно влиять на equals и hashCode,
     // чтобы, проверяя корректность ходов, у пешек не возникали дополнительные условия,
     // т.к. пешки на доске не знают во что превратиться без запроса игрока.
     // проверка вынесена в MoveSystem
     private Figure turnInto;
-
     private MoveType moveType;
     private Cell from;
     private Cell to;
@@ -46,6 +44,11 @@ public class Move {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(moveType, from, to);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -57,11 +60,6 @@ public class Move {
         return moveType == move.moveType
                 && Objects.equals(from, move.from)
                 && Objects.equals(to, move.to);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(moveType, from, to);
     }
 
     @Override

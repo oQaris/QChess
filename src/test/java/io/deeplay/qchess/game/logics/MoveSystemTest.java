@@ -13,9 +13,11 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+
+import java.lang.reflect.Field;
 
 public class MoveSystemTest {
+    private GameSettings gameSettings;
     private Board board;
     private MoveSystem ms;
     private Move move1;
@@ -25,9 +27,9 @@ public class MoveSystemTest {
 
     @Before
     public void setUp() throws ChessError {
-        GameSettings gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
+        gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
         board = gameSettings.board;
-        ms = new MoveSystem(board, gameSettings.endGameDetector);
+        ms = new MoveSystem(gameSettings);
     }
 
     @Test
@@ -38,15 +40,14 @@ public class MoveSystemTest {
         board.setFigure(figureW1);
         setBlackPawns();
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(white1);
+        setPrevMove(white1);
 
-        Assert.assertTrue(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move3.getFrom(), move3.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
+        Assert.assertTrue(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move4.getFrom(), move4.getTo()));
     }
 
     private void setBlackPawns() throws ChessException {
@@ -65,21 +66,26 @@ public class MoveSystemTest {
         board.setFigure(figureB4);
     }
 
+    private void setPrevMove(Move move) throws NoSuchFieldException, IllegalAccessException {
+        Field prevMove = gameSettings.history.getClass().getDeclaredField("prevMove");
+        prevMove.setAccessible(true);
+        prevMove.set(gameSettings.history, move);
+    }
+
     @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_2() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c2"), Cell.parse("c3"));
         Figure figureW2 = new Pawn(Color.WHITE, white2.getTo());
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(white2);
+        setPrevMove(white2);
 
         board.setFigure(figureW2);
         setBlackPawns();
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move3.getFrom(), move3.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -87,16 +93,15 @@ public class MoveSystemTest {
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("c2"), Cell.parse("d3"));
         Figure figureW3 = new Pawn(Color.WHITE, white3.getTo());
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(white3);
+        setPrevMove(white3);
 
         board.setFigure(figureW3);
         setBlackPawns();
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move3.getFrom(), move3.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -104,16 +109,15 @@ public class MoveSystemTest {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Knight(Color.WHITE, white1.getTo());
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(white1);
+        setPrevMove(white1);
 
         board.setFigure(figureW1);
         setBlackPawns();
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move3.getFrom(), move3.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -121,8 +125,7 @@ public class MoveSystemTest {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(white1);
+        setPrevMove(white1);
 
         Move black1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
         Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
@@ -139,10 +142,10 @@ public class MoveSystemTest {
         board.setFigure(figureB3);
         board.setFigure(figureB4);
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, black1.getFrom(), black1.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, black2.getFrom(), black2.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, black3.getFrom(), black3.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, black4.getFrom(), black4.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, black1.getFrom(), black1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, black2.getFrom(), black2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, black3.getFrom(), black3.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, black4.getFrom(), black4.getTo()));
     }
 
     @Test
@@ -153,15 +156,14 @@ public class MoveSystemTest {
         board.setFigure(figureB1);
         setWhitePawns();
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(black1);
+        setPrevMove(black1);
 
-        Assert.assertTrue(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move3.getFrom(), move3.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
+        Assert.assertTrue(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move4.getFrom(), move4.getTo()));
     }
 
     private void setWhitePawns() throws ChessException {
@@ -185,16 +187,15 @@ public class MoveSystemTest {
         Move black2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c7"), Cell.parse("c6"));
         Figure figureB2 = new Pawn(Color.BLACK, black2.getTo());
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(black2);
+        setPrevMove(black2);
 
         board.setFigure(figureB2);
         setWhitePawns();
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move3.getFrom(), move3.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -202,16 +203,15 @@ public class MoveSystemTest {
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("c7"), Cell.parse("d6"));
         Figure figureB3 = new Pawn(Color.BLACK, black3.getTo());
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(black3);
+        setPrevMove(black3);
 
         board.setFigure(figureB3);
         setWhitePawns();
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move1.getFrom(), move1.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move2.getFrom(), move2.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move3.getFrom(), move3.getTo()));
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, move4.getFrom(), move4.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move3.getFrom(), move3.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move4.getFrom(), move4.getTo()));
     }
 
     @Test
@@ -221,13 +221,12 @@ public class MoveSystemTest {
         Figure figure1 = new Pawn(Color.WHITE, white1.getTo());
         Figure figure2 = new Pawn(Color.WHITE, white2.getFrom());
 
-        board = Mockito.spy(board);
-        Mockito.when(board.getPrevMove()).thenReturn(white1);
+        setPrevMove(white1);
 
         board.setFigure(figure1);
         board.setFigure(figure2);
 
-        Assert.assertFalse(Pawn.isPawnEnPassant(board, white2.getFrom(), white2.getTo()));
+        Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, white2.getFrom(), white2.getTo()));
     }
 
     @Test

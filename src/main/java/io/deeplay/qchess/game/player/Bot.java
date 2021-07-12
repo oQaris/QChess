@@ -13,7 +13,6 @@ import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.*;
 
 public class Bot extends Player {
-
     private static final Map<TypeFigure, Integer> grades = preparedGrades();
 
     public Bot(GameSettings roomSettings, Color color) {

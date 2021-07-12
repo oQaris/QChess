@@ -5,7 +5,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class CellParseTest {
-
     @Test(expected = IllegalArgumentException.class)
     public void testParseFail1() {
         Cell.parse("a0");

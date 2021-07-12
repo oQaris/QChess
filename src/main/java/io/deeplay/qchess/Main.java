@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Main {
-
     public static void main(String[] args) throws ChessError {
         // TODO: при создании комнаты
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
