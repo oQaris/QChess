@@ -13,6 +13,8 @@ import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
 import java.util.*;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_CHECKING_FOR_DRAW;
+
 public class EndGameDetector {
     private final GameSettings roomSettings;
     private int pieceMoveCount = 0;
@@ -30,7 +32,7 @@ public class EndGameDetector {
                     && !isDrawWithRepetitions()
                     && !isNotEnoughMaterialForCheckmate();
         } catch (ChessException e) {
-            throw new ChessError("Ошибка при проверки на ничью", e);
+            throw new ChessError(ERROR_WHILE_CHECKING_FOR_DRAW, e);
         }
     }
 

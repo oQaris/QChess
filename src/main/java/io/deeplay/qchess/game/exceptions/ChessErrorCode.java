@@ -5,7 +5,11 @@ public enum ChessErrorCode {
     KING_NOT_FOUND("Король не найден"),
     INCORRECT_FILLING_BOARD("Заполнение доски некорректное"),
     BOT_ERROR("В боте возникло исключение"),
-    CONSOLE_PLAYER_ERROR("Произошла ошибка в классе игрока");
+    CONSOLE_PLAYER_ERROR("Произошла ошибка в классе игрока"),
+    ERROR_WHEN_MOVING_FIGURE("Проверенный ход выдал ошибку при перемещении фигуры"),
+    ERROR_WHILE_CHECKING_FOR_DRAW("Ошибка при проверки на ничью"),
+    EXCEPTION_IN_HISTORY("Возникло исключение в истории"),
+    LOG_FAILED("Не удалось записать в лог");
 
     private final String message;
 

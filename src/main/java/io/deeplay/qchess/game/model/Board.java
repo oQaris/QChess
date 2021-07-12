@@ -86,7 +86,7 @@ public class Board {
         int x = figure.getCurrentPosition().getColumn();
         int y = figure.getCurrentPosition().getRow();
         if (!isCorrectCell(x, y)) {
-            throw new ChessException("Координаты выходят за границу доски");
+            throw new ChessException(INCORRECT_COORDINATES);
         }
         cells[y][x] = figure;
     }

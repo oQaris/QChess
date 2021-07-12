@@ -10,7 +10,8 @@ import junit.framework.TestCase;
 public class BotTest extends TestCase {
 
     public void testBots() throws ChessError {
-        for (int i = 0; i < 1; i++) {
+        final int COUNT = 1;
+        for (int i = 0; i < COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             Player firstPlayer = new Bot(roomSettings, Color.WHITE);
             Player secondPlayer = new Bot(roomSettings, Color.BLACK);
