@@ -44,10 +44,7 @@ public class History implements Iterable<String> {
         String record = convertBoardToStringForsytheEdwards();
         recordsList.add(record);
 
-        if(!repetitionsMap.containsKey(record)) {
-            repetitionsMap.put(record, 0);
-        }
-        repetitionsMap.put(record, repetitionsMap.get(record) + 1);
+        repetitionsMap.put(record, repetitionsMap.getOrDefault(record, 0) + 1);
 
         log.debug("Запись {} добавлена в историю", record);
         whiteStep = !whiteStep;
@@ -164,7 +161,7 @@ public class History implements Iterable<String> {
     }
 
     /**
-     * @return true - если было repetition-кратное повторение, false - если не было
+     * @return true - если было минимум repetition-кратных повторений, false - если было меньше
      */
     public boolean checkThreefoldRepetition(int repetition) {
         for(Integer rep : repetitionsMap.values()) {
