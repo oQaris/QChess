@@ -26,7 +26,7 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        logger.info(roomSettings.board.toString());     //todo SonarLint ругается
+        logger.debug(roomSettings.board.toString());     //todo SonarLint ругается
         var notDraw = true;
         while (!roomSettings.moveSystem.isStalemate(currentPlayerToMove.getColor()) && notDraw) {
             // TODO: получать json Move
@@ -41,11 +41,11 @@ public class Game {
             }
         }
         if (!notDraw) {
-            logger.info("Игра окончена: ничья");
+            logger.error("Игра окончена: ничья");
         } else if (roomSettings.moveSystem.isCheckmate(currentPlayerToMove.getColor())) {
-            logger.info("Игра окончена: мат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+            logger.error("Игра окончена: мат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         } else {
-            logger.info("Игра окончена: пат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+            logger.error("Игра окончена: пат {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         }
         // TODO: конец игры
     }
@@ -57,7 +57,7 @@ public class Game {
         try {
             var removedFigure = roomSettings.moveSystem.move(move);
             logger.info("{} сделал ход: {} фигурой: {}", currentPlayerToMove, move, roomSettings.board.getFigure(move.getTo()));
-            logger.info(roomSettings.board.toString());     //todo SonarLint ругается
+            logger.debug(roomSettings.board.toString());     //todo SonarLint ругается
             return removedFigure;
         } catch (ChessException e) {
             throw new ChessError("Не удалось записать в лог", e);

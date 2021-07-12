@@ -48,9 +48,13 @@ public class Pawn extends Figure {
     @Override
     public Set<Move> getAllMoves(Board board) {
         Set<Move> result = new HashSet<>();
-
         Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
+        addShortAndLongMove(board, forwardShift, result);
+        addEnPassant(board, forwardShift, result);
+        return result;
+    }
 
+    private void addShortAndLongMove(Board board, Cell forwardShift, Set<Move> result) {
         Cell move = position.createAdd(forwardShift);
         if (board.isEmptyCell(move)) {
             result.add(new Move(isTurnInto(move)
@@ -58,13 +62,14 @@ public class Pawn extends Figure {
                     : MoveType.QUIET_MOVE, position, move));
 
             Cell longMove = move.createAdd(forwardShift);
-            if (isStartPosition(position) && board.isEmptyCell(longMove)) {
+            if (isStartPosition(position) && board.isEmptyCell(longMove))
                 result.add(new Move(MoveType.LONG_MOVE, position, longMove));
-            }
         }
+    }
 
-        Cell leftAttack = move.createAdd(new Cell(-1, 0));
-        Cell rightAttack = move.createAdd(new Cell(1, 0));
+    private void addEnPassant(Board board, Cell forwardShift, Set<Move> result) {
+        Cell leftAttack = position.createAdd(forwardShift).createAdd(new Cell(-1, 0));
+        Cell rightAttack = position.createAdd(forwardShift).createAdd(new Cell(1, 0));
 
         boolean isEnPassant = isPawnEnPassant(board, position, leftAttack)
                 || isPawnEnPassant(board, position, rightAttack);
@@ -80,8 +85,6 @@ public class Pawn extends Figure {
                     ? MoveType.TURN_INTO
                     : specOrAttackMoveType, position, rightAttack));
         }
-
-        return result;
     }
 
     private boolean isTurnInto(Cell end) {

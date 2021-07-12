@@ -48,7 +48,7 @@ public class Move {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Move)) return false;
-        var move = (Move) o;
+        Move move = (Move) o;
         return getMoveType() == move.getMoveType()
                 && Objects.equals(getFrom(), move.getFrom())
                 && Objects.equals(getTo(), move.getTo());
