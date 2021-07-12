@@ -33,7 +33,7 @@ public class History implements Iterable<String> {
         notation.put(TypeFigure.PAWN, 'P');
 
         try {
-            addRecord();
+            addRecord(null);
         } catch (ChessException e) {
             log.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError("Возникло исключение в истории", e);
@@ -43,9 +43,12 @@ public class History implements Iterable<String> {
     /**
      * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные приписки
      *
+     * @param prevMove предыдущий ход или null, если его не было
      * @return Строка - только что добавленная запись
      */
-    public String addRecord() throws ChessException {
+    public String addRecord(Move prevMove) throws ChessException {
+        this.prevMove = prevMove;
+
         String record = convertBoardToStringForsytheEdwards();
         recordsList.add(record);
 
@@ -179,10 +182,6 @@ public class History implements Iterable<String> {
 
     public Move getPrevMove() {
         return prevMove;
-    }
-
-    public void setPrevMove(Move prevMove) {
-        this.prevMove = prevMove;
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -37,11 +38,13 @@ public class HistoryTest {
     }
 
     @Test
-    public void testGetPawnEnPassantPossibilityWithoutLongMove() throws ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testGetPawnEnPassantPossibilityWithoutLongMove() throws ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("a2"), Cell.parse("a3"));
         board.moveFigure(move);
-        history.setPrevMove(move);
 
+        Field prevMove = history.getClass().getDeclaredField("prevMove");
+        prevMove.setAccessible(true);
+        prevMove.set(history, move);
         Method method = history.getClass().getDeclaredMethod("getPawnEnPassantPossibility");
         method.setAccessible(true);
 
@@ -49,11 +52,13 @@ public class HistoryTest {
     }
 
     @Test
-    public void testGetPawnEnPassantPossibilityWithLongMove() throws ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testGetPawnEnPassantPossibilityWithLongMove() throws ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
         Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
         board.moveFigure(move);
-        history.setPrevMove(move);
 
+        Field prevMove = history.getClass().getDeclaredField("prevMove");
+        prevMove.setAccessible(true);
+        prevMove.set(history, move);
         Method method = history.getClass().getDeclaredMethod("getPawnEnPassantPossibility");
         method.setAccessible(true);
 

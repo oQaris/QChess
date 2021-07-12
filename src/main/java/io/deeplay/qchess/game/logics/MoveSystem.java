@@ -63,8 +63,7 @@ public class MoveSystem {
 
             // ход
             Figure removedFigure = board.moveFigure(move);
-            history.setPrevMove(move);
-            history.addRecord();
+            history.addRecord(move);
             return removedFigure;
         } catch (ChessException | NullPointerException e) {
             throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры", e);

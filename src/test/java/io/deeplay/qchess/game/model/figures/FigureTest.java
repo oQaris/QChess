@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -458,7 +459,9 @@ public class FigureTest {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
-        gameSettings.history.setPrevMove(white1);
+        Field prevMove = gameSettings.history.getClass().getDeclaredField("prevMove");
+        prevMove.setAccessible(true);
+        prevMove.set(gameSettings.history, white1);
 
         Figure figureB1 = new Pawn(Color.BLACK, Cell.parse("b4"));
         Figure figureW2 = new Pawn(Color.WHITE, Cell.parse("a4"));

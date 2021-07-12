@@ -14,6 +14,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+
 public class MoveSystemTest {
     private GameSettings gameSettings;
     private Board board;
@@ -40,7 +42,7 @@ public class MoveSystemTest {
 
         Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
 
-        gameSettings.history.setPrevMove(white1);
+        setPrevMove(white1);
 
         Assert.assertTrue(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
         Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
@@ -64,12 +66,18 @@ public class MoveSystemTest {
         board.setFigure(figureB4);
     }
 
+    private void setPrevMove(Move move) throws NoSuchFieldException, IllegalAccessException {
+        Field prevMove = gameSettings.history.getClass().getDeclaredField("prevMove");
+        prevMove.setAccessible(true);
+        prevMove.set(gameSettings.history, move);
+    }
+
     @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_2() throws ChessException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Move white2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c2"), Cell.parse("c3"));
         Figure figureW2 = new Pawn(Color.WHITE, white2.getTo());
 
-        gameSettings.history.setPrevMove(white2);
+        setPrevMove(white2);
 
         board.setFigure(figureW2);
         setBlackPawns();
@@ -85,7 +93,7 @@ public class MoveSystemTest {
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("c2"), Cell.parse("d3"));
         Figure figureW3 = new Pawn(Color.WHITE, white3.getTo());
 
-        gameSettings.history.setPrevMove(white3);
+        setPrevMove(white3);
 
         board.setFigure(figureW3);
         setBlackPawns();
@@ -101,7 +109,7 @@ public class MoveSystemTest {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Knight(Color.WHITE, white1.getTo());
 
-        gameSettings.history.setPrevMove(white1);
+        setPrevMove(white1);
 
         board.setFigure(figureW1);
         setBlackPawns();
@@ -117,7 +125,7 @@ public class MoveSystemTest {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
-        gameSettings.history.setPrevMove(white1);
+        setPrevMove(white1);
 
         Move black1 = new Move(MoveType.ATTACK, Cell.parse("b4"), Cell.parse("c3"));
         Move black2 = new Move(MoveType.ATTACK, Cell.parse("b5"), Cell.parse("c4"));
@@ -150,7 +158,7 @@ public class MoveSystemTest {
 
         Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
 
-        gameSettings.history.setPrevMove(black1);
+        setPrevMove(black1);
 
         Assert.assertTrue(Pawn.isPawnEnPassant(gameSettings, move1.getFrom(), move1.getTo()));
         Assert.assertFalse(Pawn.isPawnEnPassant(gameSettings, move2.getFrom(), move2.getTo()));
@@ -179,7 +187,7 @@ public class MoveSystemTest {
         Move black2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c7"), Cell.parse("c6"));
         Figure figureB2 = new Pawn(Color.BLACK, black2.getTo());
 
-        gameSettings.history.setPrevMove(black2);
+        setPrevMove(black2);
 
         board.setFigure(figureB2);
         setWhitePawns();
@@ -195,7 +203,7 @@ public class MoveSystemTest {
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("c7"), Cell.parse("d6"));
         Figure figureB3 = new Pawn(Color.BLACK, black3.getTo());
 
-        gameSettings.history.setPrevMove(black3);
+        setPrevMove(black3);
 
         board.setFigure(figureB3);
         setWhitePawns();
@@ -213,7 +221,7 @@ public class MoveSystemTest {
         Figure figure1 = new Pawn(Color.WHITE, white1.getTo());
         Figure figure2 = new Pawn(Color.WHITE, white2.getFrom());
 
-        gameSettings.history.setPrevMove(white1);
+        setPrevMove(white1);
 
         board.setFigure(figure1);
         board.setFigure(figure2);
