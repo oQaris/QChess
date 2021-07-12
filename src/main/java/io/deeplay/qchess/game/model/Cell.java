@@ -24,6 +24,18 @@ public class Cell {
         throw new IllegalArgumentException("Incorrect position!");
     }
 
+    /**
+     * @return создает новую клетку, суммируя с текущей
+     */
+    public Cell createAdd(Cell shiftCell) {
+        return new Cell(column + shiftCell.column, row + shiftCell.row);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getColumn(), getRow());
+    }
+
     public int getColumn() {
         return column;
     }
@@ -40,18 +52,6 @@ public class Cell {
         this.row = row;
     }
 
-    /**
-     * @return создает новую клетку, суммируя с текущей
-     */
-    public Cell createAdd(Cell shiftCell) {
-        return new Cell(column + shiftCell.column, row + shiftCell.row);
-    }
-
-    @Override
-    public String toString() {
-        return "" + (char) ('a' + column) + (char) ('0' + (Board.BOARD_SIZE - row));
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -65,7 +65,7 @@ public class Cell {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getColumn(), getRow());
+    public String toString() {
+        return "" + (char) ('a' + column) + (char) ('0' + (Board.BOARD_SIZE - row));
     }
 }

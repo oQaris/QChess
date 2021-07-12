@@ -3,10 +3,11 @@ package io.deeplay.qchess.game.logics;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
 public class EndGameDetector {
     private final GameSettings roomSettings;
@@ -24,7 +25,7 @@ public class EndGameDetector {
             // условия ничьи:
             // пешка не ходит 50 ходов
             // никто не рубит
-            if (removedFigure != null || roomSettings.board.getFigure(move.getTo()).getClass() == Pawn.class) {
+            if (removedFigure != null || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) {
                 pieceMoveCount = 0;
             } else {
                 ++pieceMoveCount;
@@ -53,6 +54,6 @@ public class EndGameDetector {
      * @return true если игроку с указанным цветом ставят шах
      */
     public boolean isCheck(Color color) throws ChessError {
-        return roomSettings.board.isAttackedCell(roomSettings.board.findKingCell(color), color.inverse());
+        return Board.isAttackedCell(roomSettings, roomSettings.board.findKingCell(color), color.inverse());
     }
 }

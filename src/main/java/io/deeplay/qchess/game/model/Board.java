@@ -1,10 +1,12 @@
 package io.deeplay.qchess.game.model;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.figures.*;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,20 +79,15 @@ public class Board {
         return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
     }
 
-    public Move getPrevMove() {
-        //todo
-        return null;
-    }
-
     /**
      * @return true, если клетка cell атакуется цветом color
      */
-    public boolean isAttackedCell(Cell cell, Color color) {
-        for (Figure f : getFigures(color)) {
+    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
+        for (Figure f : settings.board.getFigures(color)) {
             for (Move m :
-                    f.getClass() == King.class
-                            ? ((King) f).getAttackedMoves(this)
-                            : f.getAllMoves(this)) {
+                    f.getType() == TypeFigure.KING
+                            ? ((King) f).getAttackedMoves(settings.board)
+                            : f.getAllMoves(settings)) {
                 if (m.getTo().equals(cell)) {
                     return true;
                 }
@@ -124,7 +121,7 @@ public class Board {
         Cell kingCell = null;
         for (Figure[] figures : cells) {
             for (Figure f : figures) {
-                if (f != null && f.getColor() == color && f.getClass() == King.class) {
+                if (f != null && f.getColor() == color && f.getType() == TypeFigure.KING) {
                     kingCell = f.getCurrentPosition();
                     break;
                 }

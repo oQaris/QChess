@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ConsolePlayer extends Player {
-
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
     private final BufferedReader in;
 

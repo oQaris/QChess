@@ -4,9 +4,9 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.*;
-import io.deeplay.qchess.game.model.figures.*;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,13 @@ import java.util.Set;
  * Хранит различные данные об игре для контроля специфичных ситуаций
  */
 public class MoveSystem {
+    private final GameSettings roomSettings;
     private final Board board;
     private final EndGameDetector endGameDetector;
     private final History history;
 
     public MoveSystem(GameSettings roomSettings) {
+        this.roomSettings = roomSettings;
         board = roomSettings.board;
         endGameDetector = roomSettings.endGameDetector;
         history = roomSettings.history;
@@ -74,7 +76,7 @@ public class MoveSystem {
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(64);
         for (Figure f : board.getFigures(color)) {
-            for (Move m : f.getAllMoves(board)) {
+            for (Move m : f.getAllMoves(roomSettings)) {
                 if (isCorrectMove(m)) {
                     res.add(m);
                 }
@@ -107,10 +109,10 @@ public class MoveSystem {
         if (move.getMoveType() == MoveType.TURN_INTO) {
             return move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
-                    && (move.getTurnInto().getClass() == Bishop.class
-                    || move.getTurnInto().getClass() == Knight.class
-                    || move.getTurnInto().getClass() == Queen.class
-                    || move.getTurnInto().getClass() == Rook.class);
+                    && (move.getTurnInto().getType() == TypeFigure.BISHOP
+                    || move.getTurnInto().getType() == TypeFigure.KNIGHT
+                    || move.getTurnInto().getType() == TypeFigure.QUEEN
+                    || move.getTurnInto().getType() == TypeFigure.ROOK);
         }
 
         return true;
@@ -121,7 +123,7 @@ public class MoveSystem {
      */
     private boolean inAvailableMoves(Move move) throws ChessException {
         Figure figure = board.getFigure(move.getFrom());
-        Set<Move> allMoves = figure.getAllMoves(board);
+        Set<Move> allMoves = figure.getAllMoves(roomSettings);
         return allMoves.contains(move);
     }
 
@@ -133,7 +135,7 @@ public class MoveSystem {
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled != null && virtualKilled.getClass() == King.class) {
+        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) {
             throw new ChessError("Срубили короля");
         }
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
