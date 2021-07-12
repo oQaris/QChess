@@ -5,66 +5,68 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import java.util.Objects;
 
 public class Move {
-    // не должно влиять на equals и hashCode,
-    // чтобы, проверяя корректность ходов, у пешек не возникали дополнительные условия,
-    // т.к. пешки на доске не знают во что превратиться без запроса игрока.
-    // проверка вынесена в MoveSystem
-    private Figure turnInto;
-    private MoveType moveType;
-    private Cell from;
-    private Cell to;
+  // не должно влиять на equals и hashCode,
+  // чтобы, проверяя корректность ходов, у пешек не возникали дополнительные условия,
+  // т.к. пешки на доске не знают во что превратиться без запроса игрока.
+  // проверка вынесена в MoveSystem
+  private Figure turnInto;
+  private MoveType moveType;
+  private Cell from;
+  private Cell to;
 
-    public Move(MoveType moveType, Cell from, Cell to) {
-        this.moveType = moveType;
-        this.from = from;
-        this.to = to;
-    }
+  public Move(MoveType moveType, Cell from, Cell to) {
+    this.moveType = moveType;
+    this.from = from;
+    this.to = to;
+  }
 
-    public Figure getTurnInto() {
-        return turnInto;
-    }
+  public Figure getTurnInto() {
+    return turnInto;
+  }
 
-    /**
-     * @param turnInto указывать from = this.to и to = this.to, как у этого мува, но необязательно
-     */
-    public void setTurnInto(Figure turnInto) {
-        this.turnInto = turnInto;
-    }
+  /** @param turnInto указывать from = this.to и to = this.to, как у этого мува, но необязательно */
+  public void setTurnInto(Figure turnInto) {
+    this.turnInto = turnInto;
+  }
 
-    public MoveType getMoveType() {
-        return moveType;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(moveType, from, to);
+  }
 
-    public Cell getFrom() {
-        return from;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Move)) return false;
+    Move move = (Move) o;
+    return getMoveType() == move.getMoveType()
+        && Objects.equals(getFrom(), move.getFrom())
+        && Objects.equals(getTo(), move.getTo());
+  }
 
-    public Cell getTo() {
-        return to;
-    }
+  public MoveType getMoveType() {
+    return moveType;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Move)) return false;
-        Move move = (Move) o;
-        return getMoveType() == move.getMoveType()
-                && Objects.equals(getFrom(), move.getFrom())
-                && Objects.equals(getTo(), move.getTo());
-    }
+  public Cell getFrom() {
+    return from;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(moveType, from, to);
-    }
+  public Cell getTo() {
+    return to;
+  }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder()
-                .append(from).append("-").append(to)
-                .append(" (").append(moveType).append(")");
-        if (moveType == MoveType.TURN_INTO)
-            sb.append(" turn into ").append(turnInto);
-        return sb.toString();
-    }
+  @Override
+  public String toString() {
+    StringBuilder sb =
+        new StringBuilder()
+            .append(from)
+            .append("-")
+            .append(to)
+            .append(" (")
+            .append(moveType)
+            .append(")");
+    if (moveType == MoveType.TURN_INTO) sb.append(" turn into ").append(turnInto);
+    return sb.toString();
+  }
 }

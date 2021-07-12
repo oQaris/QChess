@@ -18,65 +18,54 @@ public class Board {
     private final Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
     public Board(BoardFilling bf) throws ChessError {
-        if (bf != BoardFilling.STANDARD) {
-            return;
-        }
         try {
-            setFigure(new Rook(Color.WHITE, Cell.parse("a1")));
-            setFigure(new Rook(Color.WHITE, Cell.parse("h1")));
-            setFigure(new Rook(Color.BLACK, Cell.parse("a8")));
-            setFigure(new Rook(Color.BLACK, Cell.parse("h8")));
-            setFigure(new Knight(Color.WHITE, Cell.parse("b1")));
-            setFigure(new Knight(Color.WHITE, Cell.parse("g1")));
-            setFigure(new Knight(Color.BLACK, Cell.parse("b8")));
-            setFigure(new Knight(Color.BLACK, Cell.parse("g8")));
-            setFigure(new Bishop(Color.WHITE, Cell.parse("c1")));
-            setFigure(new Bishop(Color.WHITE, Cell.parse("f1")));
-            setFigure(new Bishop(Color.BLACK, Cell.parse("c8")));
-            setFigure(new Bishop(Color.BLACK, Cell.parse("f8")));
+            switch (bf) {
+                case STANDARD -> {
+                    setFigure(new Rook(Color.WHITE, Cell.parse("a1")));
+                    setFigure(new Rook(Color.WHITE, Cell.parse("h1")));
+                    setFigure(new Rook(Color.BLACK, Cell.parse("a8")));
+                    setFigure(new Rook(Color.BLACK, Cell.parse("h8")));
+                    setFigure(new Knight(Color.WHITE, Cell.parse("b1")));
+                    setFigure(new Knight(Color.WHITE, Cell.parse("g1")));
+                    setFigure(new Knight(Color.BLACK, Cell.parse("b8")));
+                    setFigure(new Knight(Color.BLACK, Cell.parse("g8")));
+                    setFigure(new Bishop(Color.WHITE, Cell.parse("c1")));
+                    setFigure(new Bishop(Color.WHITE, Cell.parse("f1")));
+                    setFigure(new Bishop(Color.BLACK, Cell.parse("c8")));
+                    setFigure(new Bishop(Color.BLACK, Cell.parse("f8")));
 
-            setFigure(new Queen(Color.WHITE, Cell.parse("d1")));
-            setFigure(new Queen(Color.BLACK, Cell.parse("d8")));
-            setFigure(new King(Color.WHITE, Cell.parse("e1")));
-            setFigure(new King(Color.BLACK, Cell.parse("e8")));
+                    setFigure(new Queen(Color.WHITE, Cell.parse("d1")));
+                    setFigure(new Queen(Color.BLACK, Cell.parse("d8")));
+                    setFigure(new King(Color.WHITE, Cell.parse("e1")));
+                    setFigure(new King(Color.BLACK, Cell.parse("e8")));
 
-            setFigure(new Pawn(Color.WHITE, Cell.parse("a2")));
-            setFigure(new Pawn(Color.WHITE, Cell.parse("b2")));
-            setFigure(new Pawn(Color.WHITE, Cell.parse("c2")));
-            setFigure(new Pawn(Color.WHITE, Cell.parse("d2")));
-            setFigure(new Pawn(Color.WHITE, Cell.parse("e2")));
-            setFigure(new Pawn(Color.WHITE, Cell.parse("f2")));
-            setFigure(new Pawn(Color.WHITE, Cell.parse("g2")));
-            setFigure(new Pawn(Color.WHITE, Cell.parse("h2")));
+                    setFigure(new Pawn(Color.WHITE, Cell.parse("a2")));
+                    setFigure(new Pawn(Color.WHITE, Cell.parse("b2")));
+                    setFigure(new Pawn(Color.WHITE, Cell.parse("c2")));
+                    setFigure(new Pawn(Color.WHITE, Cell.parse("d2")));
+                    setFigure(new Pawn(Color.WHITE, Cell.parse("e2")));
+                    setFigure(new Pawn(Color.WHITE, Cell.parse("f2")));
+                    setFigure(new Pawn(Color.WHITE, Cell.parse("g2")));
+                    setFigure(new Pawn(Color.WHITE, Cell.parse("h2")));
 
-            setFigure(new Pawn(Color.BLACK, Cell.parse("a7")));
-            setFigure(new Pawn(Color.BLACK, Cell.parse("b7")));
-            setFigure(new Pawn(Color.BLACK, Cell.parse("c7")));
-            setFigure(new Pawn(Color.BLACK, Cell.parse("d7")));
-            setFigure(new Pawn(Color.BLACK, Cell.parse("e7")));
-            setFigure(new Pawn(Color.BLACK, Cell.parse("f7")));
-            setFigure(new Pawn(Color.BLACK, Cell.parse("g7")));
-            setFigure(new Pawn(Color.BLACK, Cell.parse("h7")));
+                    setFigure(new Pawn(Color.BLACK, Cell.parse("a7")));
+                    setFigure(new Pawn(Color.BLACK, Cell.parse("b7")));
+                    setFigure(new Pawn(Color.BLACK, Cell.parse("c7")));
+                    setFigure(new Pawn(Color.BLACK, Cell.parse("d7")));
+                    setFigure(new Pawn(Color.BLACK, Cell.parse("e7")));
+                    setFigure(new Pawn(Color.BLACK, Cell.parse("f7")));
+                    setFigure(new Pawn(Color.BLACK, Cell.parse("g7")));
+                    setFigure(new Pawn(Color.BLACK, Cell.parse("h7")));
+                }
+                case CHESS960 -> {
+                    //todo Сделать рандомное заполнение Фишера
+                }
+                case EMPTY -> {
+                }
+            }
         } catch (ChessException e) {
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
-    }
-
-    /**
-     * @return true, если клетка cell атакуется цветом color
-     */
-    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
-        for (Figure f : settings.board.getFigures(color)) {
-            for (Move m :
-                    f.getType() == TypeFigure.KING
-                            ? ((King) f).getAttackedMoves(settings.board)
-                            : f.getAllMoves(settings)) {
-                if (m.getTo().equals(cell)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -96,6 +85,23 @@ public class Board {
      */
     public boolean isCorrectCell(int column, int row) {
         return column >= 0 && row >= 0 && column < BOARD_SIZE && row < BOARD_SIZE;
+    }
+
+    /**
+     * @return true, если клетка cell атакуется цветом color
+     */
+    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
+        for (Figure f : settings.board.getFigures(color)) {
+            for (Move m :
+                    f.getType() == TypeFigure.KING
+                            ? ((King) f).getAttackedMoves(settings.board)
+                            : f.getAllMoves(settings)) {
+                if (m.getTo().equals(cell)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -198,11 +204,8 @@ public class Board {
         for (Figure[] line : cells) {
             sb.append('|');
             for (Figure figure : line) {
-                if (figure == null) {
-                    sb.append("_");
-                } else {
-                    sb.append(figureToIcon(figure));
-                }
+                if (figure == null) sb.append("_");
+                else sb.append(figureToIcon(figure));
                 sb.append('|');
             }
             sb.append(System.lineSeparator());

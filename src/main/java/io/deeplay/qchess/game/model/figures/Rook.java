@@ -11,17 +11,17 @@ import java.util.Set;
 
 public class Rook extends Figure {
 
-    public Rook(Color color, Cell position) {
-        super(color, position);
-    }
+  public Rook(Color color, Cell position) {
+    super(color, position);
+  }
 
-    @Override
-    public Set<Move> getAllMoves(GameSettings settings) {
-        return rayTrace(settings.board, plusMove);
-    }
+  @Override
+  public Set<Move> getAllMoves(GameSettings settings) {
+    return rayTrace(settings.board, plusMove);
+  }
 
-    @Override
-    public TypeFigure getType() {
-        return TypeFigure.ROOK;
-    }
+  @Override
+  public TypeFigure getType() {
+    return TypeFigure.ROOK;
+  }
 }

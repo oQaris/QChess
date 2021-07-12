@@ -8,27 +8,25 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 
 public abstract class Player {
-    protected MoveSystem ms;
-    protected Board board;
-    protected Color color;
+  protected MoveSystem ms;
+  protected Board board;
+  protected Color color;
 
-    protected Player(GameSettings roomSettings, Color color) {
-        ms = roomSettings.moveSystem;
-        board = roomSettings.board;
-        this.color = color;
-    }
+  protected Player(GameSettings roomSettings, Color color) {
+    ms = roomSettings.moveSystem;
+    board = roomSettings.board;
+    this.color = color;
+  }
 
-    public Color getColor() {
-        return color;
-    }
+  public Color getColor() {
+    return color;
+  }
 
-    /**
-     * @return возвращает проверенный ход
-     */
-    public abstract Move getNextMove() throws ChessError;
+  /** @return возвращает проверенный ход */
+  public abstract Move getNextMove() throws ChessError;
 
-    @Override
-    public String toString() {
-        return color + " PLAYER";
-    }
+  @Override
+  public String toString() {
+    return color + " PLAYER";
+  }
 }
