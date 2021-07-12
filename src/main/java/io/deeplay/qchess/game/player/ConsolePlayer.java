@@ -42,7 +42,7 @@ public class ConsolePlayer extends Player {
         try {
             List<Move> allMoves = ms.getAllCorrectMoves(color);
             printMoves(allMoves);
-            var choosenMove = inputMoveNumber(allMoves);
+            Move choosenMove = inputMoveNumber(allMoves);
             specificMoveModification(choosenMove);
             return choosenMove;
         } catch (ChessError e) {
@@ -53,7 +53,7 @@ public class ConsolePlayer extends Player {
     private void printMoves(List<Move> allMoves) {
         System.out.println("Выберите ход:");
         allMoves.sort(Comparator.comparing(Move::toString));
-        var number = 1;
+        int number = 1;
         for (Move move : allMoves) {
             System.out.println(number + ": " + move);
             ++number;
@@ -64,7 +64,7 @@ public class ConsolePlayer extends Player {
         Move move = null;
         while (move == null) {
             try {
-                var numMove = Integer.parseInt(in.readLine());
+                int numMove = Integer.parseInt(in.readLine());
                 move = allMoves.get(numMove - 1);
             } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
                 logger.info("Неправильный ход, повторите попытку");
@@ -81,7 +81,7 @@ public class ConsolePlayer extends Player {
     }
 
     private Figure readTurnInto(Cell to) throws ChessError {
-        var numTurnIntoFig = 0;
+        int numTurnIntoFig = 0;
         while (numTurnIntoFig == 0) {
             try {
                 numTurnIntoFig = Integer.parseInt(in.readLine());

@@ -7,6 +7,7 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
+import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
 import java.util.*;
@@ -34,10 +35,10 @@ public class Bot extends Player {
     @Override
     public Move getNextMove() throws ChessError {
         List<Move> topMoves = new ArrayList<>();
-        var maxGrade = 0;
+        int maxGrade = 0;
         for (Move move : ms.getAllCorrectMoves(color))
             try {
-                var fig = board.getFigure(move.getTo());
+                Figure fig = board.getFigure(move.getTo());
 
                 int curGrade = fig != null ? grades.get(fig.getType()) : 0;
                 if (curGrade > maxGrade) {
@@ -50,7 +51,7 @@ public class Bot extends Player {
             } catch (ChessException e) {
                 throw new ChessError(BOT_ERROR, e);
             }
-        var move = topMoves.get(new Random().nextInt(topMoves.size()));
+        Move move = topMoves.get(new Random().nextInt(topMoves.size()));
         checkTurnInto(move);
         return move;
     }

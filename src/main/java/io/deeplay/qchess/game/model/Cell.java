@@ -31,28 +31,12 @@ public class Cell {
         return new Cell(column + shiftCell.column, row + shiftCell.row);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getColumn(), getRow());
-    }
-
     public int getColumn() {
         return column;
     }
 
     public int getRow() {
         return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    /**
-     * @return создает новую клетку, суммируя с текущей
-     */
-    public Cell createAdd(Cell shiftCell) {
-        return new Cell(column + shiftCell.column, row + shiftCell.row);
     }
 
     @Override

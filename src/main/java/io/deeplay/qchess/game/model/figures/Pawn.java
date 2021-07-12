@@ -25,11 +25,11 @@ public class Pawn extends Figure {
      *
      * @return true если это взятие на проходе
      */
-    public static boolean isPawnEnPassant(Board board, Cell from, Cell to) {
+    public static boolean isPawnEnPassant(GameSettings settings, Cell from, Cell to) {
         try {
-            var currentPawn = (Pawn) board.getFigure(from);
-            var prevMove = board.getPrevMove();
-            var pawn = (Pawn) board.getFigure(prevMove.getTo());
+            Pawn currentPawn = (Pawn) settings.board.getFigure(from);
+            Move prevMove = settings.history.getPrevMove();
+            Pawn pawn = (Pawn) settings.board.getFigure(prevMove.getTo());
 
             Cell cellDown = pawn.getColor() == Color.WHITE
                     ? new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() + 1)
@@ -50,12 +50,12 @@ public class Pawn extends Figure {
     public Set<Move> getAllMoves(GameSettings settings) {
         Set<Move> result = new HashSet<>();
         Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
-        addShortAndLongMove(board, forwardShift, result);
-        addEnPassant(board, forwardShift, result);
+        addShortAndLongMove(settings, forwardShift, result);
+        addEnPassant(settings, forwardShift, result);
         return result;
     }
 
-    private void addShortAndLongMove(Board board, Cell forwardShift, Set<Move> result) {
+    private void addShortAndLongMove(GameSettings settings, Cell forwardShift, Set<Move> result) {
         Cell move = position.createAdd(forwardShift);
         if (settings.board.isEmptyCell(move)) {
             result.add(new Move(isTurnInto(move)
@@ -63,13 +63,13 @@ public class Pawn extends Figure {
                     : MoveType.QUIET_MOVE, position, move));
 
             Cell longMove = move.createAdd(forwardShift);
-            if (isStartPosition(position) && board.isEmptyCell(longMove))
             if (isStartPosition(position) && settings.board.isEmptyCell(longMove)) {
                 result.add(new Move(MoveType.LONG_MOVE, position, longMove));
+            }
         }
     }
 
-    private void addEnPassant(Board board, Cell forwardShift, Set<Move> result) {
+    private void addEnPassant(GameSettings settings, Cell forwardShift, Set<Move> result) {
         Cell leftAttack = position.createAdd(forwardShift).createAdd(new Cell(-1, 0));
         Cell rightAttack = position.createAdd(forwardShift).createAdd(new Cell(1, 0));
 
@@ -95,33 +95,6 @@ public class Pawn extends Figure {
 
     private boolean isStartPosition(Cell start) {
         return start.getRow() == (color == Color.BLACK ? 1 : Board.BOARD_SIZE - 2);
-    }
-
-    /**
-     * Проверяет, является ли атака пешки взятием на проходе.
-     * Входные данные должны гарантировать, что это именно атака пешки (диагональный ход)
-     *
-     * @return true если это взятие на проходе
-     */
-    public static boolean isPawnEnPassant(GameSettings settings, Cell from, Cell to) {
-        try {
-            Pawn currentPawn = (Pawn) settings.board.getFigure(from);
-            Move prevMove = settings.history.getPrevMove();
-            Pawn pawn = (Pawn) settings.board.getFigure(prevMove.getTo());
-
-            Cell cellDown = pawn.getColor() == Color.WHITE
-                    ? new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() + 1)
-                    : new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() - 1);
-            Cell cellDoubleDown = pawn.getColor() == Color.WHITE
-                    ? new Cell(cellDown.getColumn(), cellDown.getRow() + 1)
-                    : new Cell(cellDown.getColumn(), cellDown.getRow() - 1);
-
-            return currentPawn.getColor() != pawn.getColor()
-                    && cellDoubleDown.equals(prevMove.getFrom())
-                    && cellDown.equals(to);
-        } catch (ChessException | ClassCastException | NullPointerException e) {
-            return false;
-        }
     }
 
     @Override

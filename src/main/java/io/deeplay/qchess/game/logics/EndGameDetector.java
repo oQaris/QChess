@@ -2,11 +2,16 @@ package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.exceptions.ChessErrorCode;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
+
+import java.util.*;
 
 public class EndGameDetector {
     private final GameSettings roomSettings;
@@ -22,7 +27,8 @@ public class EndGameDetector {
     public boolean isNotDraw(Figure removedFigure, Move move) throws ChessError {
         try {
             return !isDrawWithMoves(removedFigure, move)
-                    && !isDrawWithRepetitions();
+                    && !isDrawWithRepetitions()
+                    && !isNotEnoughMaterialForCheckmate();
         } catch (ChessException e) {
             throw new ChessError("Ошибка при проверки на ничью", e);
         }

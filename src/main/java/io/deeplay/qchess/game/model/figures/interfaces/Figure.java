@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.model.figures.interfaces;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;

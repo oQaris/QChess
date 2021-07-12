@@ -63,6 +63,23 @@ public class Board {
     }
 
     /**
+     * @return true, если клетка cell атакуется цветом color
+     */
+    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
+        for (Figure f : settings.board.getFigures(color)) {
+            for (Move m :
+                    f.getType() == TypeFigure.KING
+                            ? ((King) f).getAttackedMoves(settings.board)
+                            : f.getAllMoves(settings)) {
+                if (m.getTo().equals(cell)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Устанавливает фигуру на доску
      */
     public void setFigure(Figure figure) throws ChessException {
@@ -79,23 +96,6 @@ public class Board {
      */
     public boolean isCorrectCell(int col, int row) {
         return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
-    }
-
-    /**
-     * @return true, если клетка cell атакуется цветом color
-     */
-    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
-        for (Figure f : settings.board.getFigures(color)) {
-            for (Move m :
-                    f.getType() == TypeFigure.KING
-                            ? ((King) f).getAttackedMoves(settings.board)
-                            : f.getAllMoves(settings)) {
-                if (m.getTo().equals(cell)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -143,8 +143,8 @@ public class Board {
      * @throws ChessException если ход выходит за пределы доски
      */
     public Figure moveFigure(Move move) throws ChessException {
-        var figureFrom = getFigure(move.getFrom());
-        var figureTo = getFigure(move.getTo());
+        Figure figureFrom = getFigure(move.getFrom());
+        Figure figureTo = getFigure(move.getTo());
         figureFrom.setCurrentPosition(move.getTo());
         figureFrom.setWasMoved(true);
         setFigure(figureFrom);
@@ -193,7 +193,7 @@ public class Board {
 
     @Override
     public String toString() {
-        var sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append(System.lineSeparator());
         for (Figure[] line : cells) {
             sb.append('|');
