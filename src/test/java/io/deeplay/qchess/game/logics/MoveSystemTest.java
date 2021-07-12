@@ -27,7 +27,7 @@ public class MoveSystemTest {
     public void setUp() throws ChessError {
         GameSettings gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
         board = gameSettings.board;
-        ms = new MoveSystem(board, gameSettings.endGameDetector);
+        ms = new MoveSystem(gameSettings);
     }
 
     @Test

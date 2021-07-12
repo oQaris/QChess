@@ -1,11 +1,9 @@
 package io.deeplay.qchess.game.logics;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.*;
 import io.deeplay.qchess.game.model.figures.*;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
@@ -20,11 +18,12 @@ import java.util.Set;
 public class MoveSystem {
     private final Board board;
     private final EndGameDetector endGameDetector;
-    private Move prevMove;
+    private final History history;
 
-    public MoveSystem(Board board, EndGameDetector endGameDetector) {
-        this.board = board;
-        this.endGameDetector = endGameDetector;
+    public MoveSystem(GameSettings roomSettings) {
+        board = roomSettings.board;
+        endGameDetector = roomSettings.endGameDetector;
+        history = roomSettings.history;
     }
 
     /**
@@ -36,7 +35,7 @@ public class MoveSystem {
         try {
             // взятие на проходе
             if (move.getMoveType() == MoveType.EN_PASSANT) {
-                board.removeFigure(prevMove.getTo());
+                board.removeFigure(history.getPrevMove().getTo());
             }
 
             // превращение пешки
@@ -61,7 +60,7 @@ public class MoveSystem {
             }
 
             // ход
-            prevMove = move;
+            history.setPrevMove(move);
             return board.moveFigure(move);
         } catch (ChessException | NullPointerException e) {
             throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры", e);

@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.model;
 
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
@@ -11,7 +12,6 @@ import java.util.*;
 
 public class History implements Iterable<String> {
     private static final Logger log = LoggerFactory.getLogger(History.class);
-
     private final Map<TypeFigure, Character> notation = new HashMap<>();
     private final Map<String, Integer> repetitionsMap;
     private final List<String> recordsList;
@@ -19,7 +19,7 @@ public class History implements Iterable<String> {
     private boolean whiteStep = true;
     private Move prevMove;
 
-    public History(Board board) throws ChessException {
+    public History(Board board) throws ChessError {
         this.board = board;
         recordsList = new ArrayList<>(500);
         repetitionsMap = new HashMap<>(500);
@@ -32,7 +32,12 @@ public class History implements Iterable<String> {
         notation.put(TypeFigure.KNIGHT, 'N');
         notation.put(TypeFigure.PAWN, 'P');
 
-        addRecord();
+        try {
+            addRecord();
+        } catch (ChessException e) {
+            log.error("Возникло исключение в истории {}", e.getMessage());
+            throw new ChessError("Возникло исключение в истории", e);
+        }
     }
 
     /**
@@ -52,13 +57,6 @@ public class History implements Iterable<String> {
     }
 
     /**
-     * @return Строка - последняя запись в списке
-     */
-    public String getLastRecord() {
-        return recordsList.get(recordsList.size() - 1);
-    }
-
-    /**
      * @return Строка - запись в виде нотации Форсайта-Эдвардса
      */
     private String convertBoardToStringForsytheEdwards() throws ChessException {
@@ -69,7 +67,7 @@ public class History implements Iterable<String> {
         record.append(' ').append(whiteStep ? 'w' : 'b');
 
         String castlingPossibility = getCastlingPossibility();
-        if(!"".equals(castlingPossibility)) {
+        if (!"".equals(castlingPossibility)) {
             record.append(' ').append(castlingPossibility);
         }
 
@@ -85,26 +83,26 @@ public class History implements Iterable<String> {
         StringBuilder result = new StringBuilder();
         Figure currentFigure = null;
 
-        for(int y = 0; y < Board.BOARD_SIZE; y++) {
+        for (int y = 0; y < Board.BOARD_SIZE; y++) {
             int emptySlots = 0;
-            for(int x = 0; x < Board.BOARD_SIZE; x++) {
+            for (int x = 0; x < Board.BOARD_SIZE; x++) {
 
                 currentFigure = board.getFigure(new Cell(x, y));
 
-                if(currentFigure == null) {
+                if (currentFigure == null) {
                     emptySlots++;
                 } else {
-                    if(emptySlots != 0) {
+                    if (emptySlots != 0) {
                         result.append(emptySlots);
                     }
                     Character notationFigureChar = notation.get(currentFigure.getType());
-                    result.append(currentFigure.getColor() == Color.WHITE?
+                    result.append(currentFigure.getColor() == Color.WHITE ?
                             notationFigureChar : Character.toLowerCase(notationFigureChar));
                     emptySlots = 0;
                 }
             }
 
-            if(emptySlots != 0) {
+            if (emptySlots != 0) {
                 result.append(emptySlots);
             }
             result.append('/');
@@ -123,25 +121,25 @@ public class History implements Iterable<String> {
         Figure shortRook = null;
         Figure longRook = null;
         Figure whiteKing = board.getFigure(Cell.parse("e1"));
-        if(whiteKing != null && !whiteKing.wasMoved()) {
+        if (whiteKing != null && !whiteKing.wasMoved()) {
             shortRook = board.getFigure(Cell.parse("h1"));
             longRook = board.getFigure(Cell.parse("a1"));
-            if(shortRook != null && !shortRook.wasMoved()) {
+            if (shortRook != null && !shortRook.wasMoved()) {
                 result.append('K');
             }
-            if(longRook != null && !longRook.wasMoved()) {
+            if (longRook != null && !longRook.wasMoved()) {
                 result.append('Q');
             }
         }
 
         Figure blackKing = board.getFigure(Cell.parse("e8"));
-        if(blackKing != null && !blackKing.wasMoved()) {
+        if (blackKing != null && !blackKing.wasMoved()) {
             shortRook = board.getFigure(Cell.parse("h8"));
             longRook = board.getFigure(Cell.parse("a8"));
-            if(shortRook != null && !shortRook.wasMoved()) {
+            if (shortRook != null && !shortRook.wasMoved()) {
                 result.append('k');
             }
-            if(longRook != null && !longRook.wasMoved()) {
+            if (longRook != null && !longRook.wasMoved()) {
                 result.append('q');
             }
         }
@@ -153,19 +151,26 @@ public class History implements Iterable<String> {
      */
     private String getPawnEnPassantPossibility() throws ChessException {
         StringBuilder result = new StringBuilder();
-        if(prevMove != null && prevMove.getMoveType() == MoveType.LONG_MOVE) {
+        if (prevMove != null && prevMove.getMoveType() == MoveType.LONG_MOVE) {
             result.append(' ').append(prevMove.getTo().toString().charAt(0));
-            result.append(board.getFigure(prevMove.getTo()).getColor() == Color.WHITE? '3' : '6');
+            result.append(board.getFigure(prevMove.getTo()).getColor() == Color.WHITE ? '3' : '6');
         }
         return result.toString();
+    }
+
+    /**
+     * @return Строка - последняя запись в списке
+     */
+    public String getLastRecord() {
+        return recordsList.get(recordsList.size() - 1);
     }
 
     /**
      * @return true - если было минимум repetition-кратных повторений, false - если было меньше
      */
     public boolean checkThreefoldRepetition(int repetition) {
-        for(Integer rep : repetitionsMap.values()) {
-            if(rep >= repetition) {
+        for (Integer rep : repetitionsMap.values()) {
+            if (rep >= repetition) {
                 return true;
             }
         }

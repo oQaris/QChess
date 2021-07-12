@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-
     public static final int BOARD_SIZE = 8;
     private final Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
 
@@ -59,6 +58,25 @@ public class Board {
         }
     }
 
+    /**
+     * Устанавливает фигуру на доску
+     */
+    public void setFigure(Figure figure) throws ChessException {
+        int x = figure.getCurrentPosition().getColumn();
+        int y = figure.getCurrentPosition().getRow();
+        if (!isCorrectCell(x, y)) {
+            throw new ChessException("Координаты выходят за границу доски");
+        }
+        cells[y][x] = figure;
+    }
+
+    /**
+     * @return true, если клетка принадлежит доске
+     */
+    public boolean isCorrectCell(int col, int row) {
+        return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
+    }
+
     public Move getPrevMove() {
         //todo
         return null;
@@ -83,6 +101,22 @@ public class Board {
 
     /**
      * @param color цвет игрока
+     * @return фигуры определенного цвета
+     */
+    public List<Figure> getFigures(Color color) {
+        List<Figure> list = new ArrayList<>(16);
+        for (Figure[] figures : cells) {
+            for (Figure figure : figures) {
+                if (figure != null && figure.getColor() == color) {
+                    list.add(figure);
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * @param color цвет игрока
      * @return позиция короля определенного цвета
      * @throws ChessError если король не был найден
      */
@@ -100,22 +134,6 @@ public class Board {
             throw new ChessError("Король не найден");
         }
         return kingCell;
-    }
-
-    /**
-     * @param color цвет игрока
-     * @return фигуры определенного цвета
-     */
-    public List<Figure> getFigures(Color color) {
-        List<Figure> list = new ArrayList<>(16);
-        for (Figure[] figures : cells) {
-            for (Figure figure : figures) {
-                if (figure != null && figure.getColor() == color) {
-                    list.add(figure);
-                }
-            }
-        }
-        return list;
     }
 
     /**
@@ -149,18 +167,6 @@ public class Board {
     }
 
     /**
-     * Устанавливает фигуру на доску
-     */
-    public void setFigure(Figure figure) throws ChessException {
-        int x = figure.getCurrentPosition().getColumn();
-        int y = figure.getCurrentPosition().getRow();
-        if (!isCorrectCell(x, y)) {
-            throw new ChessException("Координаты выходят за границу доски");
-        }
-        cells[y][x] = figure;
-    }
-
-    /**
      * Убирает фигуру с доски
      *
      * @return удаленную фигуру или null, если клетка была пуста
@@ -183,13 +189,6 @@ public class Board {
         int x = cell.getColumn();
         int y = cell.getRow();
         return isCorrectCell(x, y) && cells[y][x] == null;
-    }
-
-    /**
-     * @return true, если клетка принадлежит доске
-     */
-    public boolean isCorrectCell(int col, int row) {
-        return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
     }
 
     @Override
