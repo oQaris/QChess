@@ -168,7 +168,7 @@ public class History implements Iterable<String> {
     /**
      * @return true - если было минимум repetition-кратных повторений, false - если было меньше
      */
-    public boolean checkThreefoldRepetition(int repetition) {
+    public boolean checkRepetitions(int repetition) {
         for (Integer rep : repetitionsMap.values()) {
             if (rep >= repetition) {
                 return true;

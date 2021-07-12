@@ -22,18 +22,37 @@ public class EndGameDetector {
      */
     public boolean isNotDraw(Figure removedFigure, Move move) throws ChessError {
         try {
-            // условия ничьи:
-            // пешка не ходит 50 ходов
-            // никто не рубит
-            if (removedFigure != null || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) {
-                pieceMoveCount = 0;
-            } else {
-                ++pieceMoveCount;
-            }
-            return pieceMoveCount != 50;
+            return !isDrawWithMoves(removedFigure, move)
+                    && !isDrawWithRepetitions();
         } catch (ChessException e) {
             throw new ChessError("Ошибка при проверки на ничью", e);
         }
+    }
+
+    /**
+     * Условия ничьи:
+     * 1) пешка не ходит 50 ходов
+     * 2) никто не рубит
+     *
+     * @return true, если ничья
+     */
+    private boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
+        if (removedFigure != null || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) {
+            pieceMoveCount = 0;
+        } else {
+            ++pieceMoveCount;
+        }
+        return pieceMoveCount != 50;
+    }
+
+    /**
+     * Условия ничьи:
+     * минимум 5 повторений позиций доски
+     *
+     * @return true, если ничья
+     */
+    private boolean isDrawWithRepetitions() {
+        return roomSettings.history.checkRepetitions(5);
     }
 
     /**
