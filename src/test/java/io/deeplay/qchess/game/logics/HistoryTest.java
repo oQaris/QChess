@@ -14,7 +14,6 @@ public class HistoryTest {
     @Test
     public void testGetConvertingFigurePosition() throws ChessError, ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Board board = new Board(Board.BoardFilling.STANDARD);
-        MoveSystem ms = new MoveSystem(board);
         History history = new History(board);
         Method method = history.getClass().getDeclaredMethod("getConvertingFigurePosition");
         method.setAccessible(true);
@@ -25,7 +24,6 @@ public class HistoryTest {
     @Test
     public void testGetCastlingPossibility() throws ChessError, ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Board board = new Board(Board.BoardFilling.STANDARD);
-        MoveSystem ms = new MoveSystem(board);
         History history = new History(board);
         Method method = history.getClass().getDeclaredMethod("getCastlingPossibility");
         method.setAccessible(true);
@@ -36,7 +34,6 @@ public class HistoryTest {
     @Test
     public void testGetPawnEnPassantPossibilityWithoutLongMove() throws ChessError, ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Board board = new Board(Board.BoardFilling.STANDARD);
-        MoveSystem ms = new MoveSystem(board);
         History history = new History(board);
 
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("a2"), Cell.parse("a3"));
@@ -52,7 +49,6 @@ public class HistoryTest {
     @Test
     public void testGetPawnEnPassantPossibilityWithLongMove() throws ChessError, ChessException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Board board = new Board(Board.BoardFilling.STANDARD);
-        MoveSystem ms = new MoveSystem(board);
         History history = new History(board);
 
         Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));

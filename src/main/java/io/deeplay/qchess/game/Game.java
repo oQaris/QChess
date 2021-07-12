@@ -32,7 +32,7 @@ public class Game {
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 Figure removedFigure = tryMove(move);
-                notDraw = roomSettings.endGameDetector.isNotDraw(removedFigure, move);
+                notDraw = !roomSettings.endGameDetector.isDraw(removedFigure, move);
                 currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ, что ход некорректный
