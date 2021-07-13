@@ -1,18 +1,25 @@
 package io.deeplay.qchess.game.model;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.NotationService;
-import io.deeplay.qchess.game.model.figures.*;
+import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.*;
 
 public class Board {
     public static final int BOARD_SIZE = 8;
@@ -86,6 +93,23 @@ public class Board {
     }
 
     /**
+     * @return true, если клетка cell атакуется цветом color
+     */
+    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
+        for (Figure f : settings.board.getFigures(color)) {
+            for (Move m :
+                    f.getType() == TypeFigure.KING
+                            ? ((King) f).getAttackedMoves(settings.board)
+                            : f.getAllMoves(settings)) {
+                if (m.getTo().equals(cell)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Устанавливает фигуру на доску
      */
     public void setFigure(Figure figure) throws ChessException {
@@ -102,23 +126,6 @@ public class Board {
      */
     public boolean isCorrectCell(int column, int row) {
         return column >= 0 && row >= 0 && column < BOARD_SIZE && row < BOARD_SIZE;
-    }
-
-    /**
-     * @return true, если клетка cell атакуется цветом color
-     */
-    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
-        for (Figure f : settings.board.getFigures(color)) {
-            for (Move m :
-                    f.getType() == TypeFigure.KING
-                            ? ((King) f).getAttackedMoves(settings.board)
-                            : f.getAllMoves(settings)) {
-                if (m.getTo().equals(cell)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**

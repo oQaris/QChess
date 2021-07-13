@@ -8,7 +8,6 @@ import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.player.Bot;
 import io.deeplay.qchess.game.player.ConsolePlayer;
 import io.deeplay.qchess.game.player.Player;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 

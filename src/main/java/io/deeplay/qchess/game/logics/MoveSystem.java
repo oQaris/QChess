@@ -1,19 +1,22 @@
 package io.deeplay.qchess.game.logics;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.*;
+import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.History;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 /** Хранит различные данные об игре для контроля специфичных ситуаций */
 public class MoveSystem {

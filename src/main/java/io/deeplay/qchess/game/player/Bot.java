@@ -1,5 +1,7 @@
 package io.deeplay.qchess.game.player;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.BOT_ERROR;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -9,10 +11,11 @@ import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
-import java.util.*;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.BOT_ERROR;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class Bot extends Player {
     private static final Map<TypeFigure, Integer> grades = preparedGrades();

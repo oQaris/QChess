@@ -1,5 +1,7 @@
 package io.deeplay.qchess.game;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
+
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Move;
@@ -8,8 +10,6 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
 
 public class Game {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);

@@ -1,16 +1,20 @@
 package io.deeplay.qchess.game.model;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.EXCEPTION_IN_HISTORY;
+
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.EXCEPTION_IN_HISTORY;
 
 public class History implements Iterable<String> {
     private static final Logger log = LoggerFactory.getLogger(History.class);
