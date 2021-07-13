@@ -2,14 +2,17 @@ package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.History;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class HistoryTest {
     private Board board;

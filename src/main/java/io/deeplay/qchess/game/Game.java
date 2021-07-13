@@ -1,5 +1,7 @@
 package io.deeplay.qchess.game;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
+
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Move;
@@ -9,12 +11,10 @@ import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
-
 public class Game {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
-    public final Player secondPlayer;
-    public final Player firstPlayer;
+    private final Player secondPlayer;
+    private final Player firstPlayer;
     private final GameSettings roomSettings;
     private Player currentPlayerToMove;
 
@@ -26,7 +26,7 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        logger.info(roomSettings.board.toString());
+        Game.logger.info(roomSettings.board.toString());
         boolean notDraw = true;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && notDraw) {
@@ -59,12 +59,12 @@ public class Game {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            logger.info(
+            Game.logger.info(
                     "{} сделал ход: {} фигурой: {}",
                     currentPlayerToMove,
                     move,
                     roomSettings.board.getFigure(move.getTo()));
-            logger.info(roomSettings.board.toString());
+            Game.logger.info(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException e) {
             throw new ChessError(LOG_FAILED, e);

@@ -7,13 +7,12 @@ import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class BoardTest {
     private Board board;
@@ -94,10 +93,10 @@ public class BoardTest {
 
     @Test
     public void testIsCorrectCell() {
-        Assert.assertTrue(board.isCorrectCell(0, 0));
-        Assert.assertFalse(board.isCorrectCell(0, -1));
-        Assert.assertTrue(board.isCorrectCell(7, 7));
-        Assert.assertFalse(board.isCorrectCell(100, 100));
+        Assert.assertTrue(Board.isCorrectCell(0, 0));
+        Assert.assertFalse(Board.isCorrectCell(0, -1));
+        Assert.assertTrue(Board.isCorrectCell(7, 7));
+        Assert.assertFalse(Board.isCorrectCell(100, 100));
     }
 
     @Test

@@ -1,5 +1,8 @@
 package io.deeplay.qchess.game.player;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.CONSOLE_PLAYER_ERROR;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.UNKNOWN_FIGURE_SELECTED;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Cell;
@@ -11,16 +14,12 @@ import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.CONSOLE_PLAYER_ERROR;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.UNKNOWN_FIGURE_SELECTED;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConsolePlayer extends Player {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);

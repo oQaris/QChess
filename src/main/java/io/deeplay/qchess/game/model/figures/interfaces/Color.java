@@ -5,6 +5,6 @@ public enum Color {
     WHITE;
 
     public Color inverse() {
-        return this == WHITE ? BLACK : WHITE;
+        return this == Color.WHITE ? Color.BLACK : Color.WHITE;
     }
 }

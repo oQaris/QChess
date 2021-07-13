@@ -1,19 +1,22 @@
 package io.deeplay.qchess.game.logics;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.*;
+import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.History;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 /** Хранит различные данные об игре для контроля специфичных ситуаций */
 public class MoveSystem {
@@ -82,13 +85,10 @@ public class MoveSystem {
      */
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(64);
-        for (Figure f : board.getFigures(color)) {
-            for (Move m : f.getAllMoves(roomSettings)) {
-                if (isCorrectMove(m)) {
+        for (Figure f : board.getFigures(color))
+            for (Move m : f.getAllMoves(roomSettings))
+                if (isCorrectMove(m))
                     res.add(m);
-                }
-            }
-        }
         return res;
     }
 
@@ -111,15 +111,13 @@ public class MoveSystem {
      */
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
-        if (move.getMoveType() == MoveType.TURN_INTO) {
+        if (move.getMoveType() == MoveType.TURN_INTO)
             return move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
                     && (move.getTurnInto().getType() == TypeFigure.BISHOP
-                            || move.getTurnInto().getType() == TypeFigure.KNIGHT
-                            || move.getTurnInto().getType() == TypeFigure.QUEEN
-                            || move.getTurnInto().getType() == TypeFigure.ROOK);
-        }
-
+                    || move.getTurnInto().getType() == TypeFigure.KNIGHT
+                    || move.getTurnInto().getType() == TypeFigure.QUEEN
+                    || move.getTurnInto().getType() == TypeFigure.ROOK);
         return true;
     }
 
@@ -142,9 +140,7 @@ public class MoveSystem {
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
         figureToMove.setWasMoved(hasBeenMoved);
-        if (virtualKilled != null) {
-            board.setFigure(virtualKilled);
-        }
+        if (virtualKilled != null) board.setFigure(virtualKilled);
         return !isCheck;
     }
 }

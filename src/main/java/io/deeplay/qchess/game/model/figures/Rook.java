@@ -6,7 +6,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.Set;
 
 public class Rook extends Figure {
@@ -17,7 +16,7 @@ public class Rook extends Figure {
 
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
-        return rayTrace(settings.board, plusMove);
+        return rayTrace(settings.board, Figure.plusMove);
     }
 
     @Override
