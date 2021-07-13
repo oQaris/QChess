@@ -1,5 +1,9 @@
 package io.deeplay.qchess.game.model;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -8,11 +12,8 @@ import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.*;
 
 public class Board {
     public static final int BOARD_SIZE = 8;
@@ -49,16 +50,6 @@ public class Board {
     }
 
     /**
-     * Устанавливает фигуру на доску
-     */
-    public void setFigure(Figure figure) throws ChessException {
-        int x = figure.getCurrentPosition().getColumn();
-        int y = figure.getCurrentPosition().getRow();
-        if (!Board.isCorrectCell(x, y)) throw new ChessException(INCORRECT_COORDINATES);
-        cells[y][x] = figure;
-    }
-
-    /**
      * @return true, если клетка принадлежит доске
      */
     static boolean isCorrectCell(int column, int row) {
@@ -78,6 +69,41 @@ public class Board {
         return false;
     }
 
+    private static void checkCell(int col, int row) throws ChessException {
+        if (!Board.isCorrectCell(col, row)) throw new ChessException(INCORRECT_COORDINATES);
+    }
+
+    private static char figureToIcon(Figure figure) {
+        return switch (figure.getColor()) {
+            case WHITE -> switch (figure.getType()) {
+                case BISHOP -> '♝';
+                case KING -> '♚';
+                case KNIGHT -> '♞';
+                case PAWN -> '♟';
+                case QUEEN -> '♛';
+                case ROOK -> '♜';
+            };
+            case BLACK -> switch (figure.getType()) {
+                case BISHOP -> '♗';
+                case KING -> '♔';
+                case KNIGHT -> '♘';
+                case PAWN -> '♙';
+                case QUEEN -> '♕';
+                case ROOK -> '♖';
+            };
+        };
+    }
+
+    /**
+     * Устанавливает фигуру на доску
+     */
+    public void setFigure(Figure figure) throws ChessException {
+        int x = figure.getCurrentPosition().getColumn();
+        int y = figure.getCurrentPosition().getRow();
+        if (!Board.isCorrectCell(x, y)) throw new ChessException(INCORRECT_COORDINATES);
+        cells[y][x] = figure;
+    }
+
     /**
      * @param color цвет игрока
      * @return фигуры определенного цвета
@@ -89,10 +115,6 @@ public class Board {
                 if (figure != null && figure.getColor() == color)
                     list.add(figure);
         return list;
-    }
-
-    private static void checkCell(int col, int row) throws ChessException {
-        if (!Board.isCorrectCell(col, row)) throw new ChessException(INCORRECT_COORDINATES);
     }
 
     /**
@@ -177,27 +199,6 @@ public class Board {
             sb.append(System.lineSeparator());
         }
         return sb.toString();
-    }
-
-    private static char figureToIcon(Figure figure) {
-        return switch (figure.getColor()) {
-            case WHITE -> switch (figure.getType()) {
-                case BISHOP -> '♝';
-                case KING -> '♚';
-                case KNIGHT -> '♞';
-                case PAWN -> '♟';
-                case QUEEN -> '♛';
-                case ROOK -> '♜';
-            };
-            case BLACK -> switch (figure.getType()) {
-                case BISHOP -> '♗';
-                case KING -> '♔';
-                case KNIGHT -> '♘';
-                case PAWN -> '♙';
-                case QUEEN -> '♕';
-                case ROOK -> '♖';
-            };
-        };
     }
 
     public enum BoardFilling {

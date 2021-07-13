@@ -9,7 +9,6 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +16,35 @@ public class Pawn extends Figure {
 
     public Pawn(Color color, Cell position) {
         super(color, position);
+    }
+
+    /**
+     * Проверяет, является ли атака пешки взятием на проходе. Входные данные должны гарантировать,
+     * что это именно атака пешки (диагональный ход)
+     *
+     * @return true если это взятие на проходе
+     */
+    public static boolean isPawnEnPassant(GameSettings settings, Cell from, Cell to) {
+        try {
+            Pawn currentPawn = (Pawn) settings.board.getFigure(from);
+            Move prevMove = settings.history.getPrevMove();
+            Pawn pawn = (Pawn) settings.board.getFigure(prevMove.getTo());
+
+            Cell cellDown =
+                    pawn.getColor() == Color.WHITE
+                            ? new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() + 1)
+                            : new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() - 1);
+            Cell cellDoubleDown =
+                    pawn.getColor() == Color.WHITE
+                            ? new Cell(cellDown.getColumn(), cellDown.getRow() + 1)
+                            : new Cell(cellDown.getColumn(), cellDown.getRow() - 1);
+
+            return currentPawn.getColor() != pawn.getColor()
+                    && cellDoubleDown.equals(prevMove.getFrom())
+                    && cellDown.equals(to);
+        } catch (ChessException | ClassCastException | NullPointerException e) {
+            return false;
+        }
     }
 
     @Override
@@ -76,35 +104,6 @@ public class Pawn extends Figure {
 
     private boolean isStartPosition(Cell start) {
         return start.getRow() == (color == Color.BLACK ? 1 : Board.BOARD_SIZE - 2);
-    }
-
-    /**
-     * Проверяет, является ли атака пешки взятием на проходе. Входные данные должны гарантировать,
-     * что это именно атака пешки (диагональный ход)
-     *
-     * @return true если это взятие на проходе
-     */
-    public static boolean isPawnEnPassant(GameSettings settings, Cell from, Cell to) {
-        try {
-            Pawn currentPawn = (Pawn) settings.board.getFigure(from);
-            Move prevMove = settings.history.getPrevMove();
-            Pawn pawn = (Pawn) settings.board.getFigure(prevMove.getTo());
-
-            Cell cellDown =
-                    pawn.getColor() == Color.WHITE
-                            ? new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() + 1)
-                            : new Cell(prevMove.getTo().getColumn(), prevMove.getTo().getRow() - 1);
-            Cell cellDoubleDown =
-                    pawn.getColor() == Color.WHITE
-                            ? new Cell(cellDown.getColumn(), cellDown.getRow() + 1)
-                            : new Cell(cellDown.getColumn(), cellDown.getRow() - 1);
-
-            return currentPawn.getColor() != pawn.getColor()
-                    && cellDoubleDown.equals(prevMove.getFrom())
-                    && cellDown.equals(to);
-        } catch (ChessException | ClassCastException | NullPointerException e) {
-            return false;
-        }
     }
 
     @Override

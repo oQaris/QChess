@@ -6,7 +6,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.Set;
 
 public class Rook extends Figure {

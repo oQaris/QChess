@@ -1,5 +1,7 @@
 package io.deeplay.qchess.game;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
+
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Move;
@@ -8,8 +10,6 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
 
 public class Game {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
@@ -43,10 +43,12 @@ public class Game {
             }
         }
         if (!notDraw) Game.logger.info("Игра окончена: ничья");
-        else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor())) Game.logger.info(
-                "Игра окончена: мат {}",
-                currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        else Game.logger.info(
+        else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
+            Game.logger.info(
+                    "Игра окончена: мат {}",
+                    currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+        else
+            Game.logger.info(
                     "Игра окончена: пат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
 

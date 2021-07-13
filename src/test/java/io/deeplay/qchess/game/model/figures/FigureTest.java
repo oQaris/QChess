@@ -9,19 +9,29 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class FigureTest {
     private GameSettings gameSettings;
     private Board board;
+
+    private static Set<Cell> toCellsSet(String... pos) {
+        Objects.requireNonNull(pos, "Массив строк не может быть null");
+        Set<Cell> result = new HashSet<>();
+        for (String p : pos) result.add(Cell.parse(p));
+        return result;
+    }
+
+    private static Set<Cell> extractCellTo(Set<Move> moves) {
+        return moves.stream().map(Move::getTo).collect(Collectors.toSet());
+    }
 
     @Before
     public void setUp() throws ChessError {
@@ -46,17 +56,6 @@ public class FigureTest {
         Assert.assertEquals(
                 FigureTest.toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8"),
                 FigureTest.extractCellTo(bishop2.getAllMoves(gameSettings)));
-    }
-
-    private static Set<Cell> toCellsSet(String... pos) {
-        Objects.requireNonNull(pos, "Массив строк не может быть null");
-        Set<Cell> result = new HashSet<>();
-        for (String p : pos) result.add(Cell.parse(p));
-        return result;
-    }
-
-    private static Set<Cell> extractCellTo(Set<Move> moves) {
-        return moves.stream().map(Move::getTo).collect(Collectors.toSet());
     }
 
     @Test
@@ -386,7 +385,8 @@ public class FigureTest {
         board.setFigure(pawn2);
         board.setFigure(pawn3);
         Assert.assertEquals(
-                FigureTest.toCellsSet("b3", "c2"), FigureTest.extractCellTo(knight.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("b3", "c2"),
+                FigureTest.extractCellTo(knight.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -398,7 +398,8 @@ public class FigureTest {
         board.setFigure(enemy);
 
         Assert.assertEquals(
-                FigureTest.toCellsSet("C3", "C4", "D3"), FigureTest.extractCellTo(pawn.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("C3", "C4", "D3"),
+                FigureTest.extractCellTo(pawn.getAllMoves(gameSettings)));
 
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("c3")));
 
@@ -475,7 +476,10 @@ public class FigureTest {
         board.setFigure(figureW3);
 
         Assert.assertEquals(
-                FigureTest.toCellsSet("b3", "c3"), FigureTest.extractCellTo(figureB1.getAllMoves(gameSettings)));
-        Assert.assertEquals(FigureTest.toCellsSet("b3"), FigureTest.extractCellTo(figureW3.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("b3", "c3"),
+                FigureTest.extractCellTo(figureB1.getAllMoves(gameSettings)));
+        Assert.assertEquals(
+                FigureTest.toCellsSet("b3"),
+                FigureTest.extractCellTo(figureW3.getAllMoves(gameSettings)));
     }
 }

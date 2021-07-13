@@ -16,7 +16,8 @@ public class Cell {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
                 int digit = pos.charAt(1) - '0';
-                if (digit >= 1 && digit <= Board.BOARD_SIZE) return new Cell(letter - 'a', Board.BOARD_SIZE - digit);
+                if (digit >= 1 && digit <= Board.BOARD_SIZE)
+                    return new Cell(letter - 'a', Board.BOARD_SIZE - digit);
             }
         }
         throw new IllegalArgumentException("Incorrect position!");
@@ -29,15 +30,15 @@ public class Cell {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getColumn(), getRow());
+        return Objects.hash(column, row);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Cell)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Cell cell = (Cell) o;
-        return getColumn() == cell.getColumn() && getRow() == cell.getRow();
+        return column == cell.column && row == cell.row;
     }
 
     @Override

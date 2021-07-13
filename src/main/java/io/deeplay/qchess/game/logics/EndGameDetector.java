@@ -1,5 +1,7 @@
 package io.deeplay.qchess.game.logics;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_CHECKING_FOR_DRAW;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -9,13 +11,10 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_CHECKING_FOR_DRAW;
 
 public class EndGameDetector {
     private final GameSettings roomSettings;
@@ -43,9 +42,9 @@ public class EndGameDetector {
      */
     private boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
         if (removedFigure != null
-                || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) pieceMoveCount = 0;
-        else
-            ++pieceMoveCount;
+                || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
+            pieceMoveCount = 0;
+        else ++pieceMoveCount;
         return pieceMoveCount == 50;
     }
 

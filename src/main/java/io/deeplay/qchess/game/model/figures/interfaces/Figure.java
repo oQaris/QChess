@@ -6,11 +6,19 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.*;
+import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.Rook;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 public abstract class Figure {
     private static final Logger log = LoggerFactory.getLogger(Figure.class);
@@ -72,7 +80,7 @@ public abstract class Figure {
     public abstract Set<Move> getAllMoves(GameSettings settings);
 
     protected Set<Move> rayTrace(Board board, List<Cell> directions) {
-        Figure.log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, position);
+        Figure.log.trace("Запущен рэйтрейс фигуры {} из точки {}", this, position);
         Objects.requireNonNull(directions, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : directions) {
@@ -91,7 +99,7 @@ public abstract class Figure {
         Figure enemyFigure;
         try {
             enemyFigure = board.getFigure(cell);
-        } catch (ChessException e) { // тут лог не нужен, это не ошибка
+        } catch (ChessException e) {
             return false;
         }
         return enemyFigure != null && color != enemyFigure.getColor();
@@ -103,7 +111,7 @@ public abstract class Figure {
     }
 
     protected Set<Move> stepForEach(Board board, List<Cell> moves) {
-        Figure.log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, position);
+        Figure.log.trace("Запущено нахождение ходов фигуры {} из точки {}", this, position);
         Objects.requireNonNull(moves, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : moves) {

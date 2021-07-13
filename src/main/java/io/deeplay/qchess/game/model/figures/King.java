@@ -9,7 +9,6 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,12 +23,14 @@ public class King extends Figure {
     public Set<Move> getAllMoves(GameSettings settings) {
         Set<Move> res = getAttackedMoves(settings.board);
         // рокировка
-        if (isCorrectCastling(settings, true)) res.add(
-                new Move(
-                        MoveType.SHORT_CASTLING, position, position.createAdd(new Cell(2, 0))));
-        if (isCorrectCastling(settings, false)) res.add(
-                new Move(
-                        MoveType.LONG_CASTLING, position, position.createAdd(new Cell(-2, 0))));
+        if (isCorrectCastling(settings, true))
+            res.add(
+                    new Move(
+                            MoveType.SHORT_CASTLING, position, position.createAdd(new Cell(2, 0))));
+        if (isCorrectCastling(settings, false))
+            res.add(
+                    new Move(
+                            MoveType.LONG_CASTLING, position, position.createAdd(new Cell(-2, 0))));
         return res;
     }
 
@@ -50,20 +51,20 @@ public class King extends Figure {
     private boolean isCorrectCastling(GameSettings settings, boolean shortCastling) {
         if (wasMoved
                 || !settings.board.isEmptyCell(
-                position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
+                        position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
                 || !settings.board.isEmptyCell(
-                position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
+                        position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
                 || !shortCastling
                         && !settings.board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
                 || Board.isAttackedCell(settings, position, color.inverse())
                 || Board.isAttackedCell(
                         settings,
-                position.createAdd(new Cell(shortCastling ? 1 : -1, 0)),
-                color.inverse())
+                        position.createAdd(new Cell(shortCastling ? 1 : -1, 0)),
+                        color.inverse())
                 || Board.isAttackedCell(
                         settings,
-                position.createAdd(new Cell(shortCastling ? 2 : -2, 0)),
-                color.inverse())) return false;
+                        position.createAdd(new Cell(shortCastling ? 2 : -2, 0)),
+                        color.inverse())) return false;
         try {
             Figure rook =
                     settings.board.getFigure(
