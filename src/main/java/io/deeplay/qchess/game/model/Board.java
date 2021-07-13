@@ -3,7 +3,8 @@ package io.deeplay.qchess.game.model;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.figures.*;
+import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
@@ -15,53 +16,32 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.*;
 
 public class Board {
     public static final int BOARD_SIZE = 8;
-    private final Figure[][] cells = new Figure[BOARD_SIZE][BOARD_SIZE];
+    private final Figure[][] cells = new Figure[Board.BOARD_SIZE][Board.BOARD_SIZE];
 
     public Board(BoardFilling bf) throws ChessError {
         try {
             switch (bf) {
                 case STANDARD -> {
-                    setFigure(new Rook(Color.WHITE, Cell.parse("a1")));
-                    setFigure(new Rook(Color.WHITE, Cell.parse("h1")));
-                    setFigure(new Rook(Color.BLACK, Cell.parse("a8")));
-                    setFigure(new Rook(Color.BLACK, Cell.parse("h8")));
-                    setFigure(new Knight(Color.WHITE, Cell.parse("b1")));
-                    setFigure(new Knight(Color.WHITE, Cell.parse("g1")));
-                    setFigure(new Knight(Color.BLACK, Cell.parse("b8")));
-                    setFigure(new Knight(Color.BLACK, Cell.parse("g8")));
-                    setFigure(new Bishop(Color.WHITE, Cell.parse("c1")));
-                    setFigure(new Bishop(Color.WHITE, Cell.parse("f1")));
-                    setFigure(new Bishop(Color.BLACK, Cell.parse("c8")));
-                    setFigure(new Bishop(Color.BLACK, Cell.parse("f8")));
+                    TypeFigure[] orderFirstLine = new TypeFigure[]{TypeFigure.ROOK, TypeFigure.KNIGHT, TypeFigure.BISHOP,
+                            TypeFigure.QUEEN, TypeFigure.KING, TypeFigure.BISHOP,TypeFigure.KNIGHT,TypeFigure.ROOK};
 
-                    setFigure(new Queen(Color.WHITE, Cell.parse("d1")));
-                    setFigure(new Queen(Color.BLACK, Cell.parse("d8")));
-                    setFigure(new King(Color.WHITE, Cell.parse("e1")));
-                    setFigure(new King(Color.BLACK, Cell.parse("e8")));
+                    Cell startBlack = new Cell(0, 0);
+                    Cell startWhite = new Cell( 0, Board.BOARD_SIZE-1);
+                    Cell shift = new Cell(1, 0);
 
-                    setFigure(new Pawn(Color.WHITE, Cell.parse("a2")));
-                    setFigure(new Pawn(Color.WHITE, Cell.parse("b2")));
-                    setFigure(new Pawn(Color.WHITE, Cell.parse("c2")));
-                    setFigure(new Pawn(Color.WHITE, Cell.parse("d2")));
-                    setFigure(new Pawn(Color.WHITE, Cell.parse("e2")));
-                    setFigure(new Pawn(Color.WHITE, Cell.parse("f2")));
-                    setFigure(new Pawn(Color.WHITE, Cell.parse("g2")));
-                    setFigure(new Pawn(Color.WHITE, Cell.parse("h2")));
-
-                    setFigure(new Pawn(Color.BLACK, Cell.parse("a7")));
-                    setFigure(new Pawn(Color.BLACK, Cell.parse("b7")));
-                    setFigure(new Pawn(Color.BLACK, Cell.parse("c7")));
-                    setFigure(new Pawn(Color.BLACK, Cell.parse("d7")));
-                    setFigure(new Pawn(Color.BLACK, Cell.parse("e7")));
-                    setFigure(new Pawn(Color.BLACK, Cell.parse("f7")));
-                    setFigure(new Pawn(Color.BLACK, Cell.parse("g7")));
-                    setFigure(new Pawn(Color.BLACK, Cell.parse("h7")));
+                    for (TypeFigure typeFigure : orderFirstLine) {
+                        setFigure(Figure.build(typeFigure, Color.BLACK, startBlack));
+                        setFigure(new Pawn(Color.BLACK, startBlack.createAdd(new Cell(0, 1))));
+                        setFigure(Figure.build(typeFigure, Color.WHITE, startWhite));
+                        setFigure(new Pawn(Color.WHITE, startWhite.createAdd(new Cell(0, -1))));
+                        startBlack = startBlack.createAdd(shift);
+                        startWhite = startWhite.createAdd(shift);
+                    }
                 }
                 case CHESS960 -> {
                     //todo Сделать рандомное заполнение Фишера
                 }
-                case EMPTY -> {
-                }
+                case EMPTY -> { }
             }
         } catch (ChessException e) {
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
@@ -74,33 +54,27 @@ public class Board {
     public void setFigure(Figure figure) throws ChessException {
         int x = figure.getCurrentPosition().getColumn();
         int y = figure.getCurrentPosition().getRow();
-        if (!isCorrectCell(x, y)) {
-            throw new ChessException(INCORRECT_COORDINATES);
-        }
+        if (!Board.isCorrectCell(x, y)) throw new ChessException(INCORRECT_COORDINATES);
         cells[y][x] = figure;
     }
 
     /**
      * @return true, если клетка принадлежит доске
      */
-    public boolean isCorrectCell(int column, int row) {
-        return column >= 0 && row >= 0 && column < BOARD_SIZE && row < BOARD_SIZE;
+    static boolean isCorrectCell(int column, int row) {
+        return column >= 0 && row >= 0 && column < Board.BOARD_SIZE && row < Board.BOARD_SIZE;
     }
 
     /**
      * @return true, если клетка cell атакуется цветом color
      */
     public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
-        for (Figure f : settings.board.getFigures(color)) {
+        for (Figure f : settings.board.getFigures(color))
             for (Move m :
                     f.getType() == TypeFigure.KING
                             ? ((King) f).getAttackedMoves(settings.board)
-                            : f.getAllMoves(settings)) {
-                if (m.getTo().equals(cell)) {
-                    return true;
-                }
-            }
-        }
+                            : f.getAllMoves(settings))
+                if (m.getTo().equals(cell)) return true;
         return false;
     }
 
@@ -110,14 +84,13 @@ public class Board {
      */
     public List<Figure> getFigures(Color color) {
         List<Figure> list = new ArrayList<>(16);
-        for (Figure[] figures : cells) {
-            for (Figure figure : figures) {
-                if (figure != null && figure.getColor() == color) {
-                    list.add(figure);
-                }
-            }
-        }
+        for (Figure[] figures : cells)
+            for (Figure figure : figures) if (figure != null && figure.getColor() == color) list.add(figure);
         return list;
+    }
+
+    private static void checkCell(int col, int row) throws ChessException {
+        if (!Board.isCorrectCell(col, row)) throw new ChessException(INCORRECT_COORDINATES);
     }
 
     /**
@@ -127,17 +100,13 @@ public class Board {
      */
     public Cell findKingCell(Color color) throws ChessError {
         Cell kingCell = null;
-        for (Figure[] figures : cells) {
-            for (Figure f : figures) {
+        for (Figure[] figures : cells)
+            for (Figure f : figures)
                 if (f != null && f.getColor() == color && f.getType() == TypeFigure.KING) {
                     kingCell = f.getCurrentPosition();
                     break;
                 }
-            }
-        }
-        if (kingCell == null) {
-            throw new ChessError(KING_NOT_FOUND);
-        }
+        if (kingCell == null) throw new ChessError(KING_NOT_FOUND);
         return kingCell;
     }
 
@@ -165,7 +134,7 @@ public class Board {
     public Figure getFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        checkCell(x, y);
+        Board.checkCell(x, y);
         return cells[y][x];
     }
 
@@ -177,15 +146,10 @@ public class Board {
     public Figure removeFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        checkCell(x, y);
+        Board.checkCell(x, y);
         Figure old = cells[y][x];
         cells[y][x] = null;
         return old;
-    }
-
-    private void checkCell(int col, int row) throws ChessException {
-        if (!isCorrectCell(col, row))
-            throw new ChessException(INCORRECT_COORDINATES);
     }
 
     /**
@@ -194,7 +158,7 @@ public class Board {
     public boolean isEmptyCell(Cell cell) {
         int x = cell.getColumn();
         int y = cell.getRow();
-        return isCorrectCell(x, y) && cells[y][x] == null;
+        return Board.isCorrectCell(x, y) && cells[y][x] == null;
     }
 
     @Override
@@ -205,7 +169,7 @@ public class Board {
             sb.append('|');
             for (Figure figure : line) {
                 if (figure == null) sb.append("_");
-                else sb.append(figureToIcon(figure));
+                else sb.append(Board.figureToIcon(figure));
                 sb.append('|');
             }
             sb.append(System.lineSeparator());
@@ -213,7 +177,7 @@ public class Board {
         return sb.toString();
     }
 
-    private char figureToIcon(Figure figure) {
+    private static char figureToIcon(Figure figure) {
         return switch (figure.getColor()) {
             case WHITE -> switch (figure.getType()) {
                 case BISHOP -> '♝';

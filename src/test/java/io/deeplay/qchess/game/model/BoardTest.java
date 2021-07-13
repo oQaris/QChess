@@ -94,10 +94,10 @@ public class BoardTest {
 
     @Test
     public void testIsCorrectCell() {
-        Assert.assertTrue(board.isCorrectCell(0, 0));
-        Assert.assertFalse(board.isCorrectCell(0, -1));
-        Assert.assertTrue(board.isCorrectCell(7, 7));
-        Assert.assertFalse(board.isCorrectCell(100, 100));
+        Assert.assertTrue(Board.isCorrectCell(0, 0));
+        Assert.assertFalse(Board.isCorrectCell(0, -1));
+        Assert.assertTrue(Board.isCorrectCell(7, 7));
+        Assert.assertFalse(Board.isCorrectCell(100, 100));
     }
 
     @Test

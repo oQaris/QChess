@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,17 @@ public abstract class Figure {
     protected Figure(Color color, Cell position) {
         this.color = color;
         this.position = position;
+    }
+
+    public static Figure build(TypeFigure type, Color color, Cell position){
+        return switch (type){
+            case BISHOP -> new Bishop(color, position);
+            case KING -> new King(color, position);
+            case KNIGHT -> new Knight(color, position);
+            case PAWN -> new Pawn(color, position);
+            case QUEEN -> new Queen(color, position);
+            case ROOK -> new Rook(color, position);
+        };
     }
 
     public Cell getCurrentPosition() {
