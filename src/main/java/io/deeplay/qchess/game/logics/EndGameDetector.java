@@ -18,6 +18,12 @@ import java.util.List;
 
 public class EndGameDetector {
     private final GameSettings roomSettings;
+    private final List<List<TypeFigure>> material =
+            Arrays.asList(
+                    Collections.singletonList(TypeFigure.KING),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
     private int pieceMoveCount = 0;
 
     public EndGameDetector(GameSettings roomSettings) {
@@ -58,26 +64,12 @@ public class EndGameDetector {
     }
 
     public boolean isNotEnoughMaterialForCheckmate() {
-        List<List<TypeFigure>> material =
-                Arrays.asList(
-                        Collections.singletonList(TypeFigure.KING),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
-
-        return material.stream()
-                .anyMatch(
-                        m ->
-                                (isAllFiguresSame(Color.BLACK, m)
-                                                && isAllFiguresSame(
-                                                        Color.WHITE,
-                                                        Collections.singletonList(TypeFigure.KING)))
-                                        || (isAllFiguresSame(Color.WHITE, m)
-                                                        && isAllFiguresSame(
-                                                                Color.BLACK,
-                                                                Collections.singletonList(
-                                                                        TypeFigure.KING)))
-                                                && isKingsWithSameBishop());
+        if (isKingsWithSameBishop()) return true;
+        for (List<TypeFigure> typeFigures : material) {
+            if (isAllFiguresSame(Color.BLACK, typeFigures) && isOneKing(Color.WHITE)) return true;
+            if (isAllFiguresSame(Color.WHITE, typeFigures) && isOneKing(Color.BLACK)) return true;
+        }
+        return false;
     }
 
     private boolean isAllFiguresSame(Color color, List<TypeFigure> typeFigures) {
@@ -85,6 +77,10 @@ public class EndGameDetector {
         for (Figure figure : roomSettings.board.getFigures(color))
             if (!typeFiguresCopy.remove(figure.getType())) return false;
         return true;
+    }
+
+    private boolean isOneKing(Color color) {
+        return isAllFiguresSame(color, Collections.singletonList(TypeFigure.KING));
     }
 
     private boolean isKingsWithSameBishop() {
