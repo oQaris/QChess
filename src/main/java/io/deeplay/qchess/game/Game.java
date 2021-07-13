@@ -26,23 +26,23 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        logger.debug(roomSettings.board.toString());
-        boolean notDraw = true;
+        logger.info(roomSettings.board.toString());
+        boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
-                && notDraw) {
+                && !isDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 Figure removedFigure = tryMove(move);
-                notDraw = roomSettings.endGameDetector.isNotDraw(removedFigure, move);
+                isDraw = roomSettings.endGameDetector.isDraw(removedFigure, move);
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ, что ход некорректный
             }
         }
-        if (!notDraw) Game.logger.info("Игра окончена: ничья");
+        if (isDraw) Game.logger.info("Игра окончена: ничья");
         else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
             logger.info(
                     "Игра окончена: мат {}",
