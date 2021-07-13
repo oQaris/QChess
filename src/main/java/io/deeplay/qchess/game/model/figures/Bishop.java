@@ -11,17 +11,17 @@ import java.util.Set;
 
 public class Bishop extends Figure {
 
-  public Bishop(Color color, Cell position) {
-    super(color, position);
-  }
+    public Bishop(Color color, Cell position) {
+        super(color, position);
+    }
 
-  @Override
-  public Set<Move> getAllMoves(GameSettings settings) {
-    return rayTrace(settings.board, xMove);
-  }
+    @Override
+    public Set<Move> getAllMoves(GameSettings settings) {
+        return rayTrace(settings.board, Figure.xMove);
+    }
 
-  @Override
-  public TypeFigure getType() {
-    return TypeFigure.BISHOP;
-  }
+    @Override
+    public TypeFigure getType() {
+        return TypeFigure.BISHOP;
+    }
 }

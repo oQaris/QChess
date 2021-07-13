@@ -13,14 +13,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Main {
-  public static void main(String[] args) throws ChessError {
-    // TODO: при создании комнаты
-    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws ChessError {
+        // TODO: при создании комнаты
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-    GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-    Player firstPlayer = new ConsolePlayer(roomSettings, Color.WHITE, in);
-    Player secondPlayer = new Bot(roomSettings, Color.BLACK);
-    Game game = new Game(roomSettings, firstPlayer, secondPlayer);
-    game.run();
-  }
+        GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+        Player firstPlayer = new ConsolePlayer(roomSettings, Color.WHITE, in);
+        Player secondPlayer = new Bot(roomSettings, Color.BLACK);
+        Game game = new Game(roomSettings, firstPlayer, secondPlayer);
+        game.run();
+    }
 }

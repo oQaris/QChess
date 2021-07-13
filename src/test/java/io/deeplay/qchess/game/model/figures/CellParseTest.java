@@ -11,20 +11,20 @@ import java.util.Arrays;
 @RunWith(Parameterized.class)
 public class CellParseTest {
 
-  private final String cellStr;
+    private final String cellStr;
 
-  public CellParseTest(String cellStr) {
-    this.cellStr = cellStr;
-  }
+    public CellParseTest(String cellStr) {
+        this.cellStr = cellStr;
+    }
 
-  @Parameterized.Parameters(name = "{index}: {0}")
-  public static Iterable<Object[]> dataForTest() {
-    return Arrays.asList(new Object[][] {{"a0"}, {"j1"}, {"а1"}, {"а11"}, {""}});
-  }
+    @Parameterized.Parameters(name = "{index}: {0}")
+    public static Iterable<Object[]> dataForTest() {
+        return Arrays.asList(new Object[][] {{"a0"}, {"j1"}, {"а1"}, {"а11"}, {""}});
+    }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void paramTest() {
-    Cell.parse(cellStr);
-    Assert.fail();
-  }
+    @Test(expected = IllegalArgumentException.class)
+    public void paramTest() {
+        Cell.parse(cellStr);
+        Assert.fail();
+    }
 }

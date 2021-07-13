@@ -11,17 +11,17 @@ import java.util.Set;
 
 public class Knight extends Figure {
 
-  public Knight(Color color, Cell position) {
-    super(color, position);
-  }
+    public Knight(Color color, Cell position) {
+        super(color, position);
+    }
 
-  @Override
-  public Set<Move> getAllMoves(GameSettings settings) {
-    return stepForEach(settings.board, knightMove);
-  }
+    @Override
+    public Set<Move> getAllMoves(GameSettings settings) {
+        return stepForEach(settings.board, Figure.knightMove);
+    }
 
-  @Override
-  public TypeFigure getType() {
-    return TypeFigure.KNIGHT;
-  }
+    @Override
+    public TypeFigure getType() {
+        return TypeFigure.KNIGHT;
+    }
 }

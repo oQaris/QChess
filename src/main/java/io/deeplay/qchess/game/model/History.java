@@ -13,174 +13,156 @@ import java.util.*;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.EXCEPTION_IN_HISTORY;
 
 public class History implements Iterable<String> {
-  private static final Logger log = LoggerFactory.getLogger(History.class);
-  private final Map<TypeFigure, Character> notation = new EnumMap<>(TypeFigure.class);
-  private final Map<String, Integer> repetitionsMap;
-  private final List<String> recordsList;
-  private final Board board;
-  private boolean whiteStep = true;
-  private Move prevMove;
+    private static final Logger log = LoggerFactory.getLogger(History.class);
+    private final Map<TypeFigure, Character> notation = new EnumMap<>(TypeFigure.class);
+    private final Map<String, Integer> repetitionsMap;
+    private final List<String> recordsList;
+    private final Board board;
+    private boolean whiteStep = true;
+    private Move prevMove;
 
-  public History(Board board) throws ChessError {
-    this.board = board;
-    recordsList = new ArrayList<>(500);
-    repetitionsMap = new HashMap<>(500);
-    log.debug("История инициализирована");
+    public History(Board board) throws ChessError {
+        this.board = board;
+        recordsList = new ArrayList<>(500);
+        repetitionsMap = new HashMap<>(500);
+        History.log.debug("История инициализирована");
 
-    notation.put(TypeFigure.KING, 'K');
-    notation.put(TypeFigure.QUEEN, 'Q');
-    notation.put(TypeFigure.ROOK, 'R');
-    notation.put(TypeFigure.BISHOP, 'B');
-    notation.put(TypeFigure.KNIGHT, 'N');
-    notation.put(TypeFigure.PAWN, 'P');
+        notation.put(TypeFigure.KING, 'K');
+        notation.put(TypeFigure.QUEEN, 'Q');
+        notation.put(TypeFigure.ROOK, 'R');
+        notation.put(TypeFigure.BISHOP, 'B');
+        notation.put(TypeFigure.KNIGHT, 'N');
+        notation.put(TypeFigure.PAWN, 'P');
 
-    try {
-      addRecord(null);
-    } catch (ChessException e) {
-      log.error("Возникло исключение в истории {}", e.getMessage());
-      throw new ChessError(EXCEPTION_IN_HISTORY, e);
-    }
-  }
-
-  /**
-   * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные приписки
-   *
-   * @param prevMove предыдущий ход или null, если его не было
-   * @return Строка - только что добавленная запись
-   */
-  public String addRecord(Move prevMove) throws ChessException {
-    this.prevMove = prevMove;
-
-    String record = convertBoardToStringForsytheEdwards();
-    recordsList.add(record);
-
-    repetitionsMap.put(record, repetitionsMap.getOrDefault(record, 0) + 1);
-
-    log.debug("Запись {} добавлена в историю", record);
-    whiteStep = !whiteStep;
-    return record;
-  }
-
-  /** @return Строка - запись в виде нотации Форсайта-Эдвардса */
-  private String convertBoardToStringForsytheEdwards() throws ChessException {
-    StringBuilder record = new StringBuilder(70);
-
-    record.append(getConvertingFigurePosition());
-
-    record.append(' ').append(whiteStep ? 'w' : 'b');
-
-    String castlingPossibility = getCastlingPossibility();
-    if (!"".equals(castlingPossibility)) {
-      record.append(' ').append(castlingPossibility);
-    }
-
-    record.append(getPawnEnPassantPossibility());
-
-    return record.toString();
-  }
-
-  /** @return Строка - часть записи отвечающая за позиционирование фигур на доске */
-  private String getConvertingFigurePosition() throws ChessException {
-    StringBuilder result = new StringBuilder();
-    Figure currentFigure = null;
-
-    for (int y = 0; y < Board.BOARD_SIZE; y++) {
-      int emptySlots = 0;
-      for (int x = 0; x < Board.BOARD_SIZE; x++) {
-
-        currentFigure = board.getFigure(new Cell(x, y));
-
-        if (currentFigure == null) {
-          emptySlots++;
-        } else {
-          if (emptySlots != 0) {
-            result.append(emptySlots);
-          }
-          Character notationFigureChar = notation.get(currentFigure.getType());
-          result.append(
-              currentFigure.getColor() == Color.WHITE
-                  ? notationFigureChar
-                  : Character.toLowerCase(notationFigureChar));
-          emptySlots = 0;
+        try {
+            addRecord(null);
+        } catch (ChessException e) {
+            History.log.error("Возникло исключение в истории {}", e.getMessage());
+            throw new ChessError(EXCEPTION_IN_HISTORY, e);
         }
-      }
-
-      if (emptySlots != 0) {
-        result.append(emptySlots);
-      }
-      result.append('/');
     }
 
-    result.deleteCharAt(result.length() - 1);
+    /**
+     * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные
+     * приписки
+     *
+     * @param prevMove предыдущий ход или null, если его не было
+     * @return Строка - только что добавленная запись
+     */
+    public String addRecord(Move prevMove) throws ChessException {
+        this.prevMove = prevMove;
 
-    return result.toString();
-  }
+        String record = convertBoardToStringForsytheEdwards();
+        recordsList.add(record);
 
-  /** @return Строка - часть записи отвечающая, то можно ли использовать рокировки */
-  private String getCastlingPossibility() throws ChessException {
-    StringBuilder result = new StringBuilder(4);
-    Figure shortRook;
-    Figure longRook;
-    Figure whiteKing = board.getFigure(Cell.parse("e1"));
-    if (whiteKing != null && !whiteKing.wasMoved()) {
-      shortRook = board.getFigure(Cell.parse("h1"));
-      longRook = board.getFigure(Cell.parse("a1"));
-      if (shortRook != null && !shortRook.wasMoved()) {
-        result.append('K');
-      }
-      if (longRook != null && !longRook.wasMoved()) {
-        result.append('Q');
-      }
+        repetitionsMap.put(record, repetitionsMap.getOrDefault(record, 0) + 1);
+
+        History.log.debug("Запись {} добавлена в историю", record);
+        whiteStep = !whiteStep;
+        return record;
     }
 
-    Figure blackKing = board.getFigure(Cell.parse("e8"));
-    if (blackKing != null && !blackKing.wasMoved()) {
-      shortRook = board.getFigure(Cell.parse("h8"));
-      longRook = board.getFigure(Cell.parse("a8"));
-      if (shortRook != null && !shortRook.wasMoved()) {
-        result.append('k');
-      }
-      if (longRook != null && !longRook.wasMoved()) {
-        result.append('q');
-      }
+    /** @return Строка - запись в виде нотации Форсайта-Эдвардса */
+    private String convertBoardToStringForsytheEdwards() throws ChessException {
+        StringBuilder record = new StringBuilder(70);
+
+        record.append(getConvertingFigurePosition());
+
+        record.append(' ').append(whiteStep ? 'w' : 'b');
+
+        String castlingPossibility = getCastlingPossibility();
+        if (!"".equals(castlingPossibility)) record.append(' ').append(castlingPossibility);
+
+        record.append(getPawnEnPassantPossibility());
+
+        return record.toString();
     }
-    return result.toString();
-  }
 
-  /**
-   * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на
-   *     проходе следующим ходом
-   */
-  private String getPawnEnPassantPossibility() throws ChessException {
-    StringBuilder result = new StringBuilder();
-    if (prevMove != null && prevMove.getMoveType() == MoveType.LONG_MOVE) {
-      result.append(' ').append(prevMove.getTo().toString().charAt(0));
-      result.append(board.getFigure(prevMove.getTo()).getColor() == Color.WHITE ? '3' : '6');
+    /** @return Строка - часть записи отвечающая за позиционирование фигур на доске */
+    private String getConvertingFigurePosition() throws ChessException {
+        StringBuilder result = new StringBuilder();
+        Figure currentFigure = null;
+
+        for (int y = 0; y < Board.BOARD_SIZE; y++) {
+            int emptySlots = 0;
+            for (int x = 0; x < Board.BOARD_SIZE; x++) {
+
+                currentFigure = board.getFigure(new Cell(x, y));
+
+                if (currentFigure == null) emptySlots++;
+                else {
+                    if (emptySlots != 0) result.append(emptySlots);
+                    Character notationFigureChar = notation.get(currentFigure.getType());
+                    result.append(
+                            currentFigure.getColor() == Color.WHITE
+                                    ? notationFigureChar
+                                    : Character.toLowerCase(notationFigureChar));
+                    emptySlots = 0;
+                }
+            }
+
+            if (emptySlots != 0) result.append(emptySlots);
+            result.append('/');
+        }
+
+        result.deleteCharAt(result.length() - 1);
+
+        return result.toString();
     }
-    return result.toString();
-  }
 
-  /** @return Строка - последняя запись в списке */
-  public String getLastRecord() {
-    return recordsList.get(recordsList.size() - 1);
-  }
+    /** @return Строка - часть записи отвечающая, то можно ли использовать рокировки */
+    private String getCastlingPossibility() throws ChessException {
+        StringBuilder result = new StringBuilder(4);
+        Figure shortRook;
+        Figure longRook;
+        Figure whiteKing = board.getFigure(Cell.parse("e1"));
+        if (whiteKing != null && !whiteKing.wasMoved()) {
+            shortRook = board.getFigure(Cell.parse("h1"));
+            longRook = board.getFigure(Cell.parse("a1"));
+            if (shortRook != null && !shortRook.wasMoved()) result.append('K');
+            if (longRook != null && !longRook.wasMoved()) result.append('Q');
+        }
 
-  /** @return true - если было минимум repetition-кратных повторений, false - если было меньше */
-  public boolean checkRepetitions(int repetition) {
-    for (Integer rep : repetitionsMap.values()) {
-      if (rep >= repetition) {
-        return true;
-      }
+        Figure blackKing = board.getFigure(Cell.parse("e8"));
+        if (blackKing != null && !blackKing.wasMoved()) {
+            shortRook = board.getFigure(Cell.parse("h8"));
+            longRook = board.getFigure(Cell.parse("a8"));
+            if (shortRook != null && !shortRook.wasMoved()) result.append('k');
+            if (longRook != null && !longRook.wasMoved()) result.append('q');
+        }
+        return result.toString();
     }
-    return false;
-  }
 
-  public Move getPrevMove() {
-    return prevMove;
-  }
+    /**
+     * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на
+     *     проходе следующим ходом
+     */
+    private String getPawnEnPassantPossibility() throws ChessException {
+        StringBuilder result = new StringBuilder();
+        if (prevMove != null && prevMove.getMoveType() == MoveType.LONG_MOVE) {
+            result.append(' ').append(prevMove.getTo().toString().charAt(0));
+            result.append(board.getFigure(prevMove.getTo()).getColor() == Color.WHITE ? '3' : '6');
+        }
+        return result.toString();
+    }
 
-  @Override
-  public Iterator<String> iterator() {
-    return recordsList.iterator();
-  }
+    /** @return Строка - последняя запись в списке */
+    public String getLastRecord() {
+        return recordsList.get(recordsList.size() - 1);
+    }
+
+    /** @return true - если было минимум repetition-кратных повторений, false - если было меньше */
+    public boolean checkRepetitions(int repetition) {
+        for (Integer rep : repetitionsMap.values()) if (rep >= repetition) return true;
+        return false;
+    }
+
+    public Move getPrevMove() {
+        return prevMove;
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return recordsList.iterator();
+    }
 }
