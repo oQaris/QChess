@@ -84,35 +84,6 @@ public class Board {
     }
 
     /**
-     * @return true, если клетка cell атакуется цветом color
-     */
-    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
-        for (Figure f : settings.board.getFigures(color)) {
-            for (Move m :
-                    f.getType() == TypeFigure.KING
-                            ? ((King) f).getAttackedMoves(settings.board)
-                            : f.getAllMoves(settings)) {
-                if (m.getTo().equals(cell)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Устанавливает фигуру на доску
-     */
-    public void setFigure(Figure figure) throws ChessException {
-        int x = figure.getCurrentPosition().getColumn();
-        int y = figure.getCurrentPosition().getRow();
-        if (!isCorrectCell(x, y)) {
-            throw new ChessException(INCORRECT_COORDINATES);
-        }
-        cells[y][x] = figure;
-    }
-
-    /**
      * @return true, если клетка принадлежит доске
      */
     static boolean isCorrectCell(int column, int row) {
