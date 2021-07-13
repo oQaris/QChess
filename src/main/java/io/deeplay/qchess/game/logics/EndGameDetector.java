@@ -35,7 +35,7 @@ public class EndGameDetector {
         try {
             return isDrawWithMoves(removedFigure, move)
                     || isDrawWithRepetitions()
-                    || isNotEnoughMaterialForCheckmate();
+                    || isDrawWithNotEnoughMaterialForCheckmate();
         } catch (ChessException e) {
             throw new ChessError(ERROR_WHILE_CHECKING_FOR_DRAW, e);
         }
@@ -63,7 +63,7 @@ public class EndGameDetector {
         return roomSettings.history.checkRepetitions(5);
     }
 
-    public boolean isNotEnoughMaterialForCheckmate() {
+    public boolean isDrawWithNotEnoughMaterialForCheckmate() {
         if (isKingsWithSameBishop()) return true;
         for (List<TypeFigure> typeFigures : material) {
             if (isAllFiguresSame(Color.BLACK, typeFigures) && isOneKing(Color.WHITE)) return true;

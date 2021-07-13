@@ -116,20 +116,19 @@ public class EndGameDetectorTest {
         board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
         board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
 
-        Move endMove = new Move(MoveType.QUIET_MOVE, Cell.parse("e5"), Cell.parse("e6"));
-        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertTrue(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
 
         board.setFigure(new Knight(Color.WHITE, Cell.parse("e7")));
-        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertTrue(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
 
         board.setFigure(new Knight(Color.WHITE, Cell.parse("e8")));
-        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertTrue(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
 
         board.setFigure(new Knight(Color.WHITE, Cell.parse("a1")));
-        Assert.assertTrue(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
 
         board.setFigure(new Knight(Color.BLACK, Cell.parse("a1")));
-        Assert.assertTrue(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
     }
 
     @Test
@@ -138,11 +137,10 @@ public class EndGameDetectorTest {
         board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
         board.setFigure(new Bishop(Color.WHITE, Cell.parse("a8")));
 
-        Move endMove = new Move(MoveType.QUIET_MOVE, Cell.parse("e5"), Cell.parse("e6"));
-        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertTrue(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
 
         board.setFigure(new Bishop(Color.BLACK, Cell.parse("b6")));
-        Assert.assertTrue(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
     }
 
     @Test
@@ -152,11 +150,10 @@ public class EndGameDetectorTest {
         board.setFigure(new Bishop(Color.WHITE, Cell.parse("a8")));
         board.setFigure(new Bishop(Color.BLACK, Cell.parse("b5")));
 
-        Move endMove = new Move(MoveType.QUIET_MOVE, Cell.parse("e5"), Cell.parse("e6"));
-        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertTrue(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
 
         board.setFigure(new Bishop(Color.BLACK, Cell.parse("b6")));
-        Assert.assertTrue(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
     }
 
     @Test
@@ -166,8 +163,7 @@ public class EndGameDetectorTest {
         board.setFigure(new Bishop(Color.WHITE, Cell.parse("a8")));
         board.setFigure(new Bishop(Color.BLACK, Cell.parse("b6")));
 
-        Move endMove = new Move(MoveType.QUIET_MOVE, Cell.parse("e5"), Cell.parse("e6"));
-        Assert.assertTrue(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
     }
 
     @Test
@@ -176,15 +172,16 @@ public class EndGameDetectorTest {
         board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("a3")));
 
-        Move endMove = new Move(MoveType.QUIET_MOVE, Cell.parse("e5"), Cell.parse("e6"));
-        Assert.assertTrue(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
 
         board.setFigure(new Queen(Color.WHITE, Cell.parse("a3")));
-        Assert.assertTrue(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
 
         board.setFigure(new Rook(Color.WHITE, Cell.parse("a3")));
-        Assert.assertTrue(endGameDetector.isNotDraw(null, endMove));
+        Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
     }
+
+    // ---------- testIsDrawWithMoves ---------- //
 
     @Test
     public void testIsDrawWithMoves_1()

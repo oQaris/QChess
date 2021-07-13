@@ -26,7 +26,7 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        logger.info(roomSettings.board.toString());
+        logger.debug(roomSettings.board.toString());
         boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && !isDraw) {
