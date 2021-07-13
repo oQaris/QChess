@@ -1,5 +1,7 @@
 package io.deeplay.qchess.game.logics;
 
+import io.deeplay.qchess.game.exceptions.ChessErrorCode;
+import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.King;
@@ -18,6 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class NotationService {
+    /**
+     * @return true если строка с расстаовкой является корректной, false - некорректной
+     */
     public static boolean checkValidityPlacement(String placement) {
         String[] placementRows = placement.split("/");
         for (String placementRow : placementRows) {
@@ -30,23 +35,23 @@ public class NotationService {
                 && checkFigureTypes(getAllFigureSymbols(placement, Color.WHITE));
     }
 
-    public static Figure getFigureByChar(Character symbol, int x, int y) {
-        Figure figure;
+    /**
+     * @return возвращает конкретную фигуру по входному символу, в позиции x,y
+     */
+    public static Figure getFigureByChar(Character symbol, int x, int y) throws ChessException {
         char lowerSymbol = Character.toLowerCase(symbol);
         Color figureColor = Character.isLowerCase(symbol) ? Color.BLACK : Color.WHITE;
         Cell figureCell = new Cell(x, y);
 
-        figure = switch (lowerSymbol) {
+        return switch (lowerSymbol) {
             case 'k' -> new King(figureColor, figureCell);
             case 'q' -> new Queen(figureColor, figureCell);
             case 'r' -> new Rook(figureColor, figureCell);
             case 'b' -> new Bishop(figureColor, figureCell);
             case 'n' -> new Knight(figureColor, figureCell);
             case 'p' -> new Pawn(figureColor, figureCell);
-            default -> null;
+            default -> throw new ChessException(ChessErrorCode.PARSE_FIGURE_FROM_CHAR_FAILED);
         };
-
-        return figure;
     }
 
     private static boolean checkInappropriateCharacters(String placementRow) {

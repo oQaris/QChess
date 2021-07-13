@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.logics;
 
+import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
@@ -9,20 +10,21 @@ import org.junit.Test;
 
 public class NotationServiceTest {
     @Test
-    public void testGetFigureByChar1() {
+    public void testGetFigureByChar1() throws ChessException {
         Figure blackKing = new King(Color.BLACK, new Cell(4, 7));
         Assert.assertEquals(NotationService.getFigureByChar('k', 4, 7), blackKing);
     }
 
     @Test
-    public void testGetFigureByChar2() {
+    public void testGetFigureByChar2() throws ChessException {
         Figure blackKing = new King(Color.WHITE, Cell.parse("e1"));
         Assert.assertEquals(NotationService.getFigureByChar('K', 4, 7), blackKing);
     }
 
-    @Test
-    public void testGetFigureByChar3() {
-        Assert.assertNull(NotationService.getFigureByChar('A', 4, 7));
+    @Test(expected = ChessException.class)
+    public void testGetFigureByChar3() throws ChessException {
+        NotationService.getFigureByChar('A', 4, 7);
+        Assert.fail();
     }
 
     @Test
