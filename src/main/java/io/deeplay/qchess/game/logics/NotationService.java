@@ -20,6 +20,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class NotationService {
+    private static final Character[] arr = {
+        '1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r',
+        'b', 'n', 'p'
+    };
+
+    private static final int PAWN_COUNT = 8;
+    private static final int KQ_COUNT = 1;
+    private static final int RNB_COUNT = 2;
+
     /**
      * @return true если строка с расстаовкой является корректной, false - некорректной
      */
@@ -55,10 +64,6 @@ public class NotationService {
     }
 
     private static boolean checkInappropriateCharacters(String placementRow) {
-        Character[] arr = {
-            '1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r',
-            'b', 'n', 'p'
-        };
         Set<Character> set = new HashSet<>(Arrays.asList(arr));
         for (Character c : placementRow.toCharArray()) {
             if (!set.contains(c)) {
@@ -88,9 +93,7 @@ public class NotationService {
         List<Character> result = new ArrayList<>(16);
         for (Character c : placement.toCharArray()) {
             if (!Character.isDigit(c) && !c.equals('/')) {
-                if (Character.isLowerCase(c) && (color == Color.BLACK)) {
-                    result.add(c);
-                } else if (Character.isUpperCase(c) && (color == Color.WHITE)) {
+                if ((Character.isLowerCase(c) && (color == Color.BLACK)) || (Character.isUpperCase(c) && (color == Color.WHITE))) {
                     result.add(c);
                 }
             }
@@ -106,16 +109,16 @@ public class NotationService {
                     figureMap.getOrDefault(Character.toLowerCase(c), 0) + 1);
         }
 
-        if (figureMap.get('k') != 1) {
+        if (figureMap.get('k') != KQ_COUNT) {
             return false;
         }
 
         int[] figureOverflow = {
-            8 - figureMap.getOrDefault('p', 0),
-            figureMap.getOrDefault('b', 0) - 2,
-            figureMap.getOrDefault('r', 0) - 2,
-            figureMap.getOrDefault('n', 0) - 2,
-            figureMap.getOrDefault('q', 0) - 1
+            PAWN_COUNT - figureMap.getOrDefault('p', 0),
+            figureMap.getOrDefault('b', 0) - RNB_COUNT,
+            figureMap.getOrDefault('r', 0) - RNB_COUNT,
+            figureMap.getOrDefault('n', 0) - RNB_COUNT,
+            figureMap.getOrDefault('q', 0) - KQ_COUNT
         };
 
         for (int i = 1; i < figureOverflow.length; i++) {
