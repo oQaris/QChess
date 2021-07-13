@@ -25,11 +25,11 @@ public class EndGameDetector {
     }
 
     /** @return true, если это не ничья */
-    public boolean isNotDraw(Figure removedFigure, Move move) throws ChessError {
+    public boolean isDraw(Figure removedFigure, Move move) throws ChessError {
         try {
-            return !isDrawWithMoves(removedFigure, move)
-                    && !isDrawWithRepetitions()
-                    && !isNotEnoughMaterialForCheckmate();
+            return isDrawWithMoves(removedFigure, move)
+                    || isDrawWithRepetitions()
+                    || isNotEnoughMaterialForCheckmate();
         } catch (ChessException e) {
             throw new ChessError(ERROR_WHILE_CHECKING_FOR_DRAW, e);
         }
@@ -40,12 +40,12 @@ public class EndGameDetector {
      *
      * @return true, если ничья
      */
-    private boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
+    public boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
         if (removedFigure != null
                 || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
             pieceMoveCount = 0;
         else ++pieceMoveCount;
-        return pieceMoveCount == 50;
+        return pieceMoveCount >= 50;
     }
 
     /**
@@ -53,11 +53,11 @@ public class EndGameDetector {
      *
      * @return true, если ничья
      */
-    private boolean isDrawWithRepetitions() {
+    public boolean isDrawWithRepetitions() {
         return roomSettings.history.checkRepetitions(5);
     }
 
-    private boolean isNotEnoughMaterialForCheckmate() {
+    public boolean isNotEnoughMaterialForCheckmate() {
         List<List<TypeFigure>> material =
                 Arrays.asList(
                         Collections.singletonList(TypeFigure.KING),

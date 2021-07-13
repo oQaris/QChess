@@ -5,12 +5,16 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
+import java.lang.reflect.Field;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -103,5 +107,43 @@ public class EndGameDetectorTest {
         board.setFigure(new Rook(Color.WHITE, Cell.parse("h7")));
 
         Assert.assertFalse(endGameDetector.isCheckmate(Color.WHITE));
+    }
+
+    @Test
+    public void testIsDrawWithMoves_1()
+            throws NoSuchFieldException, IllegalAccessException, ChessException {
+        Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
+        count.setAccessible(true);
+        count.set(endGameDetector, 50);
+
+        board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
+        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
+        Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
+
+        Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
+        Assert.assertFalse(
+                endGameDetector.isDrawWithMoves(
+                        new Knight(Color.BLACK, Cell.parse("e2")), moveAttack));
+        Assert.assertFalse(endGameDetector.isDrawWithMoves(null, move));
+
+        count.set(endGameDetector, 50);
+
+        Assert.assertFalse(
+                endGameDetector.isDrawWithMoves(
+                        new Pawn(Color.BLACK, Cell.parse("e2")), moveAttack));
+    }
+
+    @Test
+    public void testIsDrawWithMoves_2()
+        throws NoSuchFieldException, IllegalAccessException, ChessException {
+        Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
+        count.setAccessible(true);
+        count.set(endGameDetector, 48);
+
+        board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
+        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
+
+        Assert.assertFalse(endGameDetector.isDrawWithMoves(null, move));
+        Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
     }
 }
