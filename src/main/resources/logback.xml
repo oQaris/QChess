@@ -22,8 +22,6 @@
 
     <file>qchess-partial-stream.log</file>
 
-    <param name="Threshold" value="DEBUG"/>
-
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
       <fileNamePattern>qchess-partial-stream.%i.log.gz</fileNamePattern>
       <maxIndex>3</maxIndex>
@@ -31,25 +29,41 @@
     </rollingPolicy>
 
     <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      <maxFileSize>5MB</maxFileSize>
+      <maxFileSize>15MB</maxFileSize>
     </triggeringPolicy>
   </appender>
 
-  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION">
+  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-DEBUG">
     <append>false</append>
     <encoder>
       <Pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</Pattern>
     </encoder>
 
-    <file>qchess-last-session.log</file>
+    <file>qchess-last-session-debug.log</file>
 
-    <param name="Threshold" value="DEBUG"/>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
   </appender>
 
-  <root level="debug">
+  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-INFO">
+    <append>false</append>
+    <encoder>
+      <Pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</Pattern>
+    </encoder>
+
+    <file>qchess-last-session-info.log</file>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+  </appender>
+
+  <root level="trace">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
-    <appender-ref ref="FILE-LAST-SESSION"/>
+    <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
+    <appender-ref ref="FILE-LAST-SESSION-INFO"/>
   </root>
 
 </configuration>

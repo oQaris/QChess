@@ -102,7 +102,8 @@ public class MoveSystem {
     /** @return true если ход корректный */
     public boolean isCorrectMove(Move move) throws ChessError {
         try {
-            return checkCorrectnessIfSpecificMove(move)
+            return move != null
+                    && checkCorrectnessIfSpecificMove(move)
                     && inAvailableMoves(move)
                     && isCorrectVirtualMove(move);
         } catch (ChessException | NullPointerException e) {
@@ -119,9 +120,10 @@ public class MoveSystem {
      */
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
-        logger.trace("Начата проверка хода {} на превращение", move);
+        logger.debug("Начата проверка хода {} на превращение", move);
         if (move.getMoveType() == MoveType.TURN_INTO)
-            return move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
+            return move.getTurnInto() != null
+                    && move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
                     && (move.getTurnInto().getType() == TypeFigure.BISHOP
                     || move.getTurnInto().getType() == TypeFigure.KNIGHT
@@ -132,7 +134,7 @@ public class MoveSystem {
 
     /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move) throws ChessException {
-        logger.trace("Начата проверка хода {} на содержание его в доступных ходах", move);
+        logger.debug("Начата проверка хода {} на содержание его в доступных ходах", move);
         Figure figure = board.getFigure(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(roomSettings);
         return allMoves.contains(move);
@@ -140,7 +142,7 @@ public class MoveSystem {
 
     /** @param move корректный ход */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
-        logger.trace("Начата проверка виртуального хода {}", move);
+        logger.debug("Начата проверка виртуального хода {}", move);
         Figure figureToMove = board.getFigure(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход

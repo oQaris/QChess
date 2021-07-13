@@ -32,6 +32,7 @@ public class Game {
                 && !isDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
+            logger.info("От игрока пришел ход: {}", move);
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 tryMove(move);
@@ -73,7 +74,7 @@ public class Game {
                     roomSettings.board.getFigure(move.getTo()));
             logger.info(roomSettings.board.toString());
             return removedFigure;
-        } catch (ChessException e) {
+        } catch (ChessException | NullPointerException e) {
             logger.error("Не удалось выполнить проверенный ход: {}", move);
             throw new ChessError(ERROR_WHILE_ADD_PIECE_MOVE_COUNT, e);
         }

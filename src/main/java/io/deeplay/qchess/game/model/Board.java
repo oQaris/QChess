@@ -48,7 +48,7 @@ public class Board {
                 }
                 case EMPTY -> { }
             }
-        } catch (ChessException e) {
+        } catch (ChessException | NullPointerException e) {
             logger.error("Ошибка при заполнении доски");
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }

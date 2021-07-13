@@ -52,7 +52,7 @@ public class AttackBot extends Player {
                     topMoves.clear();
                 }
                 if (curGrade >= maxGrade) topMoves.add(move);
-            } catch (ChessException e) {
+            } catch (ChessException | NullPointerException e) {
                 logger.error("Возникла ошибка в атакующем боте: {}", e.getMessage());
                 throw new ChessError(BOT_ERROR, e);
             }

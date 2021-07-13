@@ -40,7 +40,7 @@ public class History implements Iterable<String> {
 
         try {
             addRecord(null);
-        } catch (ChessException e) {
+        } catch (ChessException | NullPointerException e) {
             logger.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(EXCEPTION_IN_HISTORY, e);
         }

@@ -12,8 +12,11 @@ import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class King extends Figure {
+    private static final Logger logger = LoggerFactory.getLogger(King.class);
 
     public King(Color color, Cell position) {
         super(color, position);
@@ -49,6 +52,7 @@ public class King extends Figure {
 
     /** @return true, если рокировка возможна */
     private boolean isCorrectCastling(GameSettings settings, boolean shortCastling) {
+        logger.debug("Запущена проверка на возможность рокировки для {}", this);
         if (wasMoved
                 || !settings.board.isEmptyCell(
                         position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
@@ -69,8 +73,9 @@ public class King extends Figure {
             Figure rook =
                     settings.board.getFigure(
                             position.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
-            return !rook.wasMoved() && rook.getType() == TypeFigure.ROOK;
+            return rook != null && !rook.wasMoved() && rook.getType() == TypeFigure.ROOK;
         } catch (ChessException | NullPointerException e) {
+            logger.warn("В проверке на рокировку возникло исключение: {}", e.getMessage());
             return false;
         }
     }
