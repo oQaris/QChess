@@ -85,7 +85,9 @@ public class Board {
     public List<Figure> getFigures(Color color) {
         List<Figure> list = new ArrayList<>(16);
         for (Figure[] figures : cells)
-            for (Figure figure : figures) if (figure != null && figure.getColor() == color) list.add(figure);
+            for (Figure figure : figures)
+                if (figure != null && figure.getColor() == color)
+                    list.add(figure);
         return list;
     }
 

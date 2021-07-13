@@ -26,10 +26,9 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        Game.logger.info(roomSettings.board.toString());
+        logger.info(roomSettings.board.toString());
         boolean notDraw = true;
-        while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
-                && notDraw) {
+        while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor()) && notDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
 
@@ -43,12 +42,15 @@ public class Game {
             }
         }
         if (!notDraw) Game.logger.info("Игра окончена: ничья");
-        else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor())) Game.logger.info(
-                "Игра окончена: мат {}",
-                currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        else Game.logger.info(
+        else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
+            Game.logger.info(
+                    "Игра окончена: мат {}",
+                    currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+        else
+            Game.logger.info(
                     "Игра окончена: пат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+
         // TODO: конец игры
     }
 
@@ -56,12 +58,12 @@ public class Game {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            Game.logger.info(
+            logger.info(
                     "{} сделал ход: {} фигурой: {}",
                     currentPlayerToMove,
                     move,
                     roomSettings.board.getFigure(move.getTo()));
-            Game.logger.info(roomSettings.board.toString());
+            logger.info(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException e) {
             throw new ChessError(LOG_FAILED, e);

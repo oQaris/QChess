@@ -48,22 +48,26 @@ public class Pawn extends Figure {
         Cell rightAttack = position.createAdd(forwardShift).createAdd(new Cell(1, 0));
 
         boolean isEnPassant =
-                Pawn.isPawnEnPassant(settings, position, leftAttack)
-                        || Pawn.isPawnEnPassant(settings, position, rightAttack);
+                isPawnEnPassant(settings, position, leftAttack)
+                        || isPawnEnPassant(settings, position, rightAttack);
         MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
 
         if (isEnemyFigureOn(settings.board, leftAttack)
-                || Pawn.isPawnEnPassant(settings, position, leftAttack)) result.add(
-                new Move(
-                        isTurnInto(leftAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
-                        position,
-                        leftAttack));
+                || isPawnEnPassant(settings, position, leftAttack)) {
+            result.add(
+                    new Move(
+                            isTurnInto(leftAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
+                            position,
+                            leftAttack));
+        }
         if (isEnemyFigureOn(settings.board, rightAttack)
-                || Pawn.isPawnEnPassant(settings, position, rightAttack)) result.add(
-                new Move(
-                        isTurnInto(rightAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
-                        position,
-                        rightAttack));
+                || isPawnEnPassant(settings, position, rightAttack)) {
+            result.add(
+                    new Move(
+                            isTurnInto(rightAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
+                            position,
+                            rightAttack));
+        }
     }
 
     private boolean isTurnInto(Cell end) {

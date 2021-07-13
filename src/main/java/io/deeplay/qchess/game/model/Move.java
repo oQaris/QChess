@@ -31,21 +31,6 @@ public class Move {
         this.turnInto = turnInto;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(moveType, from, to);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Move)) return false;
-        Move move = (Move) o;
-        return getMoveType() == move.getMoveType()
-                && Objects.equals(getFrom(), move.getFrom())
-                && Objects.equals(getTo(), move.getTo());
-    }
-
     public MoveType getMoveType() {
         return moveType;
     }
@@ -59,6 +44,21 @@ public class Move {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Move)) return false;
+        Move move = (Move) o;
+        return getMoveType() == move.getMoveType()
+                && Objects.equals(getFrom(), move.getFrom())
+                && Objects.equals(getTo(), move.getTo());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(moveType, from, to);
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb =
                 new StringBuilder()
@@ -68,7 +68,8 @@ public class Move {
                         .append(" (")
                         .append(moveType)
                         .append(")");
-        if (moveType == MoveType.TURN_INTO) sb.append(" turn into ").append(turnInto);
+        if (moveType == MoveType.TURN_INTO)
+            sb.append(" turn into ").append(turnInto);
         return sb.toString();
     }
 }

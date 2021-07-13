@@ -32,37 +32,44 @@ public class MoveSystem {
     /**
      * Делает ход без проверок
      *
-     * @return удаленная фигура или null, если клетка была пуста
+     * @return удаленная фигура или null, если ни одну фигуру не взяли
      */
     public Figure move(Move move) throws ChessError {
         try {
-            // взятие на проходе
-            if (move.getMoveType() == MoveType.EN_PASSANT) board.removeFigure(history.getPrevMove().getTo());
+            Figure removedFigure = switch (move.getMoveType()) {
+                // взятие на проходе
+                case EN_PASSANT -> {
+                    board.moveFigure(move);
+                    yield board.removeFigure(history.getPrevMove().getTo());
+                }
+                // превращение пешки
+                case TURN_INTO -> {
+                    Figure turnIntoFigure = move.getTurnInto();
+                    turnIntoFigure.setCurrentPosition(move.getTo());
+                    Figure removed = board.moveFigure(move);
+                    board.setFigure(turnIntoFigure);
+                    yield removed;
+                }
+                // рокировка
+                case SHORT_CASTLING -> {
+                    Cell from = move.getFrom().createAdd(new Cell(3, 0));
+                    Cell to = move.getFrom().createAdd(new Cell(1, 0));
+                    board.getFigure(from).setWasMoved(true);
+                    board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
+                    yield board.moveFigure(move);
+                }
+                case LONG_CASTLING->{
+                    Cell from = move.getFrom().createAdd(new Cell(-4, 0));
+                    Cell to = move.getFrom().createAdd(new Cell(-1, 0));
+                    board.getFigure(from).setWasMoved(true);
+                    board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
+                    yield board.moveFigure(move);
+                }
+                default -> board.moveFigure(move);
+            };
 
-            // превращение пешки
-            if (move.getMoveType() == MoveType.TURN_INTO) {
-                Figure turnIntoFigure = move.getTurnInto();
-                turnIntoFigure.setCurrentPosition(move.getTo());
-                board.setFigure(turnIntoFigure);
-            }
-
-            // рокировка
-            if (move.getMoveType() == MoveType.SHORT_CASTLING) {
-                Cell from = move.getFrom().createAdd(new Cell(3, 0));
-                Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                board.getFigure(from).setWasMoved(true);
-                board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-            }
-            if (move.getMoveType() == MoveType.LONG_CASTLING) {
-                Cell from = move.getFrom().createAdd(new Cell(-4, 0));
-                Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                board.getFigure(from).setWasMoved(true);
-                board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-            }
-
-            // ход
-            Figure removedFigure = board.moveFigure(move);
             history.addRecord(move);
+
             return removedFigure;
         } catch (ChessException | NullPointerException e) {
             throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
@@ -76,7 +83,9 @@ public class MoveSystem {
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(64);
         for (Figure f : board.getFigures(color))
-            for (Move m : f.getAllMoves(roomSettings)) if (isCorrectMove(m)) res.add(m);
+            for (Move m : f.getAllMoves(roomSettings))
+                if (isCorrectMove(m))
+                    res.add(m);
         return res;
     }
 
@@ -106,7 +115,6 @@ public class MoveSystem {
                     || move.getTurnInto().getType() == TypeFigure.KNIGHT
                     || move.getTurnInto().getType() == TypeFigure.QUEEN
                     || move.getTurnInto().getType() == TypeFigure.ROOK);
-
         return true;
     }
 
@@ -123,7 +131,8 @@ public class MoveSystem {
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) throw new ChessError(KING_NOT_FOUND);
+        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING)
+            throw new ChessError(KING_NOT_FOUND);
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));

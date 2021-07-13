@@ -71,8 +71,13 @@ public abstract class Figure {
     /** @return все возможные ходы фигуры, не учитывая шаха */
     public abstract Set<Move> getAllMoves(GameSettings settings);
 
+    /**
+     * @return тип фигуры
+     */
+    public abstract TypeFigure getType();
+
     protected Set<Move> rayTrace(Board board, List<Cell> directions) {
-        Figure.log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, position);
+        log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, position);
         Objects.requireNonNull(directions, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : directions) {
@@ -81,7 +86,8 @@ public abstract class Figure {
                 result.add(new Move(MoveType.QUIET_MOVE, position, cord));
                 cord = cord.createAdd(shift);
             }
-            if (isEnemyFigureOn(board, cord)) result.add(new Move(MoveType.ATTACK, position, cord));
+            if (isEnemyFigureOn(board, cord))
+                result.add(new Move(MoveType.ATTACK, position, cord));
         }
         return result;
     }
@@ -103,13 +109,15 @@ public abstract class Figure {
     }
 
     protected Set<Move> stepForEach(Board board, List<Cell> moves) {
-        Figure.log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, position);
+        log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, position);
         Objects.requireNonNull(moves, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : moves) {
             Cell cord = position.createAdd(shift);
-            if (board.isEmptyCell(cord)) result.add(new Move(MoveType.QUIET_MOVE, position, cord));
-            else if (isEnemyFigureOn(board, cord)) result.add(new Move(MoveType.ATTACK, position, cord));
+            if (board.isEmptyCell(cord))
+                result.add(new Move(MoveType.QUIET_MOVE, position, cord));
+            else if (isEnemyFigureOn(board, cord))
+                result.add(new Move(MoveType.ATTACK, position, cord));
         }
         return result;
     }
@@ -133,7 +141,4 @@ public abstract class Figure {
     public String toString() {
         return color.toString() + " " + getType();
     }
-
-    /** @return тип фигуры */
-    public abstract TypeFigure getType();
 }
