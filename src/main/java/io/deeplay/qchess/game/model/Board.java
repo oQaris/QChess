@@ -65,7 +65,7 @@ public class Board {
 
     public Board(String placement) throws ChessError {
         if (!NotationService.checkValidityPlacement(placement)) {
-            throw new ChessError("Заполнение из доски из некорректной строки");
+            throw new ChessError(INCORRECT_STRING_FOR_FILLING_BOARD);
         }
         int y = 0;
         int x = 0;
@@ -79,7 +79,7 @@ public class Board {
                 try {
                     setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
                 } catch (ChessException e) {
-                    throw new ChessError("Ошибка при установке фигуры на доску");
+                    throw new ChessError(INCORRECT_COORDINATES);
                 }
             }
         }

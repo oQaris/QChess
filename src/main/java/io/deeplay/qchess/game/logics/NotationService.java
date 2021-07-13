@@ -5,8 +5,9 @@ import io.deeplay.qchess.game.model.figures.*;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 
-import java.util.*;
-
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class NotationService {
     public static boolean checkValidityPlacement(String placement) {
@@ -36,8 +37,13 @@ public class NotationService {
     }
 
     private boolean checkInappropriateCharacters(String placementRow) {
-        char[] list = {'1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r', 'b', 'n', 'p'};
-        //String regex="\\d{3}"
+        Character[] arr = {'1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r', 'b', 'n', 'p'};
+        Set<Character> set = new HashSet<>(Arrays.asList(arr));
+        for(Character c : placementRow.toCharArray()) {
+            if (!set.contains(c)) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -45,8 +51,16 @@ public class NotationService {
         return placementRows.length == 8;
     }
 
-    private boolean checkSumInRows() {
-        return true;
+    private boolean checkSumInRows(String placementRow) {
+        int place = 0;
+        for(Character c : placementRow.toCharArray()) {
+            if (Character.isDigit(c)) {
+                place += Integer.parseInt(String.valueOf(c));
+            } else {
+                place++;
+            }
+        }
+        return place == 8;
     }
 
     private boolean checkFigureTypes() {
