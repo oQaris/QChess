@@ -27,7 +27,7 @@ public class Game {
 
     public void run() throws ChessError {
         logger.debug(roomSettings.board.toString());
-        boolean notDraw = true;
+        boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && !isDraw) {
             // TODO: получать json Move
