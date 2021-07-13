@@ -24,18 +24,6 @@ public class King extends Figure {
     public Set<Move> getAllMoves(GameSettings settings) {
         Set<Move> res = getAttackedMoves(settings.board);
         // рокировка
-<<<<<<< HEAD
-        if (isCorrectCastling(settings, true)) {
-            res.add(
-                    new Move(
-                            MoveType.SHORT_CASTLING, position, position.createAdd(new Cell(2, 0))));
-        }
-        if (isCorrectCastling(settings, false)) {
-            res.add(
-                    new Move(
-                            MoveType.LONG_CASTLING, position, position.createAdd(new Cell(-2, 0))));
-        }
-=======
         if (isCorrectCastling(settings, true))
             res.add(
                     new Move(
@@ -44,7 +32,6 @@ public class King extends Figure {
             res.add(
                     new Move(
                             MoveType.LONG_CASTLING, position, position.createAdd(new Cell(-2, 0))));
->>>>>>> 5172b3e (Слияние с мега фичей)
         return res;
     }
 
@@ -57,12 +44,8 @@ public class King extends Figure {
     public Set<Move> getAttackedMoves(Board board) {
         return stepForEach(
                 board,
-<<<<<<< HEAD
-                Stream.concat(xMove.stream(), plusMove.stream()).collect(Collectors.toList()));
-=======
                 Stream.concat(Figure.xMove.stream(), Figure.plusMove.stream())
                         .collect(Collectors.toList()));
->>>>>>> 5172b3e (Слияние с мега фичей)
     }
 
     /** @return true, если рокировка возможна */
@@ -82,13 +65,7 @@ public class King extends Figure {
                 || Board.isAttackedCell(
                         settings,
                         position.createAdd(new Cell(shortCastling ? 2 : -2, 0)),
-<<<<<<< HEAD
-                        color.inverse())) {
-            return false;
-        }
-=======
                         color.inverse())) return false;
->>>>>>> 5172b3e (Слияние с мега фичей)
         try {
             Figure rook =
                     settings.board.getFigure(

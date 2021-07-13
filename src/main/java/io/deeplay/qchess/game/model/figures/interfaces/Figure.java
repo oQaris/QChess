@@ -98,17 +98,9 @@ public abstract class Figure {
         Set<Move> result = new HashSet<>();
         for (Cell shift : moves) {
             Cell cord = position.createAdd(shift);
-<<<<<<< HEAD
-            if (board.isEmptyCell(cord)) {
-                result.add(new Move(MoveType.QUIET_MOVE, position, cord));
-            } else if (isEnemyFigureOn(board, cord)) {
-                result.add(new Move(MoveType.ATTACK, position, cord));
-            }
-=======
             if (board.isEmptyCell(cord)) result.add(new Move(MoveType.QUIET_MOVE, position, cord));
             else if (isEnemyFigureOn(board, cord))
                 result.add(new Move(MoveType.ATTACK, position, cord));
->>>>>>> 5172b3e (Слияние с мега фичей)
         }
         return result;
     }
