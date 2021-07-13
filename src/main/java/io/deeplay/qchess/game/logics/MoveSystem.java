@@ -136,9 +136,8 @@ public class MoveSystem {
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) {
+        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING)
             throw new ChessError(KING_NOT_FOUND);
-        }
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));

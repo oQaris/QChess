@@ -41,11 +41,9 @@ public class EndGameDetector {
      */
     private boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
         if (removedFigure != null
-                || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) {
+                || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
             pieceMoveCount = 0;
-        } else {
-            ++pieceMoveCount;
-        }
+        else ++pieceMoveCount;
         return pieceMoveCount == 50;
     }
 

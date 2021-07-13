@@ -59,8 +59,13 @@ public class Bot extends Player {
     }
 
     private void checkTurnInto(Move move) {
+<<<<<<< HEAD
         if (move.getMoveType() == MoveType.TURN_INTO) {
             move.setTurnInto(new Queen(color, move.getTo()));
         }
+=======
+        if (move.getMoveType() == MoveType.TURN_INTO)
+            move.setTurnInto(new Queen(color, move.getTo()));
+>>>>>>> 5172b3e (Слияние с мега фичей)
     }
 }

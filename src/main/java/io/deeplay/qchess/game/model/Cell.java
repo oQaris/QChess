@@ -16,9 +16,8 @@ public class Cell {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
                 int digit = pos.charAt(1) - '0';
-                if (digit >= 1 && digit <= Board.BOARD_SIZE) {
+                if (digit >= 1 && digit <= Board.BOARD_SIZE)
                     return new Cell(letter - 'a', Board.BOARD_SIZE - digit);
-                }
             }
         }
         throw new IllegalArgumentException("Incorrect position!");

@@ -42,17 +42,16 @@ public class Game {
                 // TODO: отправлять ответ, что ход некорректный
             }
         }
-        if (!notDraw) {
-            logger.info("Игра окончена: ничья");
-        } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor())) {
-            logger.info(
+        if (!notDraw) Game.logger.info("Игра окончена: ничья");
+        else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
+            Game.logger.info(
                     "Игра окончена: мат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        } else {
-            logger.info(
+        else
+            Game.logger.info(
                     "Игра окончена: пат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        }
+
         // TODO: конец игры
     }
 

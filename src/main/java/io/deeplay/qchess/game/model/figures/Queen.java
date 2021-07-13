@@ -21,7 +21,12 @@ public class Queen extends Figure {
     public Set<Move> getAllMoves(GameSettings settings) {
         return rayTrace(
                 settings.board,
+<<<<<<< HEAD
                 Stream.concat(xMove.stream(), plusMove.stream()).collect(Collectors.toList()));
+=======
+                Stream.concat(Figure.xMove.stream(), Figure.plusMove.stream())
+                        .collect(Collectors.toList()));
+>>>>>>> 5172b3e (Слияние с мега фичей)
     }
 
     @Override
