@@ -9,6 +9,8 @@ import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
+
 public class Game {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
     public final Player secondPlayer;
@@ -58,7 +60,7 @@ public class Game {
             logger.info(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException e) {
-            throw new ChessError("Не удалось записать в лог", e);
+            throw new ChessError(LOG_FAILED, e);
         }
     }
 }

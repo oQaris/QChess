@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.EXCEPTION_IN_HISTORY;
+
 public class History implements Iterable<String> {
     private static final Logger log = LoggerFactory.getLogger(History.class);
-    private final Map<TypeFigure, Character> notation = new HashMap<>();
+    private final Map<TypeFigure, Character> notation = new EnumMap<>(TypeFigure.class);
     private final Map<String, Integer> repetitionsMap;
     private final List<String> recordsList;
     private final Board board;
@@ -36,7 +38,7 @@ public class History implements Iterable<String> {
             addRecord(null);
         } catch (ChessException e) {
             log.error("Возникло исключение в истории {}", e.getMessage());
-            throw new ChessError("Возникло исключение в истории", e);
+            throw new ChessError(EXCEPTION_IN_HISTORY, e);
         }
     }
 
@@ -121,8 +123,8 @@ public class History implements Iterable<String> {
      */
     private String getCastlingPossibility() throws ChessException {
         StringBuilder result = new StringBuilder(4);
-        Figure shortRook = null;
-        Figure longRook = null;
+        Figure shortRook;
+        Figure longRook;
         Figure whiteKing = board.getFigure(Cell.parse("e1"));
         if (whiteKing != null && !whiteKing.wasMoved()) {
             shortRook = board.getFigure(Cell.parse("h1"));

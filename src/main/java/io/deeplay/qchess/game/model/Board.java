@@ -9,9 +9,10 @@ import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.*;
 
 public class Board {
     public static final int BOARD_SIZE = 8;
@@ -58,7 +59,7 @@ public class Board {
             setFigure(new Pawn(Color.BLACK, Cell.parse("g7")));
             setFigure(new Pawn(Color.BLACK, Cell.parse("h7")));
         } catch (ChessException e) {
-            throw new ChessError("Стандартное заполнение доски некорректное", e);
+            throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
     }
 
@@ -85,25 +86,6 @@ public class Board {
     }
 
     /**
-     * Устанавливает фигуру на доску
-     */
-    public void setFigure(Figure figure) throws ChessException {
-        int x = figure.getCurrentPosition().getColumn();
-        int y = figure.getCurrentPosition().getRow();
-        if (!isCorrectCell(x, y)) {
-            throw new ChessException("Координаты выходят за границу доски");
-        }
-        cells[y][x] = figure;
-    }
-
-    /**
-     * @return true, если клетка принадлежит доске
-     */
-    public boolean isCorrectCell(int col, int row) {
-        return col >= 0 && row >= 0 && col < BOARD_SIZE && row < BOARD_SIZE;
-    }
-
-    /**
      * @return true, если клетка cell атакуется цветом color
      */
     public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
@@ -118,6 +100,25 @@ public class Board {
             }
         }
         return false;
+    }
+
+    /**
+     * Устанавливает фигуру на доску
+     */
+    public void setFigure(Figure figure) throws ChessException {
+        int x = figure.getCurrentPosition().getColumn();
+        int y = figure.getCurrentPosition().getRow();
+        if (!isCorrectCell(x, y)) {
+            throw new ChessException(INCORRECT_COORDINATES);
+        }
+        cells[y][x] = figure;
+    }
+
+    /**
+     * @return true, если клетка принадлежит доске
+     */
+    public boolean isCorrectCell(int column, int row) {
+        return column >= 0 && row >= 0 && column < BOARD_SIZE && row < BOARD_SIZE;
     }
 
     /**
@@ -152,7 +153,7 @@ public class Board {
             }
         }
         if (kingCell == null) {
-            throw new ChessError("Король не найден");
+            throw new ChessError(KING_NOT_FOUND);
         }
         return kingCell;
     }
@@ -165,13 +166,13 @@ public class Board {
      * @throws ChessException если ход выходит за пределы доски
      */
     public Figure moveFigure(Move move) throws ChessException {
-        Figure figure = getFigure(move.getFrom());
-        Figure old = getFigure(move.getTo());
-        figure.setCurrentPosition(move.getTo());
-        figure.setWasMoved(true);
-        setFigure(figure);
+        Figure figureFrom = getFigure(move.getFrom());
+        Figure figureTo = getFigure(move.getTo());
+        figureFrom.setCurrentPosition(move.getTo());
+        figureFrom.setWasMoved(true);
+        setFigure(figureFrom);
         removeFigure(move.getFrom());
-        return old;
+        return figureTo;
     }
 
     /**
@@ -181,9 +182,7 @@ public class Board {
     public Figure getFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        if (!isCorrectCell(x, y)) {
-            throw new ChessException("Координаты выходят за границу доски");
-        }
+        checkCell(x, y);
         return cells[y][x];
     }
 
@@ -195,12 +194,15 @@ public class Board {
     public Figure removeFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        if (!isCorrectCell(x, y)) {
-            throw new ChessException("Координаты выходят за границу доски");
-        }
+        checkCell(x, y);
         Figure old = cells[y][x];
         cells[y][x] = null;
         return old;
+    }
+
+    private void checkCell(int col, int row) throws ChessException {
+        if (!isCorrectCell(col, row))
+            throw new ChessException(INCORRECT_COORDINATES);
     }
 
     /**
@@ -214,7 +216,7 @@ public class Board {
 
     @Override
     public String toString() {
-        var sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append(System.lineSeparator());
         for (Figure[] line : cells) {
             sb.append('|');
@@ -234,20 +236,20 @@ public class Board {
     private char figureToIcon(Figure figure) {
         return switch (figure.getColor()) {
             case WHITE -> switch (figure.getType()) {
-                case BISHOP -> "♝".toCharArray()[0];
-                case KING -> "♚".toCharArray()[0];
-                case KNIGHT -> "♞".toCharArray()[0];
-                case PAWN -> "♟".toCharArray()[0];
-                case QUEEN -> "♛".toCharArray()[0];
-                case ROOK -> "♜".toCharArray()[0];
+                case BISHOP -> '♝';
+                case KING -> '♚';
+                case KNIGHT -> '♞';
+                case PAWN -> '♟';
+                case QUEEN -> '♛';
+                case ROOK -> '♜';
             };
             case BLACK -> switch (figure.getType()) {
-                case BISHOP -> "♗".toCharArray()[0];
-                case KING -> "♔".toCharArray()[0];
-                case KNIGHT -> "♘".toCharArray()[0];
-                case PAWN -> "♙".toCharArray()[0];
-                case QUEEN -> "♕".toCharArray()[0];
-                case ROOK -> "♖".toCharArray()[0];
+                case BISHOP -> '♗';
+                case KING -> '♔';
+                case KNIGHT -> '♘';
+                case PAWN -> '♙';
+                case QUEEN -> '♕';
+                case ROOK -> '♖';
             };
         };
     }

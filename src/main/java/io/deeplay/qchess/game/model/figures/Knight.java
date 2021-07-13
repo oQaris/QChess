@@ -10,13 +10,9 @@ import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.Set;
 
 public class Knight extends Figure {
+
     public Knight(Color color, Cell position) {
         super(color, position);
-    }
-
-    @Override
-    public String toString() {
-        return color + " Knight";
     }
 
     @Override

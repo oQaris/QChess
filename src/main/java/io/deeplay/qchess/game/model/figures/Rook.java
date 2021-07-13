@@ -10,6 +10,7 @@ import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.Set;
 
 public class Rook extends Figure {
+
     public Rook(Color color, Cell position) {
         super(color, position);
     }
@@ -22,10 +23,5 @@ public class Rook extends Figure {
     @Override
     public TypeFigure getType() {
         return TypeFigure.ROOK;
-    }
-
-    @Override
-    public String toString() {
-        return color + " Rook";
     }
 }

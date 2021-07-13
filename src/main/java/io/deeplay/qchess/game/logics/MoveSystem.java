@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
+
 /**
  * Хранит различные данные об игре для контроля специфичных ситуаций
  */
@@ -66,7 +69,7 @@ public class MoveSystem {
             history.addRecord(move);
             return removedFigure;
         } catch (ChessException | NullPointerException e) {
-            throw new ChessError("Проверенный ход выдал ошибку при перемещении фигуры", e);
+            throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
         }
     }
 
@@ -137,7 +140,7 @@ public class MoveSystem {
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
         if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) {
-            throw new ChessError("Срубили короля");
+            throw new ChessError(KING_NOT_FOUND);
         }
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
         // отмена виртуального хода

@@ -3,35 +3,34 @@ package io.deeplay.qchess.game.model.figures;
 import io.deeplay.qchess.game.model.Cell;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Arrays;
+
+@RunWith(Parameterized.class)
 public class CellParseTest {
-    @Test(expected = IllegalArgumentException.class)
-    public void testParseFail1() {
-        Cell.parse("a0");
-        Assert.fail();
+
+    private final String cellStr;
+
+    public CellParseTest(String cellStr) {
+        this.cellStr = cellStr;
+    }
+
+    @Parameterized.Parameters(name = "{index}: {0}")
+    public static Iterable<Object[]> dataForTest() {
+        return Arrays.asList(new Object[][]{
+                {"a0"},
+                {"j1"},
+                {"а1"},
+                {"а11"},
+                {""}
+        });
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testParseFail2() {
-        Cell.parse("j1");
-        Assert.fail();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testParseFail3() {
-        Cell.parse("а1");
-        Assert.fail();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testParseFail4() {
-        Cell.parse("а11");
-        Assert.fail();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testParseFail5() {
-        Cell.parse("");
+    public void paramTest() {
+        Cell.parse(cellStr);
         Assert.fail();
     }
 }

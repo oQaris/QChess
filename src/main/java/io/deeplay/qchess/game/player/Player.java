@@ -12,7 +12,7 @@ public abstract class Player {
     protected Board board;
     protected Color color;
 
-    public Player(GameSettings roomSettings, Color color) {
+    protected Player(GameSettings roomSettings, Color color) {
         ms = roomSettings.moveSystem;
         board = roomSettings.board;
         this.color = color;
@@ -29,6 +29,6 @@ public abstract class Player {
 
     @Override
     public String toString() {
-        return (color == Color.WHITE ? "White player" : "Black player");
+        return color + " PLAYER";
     }
 }
