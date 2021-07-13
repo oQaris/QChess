@@ -80,7 +80,7 @@ public class Pawn extends Figure {
                         || isPawnEnPassant(settings, position, rightAttack);
         MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
 
-        if (isEnemyFigureOn(settings.board, leftAttack)
+        if (settings.board.isEnemyFigureOn(color, leftAttack)
                 || isPawnEnPassant(settings, position, leftAttack)) {
             result.add(
                     new Move(
@@ -88,7 +88,7 @@ public class Pawn extends Figure {
                             position,
                             leftAttack));
         }
-        if (isEnemyFigureOn(settings.board, rightAttack)
+        if (settings.board.isEnemyFigureOn(color, rightAttack)
                 || isPawnEnPassant(settings, position, rightAttack)) {
             result.add(
                     new Move(

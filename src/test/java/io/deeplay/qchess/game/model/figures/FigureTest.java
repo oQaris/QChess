@@ -22,7 +22,7 @@ public class FigureTest {
     private GameSettings gameSettings;
     private Board board;
 
-    private static Set<Cell> toCellsSet(String... pos) {
+    private static Set<Cell> toCellsSet(String... pos) throws ChessException {
         Objects.requireNonNull(pos, "Массив строк не может быть null");
         Set<Cell> result = new HashSet<>();
         for (String p : pos) result.add(Cell.parse(p));

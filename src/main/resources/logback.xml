@@ -2,7 +2,7 @@
 
   <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <pattern>[%d{HH:mm:ss.SSS}] %level [%thread] "%logger{30}" - %msg%n</pattern>
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -17,7 +17,7 @@
   <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE-PARTIAL-STREAM">
     <append>true</append>
     <encoder>
-      <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p [%t] %c{1}: %m%n</Pattern>
+      <Pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</Pattern>
     </encoder>
 
     <file>qchess-partial-stream.log</file>
@@ -38,7 +38,7 @@
   <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION">
     <append>false</append>
     <encoder>
-      <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p [%t] %c{1}: %m%n</Pattern>
+      <Pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</Pattern>
     </encoder>
 
     <file>qchess-last-session.log</file>

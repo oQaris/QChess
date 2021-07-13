@@ -17,9 +17,12 @@ import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Хранит различные данные об игре для контроля специфичных ситуаций */
 public class MoveSystem {
+    private static final Logger logger = LoggerFactory.getLogger(MoveSystem.class);
     private final GameSettings roomSettings;
     private final Board board;
     private final EndGameDetector endGameDetector;
@@ -39,6 +42,7 @@ public class MoveSystem {
      */
     public Figure move(Move move) throws ChessError {
         try {
+            logger.debug("Начато выполнение хода: {}", move);
             Figure removedFigure = switch (move.getMoveType()) {
                 // взятие на проходе
                 case EN_PASSANT -> {
@@ -74,8 +78,10 @@ public class MoveSystem {
             history.checkAndAddPieceMoveCount(move);
             history.addRecord(move);
 
+            logger.debug("Ход <{}> выполнен успешно, удаленная фигура: {}", move, removedFigure);
             return removedFigure;
         } catch (ChessException | NullPointerException e) {
+            logger.error("Ошибка при выполнении хода: {}", move);
             throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
         }
     }
@@ -100,6 +106,7 @@ public class MoveSystem {
                     && inAvailableMoves(move)
                     && isCorrectVirtualMove(move);
         } catch (ChessException | NullPointerException e) {
+            logger.warn("Проверяемый (некорректный) ход <{}> кинул исключение: {}", move, e.getMessage());
             return false;
         }
     }
@@ -112,6 +119,7 @@ public class MoveSystem {
      */
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
+        logger.trace("Начата проверка хода {} на превращение", move);
         if (move.getMoveType() == MoveType.TURN_INTO)
             return move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
@@ -124,6 +132,7 @@ public class MoveSystem {
 
     /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move) throws ChessException {
+        logger.trace("Начата проверка хода {} на содержание его в доступных ходах", move);
         Figure figure = board.getFigure(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(roomSettings);
         return allMoves.contains(move);
@@ -131,12 +140,15 @@ public class MoveSystem {
 
     /** @param move корректный ход */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
+        logger.trace("Начата проверка виртуального хода {}", move);
         Figure figureToMove = board.getFigure(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING)
+        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) {
+            logger.error("Король не был найден при проверки виртуального хода {}", move);
             throw new ChessError(KING_NOT_FOUND);
+        }
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));

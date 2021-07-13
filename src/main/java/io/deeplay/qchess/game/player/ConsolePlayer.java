@@ -42,10 +42,11 @@ public class ConsolePlayer extends Player {
         try {
             List<Move> allMoves = ms.getAllCorrectMoves(color);
             printMoves(allMoves);
-            Move choosenMove = inputMoveNumber(allMoves);
-            specificMoveModification(choosenMove);
-            return choosenMove;
+            Move chosenMove = inputMoveNumber(allMoves);
+            specificMoveModification(chosenMove);
+            return chosenMove;
         } catch (ChessError e) {
+            logger.error("Возникла ошибка в консольном игроке: {}", e.getMessage());
             throw new ChessError(CONSOLE_PLAYER_ERROR, e);
         }
     }
@@ -64,41 +65,51 @@ public class ConsolePlayer extends Player {
         Move move = null;
         while (move == null) {
             try {
-                int numMove = Integer.parseInt(in.readLine());
+                String input = in.readLine();
+                logger.info("Игрок ввел: {}", input);
+                int numMove = Integer.parseInt(input);
                 move = allMoves.get(numMove - 1);
             } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
-                logger.info("Неправильный ход, повторите попытку");
+                logger.info("Игрок ввел неправильный ход");
+                System.out.println("Неправильный ход, повторите попытку");
             }
         }
         return move;
     }
 
-    private void specificMoveModification(Move choosenMove) throws ChessError {
-        if (choosenMove.getMoveType() == MoveType.TURN_INTO) {
+    private void specificMoveModification(Move chosenMove) throws ChessError {
+        if (chosenMove.getMoveType() == MoveType.TURN_INTO) {
             System.out.println(TURN_INTO_INVITE);
-            choosenMove.setTurnInto(readTurnInto(choosenMove.getTo()));
+            chosenMove.setTurnInto(readTurnInto(chosenMove.getTo()));
         }
     }
 
     private Figure readTurnInto(Cell to) throws ChessError {
-        int numTurnIntoFig = 0;
-        while (numTurnIntoFig == 0) {
+        int numTurnIntoFigure = 0;
+        final int maxCountFigures = 4;
+        while (numTurnIntoFigure == 0) {
             try {
-                numTurnIntoFig = Integer.parseInt(in.readLine());
-                if (numTurnIntoFig < 0 || numTurnIntoFig > 4) {
-                    numTurnIntoFig = 0;
+                String input = in.readLine();
+                logger.info("Игрок ввел: {}", input);
+                numTurnIntoFigure = Integer.parseInt(input);
+                if (numTurnIntoFigure < 0 || numTurnIntoFigure > maxCountFigures) {
+                    numTurnIntoFigure = 0;
+                    throw new IllegalArgumentException();
                 }
-            } catch (IOException | NumberFormatException e) {
-                logger.info("Неправильный номер фигуры, повторите попытку");
+            } catch (IOException | IllegalArgumentException e) {
+                logger.info("Игрок ввел неправильный номер фигуры");
+                System.out.println("Неправильный номер фигуры, повторите попытку");
             }
         }
-        return switch (numTurnIntoFig) {
+        return switch (numTurnIntoFigure) {
             case 1 -> new Knight(color, to);
             case 2 -> new Bishop(color, to);
             case 3 -> new Rook(color, to);
             case 4 -> new Queen(color, to);
-            //todo почему бы по-умолчанию ферзя не выбирать? или хотя бы повторить запрос
-            default -> throw new ChessError(UNKNOWN_FIGURE_SELECTED);
+            default -> {
+                logger.error("В консольном игроке выбрана неизвестная фигура: {}", numTurnIntoFigure);
+                throw new ChessError(UNKNOWN_FIGURE_SELECTED);
+            }
         };
     }
 }

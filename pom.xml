@@ -61,10 +61,10 @@
       <version>4.13.2</version>
     </dependency>
     <dependency>
-      <artifactId>mockito-all</artifactId>
-      <groupId>org.mockito</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <groupId>org.junit.jupiter</groupId>
       <scope>test</scope>
-      <version>1.10.19</version>
+      <version>5.7.2</version>
     </dependency>
     <!-- Logger -->
     <dependency>

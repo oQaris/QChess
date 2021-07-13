@@ -14,12 +14,16 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Board {
     public static final int BOARD_SIZE = 8;
+    private static final Logger logger = LoggerFactory.getLogger(Board.class);
     private final Figure[][] cells = new Figure[Board.BOARD_SIZE][Board.BOARD_SIZE];
 
     public Board(BoardFilling bf) throws ChessError {
+        logger.debug("Начато заполнение {} доски", bf);
         try {
             switch (bf) {
                 case STANDARD -> {
@@ -27,7 +31,7 @@ public class Board {
                             TypeFigure.QUEEN, TypeFigure.KING, TypeFigure.BISHOP,TypeFigure.KNIGHT,TypeFigure.ROOK};
 
                     Cell startBlack = new Cell(0, 0);
-                    Cell startWhite = new Cell( 0, Board.BOARD_SIZE-1);
+                    Cell startWhite = new Cell(0, Board.BOARD_SIZE - 1);
                     Cell shift = new Cell(1, 0);
 
                     for (TypeFigure typeFigure : orderFirstLine) {
@@ -45,14 +49,16 @@ public class Board {
                 case EMPTY -> { }
             }
         } catch (ChessException e) {
+            logger.error("Ошибка при заполнении доски");
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
+        logger.debug("Доска {} инициализирована", bf);
     }
 
     /**
      * @return true, если клетка принадлежит доске
      */
-    static boolean isCorrectCell(int column, int row) {
+    public static boolean isCorrectCell(int column, int row) {
         return column >= 0 && row >= 0 && column < Board.BOARD_SIZE && row < Board.BOARD_SIZE;
     }
 
@@ -69,13 +75,9 @@ public class Board {
         return false;
     }
 
-    private static void checkCell(int col, int row) throws ChessException {
-        if (!Board.isCorrectCell(col, row)) throw new ChessException(INCORRECT_COORDINATES);
-    }
-
-    private static char figureToIcon(Figure figure) {
-        return switch (figure.getColor()) {
-            case WHITE -> switch (figure.getType()) {
+    private static char figureToIcon(Color color, TypeFigure figure) {
+        return switch (color) {
+            case WHITE -> switch (figure) {
                 case BISHOP -> '♝';
                 case KING -> '♚';
                 case KNIGHT -> '♞';
@@ -83,7 +85,7 @@ public class Board {
                 case QUEEN -> '♛';
                 case ROOK -> '♜';
             };
-            case BLACK -> switch (figure.getType()) {
+            case BLACK -> switch (figure) {
                 case BISHOP -> '♗';
                 case KING -> '♔';
                 case KNIGHT -> '♘';
@@ -100,8 +102,12 @@ public class Board {
     public void setFigure(Figure figure) throws ChessException {
         int x = figure.getCurrentPosition().getColumn();
         int y = figure.getCurrentPosition().getRow();
-        if (!Board.isCorrectCell(x, y)) throw new ChessException(INCORRECT_COORDINATES);
+        if (!Board.isCorrectCell(x, y)) {
+            logger.warn("Ошибка установки фигуры {} на доску", figure);
+            throw new ChessException(INCORRECT_COORDINATES);
+        }
         cells[y][x] = figure;
+        logger.trace("Фигура {} установлена на доску", figure);
     }
 
     /**
@@ -130,7 +136,10 @@ public class Board {
                     kingCell = f.getCurrentPosition();
                     break;
                 }
-        if (kingCell == null) throw new ChessError(KING_NOT_FOUND);
+        if (kingCell == null) {
+            logger.error("Король {} не был найден", color);
+            throw new ChessError(KING_NOT_FOUND);
+        }
         return kingCell;
     }
 
@@ -142,12 +151,14 @@ public class Board {
      * @throws ChessException если ход выходит за пределы доски
      */
     public Figure moveFigure(Move move) throws ChessException {
+        logger.trace("Начато перемещение фигуры: {}", move);
         Figure figureFrom = getFigure(move.getFrom());
         Figure figureTo = getFigure(move.getTo());
         figureFrom.setCurrentPosition(move.getTo());
         figureFrom.setWasMoved(true);
         setFigure(figureFrom);
         removeFigure(move.getFrom());
+        logger.trace("Фигура была перемещена: {}", move);
         return figureTo;
     }
 
@@ -158,7 +169,10 @@ public class Board {
     public Figure getFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        Board.checkCell(x, y);
+        if (!Board.isCorrectCell(x, y)) {
+            logger.warn("Фигура не была установлена на клетку: {}", cell);
+            throw new ChessException(INCORRECT_COORDINATES);
+        }
         return cells[y][x];
     }
 
@@ -170,7 +184,10 @@ public class Board {
     public Figure removeFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        Board.checkCell(x, y);
+        if (!Board.isCorrectCell(x, y)) {
+            logger.warn("Фигура не была удалена с клетки: {}", cell);
+            throw new ChessException(INCORRECT_COORDINATES);
+        }
         Figure old = cells[y][x];
         cells[y][x] = null;
         return old;
@@ -185,6 +202,16 @@ public class Board {
         return Board.isCorrectCell(x, y) && cells[y][x] == null;
     }
 
+    /**
+     * @param color цвет своей фигуры
+     * @return true, если клетка лежит на доске и на этой клетке есть фражеская фигура, иначе false
+     */
+    public boolean isEnemyFigureOn(Color color, Cell cell) {
+        int x = cell.getColumn();
+        int y = cell.getRow();
+        return Board.isCorrectCell(x, y) && cells[y][x] != null && cells[y][x].getColor() != color;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -193,7 +220,7 @@ public class Board {
             sb.append('|');
             for (Figure figure : line) {
                 if (figure == null) sb.append("_");
-                else sb.append(Board.figureToIcon(figure));
+                else sb.append(Board.figureToIcon(figure.getColor(), figure.getType()));
                 sb.append('|');
             }
             sb.append(System.lineSeparator());

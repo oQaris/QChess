@@ -26,7 +26,7 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        logger.debug(roomSettings.board.toString());
+        logger.info(roomSettings.board.toString());
         boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && !isDraw) {
@@ -66,14 +66,15 @@ public class Game {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            logger.debug(
+            logger.info(
                     "{} сделал ход: {} фигурой: {}",
                     currentPlayerToMove,
                     move,
                     roomSettings.board.getFigure(move.getTo()));
-            logger.debug(roomSettings.board.toString());
+            logger.info(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException e) {
+            logger.error("Не удалось выполнить проверенный ход: {}", move);
             throw new ChessError(ERROR_WHILE_ADD_PIECE_MOVE_COUNT, e);
         }
     }
