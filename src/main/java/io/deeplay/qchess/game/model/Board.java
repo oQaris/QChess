@@ -4,11 +4,23 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDIN
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.logics.NotationService;
+import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
@@ -46,6 +58,28 @@ public class Board {
             }
         } catch (ChessException e) {
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
+        }
+    }
+
+    public Board(String placement) throws ChessError {
+        if (!NotationService.checkValidityPlacement(placement)) {
+            throw new ChessError(INCORRECT_STRING_FOR_FILLING_BOARD);
+        }
+        int y = 0;
+        int x = 0;
+        for (Character currentSymbol : placement.toCharArray()) {
+            if(currentSymbol.equals('/')) {
+                y++;
+                x = 0;
+            } else if(Character.isDigit(currentSymbol)) {
+                x += Integer.getInteger(String.valueOf(currentSymbol));
+            } else {
+                try {
+                    setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
+                } catch (ChessException e) {
+                    throw new ChessError(INCORRECT_COORDINATES);
+                }
+            }
         }
     }
 
