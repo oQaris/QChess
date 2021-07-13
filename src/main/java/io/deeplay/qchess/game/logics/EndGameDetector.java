@@ -63,20 +63,13 @@ public class EndGameDetector {
         return roomSettings.history.checkRepetitions(5);
     }
 
-    private boolean isNotEnoughMaterialForCheckmate() {
-        return material.stream()
-                .anyMatch(
-                        m ->
-                                (isAllFiguresSame(Color.BLACK, m)
-                                                && isAllFiguresSame(
-                                                        Color.WHITE,
-                                                        Collections.singletonList(TypeFigure.KING)))
-                                        || (isAllFiguresSame(Color.WHITE, m)
-                                                        && isAllFiguresSame(
-                                                                Color.BLACK,
-                                                                Collections.singletonList(
-                                                                        TypeFigure.KING)))
-                                                && isKingsWithSameBishop());
+    public boolean isNotEnoughMaterialForCheckmate() {
+        if (isKingsWithSameBishop()) return true;
+        for (List<TypeFigure> typeFigures : material) {
+            if (isAllFiguresSame(Color.BLACK, typeFigures) && isOneKing(Color.WHITE)) return true;
+            if (isAllFiguresSame(Color.WHITE, typeFigures) && isOneKing(Color.BLACK)) return true;
+        }
+        return false;
     }
 
     private boolean isAllFiguresSame(Color color, List<TypeFigure> typeFigures) {
@@ -84,6 +77,10 @@ public class EndGameDetector {
         for (Figure figure : roomSettings.board.getFigures(color))
             if (!typeFiguresCopy.remove(figure.getType())) return false;
         return true;
+    }
+
+    private boolean isOneKing(Color color) {
+        return isAllFiguresSame(color, Collections.singletonList(TypeFigure.KING));
     }
 
     private boolean isKingsWithSameBishop() {

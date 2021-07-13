@@ -108,6 +108,8 @@ public class EndGameDetectorTest {
         Assert.assertFalse(endGameDetector.isCheckmate(Color.WHITE));
     }
 
+    // ---------- testIsNotEnoughMaterialForCheckmate ---------- //
+
     @Test
     public void testIsNotEnoughMaterialForCheckmate() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
@@ -120,6 +122,16 @@ public class EndGameDetectorTest {
         Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
 
         board.setFigure(new Knight(Color.WHITE, Cell.parse("e8")));
+        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
+    }
+
+    @Test
+    public void testIsNotEnoughMaterialForCheckmate2() throws ChessException, ChessError {
+        board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
+        board.setFigure(new Knight(Color.WHITE, Cell.parse("e7")));
+
+        Move endMove = new Move(MoveType.QUIET_MOVE, Cell.parse("e5"), Cell.parse("e6"));
         Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
     }
 }
