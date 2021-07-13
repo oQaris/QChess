@@ -31,23 +31,21 @@ public class NotationService {
     }
 
     public static Figure getFigureByChar(Character symbol, int x, int y) {
-        Figure figure = null;
-        Character lowerSymbol = Character.toLowerCase(symbol);
+        Figure figure;
+        char lowerSymbol = Character.toLowerCase(symbol);
         Color figureColor = Character.isLowerCase(symbol) ? Color.BLACK : Color.WHITE;
-        Cell figureCell = new Cell(y, x);
-        if (symbol == 'k') {
-            figure = new King(figureColor, figureCell);
-        } else if (symbol == 'q') {
-            figure = new Queen(figureColor, figureCell);
-        } else if (symbol == 'r') {
-            figure = new Rook(figureColor, figureCell);
-        } else if (symbol == 'b') {
-            figure = new Bishop(figureColor, figureCell);
-        } else if (symbol == 'n') {
-            figure = new Knight(figureColor, figureCell);
-        } else {
-            figure = new Pawn(figureColor, figureCell);
-        }
+        Cell figureCell = new Cell(x, y);
+
+        figure = switch (lowerSymbol) {
+            case 'k' -> new King(figureColor, figureCell);
+            case 'q' -> new Queen(figureColor, figureCell);
+            case 'r' -> new Rook(figureColor, figureCell);
+            case 'b' -> new Bishop(figureColor, figureCell);
+            case 'n' -> new Knight(figureColor, figureCell);
+            case 'p' -> new Pawn(figureColor, figureCell);
+            default -> null;
+        };
+
         return figure;
     }
 
@@ -83,12 +81,11 @@ public class NotationService {
 
     private static List<Character> getAllFigureSymbols(String placement, Color color) {
         List<Character> result = new ArrayList<>(16);
-        boolean colorFlag = color == Color.WHITE;
         for (Character c : placement.toCharArray()) {
             if (!Character.isDigit(c) && !c.equals('/')) {
-                if (Character.isLowerCase(c) && !colorFlag) {
+                if (Character.isLowerCase(c) && (color == Color.BLACK)) {
                     result.add(c);
-                } else if (Character.isUpperCase(c) && colorFlag) {
+                } else if (Character.isUpperCase(c) && (color == Color.WHITE)) {
                     result.add(c);
                 }
             }

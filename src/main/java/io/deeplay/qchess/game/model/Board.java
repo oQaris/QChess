@@ -2,25 +2,15 @@ package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.figures.King;
-import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.logics.NotationService;
-import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.King;
-import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
-import io.deeplay.qchess.game.model.figures.Queen;
-import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
