@@ -43,9 +43,9 @@ public class EndGameDetector {
      */
     private boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
         if (removedFigure != null
-                || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
-            pieceMoveCount = 0;
-        else ++pieceMoveCount;
+                || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) pieceMoveCount = 0;
+        else
+            ++pieceMoveCount;
         return pieceMoveCount == 50;
     }
 
@@ -84,8 +84,7 @@ public class EndGameDetector {
     private boolean isAllFiguresSame(Color color, List<TypeFigure> typeFigures) {
         List<TypeFigure> typeFiguresCopy = new ArrayList<>(typeFigures);
         for (Figure figure : roomSettings.board.getFigures(color))
-            if (!typeFiguresCopy.remove(figure.getType()))
-                return false;
+            if (!typeFiguresCopy.remove(figure.getType())) return false;
         return true;
     }
 
@@ -104,8 +103,7 @@ public class EndGameDetector {
 
     private Figure getBishop(Color color) {
         for (Figure figure : roomSettings.board.getFigures(color))
-            if (figure.getType() == TypeFigure.BISHOP)
-                return figure;
+            if (figure.getType() == TypeFigure.BISHOP) return figure;
         return null;
     }
 

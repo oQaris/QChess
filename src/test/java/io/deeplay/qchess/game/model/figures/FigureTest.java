@@ -37,23 +37,21 @@ public class FigureTest {
         board.setFigure(bishop1);
 
         Assert.assertEquals(
-                toCellsSet("D8", "F8", "D6", "F6", "C5", "G5", "B4", "H4", "A3"),
-                extractCellTo(bishop1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "F8", "D6", "F6", "C5", "G5", "B4", "H4", "A3"),
+                FigureTest.extractCellTo(bishop1.getAllMoves(gameSettings)));
 
         Figure bishop2 = new Bishop(Color.WHITE, Cell.parse("b3"));
         board.setFigure(bishop2);
 
         Assert.assertEquals(
-                toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8"),
-                extractCellTo(bishop2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8"),
+                FigureTest.extractCellTo(bishop2.getAllMoves(gameSettings)));
     }
 
     private static Set<Cell> toCellsSet(String... pos) {
         Objects.requireNonNull(pos, "Массив строк не может быть null");
         Set<Cell> result = new HashSet<>();
-        for (String p : pos) {
-            result.add(Cell.parse(p));
-        }
+        for (String p : pos) result.add(Cell.parse(p));
         return result;
     }
 
@@ -71,8 +69,8 @@ public class FigureTest {
         board.setFigure(bishop);
 
         Assert.assertEquals(
-                toCellsSet("A3", "B2", "D2", "E3"),
-                extractCellTo(bishop.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("A3", "B2", "D2", "E3"),
+                FigureTest.extractCellTo(bishop.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -94,10 +92,10 @@ public class FigureTest {
         Figure rook = new Rook(Color.BLACK, Cell.parse("a6"));
         board.setFigure(rook);
         Assert.assertEquals(
-                toCellsSet(
+                FigureTest.toCellsSet(
                         "A8", "A7", "A5", "A4", "A3", "A2", "A1", "B6", "C6", "D6", "E6", "F6",
                         "G6", "H6"),
-                extractCellTo(rook.getAllMoves(gameSettings)));
+                FigureTest.extractCellTo(rook.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -120,10 +118,10 @@ public class FigureTest {
         Figure queen = new Queen(Color.BLACK, Cell.parse("b3"));
         board.setFigure(queen);
         Assert.assertEquals(
-                toCellsSet(
+                FigureTest.toCellsSet(
                         "A4", "C2", "D1", "A2", "C4", "D5", "E6", "F7", "G8", "B8", "B7", "B6",
                         "B5", "B4", "B2", "B1", "A3", "C3", "D3", "E3", "F3", "G3", "H3"),
-                extractCellTo(queen.getAllMoves(gameSettings)));
+                FigureTest.extractCellTo(queen.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -138,8 +136,8 @@ public class FigureTest {
         board.setFigure(new Pawn(Color.WHITE, Cell.parse("b6")));
         board.setFigure(new Pawn(Color.WHITE, Cell.parse("d6")));
         Assert.assertEquals(
-                toCellsSet("D7", "B7", "A8", "B5", "A4", "D5", "E4", "F3", "G2", "H1"),
-                extractCellTo(queen.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D7", "B7", "A8", "B5", "A4", "D5", "E4", "F3", "G2", "H1"),
+                FigureTest.extractCellTo(queen.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -151,11 +149,11 @@ public class FigureTest {
         board.setFigure(king2);
 
         Assert.assertEquals(
-                toCellsSet("D1", "D2", "E2", "F2", "F1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("D8", "D7", "E7", "F7", "F8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
 
         Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
         Figure rookW2 = new Rook(Color.WHITE, Cell.parse("a1"));
@@ -176,16 +174,16 @@ public class FigureTest {
         board.setFigure(pawnW2);
 
         Assert.assertEquals(
-                toCellsSet("D1", "D2", "E2", "F2", "F1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("D8", "D7", "E7", "F7", "F8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testKingCastling_falseRook() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         Figure knightW1 = new Knight(Color.WHITE, Cell.parse("h1"));
@@ -200,16 +198,16 @@ public class FigureTest {
         board.setFigure(knightB2);
 
         Assert.assertEquals(
-                toCellsSet("D1", "D2", "E2", "F2", "F1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("D8", "D7", "E7", "F7", "F8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
     }
 
     @Test
     public void testKingCastling_1() throws ChessException {
-        //--- Король ---//
+        // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
         Figure king2 = new King(Color.BLACK, Cell.parse("e8"));
         Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
@@ -224,11 +222,11 @@ public class FigureTest {
         board.setFigure(rookB2);
 
         Assert.assertEquals(
-                toCellsSet("C1", "D1", "D2", "E2", "F2", "F1", "G1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("C1", "D1", "D2", "E2", "F2", "F1", "G1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("C8", "D8", "D7", "E7", "F7", "F8", "G8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("C8", "D8", "D7", "E7", "F7", "F8", "G8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
 
         rookW1.setWasMoved(true);
         rookW2.setWasMoved(true);
@@ -236,11 +234,11 @@ public class FigureTest {
         rookB2.setWasMoved(true);
 
         Assert.assertEquals(
-                toCellsSet("D1", "D2", "E2", "F2", "F1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("D8", "D7", "E7", "F7", "F8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -263,11 +261,11 @@ public class FigureTest {
         king2.setWasMoved(true);
 
         Assert.assertEquals(
-                toCellsSet("D1", "D2", "E2", "F2", "F1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("D8", "D7", "E7", "F7", "F8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -292,11 +290,11 @@ public class FigureTest {
         board.setFigure(FrookW);
 
         Assert.assertEquals(
-                toCellsSet("D1", "D2", "E2", "F2", "F1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("D8", "D7", "E7", "F7", "F8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -325,11 +323,11 @@ public class FigureTest {
         board.setFigure(FrookW2);
 
         Assert.assertEquals(
-                toCellsSet("D1", "D2", "E2", "F2", "F1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("D8", "D7", "E7", "F7", "F8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -358,11 +356,11 @@ public class FigureTest {
         board.setFigure(FrookW2);
 
         Assert.assertEquals(
-                toCellsSet("D1", "D2", "E2", "F2", "F1"),
-                extractCellTo(king1.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D1", "D2", "E2", "F2", "F1"),
+                FigureTest.extractCellTo(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toCellsSet("D8", "D7", "E7", "F7", "F8"),
-                extractCellTo(king2.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("D8", "D7", "E7", "F7", "F8"),
+                FigureTest.extractCellTo(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -371,8 +369,8 @@ public class FigureTest {
         Figure knight = new Knight(Color.BLACK, Cell.parse("f4"));
         board.setFigure(knight);
         Assert.assertEquals(
-                toCellsSet("E6", "G6", "D5", "D3", "E2", "G2", "H3", "H5"),
-                extractCellTo(knight.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("E6", "G6", "D5", "D3", "E2", "G2", "H3", "H5"),
+                FigureTest.extractCellTo(knight.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -388,8 +386,7 @@ public class FigureTest {
         board.setFigure(pawn2);
         board.setFigure(pawn3);
         Assert.assertEquals(
-                toCellsSet("b3", "c2"),
-                extractCellTo(knight.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("b3", "c2"), FigureTest.extractCellTo(knight.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -401,8 +398,7 @@ public class FigureTest {
         board.setFigure(enemy);
 
         Assert.assertEquals(
-                toCellsSet("C3", "C4", "D3"),
-                extractCellTo(pawn.getAllMoves(gameSettings)));
+                FigureTest.toCellsSet("C3", "C4", "D3"), FigureTest.extractCellTo(pawn.getAllMoves(gameSettings)));
 
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("c3")));
 
@@ -478,9 +474,8 @@ public class FigureTest {
         board.setFigure(figureW2);
         board.setFigure(figureW3);
 
-        Assert.assertEquals(toCellsSet("b3", "c3"),
-                extractCellTo(figureB1.getAllMoves(gameSettings)));
-        Assert.assertEquals(toCellsSet("b3"),
-                extractCellTo(figureW3.getAllMoves(gameSettings)));
+        Assert.assertEquals(
+                FigureTest.toCellsSet("b3", "c3"), FigureTest.extractCellTo(figureB1.getAllMoves(gameSettings)));
+        Assert.assertEquals(FigureTest.toCellsSet("b3"), FigureTest.extractCellTo(figureW3.getAllMoves(gameSettings)));
     }
 }

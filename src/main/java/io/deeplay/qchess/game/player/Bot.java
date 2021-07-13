@@ -45,8 +45,7 @@ public class Bot extends Player {
                     maxGrade = curGrade;
                     topMoves.clear();
                 }
-                if (curGrade >= maxGrade)
-                    topMoves.add(move);
+                if (curGrade >= maxGrade) topMoves.add(move);
             } catch (ChessException e) {
                 throw new ChessError(BOT_ERROR, e);
             }
@@ -56,7 +55,6 @@ public class Bot extends Player {
     }
 
     private void checkTurnInto(Move move) {
-        if (move.getMoveType() == MoveType.TURN_INTO)
-            move.setTurnInto(new Queen(color, move.getTo()));
+        if (move.getMoveType() == MoveType.TURN_INTO) move.setTurnInto(new Queen(color, move.getTo()));
     }
 }

@@ -42,20 +42,28 @@ public class King extends Figure {
     public Set<Move> getAttackedMoves(Board board) {
         return stepForEach(
                 board,
-                Stream.concat(Figure.xMove.stream(), Figure.plusMove.stream()).collect(Collectors.toList()));
+                Stream.concat(Figure.xMove.stream(), Figure.plusMove.stream())
+                        .collect(Collectors.toList()));
     }
 
     /** @return true, если рокировка возможна */
     private boolean isCorrectCastling(GameSettings settings, boolean shortCastling) {
         if (wasMoved
-                || !settings.board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
-                || !settings.board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
-                || !shortCastling && !settings.board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
+                || !settings.board.isEmptyCell(
+                position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
+                || !settings.board.isEmptyCell(
+                position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
+                || !shortCastling
+                        && !settings.board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
                 || Board.isAttackedCell(settings, position, color.inverse())
-                || Board.isAttackedCell(settings, position.createAdd(new Cell(shortCastling ? 1 : -1, 0)), color.inverse())
-                || Board.isAttackedCell(settings, position.createAdd(new Cell(shortCastling ? 2 : -2, 0)), color.inverse())) {
-            return false;
-        }
+                || Board.isAttackedCell(
+                        settings,
+                position.createAdd(new Cell(shortCastling ? 1 : -1, 0)),
+                color.inverse())
+                || Board.isAttackedCell(
+                        settings,
+                position.createAdd(new Cell(shortCastling ? 2 : -2, 0)),
+                color.inverse())) return false;
         try {
             Figure rook =
                     settings.board.getFigure(
