@@ -62,13 +62,14 @@ public class Board {
                 y++;
                 x = 0;
             } else if(Character.isDigit(currentSymbol)) {
-                x += Integer.getInteger(String.valueOf(currentSymbol));
+                x += Integer.parseInt(String.valueOf(currentSymbol));
             } else {
                 try {
                     setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
                 } catch (ChessException e) {
                     throw new ChessError(INCORRECT_COORDINATES);
                 }
+                x++;
             }
         }
     }
