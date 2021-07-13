@@ -1,4 +1,5 @@
 .idea/
 target/
 *.iml
-nb-configuration.xml
+*.log
+*.log.gz

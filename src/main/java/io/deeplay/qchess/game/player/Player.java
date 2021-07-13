@@ -8,9 +8,9 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 
 public abstract class Player {
-    protected MoveSystem ms;
     protected Board board;
     protected Color color;
+    protected MoveSystem ms;
 
     protected Player(GameSettings roomSettings, Color color) {
         ms = roomSettings.moveSystem;
@@ -22,9 +22,7 @@ public abstract class Player {
         return color;
     }
 
-    /**
-     * @return возвращает проверенный ход
-     */
+    /** @return возвращает проверенный ход */
     public abstract Move getNextMove() throws ChessError;
 
     @Override

@@ -15,9 +15,7 @@ import java.util.Set;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
-/**
- * Хранит различные данные об игре для контроля специфичных ситуаций
- */
+/** Хранит различные данные об игре для контроля специфичных ситуаций */
 public class MoveSystem {
     private final GameSettings roomSettings;
     private final Board board;
@@ -34,39 +32,44 @@ public class MoveSystem {
     /**
      * Делает ход без проверок
      *
-     * @return удаленная фигура или null, если клетка была пуста
+     * @return удаленная фигура или null, если ни одну фигуру не взяли
      */
     public Figure move(Move move) throws ChessError {
         try {
-            // взятие на проходе
-            if (move.getMoveType() == MoveType.EN_PASSANT) {
-                board.removeFigure(history.getPrevMove().getTo());
-            }
+            Figure removedFigure = switch (move.getMoveType()) {
+                // взятие на проходе
+                case EN_PASSANT -> {
+                    board.moveFigure(move);
+                    yield board.removeFigure(history.getPrevMove().getTo());
+                }
+                // превращение пешки
+                case TURN_INTO -> {
+                    Figure turnIntoFigure = move.getTurnInto();
+                    turnIntoFigure.setCurrentPosition(move.getTo());
+                    Figure removed = board.moveFigure(move);
+                    board.setFigure(turnIntoFigure);
+                    yield removed;
+                }
+                // рокировка
+                case SHORT_CASTLING -> {
+                    Cell from = move.getFrom().createAdd(new Cell(3, 0));
+                    Cell to = move.getFrom().createAdd(new Cell(1, 0));
+                    board.getFigure(from).setWasMoved(true);
+                    board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
+                    yield board.moveFigure(move);
+                }
+                case LONG_CASTLING->{
+                    Cell from = move.getFrom().createAdd(new Cell(-4, 0));
+                    Cell to = move.getFrom().createAdd(new Cell(-1, 0));
+                    board.getFigure(from).setWasMoved(true);
+                    board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
+                    yield board.moveFigure(move);
+                }
+                default -> board.moveFigure(move);
+            };
 
-            // превращение пешки
-            if (move.getMoveType() == MoveType.TURN_INTO) {
-                Figure turnIntoFigure = move.getTurnInto();
-                turnIntoFigure.setCurrentPosition(move.getTo());
-                board.setFigure(turnIntoFigure);
-            }
-
-            // рокировка
-            if (move.getMoveType() == MoveType.SHORT_CASTLING) {
-                Cell from = move.getFrom().createAdd(new Cell(3, 0));
-                Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                board.getFigure(from).setWasMoved(true);
-                board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-            }
-            if (move.getMoveType() == MoveType.LONG_CASTLING) {
-                Cell from = move.getFrom().createAdd(new Cell(-4, 0));
-                Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                board.getFigure(from).setWasMoved(true);
-                board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-            }
-
-            // ход
-            Figure removedFigure = board.moveFigure(move);
             history.addRecord(move);
+
             return removedFigure;
         } catch (ChessException | NullPointerException e) {
             throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
@@ -89,9 +92,7 @@ public class MoveSystem {
         return res;
     }
 
-    /**
-     * @return true если ход корректный
-     */
+    /** @return true если ход корректный */
     public boolean isCorrectMove(Move move) throws ChessError {
         try {
             return checkCorrectnessIfSpecificMove(move)
@@ -114,34 +115,29 @@ public class MoveSystem {
             return move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
                     && (move.getTurnInto().getType() == TypeFigure.BISHOP
-                    || move.getTurnInto().getType() == TypeFigure.KNIGHT
-                    || move.getTurnInto().getType() == TypeFigure.QUEEN
-                    || move.getTurnInto().getType() == TypeFigure.ROOK);
+                            || move.getTurnInto().getType() == TypeFigure.KNIGHT
+                            || move.getTurnInto().getType() == TypeFigure.QUEEN
+                            || move.getTurnInto().getType() == TypeFigure.ROOK);
         }
 
         return true;
     }
 
-    /**
-     * @return true если ход лежит в доступных
-     */
+    /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move) throws ChessException {
         Figure figure = board.getFigure(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(roomSettings);
         return allMoves.contains(move);
     }
 
-    /**
-     * @param move корректный ход
-     */
+    /** @param move корректный ход */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
         Figure figureToMove = board.getFigure(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) {
+        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING)
             throw new ChessError(KING_NOT_FOUND);
-        }
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));

@@ -1,23 +1,31 @@
 <configuration>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <!-- encoders are assigned the type
-             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <target>System.out</target>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>qchess.log</file>
+    <appender name="FILE-PARTIAL-STREAM" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>qchess-partial-stream.log</file>
         <append>true</append>
+
+        <param name="Threshold" value="DEBUG"/>
 
         <encoder>
             <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p [%t] %c{1}: %m%n</Pattern>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>test.%i.log.gz</fileNamePattern>
+            <fileNamePattern>qchess-partial-stream.%i.log.gz</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>3</maxIndex>
         </rollingPolicy>
@@ -27,12 +35,21 @@
         </triggeringPolicy>
     </appender>
 
-    <root level="info">
-        <appender-ref ref="STDOUT"/>
-    </root>
+    <appender name="FILE-LAST-SESSION" class="ch.qos.logback.core.FileAppender">
+        <file>qchess-last-session.log</file>
+        <append>false</append>
+
+        <param name="Threshold" value="DEBUG"/>
+
+        <encoder>
+            <Pattern>%c %d{yyyy.MM.dd HH:mm:ss.SSS} %-5p [%t] %c{1}: %m%n</Pattern>
+        </encoder>
+    </appender>
 
     <root level="debug">
-        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-PARTIAL-STREAM"/>
+        <appender-ref ref="FILE-LAST-SESSION"/>
     </root>
 
 </configuration>
