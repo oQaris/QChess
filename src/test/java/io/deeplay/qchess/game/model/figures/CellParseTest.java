@@ -19,13 +19,7 @@ public class CellParseTest {
 
     @Parameterized.Parameters(name = "{index}: {0}")
     public static Iterable<Object[]> dataForTest() {
-        return Arrays.asList(new Object[][]{
-                {"a0"},
-                {"j1"},
-                {"а1"},
-                {"а11"},
-                {""}
-        });
+        return Arrays.asList(new Object[][] {{"a0"}, {"j1"}, {"а1"}, {"а11"}, {""}});
     }
 
     @Test(expected = IllegalArgumentException.class)

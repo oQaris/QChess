@@ -36,7 +36,7 @@ public class Bot extends Player {
     public Move getNextMove() throws ChessError {
         List<Move> topMoves = new ArrayList<>();
         int maxGrade = 0;
-        for (Move move : ms.getAllCorrectMoves(color))
+        for (Move move : ms.getAllCorrectMoves(color)) {
             try {
                 Figure fig = board.getFigure(move.getTo());
 
@@ -45,12 +45,14 @@ public class Bot extends Player {
                     maxGrade = curGrade;
                     topMoves.clear();
                 }
-                if (curGrade >= maxGrade)
+                if (curGrade >= maxGrade) {
                     topMoves.add(move);
+                }
 
             } catch (ChessException e) {
                 throw new ChessError(BOT_ERROR, e);
             }
+        }
         Move move = topMoves.get(new Random().nextInt(topMoves.size()));
         checkTurnInto(move);
         return move;

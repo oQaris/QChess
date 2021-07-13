@@ -33,7 +33,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_blackPawnAttack_1() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_blackPawnAttack_1()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
@@ -73,7 +75,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_blackPawnAttack_2() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_blackPawnAttack_2()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move white2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c2"), Cell.parse("c3"));
         Figure figureW2 = new Pawn(Color.WHITE, white2.getTo());
 
@@ -89,7 +93,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_blackPawnAttack_3() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_blackPawnAttack_3()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move white3 = new Move(MoveType.ATTACK, Cell.parse("c2"), Cell.parse("d3"));
         Figure figureW3 = new Pawn(Color.WHITE, white3.getTo());
 
@@ -105,7 +111,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_notPawnDefense() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_notPawnDefense()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Knight(Color.WHITE, white1.getTo());
 
@@ -121,7 +129,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_notPawnAttack() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_notPawnAttack()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
@@ -149,7 +159,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_whitePawnAttack_1() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_whitePawnAttack_1()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move black1 = new Move(MoveType.LONG_MOVE, Cell.parse("c7"), Cell.parse("c5"));
         Figure figureB1 = new Pawn(Color.BLACK, black1.getTo());
 
@@ -183,7 +195,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_whitePawnAttack_2() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_whitePawnAttack_2()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move black2 = new Move(MoveType.QUIET_MOVE, Cell.parse("c7"), Cell.parse("c6"));
         Figure figureB2 = new Pawn(Color.BLACK, black2.getTo());
 
@@ -199,7 +213,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_whitePawnAttack_3() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_whitePawnAttack_3()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move black3 = new Move(MoveType.ATTACK, Cell.parse("c7"), Cell.parse("d6"));
         Figure figureB3 = new Pawn(Color.BLACK, black3.getTo());
 
@@ -215,7 +231,9 @@ public class MoveSystemTest {
     }
 
     @Test
-    public void testIsCorrectPawnEnPassant_sameColors() throws ChessException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    public void testIsCorrectPawnEnPassant_sameColors()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Move white2 = new Move(MoveType.ATTACK, Cell.parse("b2"), Cell.parse("c3"));
         Figure figure1 = new Pawn(Color.WHITE, white1.getTo());
@@ -359,5 +377,122 @@ public class MoveSystemTest {
         board.setFigure(new Rook(Color.BLACK, Cell.parse("d8")));
 
         Assert.assertTrue(ms.isCorrectMove(move4));
+    }
+
+    @Test
+    public void testMove_QUIET_MOVE() throws ChessException, ChessError {
+        Figure figure = new King(Color.WHITE, Cell.parse("d4"));
+        board.setFigure(figure);
+
+        Figure removed = ms.move(new Move(MoveType.QUIET_MOVE, Cell.parse("d4"), Cell.parse("c5")));
+
+        Assert.assertEquals(figure, board.getFigure(Cell.parse("c5")));
+        Assert.assertNull(removed);
+        Assert.assertNull(board.getFigure(Cell.parse("d4")));
+    }
+
+    @Test
+    public void testMove_ATTACK() throws ChessException, ChessError {
+        Figure white = new Pawn(Color.WHITE, Cell.parse("c3"));
+        Figure black = new Pawn(Color.BLACK, Cell.parse("d4"));
+        board.setFigure(white);
+        board.setFigure(black);
+
+        Figure removed = ms.move(new Move(MoveType.ATTACK, Cell.parse("d4"), Cell.parse("c3")));
+
+        Assert.assertEquals(white, removed);
+        Assert.assertNull(board.getFigure(Cell.parse("d4")));
+        Assert.assertEquals(black, board.getFigure(Cell.parse("c3")));
+    }
+
+    @Test
+    public void testMove_LONG_MOVE() throws ChessException, ChessError {
+        Figure white = new Pawn(Color.WHITE, Cell.parse("c2"));
+        board.setFigure(white);
+
+        Figure removed = ms.move(new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4")));
+
+        Assert.assertNull(removed);
+        Assert.assertNull(board.getFigure(Cell.parse("c2")));
+        Assert.assertNull(board.getFigure(Cell.parse("c3")));
+        Assert.assertEquals(white, board.getFigure(Cell.parse("c4")));
+    }
+
+    @Test
+    public void testMove_EN_PASSANT()
+            throws ChessException, ChessError, NoSuchFieldException, IllegalAccessException {
+        Figure white = new Pawn(Color.WHITE, Cell.parse("c4"));
+        Figure black = new Pawn(Color.BLACK, Cell.parse("b4"));
+        board.setFigure(white);
+        board.setFigure(black);
+
+        setPrevMove(new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4")));
+
+        Figure removed = ms.move(new Move(MoveType.EN_PASSANT, Cell.parse("b4"), Cell.parse("c3")));
+
+        Assert.assertEquals(white, removed);
+        Assert.assertEquals(black, board.getFigure(Cell.parse("c3")));
+        Assert.assertNull(board.getFigure(Cell.parse("b4")));
+        Assert.assertNull(board.getFigure(Cell.parse("c4")));
+    }
+
+    @Test
+    public void testMove_TURN_INTO() throws ChessException, ChessError {
+        Figure white = new Pawn(Color.WHITE, Cell.parse("d7"));
+        Figure black = new Pawn(Color.BLACK, Cell.parse("c2"));
+        Figure whiteQueen = new Queen(Color.WHITE, Cell.parse("d8"));
+        Figure blackQueen = new Queen(Color.BLACK, Cell.parse("c1"));
+        board.setFigure(white);
+        board.setFigure(black);
+
+        Move move = new Move(MoveType.TURN_INTO, Cell.parse("d7"), Cell.parse("d8"));
+        move.setTurnInto(whiteQueen);
+        Figure removed = ms.move(move);
+
+        Assert.assertNull(removed);
+        Assert.assertNull(board.getFigure(Cell.parse("d7")));
+        Assert.assertEquals(whiteQueen, board.getFigure(Cell.parse("d8")));
+
+        move = new Move(MoveType.TURN_INTO, Cell.parse("c2"), Cell.parse("c1"));
+        move.setTurnInto(blackQueen);
+        removed = ms.move(move);
+
+        Assert.assertNull(removed);
+        Assert.assertNull(board.getFigure(Cell.parse("c2")));
+        Assert.assertEquals(blackQueen, board.getFigure(Cell.parse("c1")));
+    }
+
+    @Test
+    public void testMove_SHORT_CASTLING() throws ChessException, ChessError {
+        Figure king = new King(Color.WHITE, Cell.parse("e1"));
+        Figure rook = new Rook(Color.WHITE, Cell.parse("h1"));
+        board.setFigure(king);
+        board.setFigure(rook);
+
+        Figure removed =
+                ms.move(new Move(MoveType.SHORT_CASTLING, Cell.parse("e1"), Cell.parse("g1")));
+
+        Assert.assertNull(removed);
+        Assert.assertNull(board.getFigure(Cell.parse("e1")));
+        Assert.assertNull(board.getFigure(Cell.parse("h1")));
+        Assert.assertEquals(king, board.getFigure(Cell.parse("g1")));
+        Assert.assertEquals(rook, board.getFigure(Cell.parse("f1")));
+    }
+
+    @Test
+    public void testMove_LONG_CASTLING() throws ChessException, ChessError {
+        Figure king = new King(Color.WHITE, Cell.parse("e1"));
+        Figure rook = new Rook(Color.WHITE, Cell.parse("a1"));
+        board.setFigure(king);
+        board.setFigure(rook);
+
+        Figure removed =
+                ms.move(new Move(MoveType.LONG_CASTLING, Cell.parse("e1"), Cell.parse("c1")));
+
+        Assert.assertNull(removed);
+        Assert.assertNull(board.getFigure(Cell.parse("e1")));
+        Assert.assertNull(board.getFigure(Cell.parse("a1")));
+        Assert.assertEquals(king, board.getFigure(Cell.parse("c1")));
+        Assert.assertEquals(rook, board.getFigure(Cell.parse("d1")));
     }
 }

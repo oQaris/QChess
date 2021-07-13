@@ -63,23 +63,6 @@ public class Board {
     }
 
     /**
-     * @return true, если клетка cell атакуется цветом color
-     */
-    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
-        for (Figure f : settings.board.getFigures(color)) {
-            for (Move m :
-                    f.getType() == TypeFigure.KING
-                            ? ((King) f).getAttackedMoves(settings.board)
-                            : f.getAllMoves(settings)) {
-                if (m.getTo().equals(cell)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * Устанавливает фигуру на доску
      */
     public void setFigure(Figure figure) throws ChessException {
@@ -96,6 +79,23 @@ public class Board {
      */
     public boolean isCorrectCell(int column, int row) {
         return column >= 0 && row >= 0 && column < BOARD_SIZE && row < BOARD_SIZE;
+    }
+
+    /**
+     * @return true, если клетка cell атакуется цветом color
+     */
+    public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
+        for (Figure f : settings.board.getFigures(color)) {
+            for (Move m :
+                    f.getType() == TypeFigure.KING
+                            ? ((King) f).getAttackedMoves(settings.board)
+                            : f.getAllMoves(settings)) {
+                if (m.getTo().equals(cell)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -178,8 +178,9 @@ public class Board {
     }
 
     private void checkCell(int col, int row) throws ChessException {
-        if (!isCorrectCell(col, row))
+        if (!isCorrectCell(col, row)) {
             throw new ChessException(INCORRECT_COORDINATES);
+        }
     }
 
     /**
