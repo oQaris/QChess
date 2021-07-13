@@ -1,7 +1,5 @@
 package io.deeplay.qchess.game.logics;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_CHECKING_FOR_DRAW;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -32,13 +30,9 @@ public class EndGameDetector {
 
     /** @return true, если это не ничья */
     public boolean isDraw(Figure removedFigure, Move move) throws ChessError {
-        try {
-            return isDrawWithMoves(removedFigure, move)
-                    || isDrawWithRepetitions()
-                    || isDrawWithNotEnoughMaterialForCheckmate();
-        } catch (ChessException e) {
-            throw new ChessError(ERROR_WHILE_CHECKING_FOR_DRAW, e);
-        }
+        return isDrawWithMoves()
+                || isDrawWithRepetitions()
+                || isDrawWithNotEnoughMaterialForCheckmate();
     }
 
     /**
@@ -46,12 +40,15 @@ public class EndGameDetector {
      *
      * @return true, если ничья
      */
-    public boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
+    public boolean isDrawWithMoves() {
+        return pieceMoveCount >= 50;
+    }
+
+    public void checkAndAddPieceMoveCount(Figure removedFigure, Move move) throws ChessException {
         if (removedFigure != null
                 || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
             pieceMoveCount = 0;
         else ++pieceMoveCount;
-        return pieceMoveCount >= 50;
     }
 
     /**
@@ -63,6 +60,11 @@ public class EndGameDetector {
         return roomSettings.history.checkRepetitions(5);
     }
 
+    /**
+     * Недостаточно фигур, чтобы поставить мат
+     *
+     * @return true, если ничья
+     */
     public boolean isDrawWithNotEnoughMaterialForCheckmate() {
         if (isKingsWithSameBishop()) return true;
         for (List<TypeFigure> typeFigures : material) {

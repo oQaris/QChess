@@ -123,17 +123,19 @@ public class EndGameDetectorTest {
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
         Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
 
-        Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
-        Assert.assertFalse(
-                endGameDetector.isDrawWithMoves(
-                        new Knight(Color.BLACK, Cell.parse("e2")), moveAttack));
-        Assert.assertFalse(endGameDetector.isDrawWithMoves(null, move));
+        endGameDetector.checkAndAddPieceMoveCount(null, move);
+        Assert.assertTrue(endGameDetector.isDrawWithMoves());
+        endGameDetector.checkAndAddPieceMoveCount(
+                new Knight(Color.BLACK, Cell.parse("e2")), moveAttack);
+        Assert.assertFalse(endGameDetector.isDrawWithMoves());
+        endGameDetector.checkAndAddPieceMoveCount(null, move);
+        Assert.assertFalse(endGameDetector.isDrawWithMoves());
 
         count.set(endGameDetector, 50);
 
-        Assert.assertFalse(
-                endGameDetector.isDrawWithMoves(
-                        new Pawn(Color.BLACK, Cell.parse("e2")), moveAttack));
+        endGameDetector.checkAndAddPieceMoveCount(
+                new Pawn(Color.BLACK, Cell.parse("e2")), moveAttack);
+        Assert.assertFalse(endGameDetector.isDrawWithMoves());
     }
 
     @Test
@@ -146,8 +148,10 @@ public class EndGameDetectorTest {
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
 
-        Assert.assertFalse(endGameDetector.isDrawWithMoves(null, move));
-        Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
+        endGameDetector.checkAndAddPieceMoveCount(null, move);
+        Assert.assertFalse(endGameDetector.isDrawWithMoves());
+        endGameDetector.checkAndAddPieceMoveCount(null, move);
+        Assert.assertTrue(endGameDetector.isDrawWithMoves());
     }
 
     // ---------- testIsDrawWithRepetitions ---------- //

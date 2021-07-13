@@ -1,6 +1,6 @@
 package io.deeplay.qchess.game;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PIECE_MOVE_COUNT;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -42,8 +42,15 @@ public class Game {
                 // TODO: отправлять ответ, что ход некорректный
             }
         }
-        if (isDraw) Game.logger.info("Игра окончена: ничья");
-        else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
+        if (isDraw) {
+            logger.info("Игра окончена: ничья");
+            if (roomSettings.endGameDetector.isDrawWithMoves())
+                logger.info("Причина ничьи: пешка не ходила 50 ходов и никто не рубил");
+            if (roomSettings.endGameDetector.isDrawWithRepetitions())
+                logger.info("Причина ничьи: было 5 повторений позиций доски");
+            if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
+                logger.info("Причина ничьи: недостаточно фигур, чтобы поставить мат");
+        } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
             logger.info(
                     "Игра окончена: мат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
@@ -59,6 +66,7 @@ public class Game {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
+            roomSettings.endGameDetector.checkAndAddPieceMoveCount(removedFigure, move);
             logger.debug(
                     "{} сделал ход: {} фигурой: {}",
                     currentPlayerToMove,
@@ -67,7 +75,7 @@ public class Game {
             logger.debug(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException e) {
-            throw new ChessError(LOG_FAILED, e);
+            throw new ChessError(ERROR_WHILE_ADD_PIECE_MOVE_COUNT, e);
         }
     }
 }
