@@ -2,10 +2,8 @@ package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
@@ -22,14 +20,13 @@ public class EndGameDetector {
                     Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
                     Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
                     Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
-    private int pieceMoveCount = 0;
 
     public EndGameDetector(GameSettings roomSettings) {
         this.roomSettings = roomSettings;
     }
 
     /** @return true, если это не ничья */
-    public boolean isDraw(Figure removedFigure, Move move) throws ChessError {
+    public boolean isDraw() {
         return isDrawWithMoves()
                 || isDrawWithRepetitions()
                 || isDrawWithNotEnoughMaterialForCheckmate();
@@ -41,14 +38,7 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithMoves() {
-        return pieceMoveCount >= 50;
-    }
-
-    public void checkAndAddPieceMoveCount(Figure removedFigure, Move move) throws ChessException {
-        if (removedFigure != null
-                || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
-            pieceMoveCount = 0;
-        else ++pieceMoveCount;
+        return roomSettings.history.getPieceMoveCount() >= 50;
     }
 
     /**

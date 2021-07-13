@@ -462,7 +462,7 @@ public class FigureTest {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
-        Field prevMove = gameSettings.history.getClass().getDeclaredField("prevMove");
+        Field prevMove = gameSettings.history.getClass().getDeclaredField("lastMove");
         prevMove.setAccessible(true);
         prevMove.set(gameSettings.history, white1);
 

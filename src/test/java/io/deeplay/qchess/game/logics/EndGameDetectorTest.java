@@ -115,42 +115,40 @@ public class EndGameDetectorTest {
     @Test
     public void testIsDrawWithMoves_1()
             throws NoSuchFieldException, IllegalAccessException, ChessException {
-        Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
+        Field count = gs.history.getClass().getDeclaredField("pieceMoveCount");
         count.setAccessible(true);
-        count.set(endGameDetector, 50);
+        count.set(gs.history, 50);
 
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
         Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
 
-        endGameDetector.checkAndAddPieceMoveCount(null, move);
+        gs.history.checkAndAddPieceMoveCount(move);
         Assert.assertTrue(endGameDetector.isDrawWithMoves());
-        endGameDetector.checkAndAddPieceMoveCount(
-                new Knight(Color.BLACK, Cell.parse("e2")), moveAttack);
+        gs.history.checkAndAddPieceMoveCount(moveAttack);
         Assert.assertFalse(endGameDetector.isDrawWithMoves());
-        endGameDetector.checkAndAddPieceMoveCount(null, move);
+        gs.history.checkAndAddPieceMoveCount(move);
         Assert.assertFalse(endGameDetector.isDrawWithMoves());
 
-        count.set(endGameDetector, 50);
+        count.set(gs.history, 50);
 
-        endGameDetector.checkAndAddPieceMoveCount(
-                new Pawn(Color.BLACK, Cell.parse("e2")), moveAttack);
+        gs.history.checkAndAddPieceMoveCount(moveAttack);
         Assert.assertFalse(endGameDetector.isDrawWithMoves());
     }
 
     @Test
     public void testIsDrawWithMoves_2()
             throws NoSuchFieldException, IllegalAccessException, ChessException {
-        Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
+        Field count = gs.history.getClass().getDeclaredField("pieceMoveCount");
         count.setAccessible(true);
-        count.set(endGameDetector, 48);
+        count.set(gs.history, 48);
 
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
 
-        endGameDetector.checkAndAddPieceMoveCount(null, move);
+        gs.history.checkAndAddPieceMoveCount(move);
         Assert.assertFalse(endGameDetector.isDrawWithMoves());
-        endGameDetector.checkAndAddPieceMoveCount(null, move);
+        gs.history.checkAndAddPieceMoveCount(move);
         Assert.assertTrue(endGameDetector.isDrawWithMoves());
     }
 

@@ -23,7 +23,8 @@ public class History implements Iterable<String> {
     private final List<String> recordsList;
     private final Board board;
     private boolean whiteStep = true;
-    private Move prevMove;
+    private Move lastMove;
+    private int pieceMoveCount = 0;
 
     public History(Board board) throws ChessError {
         this.board = board;
@@ -50,11 +51,11 @@ public class History implements Iterable<String> {
      * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные
      * приписки
      *
-     * @param prevMove предыдущий ход или null, если его не было
+     * @param lastMove последний ход или null, если его не было
      * @return Строка - только что добавленная запись
      */
-    public String addRecord(Move prevMove) throws ChessException {
-        this.prevMove = prevMove;
+    public String addRecord(Move lastMove) throws ChessException {
+        this.lastMove = lastMove;
 
         String record = convertBoardToStringForsytheEdwards();
         recordsList.add(record);
@@ -64,6 +65,13 @@ public class History implements Iterable<String> {
         History.log.debug("Запись {} добавлена в историю", record);
         whiteStep = !whiteStep;
         return record;
+    }
+
+    public void checkAndAddPieceMoveCount(Move move) throws ChessException {
+        if (move.getMoveType() == MoveType.ATTACK
+                || move.getMoveType() == MoveType.EN_PASSANT
+                || board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) pieceMoveCount = 0;
+        else ++pieceMoveCount;
     }
 
     /** @return Строка - запись в виде нотации Форсайта-Эдвардса */
@@ -143,11 +151,15 @@ public class History implements Iterable<String> {
      */
     private String getPawnEnPassantPossibility() throws ChessException {
         StringBuilder result = new StringBuilder();
-        if (prevMove != null && prevMove.getMoveType() == MoveType.LONG_MOVE) {
-            result.append(' ').append(prevMove.getTo().toString().charAt(0));
-            result.append(board.getFigure(prevMove.getTo()).getColor() == Color.WHITE ? '3' : '6');
+        if (lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE) {
+            result.append(' ').append(lastMove.getTo().toString().charAt(0));
+            result.append(board.getFigure(lastMove.getTo()).getColor() == Color.WHITE ? '3' : '6');
         }
         return result.toString();
+    }
+
+    public int getPieceMoveCount() {
+        return pieceMoveCount;
     }
 
     /** @return Строка - последняя запись в списке */
@@ -161,8 +173,8 @@ public class History implements Iterable<String> {
         return false;
     }
 
-    public Move getPrevMove() {
-        return prevMove;
+    public Move getLastMove() {
+        return lastMove;
     }
 
     @Override

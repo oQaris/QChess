@@ -34,8 +34,8 @@ public class Game {
             Move move = currentPlayerToMove.getNextMove();
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
-                Figure removedFigure = tryMove(move);
-                isDraw = roomSettings.endGameDetector.isDraw(removedFigure, move);
+                tryMove(move);
+                isDraw = roomSettings.endGameDetector.isDraw();
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
@@ -66,7 +66,6 @@ public class Game {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            roomSettings.endGameDetector.checkAndAddPieceMoveCount(removedFigure, move);
             logger.debug(
                     "{} сделал ход: {} фигурой: {}",
                     currentPlayerToMove,

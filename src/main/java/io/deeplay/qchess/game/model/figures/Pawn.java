@@ -27,7 +27,7 @@ public class Pawn extends Figure {
     public static boolean isPawnEnPassant(GameSettings settings, Cell from, Cell to) {
         try {
             Pawn currentPawn = (Pawn) settings.board.getFigure(from);
-            Move prevMove = settings.history.getPrevMove();
+            Move prevMove = settings.history.getLastMove();
             Pawn pawn = (Pawn) settings.board.getFigure(prevMove.getTo());
 
             Cell cellDown =

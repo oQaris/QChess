@@ -43,7 +43,7 @@ public class MoveSystem {
                 // взятие на проходе
                 case EN_PASSANT -> {
                     board.moveFigure(move);
-                    yield board.removeFigure(history.getPrevMove().getTo());
+                    yield board.removeFigure(history.getLastMove().getTo());
                 }
                 // превращение пешки
                 case TURN_INTO -> {
@@ -71,6 +71,7 @@ public class MoveSystem {
                 default -> board.moveFigure(move);
             };
 
+            history.checkAndAddPieceMoveCount(move);
             history.addRecord(move);
 
             return removedFigure;
