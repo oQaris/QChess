@@ -26,29 +26,29 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        Game.logger.info(roomSettings.board.toString());
-        boolean notDraw = true;
+        logger.debug(roomSettings.board.toString());
+        boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
-                && notDraw) {
+                && !isDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 Figure removedFigure = tryMove(move);
-                notDraw = roomSettings.endGameDetector.isNotDraw(removedFigure, move);
+                isDraw = roomSettings.endGameDetector.isDraw(removedFigure, move);
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ, что ход некорректный
             }
         }
-        if (!notDraw) Game.logger.info("Игра окончена: ничья");
+        if (isDraw) Game.logger.info("Игра окончена: ничья");
         else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
-            Game.logger.info(
+            logger.info(
                     "Игра окончена: мат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         else
-            Game.logger.info(
+            logger.info(
                     "Игра окончена: пат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
 
@@ -59,12 +59,12 @@ public class Game {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            Game.logger.info(
+            logger.debug(
                     "{} сделал ход: {} фигурой: {}",
                     currentPlayerToMove,
                     move,
                     roomSettings.board.getFigure(move.getTo()));
-            Game.logger.info(roomSettings.board.toString());
+            logger.debug(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException e) {
             throw new ChessError(LOG_FAILED, e);

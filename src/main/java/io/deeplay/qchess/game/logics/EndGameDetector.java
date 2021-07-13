@@ -18,6 +18,12 @@ import java.util.List;
 
 public class EndGameDetector {
     private final GameSettings roomSettings;
+    private final List<List<TypeFigure>> material =
+            Arrays.asList(
+                    Collections.singletonList(TypeFigure.KING),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
     private int pieceMoveCount = 0;
 
     public EndGameDetector(GameSettings roomSettings) {
@@ -25,11 +31,11 @@ public class EndGameDetector {
     }
 
     /** @return true, если это не ничья */
-    public boolean isNotDraw(Figure removedFigure, Move move) throws ChessError {
+    public boolean isDraw(Figure removedFigure, Move move) throws ChessError {
         try {
-            return !isDrawWithMoves(removedFigure, move)
-                    && !isDrawWithRepetitions()
-                    && !isNotEnoughMaterialForCheckmate();
+            return isDrawWithMoves(removedFigure, move)
+                    || isDrawWithRepetitions()
+                    || isDrawWithNotEnoughMaterialForCheckmate();
         } catch (ChessException e) {
             throw new ChessError(ERROR_WHILE_CHECKING_FOR_DRAW, e);
         }
@@ -40,12 +46,12 @@ public class EndGameDetector {
      *
      * @return true, если ничья
      */
-    private boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
+    public boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
         if (removedFigure != null
                 || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
             pieceMoveCount = 0;
         else ++pieceMoveCount;
-        return pieceMoveCount == 50;
+        return pieceMoveCount >= 50;
     }
 
     /**
@@ -53,31 +59,17 @@ public class EndGameDetector {
      *
      * @return true, если ничья
      */
-    private boolean isDrawWithRepetitions() {
+    public boolean isDrawWithRepetitions() {
         return roomSettings.history.checkRepetitions(5);
     }
 
-    private boolean isNotEnoughMaterialForCheckmate() {
-        List<List<TypeFigure>> material =
-                Arrays.asList(
-                        Collections.singletonList(TypeFigure.KING),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
-
-        return material.stream()
-                .anyMatch(
-                        m ->
-                                (isAllFiguresSame(Color.BLACK, m)
-                                                && isAllFiguresSame(
-                                                        Color.WHITE,
-                                                        Collections.singletonList(TypeFigure.KING)))
-                                        || (isAllFiguresSame(Color.WHITE, m)
-                                                        && isAllFiguresSame(
-                                                                Color.BLACK,
-                                                                Collections.singletonList(
-                                                                        TypeFigure.KING)))
-                                                && isKingsWithSameBishop());
+    public boolean isDrawWithNotEnoughMaterialForCheckmate() {
+        if (isKingsWithSameBishop()) return true;
+        for (List<TypeFigure> typeFigures : material) {
+            if (isAllFiguresSame(Color.BLACK, typeFigures) && isOneKing(Color.WHITE)) return true;
+            if (isAllFiguresSame(Color.WHITE, typeFigures) && isOneKing(Color.BLACK)) return true;
+        }
+        return false;
     }
 
     private boolean isAllFiguresSame(Color color, List<TypeFigure> typeFigures) {
@@ -85,6 +77,10 @@ public class EndGameDetector {
         for (Figure figure : roomSettings.board.getFigures(color))
             if (!typeFiguresCopy.remove(figure.getType())) return false;
         return true;
+    }
+
+    private boolean isOneKing(Color color) {
+        return isAllFiguresSame(color, Collections.singletonList(TypeFigure.KING));
     }
 
     private boolean isKingsWithSameBishop() {
