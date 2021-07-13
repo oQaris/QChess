@@ -1,6 +1,5 @@
-package io.deeplay.qchess.game.model.figures;
+package io.deeplay.qchess.game.model;
 
-import io.deeplay.qchess.game.model.Cell;
 import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,11 +7,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public class CellParseTest {
+public class CellTest {
 
     private final String cellStr;
 
-    public CellParseTest(String cellStr) {
+    public CellTest(String cellStr) {
         this.cellStr = cellStr;
     }
 

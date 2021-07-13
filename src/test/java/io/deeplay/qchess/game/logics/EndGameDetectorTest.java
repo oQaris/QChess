@@ -20,14 +20,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class EndGameDetectorTest {
+    private GameSettings gs;
     private Board board;
     private EndGameDetector endGameDetector;
 
     @Before
     public void setUp() throws ChessError {
-        GameSettings gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
-        board = gameSettings.board;
-        endGameDetector = gameSettings.endGameDetector;
+        gs = new GameSettings(Board.BoardFilling.EMPTY);
+        board = gs.board;
+        endGameDetector = gs.endGameDetector;
     }
 
     @Test(expected = ChessError.class)
@@ -149,10 +150,55 @@ public class EndGameDetectorTest {
         Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
     }
 
+    // ---------- testIsDrawWithRepetitions ---------- //
+
+    @Test
+    public void testIsDrawWithRepetitions() throws ChessException {
+        board.setFigure(new King(Color.WHITE, Cell.parse("e1")));
+        Move move1 = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
+        Move move2 = new Move(MoveType.QUIET_MOVE, Cell.parse("e2"), Cell.parse("e1"));
+
+        board.moveFigure(move1);
+        gs.history.addRecord(move1);
+        Assert.assertFalse(endGameDetector.isDrawWithRepetitions());
+
+        board.moveFigure(move2);
+        gs.history.addRecord(move2);
+        Assert.assertFalse(endGameDetector.isDrawWithRepetitions());
+
+        board.moveFigure(move1);
+        gs.history.addRecord(move1);
+        Assert.assertFalse(endGameDetector.isDrawWithRepetitions());
+
+        board.moveFigure(move2);
+        gs.history.addRecord(move2);
+        Assert.assertFalse(endGameDetector.isDrawWithRepetitions());
+
+        board.moveFigure(move1);
+        gs.history.addRecord(move1);
+        Assert.assertFalse(endGameDetector.isDrawWithRepetitions());
+
+        board.moveFigure(move2);
+        gs.history.addRecord(move2);
+        Assert.assertFalse(endGameDetector.isDrawWithRepetitions());
+
+        board.moveFigure(move1);
+        gs.history.addRecord(move1);
+        Assert.assertFalse(endGameDetector.isDrawWithRepetitions());
+
+        board.moveFigure(move2);
+        gs.history.addRecord(move2);
+        Assert.assertFalse(endGameDetector.isDrawWithRepetitions());
+
+        board.moveFigure(move1);
+        gs.history.addRecord(move1);
+        Assert.assertTrue(endGameDetector.isDrawWithRepetitions());
+    }
+
     // ---------- testIsDrawWithNotEnoughMaterialForCheckmate ---------- //
 
     @Test
-    public void test2KingsWithHorse() throws ChessException, ChessError {
+    public void test2KingsWithHorse() throws ChessException {
         board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
         board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
 
@@ -172,7 +218,7 @@ public class EndGameDetectorTest {
     }
 
     @Test
-    public void test2KingsWithElephant() throws ChessException, ChessError {
+    public void test2KingsWithElephant() throws ChessException {
         board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
         board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
         board.setFigure(new Bishop(Color.WHITE, Cell.parse("a8")));
@@ -184,7 +230,7 @@ public class EndGameDetectorTest {
     }
 
     @Test
-    public void test2KingsSameElephant() throws ChessException, ChessError {
+    public void test2KingsSameElephant() throws ChessException {
         board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
         board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
         board.setFigure(new Bishop(Color.WHITE, Cell.parse("a8")));
@@ -197,7 +243,7 @@ public class EndGameDetectorTest {
     }
 
     @Test
-    public void test2KingsDifferentElephant() throws ChessException, ChessError {
+    public void test2KingsDifferentElephant() throws ChessException {
         board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
         board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
         board.setFigure(new Bishop(Color.WHITE, Cell.parse("a8")));
@@ -207,7 +253,7 @@ public class EndGameDetectorTest {
     }
 
     @Test
-    public void test2KingsWithOtherFigure() throws ChessException, ChessError {
+    public void test2KingsWithOtherFigure() throws ChessException {
         board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
         board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("a3")));
