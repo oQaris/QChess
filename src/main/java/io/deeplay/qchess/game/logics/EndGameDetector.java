@@ -18,6 +18,12 @@ import java.util.List;
 
 public class EndGameDetector {
     private final GameSettings roomSettings;
+    private final List<List<TypeFigure>> material =
+            Arrays.asList(
+                    Collections.singletonList(TypeFigure.KING),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
+                    Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
     private int pieceMoveCount = 0;
 
     public EndGameDetector(GameSettings roomSettings) {
@@ -58,13 +64,6 @@ public class EndGameDetector {
     }
 
     private boolean isNotEnoughMaterialForCheckmate() {
-        List<List<TypeFigure>> material =
-                Arrays.asList(
-                        Collections.singletonList(TypeFigure.KING),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
-                        Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
-
         return material.stream()
                 .anyMatch(
                         m ->

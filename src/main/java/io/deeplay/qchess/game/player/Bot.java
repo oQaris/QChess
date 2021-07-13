@@ -1,26 +1,18 @@
 package io.deeplay.qchess.game.player;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.BOT_ERROR;
-
 import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-public class Bot extends Player {
-    private static final Map<TypeFigure, Integer> grades = Bot.preparedGrades();
+public abstract class Bot extends Player {
+    protected static final Map<TypeFigure, Integer> grades = Bot.preparedGrades();
 
-    public Bot(GameSettings roomSettings, Color color) {
+    protected Bot(GameSettings roomSettings, Color color) {
         super(roomSettings, color);
     }
 
@@ -35,29 +27,7 @@ public class Bot extends Player {
         return res;
     }
 
-    @Override
-    public Move getNextMove() throws ChessError {
-        List<Move> topMoves = new ArrayList<>();
-        int maxGrade = 0;
-        for (Move move : ms.getAllCorrectMoves(color))
-            try {
-                Figure fig = board.getFigure(move.getTo());
-
-                int curGrade = fig != null ? Bot.grades.get(fig.getType()) : 0;
-                if (curGrade > maxGrade) {
-                    maxGrade = curGrade;
-                    topMoves.clear();
-                }
-                if (curGrade >= maxGrade) topMoves.add(move);
-            } catch (ChessException e) {
-                throw new ChessError(BOT_ERROR, e);
-            }
-        Move move = topMoves.get(new Random().nextInt(topMoves.size()));
-        checkTurnInto(move);
-        return move;
-    }
-
-    private void checkTurnInto(Move move) {
+    protected void turnIntoInQueen(Move move) {
         if (move.getMoveType() == MoveType.TURN_INTO)
             move.setTurnInto(new Queen(color, move.getTo()));
     }

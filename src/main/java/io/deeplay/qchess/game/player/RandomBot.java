@@ -1,0 +1,23 @@
+package io.deeplay.qchess.game.player;
+
+import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.interfaces.Color;
+import java.util.List;
+import java.util.Random;
+
+public class RandomBot extends Bot {
+
+    public RandomBot(GameSettings roomSettings, Color color) {
+        super(roomSettings, color);
+    }
+
+    @Override
+    public Move getNextMove() throws ChessError {
+        List<Move> allMoves = ms.getAllCorrectMoves(color);
+        Move move = allMoves.get(new Random().nextInt(allMoves.size()));
+        turnIntoInQueen(move);
+        return move;
+    }
+}

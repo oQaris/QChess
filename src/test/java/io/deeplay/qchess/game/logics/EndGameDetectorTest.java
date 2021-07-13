@@ -5,8 +5,11 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
@@ -103,5 +106,20 @@ public class EndGameDetectorTest {
         board.setFigure(new Rook(Color.WHITE, Cell.parse("h7")));
 
         Assert.assertFalse(endGameDetector.isCheckmate(Color.WHITE));
+    }
+
+    @Test
+    public void testIsNotEnoughMaterialForCheckmate() throws ChessException, ChessError {
+        board.setFigure(new King(Color.WHITE, Cell.parse("f8")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("e6")));
+
+        Move endMove = new Move(MoveType.QUIET_MOVE, Cell.parse("e5"), Cell.parse("e6"));
+        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
+
+        board.setFigure(new Knight(Color.WHITE, Cell.parse("e7")));
+        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
+
+        board.setFigure(new Knight(Color.WHITE, Cell.parse("e8")));
+        Assert.assertFalse(endGameDetector.isNotDraw(null, endMove));
     }
 }
