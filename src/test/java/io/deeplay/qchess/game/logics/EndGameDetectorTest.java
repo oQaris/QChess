@@ -209,7 +209,7 @@ public class EndGameDetectorTest {
 
     @Test
     public void testIsDrawWithMoves_2()
-        throws NoSuchFieldException, IllegalAccessException, ChessException {
+            throws NoSuchFieldException, IllegalAccessException, ChessException {
         Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
         count.setAccessible(true);
         count.set(endGameDetector, 48);
