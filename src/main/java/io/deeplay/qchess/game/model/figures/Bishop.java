@@ -16,7 +16,7 @@ public class Bishop extends Figure {
 
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
-        return rayTrace(settings.board, xMove);
+        return rayTrace(settings.board, Figure.xMove);
     }
 
     @Override

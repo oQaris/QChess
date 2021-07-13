@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class Bot extends Player {
-    private static final Map<TypeFigure, Integer> grades = preparedGrades();
+    private static final Map<TypeFigure, Integer> grades = Bot.preparedGrades();
 
     public Bot(GameSettings roomSettings, Color color) {
         super(roomSettings, color);
@@ -39,23 +39,19 @@ public class Bot extends Player {
     public Move getNextMove() throws ChessError {
         List<Move> topMoves = new ArrayList<>();
         int maxGrade = 0;
-        for (Move move : ms.getAllCorrectMoves(color)) {
+        for (Move move : ms.getAllCorrectMoves(color))
             try {
                 Figure fig = board.getFigure(move.getTo());
 
-                int curGrade = fig != null ? grades.get(fig.getType()) : 0;
+                int curGrade = fig != null ? Bot.grades.get(fig.getType()) : 0;
                 if (curGrade > maxGrade) {
                     maxGrade = curGrade;
                     topMoves.clear();
                 }
-                if (curGrade >= maxGrade) {
-                    topMoves.add(move);
-                }
-
+                if (curGrade >= maxGrade) topMoves.add(move);
             } catch (ChessException e) {
                 throw new ChessError(BOT_ERROR, e);
             }
-        }
         Move move = topMoves.get(new Random().nextInt(topMoves.size()));
         checkTurnInto(move);
         return move;

@@ -16,7 +16,7 @@ public class Rook extends Figure {
 
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
-        return rayTrace(settings.board, plusMove);
+        return rayTrace(settings.board, Figure.plusMove);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class History implements Iterable<String> {
         this.board = board;
         recordsList = new ArrayList<>(500);
         repetitionsMap = new HashMap<>(500);
-        log.debug("История инициализирована");
+        History.log.debug("История инициализирована");
 
         notation.put(TypeFigure.KING, 'K');
         notation.put(TypeFigure.QUEEN, 'Q');
@@ -41,7 +41,7 @@ public class History implements Iterable<String> {
         try {
             addRecord(null);
         } catch (ChessException e) {
-            log.error("Возникло исключение в истории {}", e.getMessage());
+            History.log.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(EXCEPTION_IN_HISTORY, e);
         }
     }
@@ -61,7 +61,7 @@ public class History implements Iterable<String> {
 
         repetitionsMap.put(record, repetitionsMap.getOrDefault(record, 0) + 1);
 
-        log.debug("Запись {} добавлена в историю", record);
+        History.log.debug("Запись {} добавлена в историю", record);
         whiteStep = !whiteStep;
         return record;
     }
@@ -75,9 +75,7 @@ public class History implements Iterable<String> {
         record.append(' ').append(whiteStep ? 'w' : 'b');
 
         String castlingPossibility = getCastlingPossibility();
-        if (!"".equals(castlingPossibility)) {
-            record.append(' ').append(castlingPossibility);
-        }
+        if (!"".equals(castlingPossibility)) record.append(' ').append(castlingPossibility);
 
         record.append(getPawnEnPassantPossibility());
 
@@ -95,12 +93,9 @@ public class History implements Iterable<String> {
 
                 currentFigure = board.getFigure(new Cell(x, y));
 
-                if (currentFigure == null) {
-                    emptySlots++;
-                } else {
-                    if (emptySlots != 0) {
-                        result.append(emptySlots);
-                    }
+                if (currentFigure == null) emptySlots++;
+                else {
+                    if (emptySlots != 0) result.append(emptySlots);
                     Character notationFigureChar = notation.get(currentFigure.getType());
                     result.append(
                             currentFigure.getColor() == Color.WHITE
@@ -110,9 +105,7 @@ public class History implements Iterable<String> {
                 }
             }
 
-            if (emptySlots != 0) {
-                result.append(emptySlots);
-            }
+            if (emptySlots != 0) result.append(emptySlots);
             result.append('/');
         }
 
@@ -130,24 +123,16 @@ public class History implements Iterable<String> {
         if (whiteKing != null && !whiteKing.wasMoved()) {
             shortRook = board.getFigure(Cell.parse("h1"));
             longRook = board.getFigure(Cell.parse("a1"));
-            if (shortRook != null && !shortRook.wasMoved()) {
-                result.append('K');
-            }
-            if (longRook != null && !longRook.wasMoved()) {
-                result.append('Q');
-            }
+            if (shortRook != null && !shortRook.wasMoved()) result.append('K');
+            if (longRook != null && !longRook.wasMoved()) result.append('Q');
         }
 
         Figure blackKing = board.getFigure(Cell.parse("e8"));
         if (blackKing != null && !blackKing.wasMoved()) {
             shortRook = board.getFigure(Cell.parse("h8"));
             longRook = board.getFigure(Cell.parse("a8"));
-            if (shortRook != null && !shortRook.wasMoved()) {
-                result.append('k');
-            }
-            if (longRook != null && !longRook.wasMoved()) {
-                result.append('q');
-            }
+            if (shortRook != null && !shortRook.wasMoved()) result.append('k');
+            if (longRook != null && !longRook.wasMoved()) result.append('q');
         }
         return result.toString();
     }
@@ -172,11 +157,7 @@ public class History implements Iterable<String> {
 
     /** @return true - если было минимум repetition-кратных повторений, false - если было меньше */
     public boolean checkRepetitions(int repetition) {
-        for (Integer rep : repetitionsMap.values()) {
-            if (rep >= repetition) {
-                return true;
-            }
-        }
+        for (Integer rep : repetitionsMap.values()) if (rep >= repetition) return true;
         return false;
     }
 

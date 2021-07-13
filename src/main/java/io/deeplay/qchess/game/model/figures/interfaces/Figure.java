@@ -6,6 +6,12 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.Rook;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Figure {
-    protected static final Logger log = LoggerFactory.getLogger(Figure.class);
+    private static final Logger log = LoggerFactory.getLogger(Figure.class);
 
     protected static List<Cell> xMove =
             Arrays.asList(new Cell(-1, -1), new Cell(-1, 1), new Cell(1, -1), new Cell(1, 1));
@@ -41,6 +47,17 @@ public abstract class Figure {
         this.position = position;
     }
 
+    public static Figure build(TypeFigure type, Color color, Cell position){
+        return switch (type){
+            case BISHOP -> new Bishop(color, position);
+            case KING -> new King(color, position);
+            case KNIGHT -> new Knight(color, position);
+            case PAWN -> new Pawn(color, position);
+            case QUEEN -> new Queen(color, position);
+            case ROOK -> new Rook(color, position);
+        };
+    }
+
     public Cell getCurrentPosition() {
         return position;
     }
@@ -63,7 +80,7 @@ public abstract class Figure {
     public abstract Set<Move> getAllMoves(GameSettings settings);
 
     protected Set<Move> rayTrace(Board board, List<Cell> directions) {
-        log.debug("Запущен рэйтрейс фигуры {} из точки {}", this, position);
+        Figure.log.trace("Запущен рэйтрейс фигуры {} из точки {}", this, position);
         Objects.requireNonNull(directions, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : directions) {
@@ -72,9 +89,7 @@ public abstract class Figure {
                 result.add(new Move(MoveType.QUIET_MOVE, position, cord));
                 cord = cord.createAdd(shift);
             }
-            if (isEnemyFigureOn(board, cord)) {
-                result.add(new Move(MoveType.ATTACK, position, cord));
-            }
+            if (isEnemyFigureOn(board, cord)) result.add(new Move(MoveType.ATTACK, position, cord));
         }
         return result;
     }
@@ -84,7 +99,7 @@ public abstract class Figure {
         Figure enemyFigure;
         try {
             enemyFigure = board.getFigure(cell);
-        } catch (ChessException e) { // тут лог не нужен, это не ошибка
+        } catch (ChessException e) {
             return false;
         }
         return enemyFigure != null && color != enemyFigure.getColor();
@@ -96,14 +111,13 @@ public abstract class Figure {
     }
 
     protected Set<Move> stepForEach(Board board, List<Cell> moves) {
-        log.debug("Запущено нахождение ходов фигуры {} из точки {}", this, position);
+        Figure.log.trace("Запущено нахождение ходов фигуры {} из точки {}", this, position);
         Objects.requireNonNull(moves, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : moves) {
             Cell cord = position.createAdd(shift);
             if (board.isEmptyCell(cord)) result.add(new Move(MoveType.QUIET_MOVE, position, cord));
-            else if (isEnemyFigureOn(board, cord))
-                result.add(new Move(MoveType.ATTACK, position, cord));
+            else if (isEnemyFigureOn(board, cord)) result.add(new Move(MoveType.ATTACK, position, cord));
         }
         return result;
     }
@@ -115,16 +129,12 @@ public abstract class Figure {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Figure figure = (Figure) o;
         return wasMoved == figure.wasMoved
                 && color == figure.color
-                && position.equals(figure.position);
+                && Objects.equals(position, figure.position);
     }
 
     @Override
@@ -132,6 +142,8 @@ public abstract class Figure {
         return color.toString() + " " + getType();
     }
 
-    /** @return тип фигуры */
+    /**
+     * @return тип фигуры
+     */
     public abstract TypeFigure getType();
 }

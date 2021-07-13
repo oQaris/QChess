@@ -85,13 +85,10 @@ public class MoveSystem {
      */
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(64);
-        for (Figure f : board.getFigures(color)) {
-            for (Move m : f.getAllMoves(roomSettings)) {
-                if (isCorrectMove(m)) {
+        for (Figure f : board.getFigures(color))
+            for (Move m : f.getAllMoves(roomSettings))
+                if (isCorrectMove(m))
                     res.add(m);
-                }
-            }
-        }
         return res;
     }
 
@@ -114,15 +111,13 @@ public class MoveSystem {
      */
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
-        if (move.getMoveType() == MoveType.TURN_INTO) {
+        if (move.getMoveType() == MoveType.TURN_INTO)
             return move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
                     && (move.getTurnInto().getType() == TypeFigure.BISHOP
-                            || move.getTurnInto().getType() == TypeFigure.KNIGHT
-                            || move.getTurnInto().getType() == TypeFigure.QUEEN
-                            || move.getTurnInto().getType() == TypeFigure.ROOK);
-        }
-
+                    || move.getTurnInto().getType() == TypeFigure.KNIGHT
+                    || move.getTurnInto().getType() == TypeFigure.QUEEN
+                    || move.getTurnInto().getType() == TypeFigure.ROOK);
         return true;
     }
 
@@ -145,9 +140,7 @@ public class MoveSystem {
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
         figureToMove.setWasMoved(hasBeenMoved);
-        if (virtualKilled != null) {
-            board.setFigure(virtualKilled);
-        }
+        if (virtualKilled != null) board.setFigure(virtualKilled);
         return !isCheck;
     }
 }

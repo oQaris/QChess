@@ -16,7 +16,7 @@ public class Knight extends Figure {
 
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
-        return stepForEach(settings.board, knightMove);
+        return stepForEach(settings.board, Figure.knightMove);
     }
 
     @Override

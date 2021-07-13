@@ -30,6 +30,18 @@ public class Move {
         this.turnInto = turnInto;
     }
 
+    public MoveType getMoveType() {
+        return moveType;
+    }
+
+    public Cell getFrom() {
+        return from;
+    }
+
+    public Cell getTo() {
+        return to;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(moveType, from, to);
@@ -37,14 +49,12 @@ public class Move {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Move)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Move move = (Move) o;
-        return moveType == move.moveType && from.equals(move.from) && to.equals(move.to);
+        return moveType == move.moveType
+                && Objects.equals(from, move.from)
+                && Objects.equals(to, move.to);
     }
 
     @Override
@@ -57,21 +67,7 @@ public class Move {
                         .append(" (")
                         .append(moveType)
                         .append(")");
-        if (moveType == MoveType.TURN_INTO) {
-            sb.append(" turn into ").append(turnInto);
-        }
+        if (moveType == MoveType.TURN_INTO) sb.append(" turn into ").append(turnInto);
         return sb.toString();
-    }
-
-    public MoveType getMoveType() {
-        return moveType;
-    }
-
-    public Cell getFrom() {
-        return from;
-    }
-
-    public Cell getTo() {
-        return to;
     }
 }

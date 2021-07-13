@@ -66,9 +66,8 @@ public class Pawn extends Figure {
                             move));
 
             Cell longMove = move.createAdd(forwardShift);
-            if (isStartPosition(position) && settings.board.isEmptyCell(longMove)) {
+            if (isStartPosition(position) && settings.board.isEmptyCell(longMove))
                 result.add(new Move(MoveType.LONG_MOVE, position, longMove));
-            }
         }
     }
 
