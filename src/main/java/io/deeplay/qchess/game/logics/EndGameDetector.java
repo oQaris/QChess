@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EndGameDetector {
+    private static final Logger logger = LoggerFactory.getLogger(EndGameDetector.class);
     private final GameSettings roomSettings;
     private final List<List<TypeFigure>> material =
             Arrays.asList(
@@ -38,6 +41,7 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithMoves() {
+        logger.debug("Начата проверка на ничью при 50 ходах");
         return roomSettings.history.getPieceMoveCount() >= 50;
     }
 
@@ -47,6 +51,7 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithRepetitions() {
+        logger.debug("Начата проверка на ничью при 5 повторениях позиции доски");
         return roomSettings.history.checkRepetitions(5);
     }
 
@@ -56,6 +61,7 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithNotEnoughMaterialForCheckmate() {
+        logger.debug("Начата проверка на ничью при недостаточном количестве материала для мата");
         List<Figure> whiteFigures = roomSettings.board.getFigures(Color.WHITE);
         List<Figure> blackFigures = roomSettings.board.getFigures(Color.BLACK);
 

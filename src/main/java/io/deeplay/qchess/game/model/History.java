@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class History implements Iterable<String> {
-    private static final Logger log = LoggerFactory.getLogger(History.class);
+    private static final Logger logger = LoggerFactory.getLogger(History.class);
     private final Map<TypeFigure, Character> notation = new EnumMap<>(TypeFigure.class);
     private final Map<String, Integer> repetitionsMap;
     private final List<String> recordsList;
@@ -28,9 +28,8 @@ public class History implements Iterable<String> {
 
     public History(Board board) throws ChessError {
         this.board = board;
-        recordsList = new ArrayList<>(500);
-        repetitionsMap = new HashMap<>(500);
-        History.log.debug("История инициализирована");
+        recordsList = new ArrayList<>(300);
+        repetitionsMap = new HashMap<>(300);
 
         notation.put(TypeFigure.KING, 'K');
         notation.put(TypeFigure.QUEEN, 'Q');
@@ -41,10 +40,11 @@ public class History implements Iterable<String> {
 
         try {
             addRecord(null);
-        } catch (ChessException e) {
-            History.log.error("Возникло исключение в истории {}", e.getMessage());
+        } catch (ChessException | NullPointerException e) {
+            logger.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(EXCEPTION_IN_HISTORY, e);
         }
+        logger.debug("История инициализирована");
     }
 
     /**
@@ -61,8 +61,8 @@ public class History implements Iterable<String> {
         recordsList.add(record);
 
         repetitionsMap.put(record, repetitionsMap.getOrDefault(record, 0) + 1);
+        logger.debug("Запись <{}> добавлена в историю", record);
 
-        History.log.debug("Запись {} добавлена в историю", record);
         whiteStep = !whiteStep;
         return record;
     }

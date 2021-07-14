@@ -1,28 +1,21 @@
 package io.deeplay.qchess.game.model;
 
-import java.util.Arrays;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import io.deeplay.qchess.game.exceptions.ChessException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-@RunWith(Parameterized.class)
 public class CellTest {
 
-    private final String cellStr;
-
-    public CellTest(String cellStr) {
-        this.cellStr = cellStr;
+    @ParameterizedTest
+    @ValueSource(strings = {"a0", "j1", /* это русская буква: */ "а1", "a11", "", "-"})
+    public void testIncorrectParse(String cellStr) {
+        Assertions.assertThrows(ChessException.class, () -> Cell.parse(cellStr));
     }
 
-    @Parameterized.Parameters(name = "{index}: {0}")
-    public static Iterable<Object[]> dataForTest() {
-        return Arrays.asList(new Object[][] {{"a0"}, {"j1"}, {"а1"}, {"а11"}, {""}});
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void paramTest() {
-        Cell.parse(cellStr);
-        Assert.fail();
+    @ParameterizedTest
+    @ValueSource(strings = {"a1", "g3", "f8", "h8", "a8", "h1"})
+    public void testToString(String cellStr) throws ChessException {
+        Assertions.assertEquals(cellStr, Cell.parse(cellStr).toString());
     }
 }

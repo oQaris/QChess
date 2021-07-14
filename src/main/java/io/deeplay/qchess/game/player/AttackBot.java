@@ -16,8 +16,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AttackBot extends Player {
+    private static final Logger logger = LoggerFactory.getLogger(AttackBot.class);
     private static final Map<TypeFigure, Integer> grades = preparedGrades();
 
     public AttackBot(GameSettings roomSettings, Color color) {
@@ -41,15 +44,16 @@ public class AttackBot extends Player {
         int maxGrade = 0;
         for (Move move : ms.getAllCorrectMoves(color))
             try {
-                Figure fig = board.getFigure(move.getTo());
+                Figure figure = board.getFigure(move.getTo());
 
-                int curGrade = fig != null ? grades.get(fig.getType()) : 0;
+                int curGrade = figure != null ? grades.get(figure.getType()) : 0;
                 if (curGrade > maxGrade) {
                     maxGrade = curGrade;
                     topMoves.clear();
                 }
                 if (curGrade >= maxGrade) topMoves.add(move);
-            } catch (ChessException e) {
+            } catch (ChessException | NullPointerException e) {
+                logger.error("Возникла ошибка в атакующем боте: {}", e.getMessage());
                 throw new ChessError(BOT_ERROR, e);
             }
         Move move = topMoves.get(new Random().nextInt(topMoves.size()));

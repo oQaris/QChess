@@ -81,7 +81,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testIsEmptyCell() {
+    public void testIsEmptyCell() throws ChessException {
         Assert.assertTrue(board.isEmptyCell(Cell.parse("a1")));
     }
 

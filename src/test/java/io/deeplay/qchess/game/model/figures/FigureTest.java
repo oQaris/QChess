@@ -22,7 +22,7 @@ public class FigureTest {
     private GameSettings gameSettings;
     private Board board;
 
-    private static Set<Cell> toCellsSet(String... pos) {
+    private static Set<Cell> toCellsSet(String... pos) throws ChessException {
         Objects.requireNonNull(pos, "Массив строк не может быть null");
         Set<Cell> result = new HashSet<>();
         for (String p : pos) result.add(Cell.parse(p));
@@ -445,6 +445,7 @@ public class FigureTest {
         Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
         Figure pawn3 = new Pawn(Color.BLACK, Cell.parse("b4"));
         Figure pawn4 = new Pawn(Color.BLACK, Cell.parse("d4"));
+        pawn.setWasMoved(true);
         board.setFigure(pawn);
         board.setFigure(pawn1);
         board.setFigure(pawn2);
@@ -453,6 +454,36 @@ public class FigureTest {
         Assert.assertEquals(
                 FigureTest.toCellsSet("B6", "D6", "c6"),
                 FigureTest.extractCellTo(pawn.getAllMoves(gameSettings)));
+    }
+
+    @Test
+    public void testPawnWithEndOfBoard()
+            throws ChessException, NoSuchFieldException, IllegalAccessException {
+        // --- Пешки стоящие у краев доски ---//
+        Figure pawn1 = new Pawn(Color.BLACK, Cell.parse("a4"));
+        Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("h4"));
+        Figure pawn3 = new Pawn(Color.WHITE, Cell.parse("b4"));
+        Figure pawn4 = new Pawn(Color.WHITE, Cell.parse("g4"));
+        pawn1.setWasMoved(true);
+        pawn2.setWasMoved(true);
+        board.setFigure(pawn1);
+        board.setFigure(pawn2);
+        board.setFigure(pawn3);
+        board.setFigure(pawn4);
+        setPrevMove(new Move(MoveType.LONG_MOVE, Cell.parse("b2"), Cell.parse("b4")));
+        Assert.assertEquals(
+                FigureTest.toCellsSet("a3", "b3"),
+                FigureTest.extractCellTo(pawn1.getAllMoves(gameSettings)));
+        setPrevMove(new Move(MoveType.LONG_MOVE, Cell.parse("g2"), Cell.parse("g4")));
+        Assert.assertEquals(
+                FigureTest.toCellsSet("g3", "h3"),
+                FigureTest.extractCellTo(pawn2.getAllMoves(gameSettings)));
+    }
+
+    private void setPrevMove(Move move) throws NoSuchFieldException, IllegalAccessException {
+        Field prevMove = gameSettings.history.getClass().getDeclaredField("lastMove");
+        prevMove.setAccessible(true);
+        prevMove.set(gameSettings.history, move);
     }
 
     @Test
