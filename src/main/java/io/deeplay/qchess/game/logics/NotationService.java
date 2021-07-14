@@ -109,7 +109,7 @@ public class NotationService {
                     figureMap.getOrDefault(Character.toLowerCase(c), 0) + 1);
         }
 
-        if (figureMap.get('k') != KQ_COUNT) {
+        if (figureMap.getOrDefault('k', 0) != KQ_COUNT) {
             return false;
         }
 

@@ -1,4 +1,4 @@
-package io.deeplay.qchess.game.logics;
+package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;

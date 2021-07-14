@@ -65,25 +65,31 @@ public class NotationServiceTest {
 
     @Test
     public void testCheckValidityPlacement7() {
-        String str = "rnbqkpnr/pppppppp/8/7/8/8/PPPPPPPP/RNBQKBNR";
+        String str = "rnbkkpnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
         Assert.assertFalse(NotationService.checkValidityPlacement(str));
     }
 
     @Test
     public void testCheckValidityPlacement8() {
-        String str = "rnbq1bnr/pppppppp/8/7/8/8/PPPPPPPP/RNBQKBNR";
+        String str = "rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
         Assert.assertFalse(NotationService.checkValidityPlacement(str));
     }
 
     @Test
     public void testCheckValidityPlacement9() {
-        String str = "rnbqkbnr/pppppppp/8/7/8/8/PPPPPPPP/RNBQKBNR/8";
+        String str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8";
         Assert.assertFalse(NotationService.checkValidityPlacement(str));
     }
 
     @Test
     public void testCheckValidityPlacement10() {
-        String str = "rnbqkbqr/pppppppp/8/7/8/8/PPPPPPPP/RNBQKBNR";
+        String str = "rnbqkbqr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        Assert.assertFalse(NotationService.checkValidityPlacement(str));
+    }
+
+    @Test
+    public void testCheckValidityPlacement11() {
+        String str = "rnbqk1nr/pppppppp/p7/8/8/8/PPPPPPPP/RNBQKBNR";
         Assert.assertFalse(NotationService.checkValidityPlacement(str));
     }
 }
