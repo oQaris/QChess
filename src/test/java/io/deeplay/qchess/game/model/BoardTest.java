@@ -27,7 +27,7 @@ public class BoardTest {
         Figure whiteKing = new King(Color.WHITE, Cell.parse("c1"));
         Figure whitePawn = new Pawn(Color.WHITE, Cell.parse("a1"));
         Figure blackPawn = new Pawn(Color.BLACK, Cell.parse("e7"));
-        // board.setFigure(whiteKing);
+        board.setFigure(whiteKing);
         board.setFigure(whitePawn);
         board.setFigure(blackPawn);
         Assert.assertEquals(Cell.parse("c1"), board.findKingCell(Color.WHITE));
