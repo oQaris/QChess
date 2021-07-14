@@ -1,6 +1,6 @@
 package io.deeplay.qchess.game.player;
 
-import io.deeplay.qchess.game.Game;
+import io.deeplay.qchess.game.SelfPlay;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
@@ -15,7 +15,7 @@ public class BotTest extends TestCase {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             Player firstPlayer = new RandomBot(roomSettings, Color.BLACK);
             Player secondPlayer = new AttackBot(roomSettings, Color.WHITE);
-            Game game = new Game(roomSettings, firstPlayer, secondPlayer);
+            SelfPlay game = new SelfPlay(roomSettings, firstPlayer, secondPlayer);
             game.run();
         }
     }

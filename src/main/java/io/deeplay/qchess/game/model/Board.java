@@ -24,7 +24,7 @@ public class Board {
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
     private final Figure[][] cells = new Figure[Board.BOARD_SIZE][Board.BOARD_SIZE];
 
-    public Board(BoardFilling bf) throws ChessError {
+    public Board(BoardFilling bf) {
         logger.debug("Начато заполнение {} доски", bf);
         try {
             switch (bf) {
@@ -52,7 +52,6 @@ public class Board {
             }
         } catch (ChessException | NullPointerException e) {
             logger.error("Ошибка при заполнении доски");
-            throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
         logger.debug("Доска {} инициализирована", bf);
     }
