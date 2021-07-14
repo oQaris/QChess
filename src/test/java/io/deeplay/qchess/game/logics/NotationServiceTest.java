@@ -92,4 +92,10 @@ public class NotationServiceTest {
         String str = "rnbqk1nr/pppppppp/p7/8/8/8/PPPPPPPP/RNBQKBNR";
         Assert.assertFalse(NotationService.checkValidityPlacement(str));
     }
+
+    @Test
+    public void testCheckValidityPlacement12() {
+        String str = "8/8/8/4k3/3K4/8/8/8";
+        Assert.assertFalse(NotationService.checkValidityPlacement(str));
+    }
 }
