@@ -9,6 +9,7 @@ public enum ChessErrorCode {
     ERROR_WHEN_MOVING_FIGURE("Проверенный ход выдал ошибку при перемещении фигуры"),
     ERROR_WHILE_ADD_PIECE_MOVE_COUNT("Ошибка при добавлении ходов для ничьи"),
     EXCEPTION_IN_HISTORY("Возникло исключение в истории"),
+    LOG_FAILED("Не удалось записать в лог"),
     UNKNOWN_FIGURE_SELECTED("Выбрана неизвестная фигура");
 
     private final String message;
