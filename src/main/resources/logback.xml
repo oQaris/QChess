@@ -5,10 +5,8 @@
       <pattern>[%d{HH:mm:ss.SSS}] %level [%thread] "%logger{30}" - %msg%n</pattern>
     </encoder>
 
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>WARN</level>
-      <onMatch>ACCEPT</onMatch>
-      <onMismatch>DENY</onMismatch>
     </filter>
 
     <target>System.out</target>

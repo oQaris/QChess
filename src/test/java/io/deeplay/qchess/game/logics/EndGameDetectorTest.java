@@ -117,7 +117,7 @@ public class EndGameDetectorTest {
             throws NoSuchFieldException, IllegalAccessException, ChessException {
         Field count = gs.history.getClass().getDeclaredField("peaceMoveCount");
         count.setAccessible(true);
-        count.set(gs.history, EndGameDetector.endPeaceMoveCount);
+        count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT);
 
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
@@ -130,7 +130,7 @@ public class EndGameDetectorTest {
         gs.history.checkAndAddPeaceMoveCount(move);
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
 
-        count.set(gs.history, EndGameDetector.endPeaceMoveCount);
+        count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT);
 
         gs.history.checkAndAddPeaceMoveCount(moveAttack);
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
@@ -141,7 +141,7 @@ public class EndGameDetectorTest {
             throws NoSuchFieldException, IllegalAccessException, ChessException {
         Field count = gs.history.getClass().getDeclaredField("peaceMoveCount");
         count.setAccessible(true);
-        count.set(gs.history, EndGameDetector.endPeaceMoveCount - 2);
+        count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT - 2);
 
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));

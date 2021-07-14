@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EndGameDetector {
-    public static final int endPeaceMoveCount = 75;
-    public static final int endRepetitionsCount = 5;
+    public static final int END_PEACE_MOVE_COUNT = 75;
+    public static final int END_REPETITIONS_COUNT = 5;
     private static final Logger logger = LoggerFactory.getLogger(EndGameDetector.class);
     private final GameSettings roomSettings;
     private final List<List<TypeFigure>> material =
@@ -43,8 +43,9 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithPeaceMoves() {
-        logger.debug("Начата проверка на ничью при {} ходов без взятия и хода пешки", endPeaceMoveCount);
-        return roomSettings.history.getPeaceMoveCount() >= endPeaceMoveCount;
+        logger.debug("Начата проверка на ничью при {} ходов без взятия и хода пешки",
+            END_PEACE_MOVE_COUNT);
+        return roomSettings.history.getPeaceMoveCount() >= END_PEACE_MOVE_COUNT;
     }
 
     /**
@@ -54,8 +55,8 @@ public class EndGameDetector {
      */
     public boolean isDrawWithRepetitions() {
         logger.debug(
-                "Начата проверка на ничью при {} повторениях позиции доски", endRepetitionsCount);
-        return roomSettings.history.checkRepetitions(endRepetitionsCount);
+                "Начата проверка на ничью при {} повторениях позиции доски", END_REPETITIONS_COUNT);
+        return roomSettings.history.checkRepetitions(END_REPETITIONS_COUNT);
     }
 
     /**
