@@ -16,6 +16,7 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
       - uses: actions/upload-artifact@v2
+        if: failure()
         with:
           name: logs
           path: logs/
