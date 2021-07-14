@@ -108,7 +108,7 @@ public class EndGameDetector {
     private boolean isKingsWithSameBishop(List<Figure> whiteFigures, List<Figure> blackFigures) {
         List<TypeFigure> kingWithBishop = Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP);
         if (!isAllFiguresSame(whiteFigures, kingWithBishop)
-                || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
+            || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
 
         Figure whiteBishop = getBishop(whiteFigures);
         Figure blackBishop = getBishop(blackFigures);
@@ -120,7 +120,7 @@ public class EndGameDetector {
         Cell blackBishopPosition = blackBishop.getCurrentPosition();
 
         return (whiteBishopPosition.getColumn() + whiteBishopPosition.getRow()) % 2
-                == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
+            == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
     }
 
     /**

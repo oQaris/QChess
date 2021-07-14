@@ -109,7 +109,47 @@ public class EndGameDetectorTest {
         Assert.assertFalse(endGameDetector.isCheckmate(Color.WHITE));
     }
 
-    // ---------- testIsNotEnoughMaterialForCheckmate ---------- //
+    // ---------- testIsDrawWithMoves ---------- //
+
+    @Test
+    public void testIsDrawWithMoves_1()
+            throws NoSuchFieldException, IllegalAccessException, ChessException {
+        Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
+        count.setAccessible(true);
+        count.set(endGameDetector, 50);
+
+        board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
+        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
+        Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
+
+        Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
+        Assert.assertFalse(
+                endGameDetector.isDrawWithMoves(
+                        new Knight(Color.BLACK, Cell.parse("e2")), moveAttack));
+        Assert.assertFalse(endGameDetector.isDrawWithMoves(null, move));
+
+        count.set(endGameDetector, 50);
+
+        Assert.assertFalse(
+                endGameDetector.isDrawWithMoves(
+                        new Pawn(Color.BLACK, Cell.parse("e2")), moveAttack));
+    }
+
+    @Test
+    public void testIsDrawWithMoves_2()
+            throws NoSuchFieldException, IllegalAccessException, ChessException {
+        Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
+        count.setAccessible(true);
+        count.set(endGameDetector, 48);
+
+        board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
+        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
+
+        Assert.assertFalse(endGameDetector.isDrawWithMoves(null, move));
+        Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
+    }
+
+    // ---------- testIsDrawWithNotEnoughMaterialForCheckmate ---------- //
 
     @Test
     public void test2KingsWithHorse() throws ChessException, ChessError {
@@ -179,45 +219,5 @@ public class EndGameDetectorTest {
 
         board.setFigure(new Rook(Color.WHITE, Cell.parse("a3")));
         Assert.assertFalse(endGameDetector.isDrawWithNotEnoughMaterialForCheckmate());
-    }
-
-    // ---------- testIsDrawWithMoves ---------- //
-
-    @Test
-    public void testIsDrawWithMoves_1()
-            throws NoSuchFieldException, IllegalAccessException, ChessException {
-        Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
-        count.setAccessible(true);
-        count.set(endGameDetector, 50);
-
-        board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
-        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
-        Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
-
-        Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
-        Assert.assertFalse(
-                endGameDetector.isDrawWithMoves(
-                        new Knight(Color.BLACK, Cell.parse("e2")), moveAttack));
-        Assert.assertFalse(endGameDetector.isDrawWithMoves(null, move));
-
-        count.set(endGameDetector, 50);
-
-        Assert.assertFalse(
-                endGameDetector.isDrawWithMoves(
-                        new Pawn(Color.BLACK, Cell.parse("e2")), moveAttack));
-    }
-
-    @Test
-    public void testIsDrawWithMoves_2()
-            throws NoSuchFieldException, IllegalAccessException, ChessException {
-        Field count = endGameDetector.getClass().getDeclaredField("pieceMoveCount");
-        count.setAccessible(true);
-        count.set(endGameDetector, 48);
-
-        board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
-        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
-
-        Assert.assertFalse(endGameDetector.isDrawWithMoves(null, move));
-        Assert.assertTrue(endGameDetector.isDrawWithMoves(null, move));
     }
 }
