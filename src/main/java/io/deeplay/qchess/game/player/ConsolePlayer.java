@@ -41,6 +41,7 @@ public class ConsolePlayer extends Player {
     public Move getNextMove() throws ChessError {
         try {
             List<Move> allMoves = ms.getAllCorrectMoves(color);
+            System.out.println(board);
             printMoves(allMoves);
             Move chosenMove = inputMoveNumber(allMoves);
             specificMoveModification(chosenMove);
