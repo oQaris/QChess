@@ -12,14 +12,14 @@ import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SelfPlay {
-    private static final Logger logger = LoggerFactory.getLogger(SelfPlay.class);
+public class Selfplay {
+    private static final Logger logger = LoggerFactory.getLogger(Selfplay.class);
     private final Player secondPlayer;
     private final Player firstPlayer;
     private final GameSettings roomSettings;
     private Player currentPlayerToMove;
 
-    public SelfPlay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer) {
+    public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer) {
         this.roomSettings = roomSettings;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
@@ -49,11 +49,11 @@ public class SelfPlay {
             if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
                 logger.info(
                         "Причина ничьи: на протяжении {} ходов ни одна пешка не ходила и никто не рубил",
-                        EndGameDetector.endPeaceMoveCount);
+                        EndGameDetector.END_PEACE_MOVE_COUNT);
             if (roomSettings.endGameDetector.isDrawWithRepetitions())
                 logger.info(
                         "Причина ничьи: было {} повторений позиций доски",
-                        EndGameDetector.endRepetitionsCount);
+                        EndGameDetector.END_REPETITIONS_COUNT);
             if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
                 logger.info("Причина ничьи: недостаточно фигур, чтобы поставить мат");
         } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
