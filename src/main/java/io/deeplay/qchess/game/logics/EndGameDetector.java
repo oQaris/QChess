@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class EndGameDetector {
     private final GameSettings roomSettings;
@@ -99,16 +98,18 @@ public class EndGameDetector {
     private boolean isKingsWithSameBishop(List<Figure> whiteFigures, List<Figure> blackFigures) {
         List<TypeFigure> kingWithBishop = Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP);
         if (!isAllFiguresSame(whiteFigures, kingWithBishop)
-            || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
+                || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
 
         Figure whiteBishop = getBishop(whiteFigures);
         Figure blackBishop = getBishop(blackFigures);
+
+        if (whiteBishop == null || blackBishop == null) return false;
 
         Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
         Cell blackBishopPosition = blackBishop.getCurrentPosition();
 
         return (whiteBishopPosition.getColumn() + whiteBishopPosition.getRow()) % 2
-            == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
+                == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
     }
 
     /**
