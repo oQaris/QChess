@@ -1,6 +1,6 @@
 package io.deeplay.qchess.game;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.LOG_FAILED;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PIECE_MOVE_COUNT;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -26,24 +26,32 @@ public class Game {
     }
 
     public void run() throws ChessError {
-        logger.debug(roomSettings.board.toString());
+        logger.info(roomSettings.board.toString());
         boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && !isDraw) {
             // TODO: получать json Move
             Move move = currentPlayerToMove.getNextMove();
+            logger.info("От игрока пришел ход: {}", move);
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
-                Figure removedFigure = tryMove(move);
-                isDraw = roomSettings.endGameDetector.isDraw(removedFigure, move);
+                tryMove(move);
+                isDraw = roomSettings.endGameDetector.isDraw();
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ, что ход некорректный
             }
         }
-        if (isDraw) Game.logger.info("Игра окончена: ничья");
-        else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
+        if (isDraw) {
+            logger.info("Игра окончена: ничья");
+            if (roomSettings.endGameDetector.isDrawWithMoves())
+                logger.info("Причина ничьи: пешка не ходила 50 ходов и никто не рубил");
+            if (roomSettings.endGameDetector.isDrawWithRepetitions())
+                logger.info("Причина ничьи: было 5 повторений позиций доски");
+            if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
+                logger.info("Причина ничьи: недостаточно фигур, чтобы поставить мат");
+        } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
             logger.info(
                     "Игра окончена: мат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
@@ -59,15 +67,16 @@ public class Game {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            logger.debug(
+            logger.info(
                     "{} сделал ход: {} фигурой: {}",
                     currentPlayerToMove,
                     move,
                     roomSettings.board.getFigure(move.getTo()));
-            logger.debug(roomSettings.board.toString());
+            logger.info(roomSettings.board.toString());
             return removedFigure;
-        } catch (ChessException e) {
-            throw new ChessError(LOG_FAILED, e);
+        } catch (ChessException | NullPointerException e) {
+            logger.error("Не удалось выполнить проверенный ход: {}", move);
+            throw new ChessError(ERROR_WHILE_ADD_PIECE_MOVE_COUNT, e);
         }
     }
 }

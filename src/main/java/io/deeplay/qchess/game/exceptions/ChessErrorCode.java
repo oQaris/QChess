@@ -8,7 +8,7 @@ public enum ChessErrorCode {
     BOT_ERROR("В боте возникло исключение"),
     CONSOLE_PLAYER_ERROR("Произошла ошибка в классе игрока"),
     ERROR_WHEN_MOVING_FIGURE("Проверенный ход выдал ошибку при перемещении фигуры"),
-    ERROR_WHILE_CHECKING_FOR_DRAW("Ошибка при проверки на ничью"),
+    ERROR_WHILE_ADD_PIECE_MOVE_COUNT("Ошибка при добавлении ходов для ничьи"),
     EXCEPTION_IN_HISTORY("Возникло исключение в истории"),
     LOG_FAILED("Не удалось записать в лог"),
     PARSE_FIGURE_FROM_CHAR_FAILED("Ошибка создания фигуры по символу"),

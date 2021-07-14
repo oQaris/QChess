@@ -1,8 +1,14 @@
 package io.deeplay.qchess.game.model;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
+
+import io.deeplay.qchess.game.exceptions.ChessException;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Cell {
+    private static final Logger logger = LoggerFactory.getLogger(Cell.class);
     private final int column;
     private final int row;
 
@@ -11,7 +17,7 @@ public class Cell {
         this.row = row;
     }
 
-    public static Cell parse(String pos) {
+    public static Cell parse(String pos) throws ChessException {
         if (pos.length() == 2) {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
@@ -20,7 +26,8 @@ public class Cell {
                     return new Cell(letter - 'a', Board.BOARD_SIZE - digit);
             }
         }
-        throw new IllegalArgumentException("Incorrect position!");
+        logger.warn("Координаты клетки заданы некорректно");
+        throw new ChessException(INCORRECT_COORDINATES);
     }
 
     /** @return создает новую клетку, суммируя с текущей */
@@ -43,7 +50,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        return String.format("%c%c", 'a' + column, '0' + Board.BOARD_SIZE - row);
+        return String.format("%c%d", 'a' + column, Board.BOARD_SIZE - row);
     }
 
     public int getColumn() {

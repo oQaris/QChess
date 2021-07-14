@@ -17,19 +17,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class History implements Iterable<String> {
-    private static final Logger log = LoggerFactory.getLogger(History.class);
+    private static final Logger logger = LoggerFactory.getLogger(History.class);
     private final Map<TypeFigure, Character> notation = new EnumMap<>(TypeFigure.class);
     private final Map<String, Integer> repetitionsMap;
     private final List<String> recordsList;
     private final Board board;
     private boolean whiteStep = true;
-    private Move prevMove;
+    private Move lastMove;
+    private int pieceMoveCount = 0;
 
     public History(Board board) throws ChessError {
         this.board = board;
-        recordsList = new ArrayList<>(500);
-        repetitionsMap = new HashMap<>(500);
-        History.log.debug("История инициализирована");
+        recordsList = new ArrayList<>(300);
+        repetitionsMap = new HashMap<>(300);
 
         notation.put(TypeFigure.KING, 'K');
         notation.put(TypeFigure.QUEEN, 'Q');
@@ -40,30 +40,38 @@ public class History implements Iterable<String> {
 
         try {
             addRecord(null);
-        } catch (ChessException e) {
-            History.log.error("Возникло исключение в истории {}", e.getMessage());
+        } catch (ChessException | NullPointerException e) {
+            logger.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(EXCEPTION_IN_HISTORY, e);
         }
+        logger.debug("История инициализирована");
     }
 
     /**
      * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные
      * приписки
      *
-     * @param prevMove предыдущий ход или null, если его не было
+     * @param lastMove последний ход или null, если его не было
      * @return Строка - только что добавленная запись
      */
-    public String addRecord(Move prevMove) throws ChessException {
-        this.prevMove = prevMove;
+    public String addRecord(Move lastMove) throws ChessException {
+        this.lastMove = lastMove;
 
         String record = convertBoardToStringForsytheEdwards();
         recordsList.add(record);
 
         repetitionsMap.put(record, repetitionsMap.getOrDefault(record, 0) + 1);
+        logger.debug("Запись <{}> добавлена в историю", record);
 
-        History.log.debug("Запись {} добавлена в историю", record);
         whiteStep = !whiteStep;
         return record;
+    }
+
+    public void checkAndAddPieceMoveCount(Move move) throws ChessException {
+        if (move.getMoveType() == MoveType.ATTACK
+                || move.getMoveType() == MoveType.EN_PASSANT
+                || board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) pieceMoveCount = 0;
+        else ++pieceMoveCount;
     }
 
     /** @return Строка - запись в виде нотации Форсайта-Эдвардса */
@@ -143,11 +151,15 @@ public class History implements Iterable<String> {
      */
     private String getPawnEnPassantPossibility() throws ChessException {
         StringBuilder result = new StringBuilder();
-        if (prevMove != null && prevMove.getMoveType() == MoveType.LONG_MOVE) {
-            result.append(' ').append(prevMove.getTo().toString().charAt(0));
-            result.append(board.getFigure(prevMove.getTo()).getColor() == Color.WHITE ? '3' : '6');
+        if (lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE) {
+            result.append(' ').append(lastMove.getTo().toString().charAt(0));
+            result.append(board.getFigure(lastMove.getTo()).getColor() == Color.WHITE ? '3' : '6');
         }
         return result.toString();
+    }
+
+    public int getPieceMoveCount() {
+        return pieceMoveCount;
     }
 
     /** @return Строка - последняя запись в списке */
@@ -161,8 +173,8 @@ public class History implements Iterable<String> {
         return false;
     }
 
-    public Move getPrevMove() {
-        return prevMove;
+    public Move getLastMove() {
+        return lastMove;
     }
 
     @Override

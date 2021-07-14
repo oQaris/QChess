@@ -11,8 +11,11 @@ import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.HashSet;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Pawn extends Figure {
+    private static final Logger logger = LoggerFactory.getLogger(Pawn.class);
 
     public Pawn(Color color, Cell position) {
         super(color, position);
@@ -24,11 +27,12 @@ public class Pawn extends Figure {
      *
      * @return true если это взятие на проходе
      */
-    public static boolean isPawnEnPassant(GameSettings settings, Cell from, Cell to) {
+    public boolean isPawnEnPassant(GameSettings settings, Cell to) {
         try {
-            Pawn currentPawn = (Pawn) settings.board.getFigure(from);
-            Move prevMove = settings.history.getPrevMove();
-            Pawn pawn = (Pawn) settings.board.getFigure(prevMove.getTo());
+            Move prevMove = settings.history.getLastMove();
+            if (prevMove == null) return false;
+            Figure pawn = settings.board.getFigure(prevMove.getTo());
+            if (pawn == null || pawn.getType() != TypeFigure.PAWN) return false;
 
             Cell cellDown =
                     pawn.getColor() == Color.WHITE
@@ -39,10 +43,11 @@ public class Pawn extends Figure {
                             ? new Cell(cellDown.getColumn(), cellDown.getRow() + 1)
                             : new Cell(cellDown.getColumn(), cellDown.getRow() - 1);
 
-            return currentPawn.getColor() != pawn.getColor()
+            return color != pawn.getColor()
                     && cellDoubleDown.equals(prevMove.getFrom())
                     && cellDown.equals(to);
-        } catch (ChessException | ClassCastException | NullPointerException e) {
+        } catch (ChessException | NullPointerException e) {
+            logger.warn("В проверке взятия на проходе возникло исключение: {}", e.getMessage());
             return false;
         }
     }
@@ -57,6 +62,9 @@ public class Pawn extends Figure {
     }
 
     private void addShortAndLongMove(GameSettings settings, Cell forwardShift, Set<Move> result) {
+        logger.trace(
+                "Начато добавление смещения {} для длинного или короткого перемещения",
+                forwardShift);
         Cell move = position.createAdd(forwardShift);
         if (settings.board.isEmptyCell(move)) {
             result.add(
@@ -66,30 +74,30 @@ public class Pawn extends Figure {
                             move));
 
             Cell longMove = move.createAdd(forwardShift);
-            if (isStartPosition(position) && settings.board.isEmptyCell(longMove))
+            if (!wasMoved && settings.board.isEmptyCell(longMove))
                 result.add(new Move(MoveType.LONG_MOVE, position, longMove));
         }
     }
 
     private void addEnPassant(GameSettings settings, Cell forwardShift, Set<Move> result) {
+        logger.trace("Начато добавление смещения {} для взятия на проходе", forwardShift);
         Cell leftAttack = position.createAdd(forwardShift).createAdd(new Cell(-1, 0));
         Cell rightAttack = position.createAdd(forwardShift).createAdd(new Cell(1, 0));
 
         boolean isEnPassant =
-                isPawnEnPassant(settings, position, leftAttack)
-                        || isPawnEnPassant(settings, position, rightAttack);
+                isPawnEnPassant(settings, leftAttack) || isPawnEnPassant(settings, rightAttack);
         MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
 
-        if (isEnemyFigureOn(settings.board, leftAttack)
-                || isPawnEnPassant(settings, position, leftAttack)) {
+        if (settings.board.isEnemyFigureOn(color, leftAttack)
+                || isPawnEnPassant(settings, leftAttack)) {
             result.add(
                     new Move(
                             isTurnInto(leftAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
                             position,
                             leftAttack));
         }
-        if (isEnemyFigureOn(settings.board, rightAttack)
-                || isPawnEnPassant(settings, position, rightAttack)) {
+        if (settings.board.isEnemyFigureOn(color, rightAttack)
+                || isPawnEnPassant(settings, rightAttack)) {
             result.add(
                     new Move(
                             isTurnInto(rightAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
@@ -100,10 +108,6 @@ public class Pawn extends Figure {
 
     private boolean isTurnInto(Cell end) {
         return end.getRow() == (color == Color.WHITE ? 0 : Board.BOARD_SIZE - 1);
-    }
-
-    private boolean isStartPosition(Cell start) {
-        return start.getRow() == (color == Color.BLACK ? 1 : Board.BOARD_SIZE - 2);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.model.figures.interfaces;
 
 import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
@@ -21,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Figure {
-    private static final Logger log = LoggerFactory.getLogger(Figure.class);
+    private static final Logger logger = LoggerFactory.getLogger(Figure.class);
 
     protected static List<Cell> xMove =
             Arrays.asList(new Cell(-1, -1), new Cell(-1, 1), new Cell(1, -1), new Cell(1, 1));
@@ -45,10 +44,11 @@ public abstract class Figure {
     protected Figure(Color color, Cell position) {
         this.color = color;
         this.position = position;
+        logger.debug("Фигура {} была создана", this);
     }
 
     public static Figure build(TypeFigure type, Color color, Cell position){
-        return switch (type){
+        return switch (type) {
             case BISHOP -> new Bishop(color, position);
             case KING -> new King(color, position);
             case KNIGHT -> new Knight(color, position);
@@ -80,7 +80,7 @@ public abstract class Figure {
     public abstract Set<Move> getAllMoves(GameSettings settings);
 
     protected Set<Move> rayTrace(Board board, List<Cell> directions) {
-        Figure.log.trace("Запущен рэйтрейс фигуры {} из точки {}", this, position);
+        logger.trace("Запущен рэйтрейс фигуры {} из точки {}", this, position);
         Objects.requireNonNull(directions, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : directions) {
@@ -89,20 +89,10 @@ public abstract class Figure {
                 result.add(new Move(MoveType.QUIET_MOVE, position, cord));
                 cord = cord.createAdd(shift);
             }
-            if (isEnemyFigureOn(board, cord)) result.add(new Move(MoveType.ATTACK, position, cord));
+            if (board.isEnemyFigureOn(color, cord))
+                result.add(new Move(MoveType.ATTACK, position, cord));
         }
         return result;
-    }
-
-    /** @return true, если клетка лежит на доске и на этой клетке есть фигура, иначе false */
-    protected boolean isEnemyFigureOn(Board board, Cell cell) {
-        Figure enemyFigure;
-        try {
-            enemyFigure = board.getFigure(cell);
-        } catch (ChessException e) {
-            return false;
-        }
-        return enemyFigure != null && color != enemyFigure.getColor();
     }
 
     /** @return цвет фигуры */
@@ -111,13 +101,14 @@ public abstract class Figure {
     }
 
     protected Set<Move> stepForEach(Board board, List<Cell> moves) {
-        Figure.log.trace("Запущено нахождение ходов фигуры {} из точки {}", this, position);
+        logger.trace("Запущено нахождение ходов фигуры {} из точки {}", this, position);
         Objects.requireNonNull(moves, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : moves) {
             Cell cord = position.createAdd(shift);
             if (board.isEmptyCell(cord)) result.add(new Move(MoveType.QUIET_MOVE, position, cord));
-            else if (isEnemyFigureOn(board, cord)) result.add(new Move(MoveType.ATTACK, position, cord));
+            else if (board.isEnemyFigureOn(color, cord))
+                result.add(new Move(MoveType.ATTACK, position, cord));
         }
         return result;
     }
