@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EndGameDetector {
+    public static final int END_PEACE_MOVE_COUNT = 75;
+    public static final int END_REPETITIONS_COUNT = 5;
     private static final Logger logger = LoggerFactory.getLogger(EndGameDetector.class);
     private final GameSettings roomSettings;
     private final List<List<TypeFigure>> material =
@@ -30,7 +32,7 @@ public class EndGameDetector {
 
     /** @return true, если это не ничья */
     public boolean isDraw() {
-        return isDrawWithMoves()
+        return isDrawWithPeaceMoves()
                 || isDrawWithRepetitions()
                 || isDrawWithNotEnoughMaterialForCheckmate();
     }
@@ -40,9 +42,10 @@ public class EndGameDetector {
      *
      * @return true, если ничья
      */
-    public boolean isDrawWithMoves() {
-        logger.debug("Начата проверка на ничью при 50 ходах");
-        return roomSettings.history.getPieceMoveCount() >= 50;
+    public boolean isDrawWithPeaceMoves() {
+        logger.debug("Начата проверка на ничью при {} ходов без взятия и хода пешки",
+            END_PEACE_MOVE_COUNT);
+        return roomSettings.history.getPeaceMoveCount() >= END_PEACE_MOVE_COUNT;
     }
 
     /**
@@ -51,8 +54,9 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithRepetitions() {
-        logger.debug("Начата проверка на ничью при 5 повторениях позиции доски");
-        return roomSettings.history.checkRepetitions(5);
+        logger.debug(
+                "Начата проверка на ничью при {} повторениях позиции доски", END_REPETITIONS_COUNT);
+        return roomSettings.history.checkRepetitions(END_REPETITIONS_COUNT);
     }
 
     /**

@@ -75,7 +75,7 @@ public class MoveSystem {
                 default -> board.moveFigure(move);
             };
 
-            history.checkAndAddPieceMoveCount(move);
+            history.checkAndAddPeaceMoveCount(move);
             history.addRecord(move);
 
             logger.debug("Ход <{}> выполнен успешно, удаленная фигура: {}", move, removedFigure);

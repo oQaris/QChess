@@ -110,46 +110,46 @@ public class EndGameDetectorTest {
         Assert.assertFalse(endGameDetector.isCheckmate(Color.WHITE));
     }
 
-    // ---------- testIsDrawWithMoves ---------- //
+    // ---------- testIsDrawWithPeaceMoves ---------- //
 
     @Test
-    public void testIsDrawWithMoves_1()
+    public void testIsDrawWithPeaceMoves_1()
             throws NoSuchFieldException, IllegalAccessException, ChessException {
-        Field count = gs.history.getClass().getDeclaredField("pieceMoveCount");
+        Field count = gs.history.getClass().getDeclaredField("peaceMoveCount");
         count.setAccessible(true);
-        count.set(gs.history, 50);
+        count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT);
 
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
         Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
 
-        gs.history.checkAndAddPieceMoveCount(move);
-        Assert.assertTrue(endGameDetector.isDrawWithMoves());
-        gs.history.checkAndAddPieceMoveCount(moveAttack);
-        Assert.assertFalse(endGameDetector.isDrawWithMoves());
-        gs.history.checkAndAddPieceMoveCount(move);
-        Assert.assertFalse(endGameDetector.isDrawWithMoves());
+        gs.history.checkAndAddPeaceMoveCount(move);
+        Assert.assertTrue(endGameDetector.isDrawWithPeaceMoves());
+        gs.history.checkAndAddPeaceMoveCount(moveAttack);
+        Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
+        gs.history.checkAndAddPeaceMoveCount(move);
+        Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
 
-        count.set(gs.history, 50);
+        count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT);
 
-        gs.history.checkAndAddPieceMoveCount(moveAttack);
-        Assert.assertFalse(endGameDetector.isDrawWithMoves());
+        gs.history.checkAndAddPeaceMoveCount(moveAttack);
+        Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
     }
 
     @Test
-    public void testIsDrawWithMoves_2()
+    public void testIsDrawWithPeaceMoves_2()
             throws NoSuchFieldException, IllegalAccessException, ChessException {
-        Field count = gs.history.getClass().getDeclaredField("pieceMoveCount");
+        Field count = gs.history.getClass().getDeclaredField("peaceMoveCount");
         count.setAccessible(true);
-        count.set(gs.history, 48);
+        count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT - 2);
 
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
 
-        gs.history.checkAndAddPieceMoveCount(move);
-        Assert.assertFalse(endGameDetector.isDrawWithMoves());
-        gs.history.checkAndAddPieceMoveCount(move);
-        Assert.assertTrue(endGameDetector.isDrawWithMoves());
+        gs.history.checkAndAddPeaceMoveCount(move);
+        Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
+        gs.history.checkAndAddPeaceMoveCount(move);
+        Assert.assertTrue(endGameDetector.isDrawWithPeaceMoves());
     }
 
     // ---------- testIsDrawWithRepetitions ---------- //

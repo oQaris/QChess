@@ -1,9 +1,10 @@
 package io.deeplay.qchess.game;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PIECE_MOVE_COUNT;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PEACE_MOVE_COUNT;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
@@ -11,14 +12,14 @@ import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Game {
-    private static final Logger logger = LoggerFactory.getLogger(Game.class);
+public class Selfplay {
+    private static final Logger logger = LoggerFactory.getLogger(Selfplay.class);
     private final Player secondPlayer;
     private final Player firstPlayer;
     private final GameSettings roomSettings;
     private Player currentPlayerToMove;
 
-    public Game(GameSettings roomSettings, Player firstPlayer, Player secondPlayer) {
+    public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer) {
         this.roomSettings = roomSettings;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
@@ -45,10 +46,14 @@ public class Game {
         }
         if (isDraw) {
             logger.info("Игра окончена: ничья");
-            if (roomSettings.endGameDetector.isDrawWithMoves())
-                logger.info("Причина ничьи: пешка не ходила 50 ходов и никто не рубил");
+            if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
+                logger.info(
+                        "Причина ничьи: на протяжении {} ходов ни одна пешка не ходила и никто не рубил",
+                        EndGameDetector.END_PEACE_MOVE_COUNT);
             if (roomSettings.endGameDetector.isDrawWithRepetitions())
-                logger.info("Причина ничьи: было 5 повторений позиций доски");
+                logger.info(
+                        "Причина ничьи: было {} повторений позиций доски",
+                        EndGameDetector.END_REPETITIONS_COUNT);
             if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
                 logger.info("Причина ничьи: недостаточно фигур, чтобы поставить мат");
         } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
@@ -76,7 +81,7 @@ public class Game {
             return removedFigure;
         } catch (ChessException | NullPointerException e) {
             logger.error("Не удалось выполнить проверенный ход: {}", move);
-            throw new ChessError(ERROR_WHILE_ADD_PIECE_MOVE_COUNT, e);
+            throw new ChessError(ERROR_WHILE_ADD_PEACE_MOVE_COUNT, e);
         }
     }
 }

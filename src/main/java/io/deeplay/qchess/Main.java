@@ -1,6 +1,6 @@
 package io.deeplay.qchess;
 
-import io.deeplay.qchess.game.Game;
+import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
@@ -19,7 +19,7 @@ public class Main {
         GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
         Player firstPlayer = new ConsolePlayer(roomSettings, Color.WHITE, in);
         Player secondPlayer = new AttackBot(roomSettings, Color.BLACK);
-        Game game = new Game(roomSettings, firstPlayer, secondPlayer);
+        Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
         game.run();
     }
 }

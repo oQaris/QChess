@@ -24,7 +24,7 @@ public class History implements Iterable<String> {
     private final Board board;
     private boolean whiteStep = true;
     private Move lastMove;
-    private int pieceMoveCount = 0;
+    private int peaceMoveCount = 0;
 
     public History(Board board) throws ChessError {
         this.board = board;
@@ -67,11 +67,11 @@ public class History implements Iterable<String> {
         return record;
     }
 
-    public void checkAndAddPieceMoveCount(Move move) throws ChessException {
+    public void checkAndAddPeaceMoveCount(Move move) throws ChessException {
         if (move.getMoveType() == MoveType.ATTACK
                 || move.getMoveType() == MoveType.EN_PASSANT
-                || board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) pieceMoveCount = 0;
-        else ++pieceMoveCount;
+                || board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) peaceMoveCount = 0;
+        else ++peaceMoveCount;
     }
 
     /** @return Строка - запись в виде нотации Форсайта-Эдвардса */
@@ -158,8 +158,8 @@ public class History implements Iterable<String> {
         return result.toString();
     }
 
-    public int getPieceMoveCount() {
-        return pieceMoveCount;
+    public int getPeaceMoveCount() {
+        return peaceMoveCount;
     }
 
     /** @return Строка - последняя запись в списке */
