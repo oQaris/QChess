@@ -289,7 +289,7 @@ public class FigureTest {
                 king2.getAllMoves(gameSettings));
     }
 
-    /*@Test
+    @Test
     public void testKingCastling1() throws ChessException {
         // --- Король ---//
         Figure king1 = new King(Color.WHITE, Cell.parse("e1"));
@@ -305,12 +305,35 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        Assert.assertEquals(
-                toMoveSet("C1", "D1", "D2", "E2", "F2", "F1", "G1"),
-                king1.getAllMoves(gameSettings));
-        Assert.assertEquals(
-                toMoveSet("C8", "D8", "D7", "E7", "F7", "F8", "G8"),
-                king2.getAllMoves(gameSettings));
+        Set<Move> expected1 =
+                toMoveSet(
+                        king1.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D1",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "F1");
+        expected1.add(
+                new Move(MoveType.LONG_CASTLING, king1.getCurrentPosition(), Cell.parse("C1")));
+        expected1.add(
+                new Move(MoveType.SHORT_CASTLING, king1.getCurrentPosition(), Cell.parse("G1")));
+        Assert.assertEquals(expected1, king1.getAllMoves(gameSettings));
+
+        Set<Move> expected2 =
+                toMoveSet(
+                        king2.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D8",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "F8");
+        expected2.add(
+                new Move(MoveType.LONG_CASTLING, king2.getCurrentPosition(), Cell.parse("C8")));
+        expected2.add(
+                new Move(MoveType.SHORT_CASTLING, king2.getCurrentPosition(), Cell.parse("G8")));
+        Assert.assertEquals(expected2, king2.getAllMoves(gameSettings));
 
         rookW1.setWasMoved(true);
         rookW2.setWasMoved(true);
@@ -318,10 +341,24 @@ public class FigureTest {
         rookB2.setWasMoved(true);
 
         Assert.assertEquals(
-                toMoveSet("D1", "D2", "E2", "F2", "F1"),
+                toMoveSet(
+                        king1.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D1",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "F1"),
                 king1.getAllMoves(gameSettings));
         Assert.assertEquals(
-                toMoveSet("D8", "D7", "E7", "F7", "F8"),
+                toMoveSet(
+                        king2.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D8",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "F8"),
                 king2.getAllMoves(gameSettings));
     }
 
@@ -345,10 +382,24 @@ public class FigureTest {
         king2.setWasMoved(true);
 
         Assert.assertEquals(
-                toMoveSet("D1", "D2", "E2", "F2", "F1"),
+                toMoveSet(
+                        king1.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D1",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "F1"),
                 king1.getAllMoves(gameSettings));
         Assert.assertEquals(
-                toMoveSet("D8", "D7", "E7", "F7", "F8"),
+                toMoveSet(
+                        king2.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D8",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "F8"),
                 king2.getAllMoves(gameSettings));
     }
 
@@ -374,10 +425,24 @@ public class FigureTest {
         board.setFigure(FrookW);
 
         Assert.assertEquals(
-                toMoveSet("D1", "D2", "E2", "F2", "F1"),
+                toMoveSet(
+                        king1.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D1",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "F1"),
                 king1.getAllMoves(gameSettings));
         Assert.assertEquals(
-                toMoveSet("D8", "D7", "E7", "F7", "F8"),
+                toMoveSet(
+                        king2.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D8",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "F8"),
                 king2.getAllMoves(gameSettings));
     }
 
@@ -407,10 +472,24 @@ public class FigureTest {
         board.setFigure(FrookW2);
 
         Assert.assertEquals(
-                toMoveSet("D1", "D2", "E2", "F2", "F1"),
+                toMoveSet(
+                        king1.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D1",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "F1"),
                 king1.getAllMoves(gameSettings));
         Assert.assertEquals(
-                toMoveSet("D8", "D7", "E7", "F7", "F8"),
+                toMoveSet(
+                        king2.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D8",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "F8"),
                 king2.getAllMoves(gameSettings));
     }
 
@@ -440,16 +519,30 @@ public class FigureTest {
         board.setFigure(FrookW2);
 
         Assert.assertEquals(
-                toMoveSet("D1", "D2", "E2", "F2", "F1"),
+                toMoveSet(
+                        king1.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D1",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "F1"),
                 king1.getAllMoves(gameSettings));
         Assert.assertEquals(
-                toMoveSet("D8", "D7", "E7", "F7", "F8"),
+                toMoveSet(
+                        king2.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "D8",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "F8"),
                 king2.getAllMoves(gameSettings));
-    }*/
+    }
 
     @Test
     public void testKnight() throws ChessException {
-        // --- Конь ---//
+        // --- Конь --- //
         Figure knight = new Knight(Color.BLACK, Cell.parse("f4"));
         board.setFigure(knight);
         Assert.assertEquals(
@@ -469,7 +562,7 @@ public class FigureTest {
 
     @Test
     public void testKnightWithFriendPawns() throws ChessException {
-        // --- Конь с дружественными пешками вокруг коня, но не закрывающие ход ---//
+        // --- Конь с дружественными пешками вокруг коня, но не закрывающие ход --- //
         Figure knight = new Knight(Color.WHITE, Cell.parse("a1"));
         Figure pawn1 = new Pawn(Color.WHITE, Cell.parse("a2"));
         Figure pawn2 = new Pawn(Color.WHITE, Cell.parse("b2"));
@@ -486,7 +579,7 @@ public class FigureTest {
 
     @Test
     public void testPawn() throws ChessException {
-        // --- Пешка ---//
+        // --- Пешка --- //
         Figure pawn = new Pawn(Color.WHITE, Cell.parse("c2"));
         Figure enemy = new Queen(Color.BLACK, Cell.parse("d3"));
         board.setFigure(pawn);
@@ -507,7 +600,7 @@ public class FigureTest {
 
     @Test
     public void testPawnForEnemyRespawn() throws ChessException {
-        // --- Пешка дошедшая до конца поля ---//
+        // --- Пешка дошедшая до конца поля --- //
         Figure pawn = new Pawn(Color.BLACK, Cell.parse("d1"));
         board.setFigure(pawn);
         Assert.assertEquals(Set.of(), pawn.getAllMoves(gameSettings));
@@ -515,7 +608,7 @@ public class FigureTest {
 
     @Test
     public void testPawnWithXEnemy() throws ChessException {
-        // --- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
+        // --- Пешка окружённая противниками по диагональным клеткам и с противником на пути --- //
         Figure pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
         Figure pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
         Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
@@ -535,7 +628,7 @@ public class FigureTest {
 
     @Test
     public void testPawnWithXEnemy2() throws ChessException {
-        // --- Пешка окружённая противниками по диагональным клеткам и с противником на пути ---//
+        // --- Пешка окружённая противниками по диагональным клеткам и с противником на пути --- //
         Figure pawn = new Pawn(Color.WHITE, Cell.parse("c5"));
         Figure pawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
         Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
@@ -557,7 +650,7 @@ public class FigureTest {
     @Test
     public void testPawnWithEndOfBoard()
             throws ChessException, NoSuchFieldException, IllegalAccessException {
-        // --- Пешки стоящие у краев доски ---//
+        // --- Пешки стоящие у краев доски --- //
         Figure pawn1 = new Pawn(Color.BLACK, Cell.parse("a4"));
         Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("h4"));
         Figure pawn3 = new Pawn(Color.WHITE, Cell.parse("b4"));
