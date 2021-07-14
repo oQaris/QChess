@@ -73,7 +73,7 @@ public class MoveSystemTest {
     }
 
     private void setPrevMove(Move move) throws NoSuchFieldException, IllegalAccessException {
-        Field prevMove = gameSettings.history.getClass().getDeclaredField("prevMove");
+        Field prevMove = gameSettings.history.getClass().getDeclaredField("lastMove");
         prevMove.setAccessible(true);
         prevMove.set(gameSettings.history, move);
     }

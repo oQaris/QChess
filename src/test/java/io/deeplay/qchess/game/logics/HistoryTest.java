@@ -49,7 +49,7 @@ public class HistoryTest {
         Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("a2"), Cell.parse("a3"));
         board.moveFigure(move);
 
-        Field prevMove = history.getClass().getDeclaredField("prevMove");
+        Field prevMove = history.getClass().getDeclaredField("lastMove");
         prevMove.setAccessible(true);
         prevMove.set(history, move);
         Method method = history.getClass().getDeclaredMethod("getPawnEnPassantPossibility");
@@ -65,7 +65,7 @@ public class HistoryTest {
         Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
         board.moveFigure(move);
 
-        Field prevMove = history.getClass().getDeclaredField("prevMove");
+        Field prevMove = history.getClass().getDeclaredField("lastMove");
         prevMove.setAccessible(true);
         prevMove.set(history, move);
         Method method = history.getClass().getDeclaredMethod("getPawnEnPassantPossibility");

@@ -1,14 +1,9 @@
 package io.deeplay.qchess.game.logics;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_CHECKING_FOR_DRAW;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INTERNAL_ERROR;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
@@ -16,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class EndGameDetector {
     private final GameSettings roomSettings;
@@ -26,21 +20,16 @@ public class EndGameDetector {
                     Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
                     Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
                     Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
-    private int pieceMoveCount = 0;
 
     public EndGameDetector(GameSettings roomSettings) {
         this.roomSettings = roomSettings;
     }
 
     /** @return true, если это не ничья */
-    public boolean isDraw(Figure removedFigure, Move move) throws ChessError {
-        try {
-            return isDrawWithMoves(removedFigure, move)
-                    || isDrawWithRepetitions()
-                    || isDrawWithNotEnoughMaterialForCheckmate();
-        } catch (ChessException e) {
-            throw new ChessError(ERROR_WHILE_CHECKING_FOR_DRAW, e);
-        }
+    public boolean isDraw() {
+        return isDrawWithMoves()
+                || isDrawWithRepetitions()
+                || isDrawWithNotEnoughMaterialForCheckmate();
     }
 
     /**
@@ -48,12 +37,8 @@ public class EndGameDetector {
      *
      * @return true, если ничья
      */
-    public boolean isDrawWithMoves(Figure removedFigure, Move move) throws ChessException {
-        if (removedFigure != null
-                || roomSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
-            pieceMoveCount = 0;
-        else ++pieceMoveCount;
-        return pieceMoveCount >= 50;
+    public boolean isDrawWithMoves() {
+        return roomSettings.history.getPieceMoveCount() >= 50;
     }
 
     /**
@@ -65,6 +50,11 @@ public class EndGameDetector {
         return roomSettings.history.checkRepetitions(5);
     }
 
+    /**
+     * Недостаточно фигур, чтобы поставить мат
+     *
+     * @return true, если ничья
+     */
     public boolean isDrawWithNotEnoughMaterialForCheckmate() {
         List<Figure> whiteFigures = roomSettings.board.getFigures(Color.WHITE);
         List<Figure> blackFigures = roomSettings.board.getFigures(Color.BLACK);
@@ -108,19 +98,18 @@ public class EndGameDetector {
     private boolean isKingsWithSameBishop(List<Figure> whiteFigures, List<Figure> blackFigures) {
         List<TypeFigure> kingWithBishop = Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP);
         if (!isAllFiguresSame(whiteFigures, kingWithBishop)
-            || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
+                || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
 
         Figure whiteBishop = getBishop(whiteFigures);
         Figure blackBishop = getBishop(blackFigures);
 
-        Objects.requireNonNull(whiteBishop, INTERNAL_ERROR.getMessage());
-        Objects.requireNonNull(blackBishop, INTERNAL_ERROR.getMessage());
+        if (whiteBishop == null || blackBishop == null) return false;
 
         Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
         Cell blackBishopPosition = blackBishop.getCurrentPosition();
 
         return (whiteBishopPosition.getColumn() + whiteBishopPosition.getRow()) % 2
-            == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
+                == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
     }
 
     /**
