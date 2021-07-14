@@ -62,28 +62,52 @@ public class EndGameDetector {
      */
     public boolean isDrawWithNotEnoughMaterialForCheckmate() {
         logger.debug("Начата проверка на ничью при недостаточном количестве материала для мата");
-        if (isKingsWithSameBishop()) return true;
+        List<Figure> whiteFigures = roomSettings.board.getFigures(Color.WHITE);
+        List<Figure> blackFigures = roomSettings.board.getFigures(Color.BLACK);
+
+        if (isKingsWithSameBishop(whiteFigures, blackFigures)) return true;
+
+        List<TypeFigure> oneKing = Collections.singletonList(TypeFigure.KING);
+        boolean isOneKingWhite = isAllFiguresSame(whiteFigures, oneKing);
+        boolean isOneKingBlack = isAllFiguresSame(blackFigures, oneKing);
+
         for (List<TypeFigure> typeFigures : material) {
-            if (isAllFiguresSame(Color.BLACK, typeFigures) && isOneKing(Color.WHITE)) return true;
-            if (isAllFiguresSame(Color.WHITE, typeFigures) && isOneKing(Color.BLACK)) return true;
+            if (isOneKingWhite && isAllFiguresSame(blackFigures, typeFigures)) return true;
+            if (isOneKingBlack && isAllFiguresSame(whiteFigures, typeFigures)) return true;
         }
         return false;
     }
 
-    private boolean isAllFiguresSame(Color color, List<TypeFigure> typeFigures) {
+    /**
+     * Проверяет, что все фигуры в figures соответствуют своим типам в typeFigures
+     *
+     * @param figures Список фигур
+     * @param typeFigures Список требуемых типов
+     * @return true - если списки равны и фигуры из первого списка соответствуют типам из второго
+     *     (без учёта порядка)
+     */
+    private boolean isAllFiguresSame(List<Figure> figures, List<TypeFigure> typeFigures) {
         List<TypeFigure> typeFiguresCopy = new ArrayList<>(typeFigures);
-        for (Figure figure : roomSettings.board.getFigures(color))
-            if (!typeFiguresCopy.remove(figure.getType())) return false;
+        if (figures.size() != typeFigures.size()) return false;
+        for (Figure figure : figures) if (!typeFiguresCopy.remove(figure.getType())) return false;
         return true;
     }
 
-    private boolean isOneKing(Color color) {
-        return isAllFiguresSame(color, Collections.singletonList(TypeFigure.KING));
-    }
+    /**
+     * Проверяет, чтоб в переданных списках содержалось только по 2 фигуры - Король и Слон, причём
+     * слоны должны быть одного цвета
+     *
+     * @param whiteFigures Список белых фигур
+     * @param blackFigures Список чёрных фигур
+     * @return true - если списки удовлетворяют условию
+     */
+    private boolean isKingsWithSameBishop(List<Figure> whiteFigures, List<Figure> blackFigures) {
+        List<TypeFigure> kingWithBishop = Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP);
+        if (!isAllFiguresSame(whiteFigures, kingWithBishop)
+                || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
 
-    private boolean isKingsWithSameBishop() {
-        Figure whiteBishop = getBishop(Color.WHITE);
-        Figure blackBishop = getBishop(Color.BLACK);
+        Figure whiteBishop = getBishop(whiteFigures);
+        Figure blackBishop = getBishop(blackFigures);
 
         if (whiteBishop == null || blackBishop == null) return false;
 
@@ -94,9 +118,14 @@ public class EndGameDetector {
                 == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
     }
 
-    private Figure getBishop(Color color) {
-        for (Figure figure : roomSettings.board.getFigures(color))
-            if (figure.getType() == TypeFigure.BISHOP) return figure;
+    /**
+     * Ищет в списке фигуру типа Слона
+     *
+     * @param figures Список фигур для поиска
+     * @return найденного слона, или null - иначе
+     */
+    private Figure getBishop(List<Figure> figures) {
+        for (Figure figure : figures) if (figure.getType() == TypeFigure.BISHOP) return figure;
         return null;
     }
 
