@@ -73,4 +73,9 @@ public class HistoryTest {
 
         Assert.assertEquals(" a3", method.invoke(history));
     }
+
+    @Test
+    public void testAddRecord() throws ChessException {
+        Assert.assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq", history.addRecord(null));
+    }
 }
