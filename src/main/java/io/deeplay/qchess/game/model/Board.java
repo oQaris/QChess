@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
@@ -28,23 +27,10 @@ public class Board {
         logger.debug("Начато заполнение {} доски", bf);
         try {
             switch (bf) {
-                case STANDARD -> {
-                    TypeFigure[] orderFirstLine = new TypeFigure[]{TypeFigure.ROOK, TypeFigure.KNIGHT, TypeFigure.BISHOP,
-                            TypeFigure.QUEEN, TypeFigure.KING, TypeFigure.BISHOP,TypeFigure.KNIGHT,TypeFigure.ROOK};
-
-                    Cell startBlack = new Cell(0, 0);
-                    Cell startWhite = new Cell(0, Board.BOARD_SIZE - 1);
-                    Cell shift = new Cell(1, 0);
-
-                    for (TypeFigure typeFigure : orderFirstLine) {
-                        setFigure(Figure.build(typeFigure, Color.BLACK, startBlack));
-                        setFigure(new Pawn(Color.BLACK, startBlack.createAdd(new Cell(0, 1))));
-                        setFigure(Figure.build(typeFigure, Color.WHITE, startWhite));
-                        setFigure(new Pawn(Color.WHITE, startWhite.createAdd(new Cell(0, -1))));
-                        startBlack = startBlack.createAdd(shift);
-                        startWhite = startWhite.createAdd(shift);
-                    }
-                }
+                case STANDARD -> fillBoardForFirstLine(new TypeFigure[]{
+                    TypeFigure.ROOK, TypeFigure.KNIGHT, TypeFigure.BISHOP,
+                    TypeFigure.QUEEN, TypeFigure.KING, TypeFigure.BISHOP,
+                    TypeFigure.KNIGHT,TypeFigure.ROOK});
                 case CHESS960 -> {
                     //todo Сделать рандомное заполнение Фишера
                 }
@@ -120,6 +106,21 @@ public class Board {
                 case ROOK -> '♖';
             };
         };
+    }
+
+    private void fillBoardForFirstLine(TypeFigure[] orderFirstLine) throws ChessException {
+        Cell startBlack = new Cell(0, 0);
+        Cell startWhite = new Cell(0, Board.BOARD_SIZE - 1);
+        Cell shift = new Cell(1, 0);
+
+        for (TypeFigure typeFigure : orderFirstLine) {
+            setFigure(Figure.build(typeFigure, Color.BLACK, startBlack));
+            setFigure(new Pawn(Color.BLACK, startBlack.createAdd(new Cell(0, 1))));
+            setFigure(Figure.build(typeFigure, Color.WHITE, startWhite));
+            setFigure(new Pawn(Color.WHITE, startWhite.createAdd(new Cell(0, -1))));
+            startBlack = startBlack.createAdd(shift);
+            startWhite = startWhite.createAdd(shift);
+        }
     }
 
     /**
