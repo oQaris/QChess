@@ -9,6 +9,7 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Assert;
@@ -25,10 +26,6 @@ public class FigureTest {
         for (String to : tos) result.add(new Move(type, from, Cell.parse(to)));
         return result;
     }
-
-    /*private static Set<Cell> extractCellTo(Set<Move> moves) {
-        return moves.stream().map(Move::getTo).collect(Collectors.toSet());
-    }*/
 
     @Before
     public void setUp() throws ChessError {
@@ -285,10 +282,10 @@ public class FigureTest {
         board.setFigure(knightB2);
 
         Assert.assertEquals(
-                toMoveSet(from1, MoveType.QUIET_MOVE,"D1", "D2", "E2", "F2", "F1"),
+                toMoveSet(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1"),
                 king1.getAllMoves(gameSettings));
         Assert.assertEquals(
-                toMoveSet(from2, MoveType.QUIET_MOVE,"D8", "D7", "E7", "F7", "F8"),
+                toMoveSet(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8"),
                 king2.getAllMoves(gameSettings));
     }
 
@@ -450,14 +447,24 @@ public class FigureTest {
                 king2.getAllMoves(gameSettings));
     }*/
 
-    /*@Test
+    @Test
     public void testKnight() throws ChessException {
         // --- Конь ---//
         Figure knight = new Knight(Color.BLACK, Cell.parse("f4"));
         board.setFigure(knight);
         Assert.assertEquals(
-                toMoveSet("E6", "G6", "D5", "D3", "E2", "G2", "H3", "H5"),
-                knight.getAllMoves(gameSettings)));
+                toMoveSet(
+                        knight.getCurrentPosition(),
+                        MoveType.QUIET_MOVE,
+                        "E6",
+                        "G6",
+                        "D5",
+                        "D3",
+                        "E2",
+                        "G2",
+                        "H3",
+                        "H5"),
+                knight.getAllMoves(gameSettings));
     }
 
     @Test
@@ -473,8 +480,8 @@ public class FigureTest {
         board.setFigure(pawn2);
         board.setFigure(pawn3);
         Assert.assertEquals(
-                toMoveSet("b3", "c2"),
-                knight.getAllMoves(gameSettings)));
+                toMoveSet(knight.getCurrentPosition(), MoveType.QUIET_MOVE, "b3", "c2"),
+                knight.getAllMoves(gameSettings));
     }
 
     @Test
@@ -485,15 +492,17 @@ public class FigureTest {
         board.setFigure(pawn);
         board.setFigure(enemy);
 
-        Assert.assertEquals(
-                toMoveSet("C3", "C4", "D3"),
-                pawn.getAllMoves(gameSettings)));
+        Set<Move> expected = toMoveSet(pawn.getCurrentPosition(), MoveType.QUIET_MOVE, "C3");
+        expected.add(new Move(MoveType.LONG_MOVE, pawn.getCurrentPosition(), Cell.parse("C4")));
+        expected.add(new Move(MoveType.ATTACK, pawn.getCurrentPosition(), Cell.parse("D3")));
+
+        Assert.assertEquals(expected, pawn.getAllMoves(gameSettings));
 
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("c3")));
 
         Assert.assertEquals(
-                toMoveSet("D3"),
-                pawn.getAllMoves(gameSettings)));
+                toMoveSet(pawn.getCurrentPosition(), MoveType.ATTACK, "D3"),
+                pawn.getAllMoves(gameSettings));
     }
 
     @Test
@@ -501,8 +510,7 @@ public class FigureTest {
         // --- Пешка дошедшая до конца поля ---//
         Figure pawn = new Pawn(Color.BLACK, Cell.parse("d1"));
         board.setFigure(pawn);
-        Assert.assertEquals(
-                new HashSet<Cell>(), pawn.getAllMoves(gameSettings)));
+        Assert.assertEquals(Set.of(), pawn.getAllMoves(gameSettings));
     }
 
     @Test
@@ -521,8 +529,8 @@ public class FigureTest {
         board.setFigure(pawn4);
         board.setFigure(pawn5);
         Assert.assertEquals(
-                toMoveSet("B6", "D6"),
-                pawn.getAllMoves(gameSettings)));
+                toMoveSet(pawn.getCurrentPosition(), MoveType.ATTACK, "B6", "D6"),
+                pawn.getAllMoves(gameSettings));
     }
 
     @Test
@@ -539,9 +547,11 @@ public class FigureTest {
         board.setFigure(pawn2);
         board.setFigure(pawn3);
         board.setFigure(pawn4);
-        Assert.assertEquals(
-                toMoveSet("B6", "D6", "c6"),
-                pawn.getAllMoves(gameSettings)));
+
+        Set<Move> expected = toMoveSet(pawn.getCurrentPosition(), MoveType.ATTACK, "B6", "D6");
+        expected.add(new Move(MoveType.QUIET_MOVE, pawn.getCurrentPosition(), Cell.parse("c6")));
+
+        Assert.assertEquals(expected, pawn.getAllMoves(gameSettings));
     }
 
     @Test
@@ -559,13 +569,17 @@ public class FigureTest {
         board.setFigure(pawn3);
         board.setFigure(pawn4);
         setPrevMove(new Move(MoveType.LONG_MOVE, Cell.parse("b2"), Cell.parse("b4")));
-        Assert.assertEquals(
-                toMoveSet("a3", "b3"),
-                pawn1.getAllMoves(gameSettings)));
+
+        Set<Move> expected = toMoveSet(pawn1.getCurrentPosition(), MoveType.EN_PASSANT, "b3");
+        expected.add(new Move(MoveType.QUIET_MOVE, pawn1.getCurrentPosition(), Cell.parse("a3")));
+
+        Assert.assertEquals(expected, pawn1.getAllMoves(gameSettings));
         setPrevMove(new Move(MoveType.LONG_MOVE, Cell.parse("g2"), Cell.parse("g4")));
-        Assert.assertEquals(
-                toMoveSet("g3", "h3"),
-                pawn2.getAllMoves(gameSettings)));
+
+        expected = toMoveSet(pawn2.getCurrentPosition(), MoveType.EN_PASSANT, "g3");
+        expected.add(new Move(MoveType.QUIET_MOVE, pawn2.getCurrentPosition(), Cell.parse("h3")));
+
+        Assert.assertEquals(expected, pawn2.getAllMoves(gameSettings));
     }
 
     private void setPrevMove(Move move) throws NoSuchFieldException, IllegalAccessException {
@@ -581,9 +595,7 @@ public class FigureTest {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
-        Field prevMove = gameSettings.history.getClass().getDeclaredField("lastMove");
-        prevMove.setAccessible(true);
-        prevMove.set(gameSettings.history, white1);
+        setPrevMove(white1);
 
         Figure figureB1 = new Pawn(Color.BLACK, Cell.parse("b4"));
         Figure figureW2 = new Pawn(Color.WHITE, Cell.parse("a4"));
@@ -594,11 +606,13 @@ public class FigureTest {
         board.setFigure(figureW2);
         board.setFigure(figureW3);
 
+        Set<Move> expected = toMoveSet(figureB1.getCurrentPosition(), MoveType.QUIET_MOVE, "b3");
+        expected.add(
+                new Move(MoveType.EN_PASSANT, figureB1.getCurrentPosition(), Cell.parse("c3")));
+
+        Assert.assertEquals(expected, figureB1.getAllMoves(gameSettings));
         Assert.assertEquals(
-                toMoveSet("b3", "c3"),
-                figureB1.getAllMoves(gameSettings)));
-        Assert.assertEquals(
-                toMoveSet("b3"),
-                figureW3.getAllMoves(gameSettings)));
-    }*/
+                toMoveSet(figureW3.getCurrentPosition(), MoveType.QUIET_MOVE, "b3"),
+                figureW3.getAllMoves(gameSettings));
+    }
 }
