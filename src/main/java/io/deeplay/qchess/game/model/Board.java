@@ -2,11 +2,13 @@ package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.logics.NotationService;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
@@ -53,6 +55,31 @@ public class Board {
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
         logger.debug("Доска {} инициализирована", bf);
+    }
+
+    public Board(String placement) throws ChessError {
+        if (!NotationService.checkValidityPlacement(placement)) {
+            logger.error("Ошибка при парсинге строки для конструктора доски (строка не валидна)");
+            throw new ChessError(INCORRECT_STRING_FOR_FILLING_BOARD);
+        }
+        int y = 0;
+        int x = 0;
+        for (Character currentSymbol : placement.toCharArray()) {
+            if(currentSymbol.equals('/')) {
+                y++;
+                x = 0;
+            } else if(Character.isDigit(currentSymbol)) {
+                x += Integer.parseInt(String.valueOf(currentSymbol));
+            } else {
+                try {
+                    setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
+                } catch (ChessException e) {
+                    logger.error("Ошибка при установке фигуры на доску в конструкторе доски по строке");
+                    throw new ChessError(INCORRECT_COORDINATES);
+                }
+                x++;
+            }
+        }
     }
 
     /**

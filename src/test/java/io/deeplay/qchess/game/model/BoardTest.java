@@ -119,4 +119,26 @@ public class BoardTest {
                 board.moveFigure(
                         new Move(MoveType.QUIET_MOVE, Cell.parse("a1"), Cell.parse("a5"))));
     }
+
+    @Test
+    public void testBoardStringConstructor1() throws ChessError, ChessException {
+        String placement = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        String actual = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq";
+        Board board = new Board(placement);
+        History history = new History(board);
+        Assert.assertEquals(history.addRecord(null), actual);
+    }
+
+    @Test
+    public void testBoardStringConstructor2() throws ChessError, ChessException {
+        String placement = "4k3/ppp2ppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        String actual = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQ a3";
+        Board board = new Board(placement);
+        History history = new History(board);
+
+        Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
+        board.moveFigure(move);
+
+        Assert.assertEquals(history.addRecord(move), actual);
+    }
 }
