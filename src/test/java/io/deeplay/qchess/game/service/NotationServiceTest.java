@@ -1,10 +1,10 @@
-package io.deeplay.qchess.game.logics;
+package io.deeplay.qchess.game.service;
 
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.King;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import org.junit.Assert;
 import org.junit.Test;
 

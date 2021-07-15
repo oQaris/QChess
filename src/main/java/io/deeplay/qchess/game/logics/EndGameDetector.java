@@ -4,9 +4,9 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
+import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,12 +19,12 @@ public class EndGameDetector {
     public static final int END_REPETITIONS_COUNT = 5;
     private static final Logger logger = LoggerFactory.getLogger(EndGameDetector.class);
     private final GameSettings roomSettings;
-    private final List<List<TypeFigure>> material =
+    private final List<List<FigureType>> material =
             Arrays.asList(
-                    Collections.singletonList(TypeFigure.KING),
-                    Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT),
-                    Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP),
-                    Arrays.asList(TypeFigure.KING, TypeFigure.KNIGHT, TypeFigure.KNIGHT));
+                    Collections.singletonList(FigureType.KING),
+                    Arrays.asList(FigureType.KING, FigureType.KNIGHT),
+                    Arrays.asList(FigureType.KING, FigureType.BISHOP),
+                    Arrays.asList(FigureType.KING, FigureType.KNIGHT, FigureType.KNIGHT));
 
     public EndGameDetector(GameSettings roomSettings) {
         this.roomSettings = roomSettings;
@@ -72,29 +72,29 @@ public class EndGameDetector {
 
         if (isKingsWithSameBishop(whiteFigures, blackFigures)) return true;
 
-        List<TypeFigure> oneKing = Collections.singletonList(TypeFigure.KING);
+        List<FigureType> oneKing = Collections.singletonList(FigureType.KING);
         boolean isOneKingWhite = isAllFiguresSame(whiteFigures, oneKing);
         boolean isOneKingBlack = isAllFiguresSame(blackFigures, oneKing);
 
-        for (List<TypeFigure> typeFigures : material) {
-            if (isOneKingWhite && isAllFiguresSame(blackFigures, typeFigures)) return true;
-            if (isOneKingBlack && isAllFiguresSame(whiteFigures, typeFigures)) return true;
+        for (List<FigureType> figureTypes : material) {
+            if (isOneKingWhite && isAllFiguresSame(blackFigures, figureTypes)) return true;
+            if (isOneKingBlack && isAllFiguresSame(whiteFigures, figureTypes)) return true;
         }
         return false;
     }
 
     /**
-     * Проверяет, что все фигуры в figures соответствуют своим типам в typeFigures
+     * Проверяет, что все фигуры в figures соответствуют своим типам в figureTypes
      *
      * @param figures Список фигур
-     * @param typeFigures Список требуемых типов
+     * @param figureTypes Список требуемых типов
      * @return true - если списки равны и фигуры из первого списка соответствуют типам из второго
      *     (без учёта порядка)
      */
-    private boolean isAllFiguresSame(List<Figure> figures, List<TypeFigure> typeFigures) {
-        List<TypeFigure> typeFiguresCopy = new ArrayList<>(typeFigures);
-        if (figures.size() != typeFigures.size()) return false;
-        for (Figure figure : figures) if (!typeFiguresCopy.remove(figure.getType())) return false;
+    private boolean isAllFiguresSame(List<Figure> figures, List<FigureType> figureTypes) {
+        List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
+        if (figures.size() != figureTypes.size()) return false;
+        for (Figure figure : figures) if (!figuresCopyType.remove(figure.getType())) return false;
         return true;
     }
 
@@ -107,7 +107,7 @@ public class EndGameDetector {
      * @return true - если списки удовлетворяют условию
      */
     private boolean isKingsWithSameBishop(List<Figure> whiteFigures, List<Figure> blackFigures) {
-        List<TypeFigure> kingWithBishop = Arrays.asList(TypeFigure.KING, TypeFigure.BISHOP);
+        List<FigureType> kingWithBishop = Arrays.asList(FigureType.KING, FigureType.BISHOP);
         if (!isAllFiguresSame(whiteFigures, kingWithBishop)
                 || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
 
@@ -130,7 +130,7 @@ public class EndGameDetector {
      * @return найденного слона, или null - иначе
      */
     private Figure getBishop(List<Figure> figures) {
-        for (Figure figure : figures) if (figure.getType() == TypeFigure.BISHOP) return figure;
+        for (Figure figure : figures) if (figure.getType() == FigureType.BISHOP) return figure;
         return null;
     }
 

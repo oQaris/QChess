@@ -2,10 +2,10 @@ package io.deeplay.qchess.game.player;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Queen;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import java.util.List;
 import java.util.Random;
 

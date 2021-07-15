@@ -8,12 +8,12 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.History;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
+import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -127,10 +127,10 @@ public class MoveSystem {
             return move.getTurnInto() != null
                     && move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
-                    && (move.getTurnInto().getType() == TypeFigure.BISHOP
-                            || move.getTurnInto().getType() == TypeFigure.KNIGHT
-                            || move.getTurnInto().getType() == TypeFigure.QUEEN
-                            || move.getTurnInto().getType() == TypeFigure.ROOK);
+                    && (move.getTurnInto().getType() == FigureType.BISHOP
+                            || move.getTurnInto().getType() == FigureType.KNIGHT
+                            || move.getTurnInto().getType() == FigureType.QUEEN
+                            || move.getTurnInto().getType() == FigureType.ROOK);
         return true;
     }
 
@@ -149,8 +149,8 @@ public class MoveSystem {
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) {
-            logger.error("Срубили короля при проверки виртуального хода {}", move);
+        if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
+            logger.error("Срубили короля при проверке виртуального хода {}", move);
             throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
         }
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());

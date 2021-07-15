@@ -1,16 +1,11 @@
-package io.deeplay.qchess.game.model.figures.interfaces;
+package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.Bishop;
-import io.deeplay.qchess.game.model.figures.King;
-import io.deeplay.qchess.game.model.figures.Knight;
-import io.deeplay.qchess.game.model.figures.Pawn;
-import io.deeplay.qchess.game.model.figures.Queen;
-import io.deeplay.qchess.game.model.figures.Rook;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +42,7 @@ public abstract class Figure {
         logger.debug("Фигура {} была создана", this);
     }
 
-    public static Figure build(TypeFigure type, Color color, Cell position) {
+    public static Figure build(FigureType type, Color color, Cell position) {
         return switch (type) {
             case BISHOP -> new Bishop(color, position);
             case KING -> new King(color, position);
@@ -134,5 +129,5 @@ public abstract class Figure {
     }
 
     /** @return тип фигуры */
-    public abstract TypeFigure getType();
+    public abstract FigureType getType();
 }
