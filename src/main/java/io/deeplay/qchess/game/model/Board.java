@@ -152,19 +152,14 @@ public class Board {
      * @throws ChessError если король не был найден
      */
     public Figure findKing(Color color) throws ChessError {
-        Figure king = null;
         for (Figure[] figures : cells)
             for (Figure f : figures)
-                if (f != null && f.getColor() == color && f.getType() == TypeFigure.KING) {
-                    return f;
-                }
+                if (f != null && f.getColor() == color && f.getType() == TypeFigure.KING) return f;
         logger.error("Король {} не был найден", color);
         throw new ChessError(KING_NOT_FOUND);
     }
 
     /**
-     * Метод может быть небезопасным из-за смещения!
-     *
      * @param cell стартовая клетка
      * @param color цвет ладьи
      * @param shift вектор смещения (поиск в эту сторону)

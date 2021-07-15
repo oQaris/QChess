@@ -91,7 +91,6 @@ public class History implements Iterable<String> {
         for (int y = 0; y < Board.BOARD_SIZE; y++) {
             int emptySlots = 0;
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
-
                 currentFigure = gameSettings.board.getFigure(new Cell(x, y));
 
                 if (currentFigure == null) emptySlots++;
@@ -127,10 +126,9 @@ public class History implements Iterable<String> {
                 gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
         Figure rightRook =
                 gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(1, 0));
-        if (leftRook != null && !leftRook.wasMoved()) res = res + 'k';
-        if (rightRook != null && !rightRook.wasMoved()) res = res + 'q';
-        if (color == Color.WHITE) res = res.toUpperCase();
-        return res;
+        if (rightRook != null && !rightRook.wasMoved()) res = "k";
+        if (leftRook != null && !leftRook.wasMoved()) res = res + "q";
+        return color == Color.WHITE ? res.toUpperCase() : res;
     }
 
     /**
