@@ -2,6 +2,7 @@ package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.exceptions.ChessErrorCode;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.King;
@@ -40,6 +41,7 @@ public class NotationService {
             }
         }
         return checkRowsNumber(placementRows)
+                && checkTwoKings(getPlacementTable(placementRows))
                 && checkFigureTypes(getAllFigureSymbols(placement, Color.BLACK))
                 && checkFigureTypes(getAllFigureSymbols(placement, Color.WHITE));
     }
@@ -89,6 +91,45 @@ public class NotationService {
         return place == 8;
     }
 
+    private static char[][] getPlacementTable(String[] placementRows) {
+        char[][] placementTable = new char[Board.BOARD_SIZE + 2][Board.BOARD_SIZE + 2];
+        for (char[] row : placementTable) {
+            Arrays.fill(row, 'e');
+        }
+
+        for (int y = 1; y < Board.BOARD_SIZE + 1; y++) {
+            int x = 1;
+            for (Character c : placementRows[y - 1].toCharArray()) {
+                if (Character.isDigit(c)) {
+                    x += Integer.parseInt(String.valueOf(c));
+                } else {
+                    placementTable[y][x] = Character.toLowerCase(c);
+                    x++;
+                }
+            }
+        }
+        return placementTable;
+    }
+
+    private static boolean checkTwoKings(char[][] placementTable) {
+        for(int y = 1; y < Board.BOARD_SIZE + 2; y++) {
+            for(int x = 1; x < Board.BOARD_SIZE + 2; x++) {
+                if(placementTable[y][x] == 'k') {
+                    for(int detour = 0; detour < 9; detour++) {
+                        if(detour == 4) {
+                            continue;
+                        }
+                        if(placementTable[(detour / 3) - 1 + y][(detour % 3) - 1 + x] == 'k') {
+                            return false;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
     private static List<Character> getAllFigureSymbols(String placement, Color color) {
         List<Character> result = new ArrayList<>(16);
         for (Character c : placement.toCharArray()) {
@@ -109,7 +150,7 @@ public class NotationService {
                     figureMap.getOrDefault(Character.toLowerCase(c), 0) + 1);
         }
 
-        if (figureMap.get('k') != KQ_COUNT) {
+        if (figureMap.getOrDefault('k', 0) != KQ_COUNT) {
             return false;
         }
 
