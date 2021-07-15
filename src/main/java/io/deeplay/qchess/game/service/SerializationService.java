@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.StringReader;
 
-public class Flexer {
-    final ObjectMapper mapper = new ObjectMapper();
+public abstract class SerializationService {
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    String serialize(Object obj) throws JsonProcessingException {
+    public static String serialize(Object obj) throws JsonProcessingException {
         return mapper.writeValueAsString(obj);
     }
 
-    <T> T deserialize(String json, Class<T> clazz) throws IOException {
+    public static <T> T deserialize(String json, Class<T> clazz) throws IOException {
         return mapper.readValue(new StringReader(json), clazz);
     }
 }
