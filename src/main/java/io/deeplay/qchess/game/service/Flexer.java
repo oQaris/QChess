@@ -1,4 +1,4 @@
-package io.deeplay.qchess.game.logics;
+package io.deeplay.qchess.game.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
