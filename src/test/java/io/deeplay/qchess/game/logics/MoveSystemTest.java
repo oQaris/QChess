@@ -362,6 +362,7 @@ public class MoveSystemTest {
     @Test
     public void testMove_QUIET_MOVE() throws ChessException, ChessError {
         Figure figure = new King(Color.WHITE, Cell.parse("d4"));
+        board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
         board.setFigure(figure);
 
         Figure removed = ms.move(new Move(MoveType.QUIET_MOVE, Cell.parse("d4"), Cell.parse("c5")));
@@ -454,6 +455,7 @@ public class MoveSystemTest {
     public void testMove_SHORT_CASTLING() throws ChessException, ChessError {
         Figure king = new King(Color.WHITE, Cell.parse("e1"));
         Figure rook = new Rook(Color.WHITE, Cell.parse("h1"));
+        board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
         board.setFigure(king);
         board.setFigure(rook);
 
@@ -471,6 +473,7 @@ public class MoveSystemTest {
     public void testMove_LONG_CASTLING() throws ChessException, ChessError {
         Figure king = new King(Color.WHITE, Cell.parse("e1"));
         Figure rook = new Rook(Color.WHITE, Cell.parse("a1"));
+        board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
         board.setFigure(king);
         board.setFigure(rook);
 
