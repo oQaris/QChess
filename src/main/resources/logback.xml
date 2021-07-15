@@ -18,10 +18,10 @@
       <Pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</Pattern>
     </encoder>
 
-    <file>qchess-partial-stream.log</file>
+    <file>logs/qchess-stream-part.log</file>
 
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <fileNamePattern>qchess-partial-stream.%i.log</fileNamePattern>
+      <fileNamePattern>logs/parts/qchess-stream-part.%i.log.gz</fileNamePattern>
       <maxIndex>3</maxIndex>
       <minIndex>1</minIndex>
     </rollingPolicy>
@@ -37,7 +37,7 @@
       <Pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</Pattern>
     </encoder>
 
-    <file>qchess-last-session-debug.log</file>
+    <file>logs/qchess-last-session-debug.log</file>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>DEBUG</level>
@@ -50,7 +50,7 @@
       <Pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</Pattern>
     </encoder>
 
-    <file>qchess-last-session-info.log</file>
+    <file>logs/qchess-last-session-info.log</file>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>INFO</level>
