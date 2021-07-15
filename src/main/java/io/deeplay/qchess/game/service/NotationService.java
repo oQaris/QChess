@@ -1,4 +1,4 @@
-package io.deeplay.qchess.game.logics;
+package io.deeplay.qchess.game.service;
 
 import io.deeplay.qchess.game.exceptions.ChessErrorCode;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/** Используется для нотации Форсайта-Эдвардса (FEN) */
 public class NotationService {
     private static final Character[] arr = {
         '1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r', 'b',

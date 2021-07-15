@@ -7,7 +7,7 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.logics.NotationService;
+import io.deeplay.qchess.game.service.NotationService;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
