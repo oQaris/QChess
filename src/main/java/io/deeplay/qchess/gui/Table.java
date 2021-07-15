@@ -29,7 +29,8 @@ public class Table {
         this.gameFrame.setLayout(new BorderLayout());
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        this.gameFrame.setResizable(false);
+
         this.boardPanel = new BoardPanel();
         this.gameFrame.add(boardPanel, BorderLayout.CENTER);
 
