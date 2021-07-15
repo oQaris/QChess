@@ -1,7 +1,7 @@
 package io.deeplay.qchess.game.logics;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_WAS_KILLED_IN_VIRTUAL_MOVE;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -150,8 +150,8 @@ public class MoveSystem {
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
         if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) {
-            logger.error("Король не был найден при проверки виртуального хода {}", move);
-            throw new ChessError(KING_NOT_FOUND);
+            logger.error("Срубили короля при проверки виртуального хода {}", move);
+            throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
         }
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
         // отмена виртуального хода
