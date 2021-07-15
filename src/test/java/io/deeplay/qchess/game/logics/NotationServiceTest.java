@@ -5,6 +5,7 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
 import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.service.NotationService;
 import org.junit.Assert;
 import org.junit.Test;
 
