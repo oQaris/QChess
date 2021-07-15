@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.StringReader;
 
-public abstract class SerializationService {
+public final class SerializationService {
     private static final ObjectMapper mapper = new ObjectMapper();
+
+    private SerializationService() {
+    }
 
     public static String serialize(Object obj) throws JsonProcessingException {
         return mapper.writeValueAsString(obj);
