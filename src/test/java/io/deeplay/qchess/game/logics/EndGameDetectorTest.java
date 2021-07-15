@@ -157,6 +157,7 @@ public class EndGameDetectorTest {
     @Test
     public void testIsDrawWithRepetitions() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("e1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("e8")));
         Move move1 = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
         Move move2 = new Move(MoveType.QUIET_MOVE, Cell.parse("e2"), Cell.parse("e1"));
 

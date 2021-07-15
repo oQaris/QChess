@@ -126,22 +126,25 @@ public class BoardTest {
     @Test
     public void testBoardStringConstructor1() throws ChessError, ChessException {
         String placement = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        String actual = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq";
-        board = new Board(placement);
+        String expected = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq";
+        gameSettings = new GameSettings(placement);
+
         History history = new History(gameSettings);
-        Assert.assertEquals(history.addRecord(null), actual);
+        history.addRecord(null);
+        Assert.assertEquals(expected, history.addRecord(null));
     }
 
     @Test
     public void testBoardStringConstructor2() throws ChessError, ChessException {
         String placement = "4k3/ppp2ppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        String actual = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQ a3";
-        board = new Board(placement);
+        String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR w KQ a3";
+        gameSettings = new GameSettings(placement);
+
         History history = new History(gameSettings);
 
         Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
-        board.moveFigure(move);
+        gameSettings.board.moveFigure(move);
 
-        Assert.assertEquals(history.addRecord(move), actual);
+        Assert.assertEquals(expected, history.addRecord(move));
     }
 }
