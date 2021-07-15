@@ -55,9 +55,19 @@ public class Pawn extends Figure {
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
         Set<Move> result = new HashSet<>();
+
         Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
         addShortAndLongMove(settings, forwardShift, result);
-        addEnPassant(settings, forwardShift, result);
+
+        Move leftSpecialMove =
+                getSpecialMove(
+                        settings, position.createAdd(forwardShift).createAdd(new Cell(-1, 0)));
+        Move rightSpecialMove =
+                getSpecialMove(
+                        settings, position.createAdd(forwardShift).createAdd(new Cell(1, 0)));
+        if (leftSpecialMove != null) result.add(leftSpecialMove);
+        if (rightSpecialMove != null) result.add(rightSpecialMove);
+
         return result;
     }
 
@@ -79,31 +89,18 @@ public class Pawn extends Figure {
         }
     }
 
-    private void addEnPassant(GameSettings settings, Cell forwardShift, Set<Move> result) {
-        logger.trace("Начато добавление смещения {} для взятия на проходе", forwardShift);
-        Cell leftAttack = position.createAdd(forwardShift).createAdd(new Cell(-1, 0));
-        Cell rightAttack = position.createAdd(forwardShift).createAdd(new Cell(1, 0));
-
-        boolean isEnPassant =
-                isPawnEnPassant(settings, leftAttack) || isPawnEnPassant(settings, rightAttack);
-        MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
-
-        if (settings.board.isEnemyFigureOn(color, leftAttack)
-                || isPawnEnPassant(settings, leftAttack)) {
-            result.add(
-                    new Move(
-                            isTurnInto(leftAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
-                            position,
-                            leftAttack));
+    private Move getSpecialMove(GameSettings settings, Cell attack) {
+        logger.trace("Начато добавление смещения {} для взятия на проходе", attack);
+        boolean isEnPassant = isPawnEnPassant(settings, attack);
+        if (settings.board.isEnemyFigureOn(color, attack) || isEnPassant) {
+            if (isTurnInto(attack)) {
+                return new Move(MoveType.TURN_INTO, position, attack);
+            } else {
+                return new Move(
+                        isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK, position, attack);
+            }
         }
-        if (settings.board.isEnemyFigureOn(color, rightAttack)
-                || isPawnEnPassant(settings, rightAttack)) {
-            result.add(
-                    new Move(
-                            isTurnInto(rightAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
-                            position,
-                            rightAttack));
-        }
+        return null;
     }
 
     private boolean isTurnInto(Cell end) {

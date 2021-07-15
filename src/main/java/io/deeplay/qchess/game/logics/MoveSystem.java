@@ -150,7 +150,7 @@ public class MoveSystem {
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
         if (virtualKilled != null && virtualKilled.getType() == TypeFigure.KING) {
-            logger.error("Король не был найден при проверки виртуального хода {}", move);
+            logger.error("Срубили короля при проверке виртуального хода {}", move);
             throw new ChessError(KING_NOT_FOUND);
         }
         boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());

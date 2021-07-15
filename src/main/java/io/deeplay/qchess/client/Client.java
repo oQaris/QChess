@@ -1,6 +1,7 @@
 package io.deeplay.qchess.client;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -62,7 +63,7 @@ public class Client {
         return 0;
     }
 
-    private int clientLoop() throws Exception {
+    private int clientLoop() throws IOException {
         if (clientInput.ready()) {
             String str = clientInput.readLine();
             out.println(str);

@@ -8,8 +8,7 @@ import java.io.StringReader;
 public final class SerializationService {
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private SerializationService() {
-    }
+    private SerializationService() {}
 
     public static String serialize(Object obj) throws JsonProcessingException {
         return mapper.writeValueAsString(obj);
