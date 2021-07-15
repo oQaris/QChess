@@ -1,5 +1,6 @@
 package io.deeplay.qchess.game.logics;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
@@ -15,13 +16,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class HistoryTest {
-    private Board board;
     private History history;
+    private Board board;
 
     @Before
     public void setUp() throws ChessError {
-        board = new Board(Board.BoardFilling.STANDARD);
-        history = new History(board);
+        GameSettings gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
+        history = new History(gameSettings);
+        board = gameSettings.board;
     }
 
     @Test
@@ -75,7 +77,8 @@ public class HistoryTest {
     }
 
     @Test
-    public void testAddRecord() throws ChessException {
-        Assert.assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq", history.addRecord(null));
+    public void testAddRecord() throws ChessException, ChessError {
+        Assert.assertEquals(
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq", history.addRecord(null));
     }
 }

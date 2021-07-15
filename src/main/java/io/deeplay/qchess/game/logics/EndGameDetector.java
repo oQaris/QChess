@@ -43,8 +43,9 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithPeaceMoves() {
-        logger.debug("Начата проверка на ничью при {} ходов без взятия и хода пешки",
-            END_PEACE_MOVE_COUNT);
+        logger.debug(
+                "Начата проверка на ничью при {} ходов без взятия и хода пешки",
+                END_PEACE_MOVE_COUNT);
         return roomSettings.history.getPeaceMoveCount() >= END_PEACE_MOVE_COUNT;
     }
 
@@ -146,6 +147,8 @@ public class EndGameDetector {
     /** @return true если игроку с указанным цветом ставят шах */
     boolean isCheck(Color color) throws ChessError {
         return Board.isAttackedCell(
-                roomSettings, roomSettings.board.findKingCell(color), color.inverse());
+                roomSettings,
+                roomSettings.board.findKing(color).getCurrentPosition(),
+                color.inverse());
     }
 }

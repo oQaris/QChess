@@ -14,7 +14,7 @@ public class GameSettings {
 
     public GameSettings(Board.BoardFilling boardType) throws ChessError {
         board = new Board(boardType);
-        history = new History(board);
+        history = new History(this);
         endGameDetector = new EndGameDetector(this);
         moveSystem = new MoveSystem(this);
     }

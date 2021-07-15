@@ -21,7 +21,7 @@
     <file>qchess-partial-stream.log</file>
 
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <fileNamePattern>qchess-partial-stream.%i.log.gz</fileNamePattern>
+      <fileNamePattern>qchess-partial-stream.%i.log</fileNamePattern>
       <maxIndex>3</maxIndex>
       <minIndex>1</minIndex>
     </rollingPolicy>

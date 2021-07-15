@@ -27,14 +27,17 @@ public class Board {
         logger.debug("Начато заполнение {} доски", bf);
         try {
             switch (bf) {
-                case STANDARD -> fillBoardForFirstLine(new TypeFigure[]{
-                    TypeFigure.ROOK, TypeFigure.KNIGHT, TypeFigure.BISHOP,
-                    TypeFigure.QUEEN, TypeFigure.KING, TypeFigure.BISHOP,
-                    TypeFigure.KNIGHT,TypeFigure.ROOK});
+                case STANDARD -> fillBoardForFirstLine(
+                        new TypeFigure[] {
+                            TypeFigure.ROOK, TypeFigure.KNIGHT, TypeFigure.BISHOP,
+                            TypeFigure.QUEEN, TypeFigure.KING, TypeFigure.BISHOP,
+                            TypeFigure.KNIGHT, TypeFigure.ROOK
+                        });
                 case CHESS960 -> {
-                    //todo Сделать рандомное заполнение Фишера
+                    // todo Сделать рандомное заполнение Фишера
                 }
-                case EMPTY -> { }
+                case EMPTY -> {
+                }
             }
         } catch (ChessException | NullPointerException e) {
             logger.error("Ошибка при заполнении доски");
@@ -50,16 +53,17 @@ public class Board {
         int y = 0;
         int x = 0;
         for (Character currentSymbol : placement.toCharArray()) {
-            if(currentSymbol.equals('/')) {
+            if (currentSymbol.equals('/')) {
                 y++;
                 x = 0;
-            } else if(Character.isDigit(currentSymbol)) {
+            } else if (Character.isDigit(currentSymbol)) {
                 x += Integer.parseInt(String.valueOf(currentSymbol));
             } else {
                 try {
                     setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
                 } catch (ChessException e) {
-                    logger.error("Ошибка при установке фигуры на доску в конструкторе доски по строке");
+                    logger.error(
+                            "Ошибка при установке фигуры на доску в конструкторе доски по строке");
                     throw new ChessError(INCORRECT_COORDINATES);
                 }
                 x++;
@@ -67,23 +71,18 @@ public class Board {
         }
     }
 
-    /**
-     * @return true, если клетка принадлежит доске
-     */
+    /** @return true, если клетка принадлежит доске */
     public static boolean isCorrectCell(int column, int row) {
         return column >= 0 && row >= 0 && column < Board.BOARD_SIZE && row < Board.BOARD_SIZE;
     }
 
-    /**
-     * @return true, если клетка cell атакуется цветом color
-     */
+    /** @return true, если клетка cell атакуется цветом color */
     public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
         for (Figure f : settings.board.getFigures(color))
             for (Move m :
                     f.getType() == TypeFigure.KING
                             ? ((King) f).getAttackedMoves(settings.board)
-                            : f.getAllMoves(settings))
-                if (m.getTo().equals(cell)) return true;
+                            : f.getAllMoves(settings)) if (m.getTo().equals(cell)) return true;
         return false;
     }
 
@@ -123,9 +122,7 @@ public class Board {
         }
     }
 
-    /**
-     * Устанавливает фигуру на доску
-     */
+    /** Устанавливает фигуру на доску */
     public void setFigure(Figure figure) throws ChessException {
         int x = figure.getCurrentPosition().getColumn();
         int y = figure.getCurrentPosition().getRow();
@@ -145,8 +142,7 @@ public class Board {
         List<Figure> list = new ArrayList<>(16);
         for (Figure[] figures : cells)
             for (Figure figure : figures)
-                if (figure != null && figure.getColor() == color)
-                    list.add(figure);
+                if (figure != null && figure.getColor() == color) list.add(figure);
         return list;
     }
 
@@ -155,24 +151,30 @@ public class Board {
      * @return позиция короля определенного цвета
      * @throws ChessError если король не был найден
      */
-    public Cell findKingCell(Color color) throws ChessError {
-        Cell kingCell = null;
+    public Figure findKing(Color color) throws ChessError {
+        Figure king = null;
         for (Figure[] figures : cells)
             for (Figure f : figures)
                 if (f != null && f.getColor() == color && f.getType() == TypeFigure.KING) {
-                    kingCell = f.getCurrentPosition();
+                    king = f;
                     break;
                 }
-        if (kingCell == null) {
+        if (king == null) {
             logger.error("Король {} не был найден", color);
             throw new ChessError(KING_NOT_FOUND);
         }
-        return kingCell;
+        return king;
+        /*return Arrays.stream(cells)
+        .flatMap(Arrays::stream)
+        .filter(Objects::nonNull)
+        .filter(f -> f.getColor() == color && f.getType() == TypeFigure.KING)
+        .findAny()
+        .orElseThrow(() -> new ChessError(KING_NOT_FOUND));*/
     }
 
     /**
-     * Перемещает фигуру с заменой старой, даже если ход некорректный.
-     * При срублении фигуры, возвращается эта фигура без изменения собственных координат.
+     * Перемещает фигуру с заменой старой, даже если ход некорректный. При срублении фигуры,
+     * возвращается эта фигура без изменения собственных координат.
      *
      * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
      * @throws ChessException если ход выходит за пределы доски
@@ -220,9 +222,7 @@ public class Board {
         return old;
     }
 
-    /**
-     * @return true, если клетка лежит на доске и она пустая, иначе false
-     */
+    /** @return true, если клетка лежит на доске и она пустая, иначе false */
     public boolean isEmptyCell(Cell cell) {
         int x = cell.getColumn();
         int y = cell.getRow();
@@ -256,6 +256,8 @@ public class Board {
     }
 
     public enum BoardFilling {
-        EMPTY, STANDARD, CHESS960
+        EMPTY,
+        STANDARD,
+        CHESS960
     }
 }

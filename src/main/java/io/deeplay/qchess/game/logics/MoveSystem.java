@@ -43,37 +43,38 @@ public class MoveSystem {
     public Figure move(Move move) throws ChessError {
         try {
             logger.debug("Начато выполнение хода: {}", move);
-            Figure removedFigure = switch (move.getMoveType()) {
-                // взятие на проходе
-                case EN_PASSANT -> {
-                    board.moveFigure(move);
-                    yield board.removeFigure(history.getLastMove().getTo());
-                }
-                // превращение пешки
-                case TURN_INTO -> {
-                    Figure turnIntoFigure = move.getTurnInto();
-                    turnIntoFigure.setCurrentPosition(move.getTo());
-                    Figure removed = board.moveFigure(move);
-                    board.setFigure(turnIntoFigure);
-                    yield removed;
-                }
-                // рокировка
-                case SHORT_CASTLING -> {
-                    Cell from = move.getFrom().createAdd(new Cell(3, 0));
-                    Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                    board.getFigure(from).setWasMoved(true);
-                    board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-                    yield board.moveFigure(move);
-                }
-                case LONG_CASTLING->{
-                    Cell from = move.getFrom().createAdd(new Cell(-4, 0));
-                    Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                    board.getFigure(from).setWasMoved(true);
-                    board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-                    yield board.moveFigure(move);
-                }
-                default -> board.moveFigure(move);
-            };
+            Figure removedFigure =
+                    switch (move.getMoveType()) {
+                            // взятие на проходе
+                        case EN_PASSANT -> {
+                            board.moveFigure(move);
+                            yield board.removeFigure(history.getLastMove().getTo());
+                        }
+                            // превращение пешки
+                        case TURN_INTO -> {
+                            Figure turnIntoFigure = move.getTurnInto();
+                            turnIntoFigure.setCurrentPosition(move.getTo());
+                            Figure removed = board.moveFigure(move);
+                            board.setFigure(turnIntoFigure);
+                            yield removed;
+                        }
+                            // рокировка
+                        case SHORT_CASTLING -> {
+                            Cell from = move.getFrom().createAdd(new Cell(3, 0));
+                            Cell to = move.getFrom().createAdd(new Cell(1, 0));
+                            board.getFigure(from).setWasMoved(true);
+                            board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
+                            yield board.moveFigure(move);
+                        }
+                        case LONG_CASTLING -> {
+                            Cell from = move.getFrom().createAdd(new Cell(-4, 0));
+                            Cell to = move.getFrom().createAdd(new Cell(-1, 0));
+                            board.getFigure(from).setWasMoved(true);
+                            board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
+                            yield board.moveFigure(move);
+                        }
+                        default -> board.moveFigure(move);
+                    };
 
             history.checkAndAddPeaceMoveCount(move);
             history.addRecord(move);
@@ -93,9 +94,7 @@ public class MoveSystem {
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(64);
         for (Figure f : board.getFigures(color))
-            for (Move m : f.getAllMoves(roomSettings))
-                if (isCorrectMove(m))
-                    res.add(m);
+            for (Move m : f.getAllMoves(roomSettings)) if (isCorrectMove(m)) res.add(m);
         return res;
     }
 
@@ -107,7 +106,10 @@ public class MoveSystem {
                     && inAvailableMoves(move)
                     && isCorrectVirtualMove(move);
         } catch (ChessException | NullPointerException e) {
-            logger.warn("Проверяемый (некорректный) ход <{}> кинул исключение: {}", move, e.getMessage());
+            logger.warn(
+                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
+                    move,
+                    e.getMessage());
             return false;
         }
     }
@@ -126,9 +128,9 @@ public class MoveSystem {
                     && move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
                     && move.getTurnInto().getCurrentPosition().equals(move.getTo())
                     && (move.getTurnInto().getType() == TypeFigure.BISHOP
-                    || move.getTurnInto().getType() == TypeFigure.KNIGHT
-                    || move.getTurnInto().getType() == TypeFigure.QUEEN
-                    || move.getTurnInto().getType() == TypeFigure.ROOK);
+                            || move.getTurnInto().getType() == TypeFigure.KNIGHT
+                            || move.getTurnInto().getType() == TypeFigure.QUEEN
+                            || move.getTurnInto().getType() == TypeFigure.ROOK);
         return true;
     }
 

@@ -21,17 +21,15 @@ import java.util.Set;
 
 public class NotationService {
     private static final Character[] arr = {
-        '1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r',
-        'b', 'n', 'p'
+        '1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r', 'b',
+        'n', 'p'
     };
 
     private static final int PAWN_COUNT = 8;
     private static final int KQ_COUNT = 1;
     private static final int RNB_COUNT = 2;
 
-    /**
-     * @return true если строка с расстаовкой является корректной, false - некорректной
-     */
+    /** @return true если строка с расстаовкой является корректной, false - некорректной */
     public static boolean checkValidityPlacement(String placement) {
         String[] placementRows = placement.split("/");
         for (String placementRow : placementRows) {
@@ -44,9 +42,7 @@ public class NotationService {
                 && checkFigureTypes(getAllFigureSymbols(placement, Color.WHITE));
     }
 
-    /**
-     * @return возвращает конкретную фигуру по входному символу, в позиции x,y
-     */
+    /** @return возвращает конкретную фигуру по входному символу, в позиции x,y */
     public static Figure getFigureByChar(Character symbol, int x, int y) throws ChessException {
         char lowerSymbol = Character.toLowerCase(symbol);
         Color figureColor = Character.isLowerCase(symbol) ? Color.BLACK : Color.WHITE;
@@ -93,7 +89,8 @@ public class NotationService {
         List<Character> result = new ArrayList<>(16);
         for (Character c : placement.toCharArray()) {
             if (!Character.isDigit(c) && !c.equals('/')) {
-                if ((Character.isLowerCase(c) && (color == Color.BLACK)) || (Character.isUpperCase(c) && (color == Color.WHITE))) {
+                if ((Character.isLowerCase(c) && (color == Color.BLACK))
+                        || (Character.isUpperCase(c) && (color == Color.WHITE))) {
                     result.add(c);
                 }
             }

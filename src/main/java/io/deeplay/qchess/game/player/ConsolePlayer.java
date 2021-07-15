@@ -24,11 +24,15 @@ import org.slf4j.LoggerFactory;
 public class ConsolePlayer extends Player {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
     private static final String TURN_INTO_INVITE =
-            "Выберите фигуру для превращения:" +
-                    System.lineSeparator() + "1 - Конь" +
-                    System.lineSeparator() + "2 - Слон" +
-                    System.lineSeparator() + "3 - Ладья" +
-                    System.lineSeparator() + "4 - Ферзь";
+            "Выберите фигуру для превращения:"
+                    + System.lineSeparator()
+                    + "1 - Конь"
+                    + System.lineSeparator()
+                    + "2 - Слон"
+                    + System.lineSeparator()
+                    + "3 - Ладья"
+                    + System.lineSeparator()
+                    + "4 - Ферзь";
 
     private final BufferedReader in;
 
@@ -108,7 +112,8 @@ public class ConsolePlayer extends Player {
             case 3 -> new Rook(color, to);
             case 4 -> new Queen(color, to);
             default -> {
-                logger.error("В консольном игроке выбрана неизвестная фигура: {}", numTurnIntoFigure);
+                logger.error(
+                        "В консольном игроке выбрана неизвестная фигура: {}", numTurnIntoFigure);
                 throw new ChessError(UNKNOWN_FIGURE_SELECTED);
             }
         };
