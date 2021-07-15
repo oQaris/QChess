@@ -147,6 +147,8 @@ public class EndGameDetector {
     /** @return true если игроку с указанным цветом ставят шах */
     boolean isCheck(Color color) throws ChessError {
         return Board.isAttackedCell(
-                roomSettings, roomSettings.board.findKingCell(color), color.inverse());
+                roomSettings,
+                roomSettings.board.findKing(color).getCurrentPosition(),
+                color.inverse());
     }
 }
