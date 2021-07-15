@@ -1,6 +1,5 @@
 package io.deeplay.qchess.game;
 
-import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
@@ -12,7 +11,7 @@ public class GameSettings {
     public final EndGameDetector endGameDetector;
     public final History history;
 
-    public GameSettings(Board.BoardFilling boardType) throws ChessError {
+    public GameSettings(Board.BoardFilling boardType) {
         board = new Board(boardType);
         history = new History(this);
         endGameDetector = new EndGameDetector(this);

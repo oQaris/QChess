@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
@@ -28,7 +27,7 @@ public class FigureTest {
     }
 
     @Before
-    public void setUp() throws ChessError {
+    public void setUp() {
         gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
         board = gameSettings.board;
     }

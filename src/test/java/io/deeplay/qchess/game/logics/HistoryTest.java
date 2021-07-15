@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.History;
 import io.deeplay.qchess.game.model.Move;
@@ -20,8 +21,8 @@ public class HistoryTest {
     private Board board;
 
     @Before
-    public void setUp() throws ChessError {
-        GameSettings gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
+    public void setUp() {
+        GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
         history = new History(gameSettings);
         board = gameSettings.board;
     }

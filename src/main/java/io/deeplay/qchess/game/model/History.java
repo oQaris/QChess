@@ -1,7 +1,5 @@
 package io.deeplay.qchess.game.model;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.EXCEPTION_IN_HISTORY;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -30,7 +28,7 @@ public class History implements Iterable<String> {
     private Move lastMove;
     private int peaceMoveCount = 0;
 
-    public History(GameSettings gameSettings) throws ChessError {
+    public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
 
         notation.put(TypeFigure.KING, 'K');
@@ -40,12 +38,6 @@ public class History implements Iterable<String> {
         notation.put(TypeFigure.KNIGHT, 'N');
         notation.put(TypeFigure.PAWN, 'P');
 
-        try {
-            addRecord(null);
-        } catch (ChessException | NullPointerException e) {
-            logger.error("Возникло исключение в истории {}", e.getMessage());
-            throw new ChessError(EXCEPTION_IN_HISTORY, e);
-        }
         logger.debug("История инициализирована");
     }
 
@@ -85,8 +77,7 @@ public class History implements Iterable<String> {
 
         rec.append(' ').append(whiteStep ? 'w' : 'b');
 
-        String castlingPossibility =
-                getCastlingPossibility(Color.WHITE) + getCastlingPossibility(Color.BLACK);
+        String castlingPossibility = getCastlingPossibility();
         if (!"".equals(castlingPossibility)) rec.append(' ').append(castlingPossibility);
 
         rec.append(getPawnEnPassantPossibility());
@@ -126,9 +117,11 @@ public class History implements Iterable<String> {
         return result.toString();
     }
 
-    /**
-     * @return Строка - часть записи отвечающая, можно ли использовать рокировки для заданного цвета
-     */
+    /** @return Строка - часть записи отвечающая, можно ли использовать рокировки */
+    private String getCastlingPossibility() throws ChessError {
+        return getCastlingPossibility(Color.WHITE) + getCastlingPossibility(Color.BLACK);
+    }
+
     private String getCastlingPossibility(Color color) throws ChessError {
         String res = "";
         Set<MoveType> moveTypes =

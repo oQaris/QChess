@@ -20,7 +20,7 @@ public class BoardTest {
     private GameSettings gameSettings;
 
     @Before
-    public void setUp() throws ChessError {
+    public void setUp() {
         gameSettings = new GameSettings(Board.BoardFilling.EMPTY);
         board = gameSettings.board;
     }

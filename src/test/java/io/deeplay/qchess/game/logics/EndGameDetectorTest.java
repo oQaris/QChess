@@ -25,7 +25,7 @@ public class EndGameDetectorTest {
     private EndGameDetector endGameDetector;
 
     @Before
-    public void setUp() throws ChessError {
+    public void setUp() {
         gs = new GameSettings(Board.BoardFilling.EMPTY);
         board = gs.board;
         endGameDetector = gs.endGameDetector;
