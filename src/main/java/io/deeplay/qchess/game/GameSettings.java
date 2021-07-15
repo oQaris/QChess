@@ -12,9 +12,16 @@ public class GameSettings {
     public final EndGameDetector endGameDetector;
     public final History history;
 
-    public GameSettings(Board.BoardFilling boardType) throws ChessError {
+    public GameSettings(Board.BoardFilling boardType) {
         board = new Board(boardType);
-        history = new History(board);
+        history = new History(this);
+        endGameDetector = new EndGameDetector(this);
+        moveSystem = new MoveSystem(this);
+    }
+
+    public GameSettings(String boardFillingForsythEdwards) throws ChessError {
+        board = new Board(boardFillingForsythEdwards);
+        history = new History(this);
         endGameDetector = new EndGameDetector(this);
         moveSystem = new MoveSystem(this);
     }

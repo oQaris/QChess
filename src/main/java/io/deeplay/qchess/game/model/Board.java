@@ -46,28 +46,28 @@ public class Board {
     }
 
     public Board(String placement) throws ChessError {
-        if (!NotationService.checkValidityPlacement(placement)) {
-            logger.error("Ошибка при парсинге строки для конструктора доски (строка не валидна)");
-            throw new ChessError(INCORRECT_STRING_FOR_FILLING_BOARD);
-        }
-        int y = 0;
-        int x = 0;
-        for (Character currentSymbol : placement.toCharArray()) {
-            if (currentSymbol.equals('/')) {
-                y++;
-                x = 0;
-            } else if (Character.isDigit(currentSymbol)) {
-                x += Integer.parseInt(String.valueOf(currentSymbol));
-            } else {
-                try {
-                    setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
-                } catch (ChessException e) {
-                    logger.error(
-                            "Ошибка при установке фигуры на доску в конструкторе доски по строке");
-                    throw new ChessError(INCORRECT_COORDINATES);
-                }
-                x++;
+        try {
+            if (!NotationService.checkValidityPlacement(placement)) {
+                logger.error(
+                        "Ошибка при парсинге строки для конструктора доски (строка не валидна)");
+                throw new ChessError(INCORRECT_STRING_FOR_FILLING_BOARD);
             }
+            int y = 0;
+            int x = 0;
+            for (Character currentSymbol : placement.toCharArray()) {
+                if (currentSymbol.equals('/')) {
+                    y++;
+                    x = 0;
+                } else if (Character.isDigit(currentSymbol)) {
+                    x += Integer.parseInt(String.valueOf(currentSymbol));
+                } else {
+                    setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
+                    x++;
+                }
+            }
+        } catch (ChessException e) {
+            logger.error("Ошибка при установке фигуры на доску в конструкторе доски по строке");
+            throw new ChessError(INCORRECT_COORDINATES);
         }
     }
 
@@ -151,19 +151,28 @@ public class Board {
      * @return позиция короля определенного цвета
      * @throws ChessError если король не был найден
      */
-    public Cell findKingCell(Color color) throws ChessError {
-        Cell kingCell = null;
+    public Figure findKing(Color color) throws ChessError {
         for (Figure[] figures : cells)
             for (Figure f : figures)
-                if (f != null && f.getColor() == color && f.getType() == TypeFigure.KING) {
-                    kingCell = f.getCurrentPosition();
-                    break;
-                }
-        if (kingCell == null) {
-            logger.error("Король {} не был найден", color);
-            throw new ChessError(KING_NOT_FOUND);
+                if (f != null && f.getColor() == color && f.getType() == TypeFigure.KING) return f;
+        logger.error("Король {} не был найден", color);
+        throw new ChessError(KING_NOT_FOUND);
+    }
+
+    /**
+     * @param cell стартовая клетка
+     * @param color цвет ладьи
+     * @param shift вектор смещения (поиск в эту сторону)
+     * @return ладья относительно стартовой клетки цвета color или null, если не найдена
+     */
+    public Figure findRook(Cell cell, Color color, Cell shift) {
+        while (isCorrectCell(cell.getColumn(), cell.getRow())) {
+            Figure figure = cells[cell.getRow()][cell.getColumn()];
+            if (figure != null && figure.getColor() == color && figure.getType() == TypeFigure.ROOK)
+                return figure;
+            cell = cell.createAdd(shift);
         }
-        return kingCell;
+        return null;
     }
 
     /**

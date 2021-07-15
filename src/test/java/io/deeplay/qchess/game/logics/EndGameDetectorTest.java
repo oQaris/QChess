@@ -25,7 +25,7 @@ public class EndGameDetectorTest {
     private EndGameDetector endGameDetector;
 
     @Before
-    public void setUp() throws ChessError {
+    public void setUp() {
         gs = new GameSettings(Board.BoardFilling.EMPTY);
         board = gs.board;
         endGameDetector = gs.endGameDetector;
@@ -155,8 +155,9 @@ public class EndGameDetectorTest {
     // ---------- testIsDrawWithRepetitions ---------- //
 
     @Test
-    public void testIsDrawWithRepetitions() throws ChessException {
+    public void testIsDrawWithRepetitions() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("e1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("e8")));
         Move move1 = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
         Move move2 = new Move(MoveType.QUIET_MOVE, Cell.parse("e2"), Cell.parse("e1"));
 
