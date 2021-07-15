@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PEACE_MOVE_COUNT;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -28,6 +29,12 @@ public class Selfplay {
 
     public void run() throws ChessError {
         logger.info(roomSettings.board.toString());
+        try {
+            roomSettings.history.addRecord(null);
+        } catch (ChessException | ChessError e) {
+            logger.error("Возникло исключение в истории {}", e.getMessage());
+            throw new ChessError(INCORRECT_FILLING_BOARD, e);
+        }
         boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && !isDraw) {

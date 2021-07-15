@@ -1,7 +1,9 @@
 package io.deeplay.qchess.game.model;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.model.Board.BoardFilling;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,13 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class HistoryTest {
-    private Board board;
     private History history;
+    private Board board;
 
     @Before
-    public void setUp() throws ChessError {
-        board = new Board(Board.BoardFilling.STANDARD);
-        history = new History(board);
+    public void setUp() {
+        GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
+        history = new History(gameSettings);
+        board = gameSettings.board;
     }
 
     @Test
@@ -70,14 +73,14 @@ public class HistoryTest {
     }
 
     @Test
-    public void testAddRecord() throws ChessException {
+    public void testAddRecord() throws ChessException, ChessError {
         Assert.assertEquals(
-                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq", history.addRecord(null));
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq", history.addRecord(null));
     }
 
     @Test
-    public void testAddRecord1() throws ChessException {
-        String actual = "rnbqkbnr/p1pppppp/8/1p6/P7/R7/1PPPPPPP/1NBQKBNR b Kkq";
+    public void testAddRecord1() throws ChessException, ChessError {
+        String expected = "rnbqkbnr/p1pppppp/8/1p6/P7/R7/1PPPPPPP/1NBQKBNR w Kkq";
         Move[] moveList = {
             new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4")),
             new Move(MoveType.LONG_MOVE, Cell.parse("b7"), Cell.parse("b5")),
@@ -88,12 +91,12 @@ public class HistoryTest {
             history.addRecord(move);
         }
 
-        Assert.assertEquals(history.getLastRecord(), actual);
+        Assert.assertEquals(expected, history.getLastRecord());
     }
 
     @Test
-    public void testAddRecord2() throws ChessException {
-        String actual = "rnbqkb1r/1ppppnpp/8/5p2/1p6/P1N5/2PPPPPP/R1BQKBNR w KQkq";
+    public void testAddRecord2() throws ChessException, ChessError {
+        String expected = "rnbqkb1r/1ppppnpp/8/5p2/1p6/P1N5/2PPPPPP/R1BQKBNR b KQkq";
         Move[] moveList = {
             new Move(MoveType.QUIET_MOVE, Cell.parse("b1"), Cell.parse("c3")),
             new Move(MoveType.LONG_MOVE, Cell.parse("f7"), Cell.parse("f5")),
@@ -112,12 +115,12 @@ public class HistoryTest {
             history.addRecord(move);
         }
 
-        Assert.assertEquals(history.getLastRecord(), actual);
+        Assert.assertEquals(expected, history.getLastRecord());
     }
 
     @Test
-    public void testAddRecord3() throws ChessException {
-        String actual = "rnbqkbnr/p2pppp1/p6p/2p5/8/8/1PPPPPPP/RNBQKBNR w KQkq";
+    public void testAddRecord3() throws ChessException, ChessError {
+        String expected = "rnbqkbnr/p2pppp1/p6p/2p5/8/8/1PPPPPPP/RNBQKBNR b KQkq";
         Move[] moveList = {
             new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4")),
             new Move(MoveType.QUIET_MOVE, Cell.parse("h7"), Cell.parse("h6")),
@@ -132,12 +135,12 @@ public class HistoryTest {
             history.addRecord(move);
         }
 
-        Assert.assertEquals(history.getLastRecord(), actual);
+        Assert.assertEquals(expected, history.getLastRecord());
     }
 
     @Test
-    public void testAddRecord4() throws ChessException {
-        String actual = "rnbqkbnr/2pp1ppp/pp6/4p1N1/8/5P2/PPPPP1PP/RNBQKB1R w KQkq e6";
+    public void testAddRecord4() throws ChessException, ChessError {
+        String expected = "rnbqkbnr/2pp1ppp/pp6/4p1N1/8/5P2/PPPPP1PP/RNBQKB1R b KQkq e6";
         Move[] moveList = {
             new Move(MoveType.QUIET_MOVE, Cell.parse("f2"), Cell.parse("f3")),
             new Move(MoveType.QUIET_MOVE, Cell.parse("b7"), Cell.parse("b6")),
@@ -152,6 +155,6 @@ public class HistoryTest {
             history.addRecord(move);
         }
 
-        Assert.assertEquals(history.getLastRecord(), actual);
+        Assert.assertEquals(expected, history.getLastRecord());
     }
 }

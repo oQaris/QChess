@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.model;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.EXCEPTION_IN_HISTORY;
-
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.figures.interfaces.Color;
@@ -18,18 +17,17 @@ import org.slf4j.LoggerFactory;
 
 public class History implements Iterable<String> {
     private static final Logger logger = LoggerFactory.getLogger(History.class);
+    private static final int AVERAGE_MAXIMUM_MOVES = 300;
     private final Map<TypeFigure, Character> notation = new EnumMap<>(TypeFigure.class);
-    private final Map<String, Integer> repetitionsMap;
-    private final List<String> recordsList;
-    private final Board board;
+    private final Map<String, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
+    private final List<String> recordsList = new ArrayList<>(AVERAGE_MAXIMUM_MOVES);
+    private final GameSettings gameSettings;
     private boolean whiteStep = true;
     private Move lastMove;
     private int peaceMoveCount = 0;
 
-    public History(Board board) throws ChessError {
-        this.board = board;
-        recordsList = new ArrayList<>(300);
-        repetitionsMap = new HashMap<>(300);
+    public History(GameSettings gameSettings) {
+        this.gameSettings = gameSettings;
 
         notation.put(TypeFigure.KING, 'K');
         notation.put(TypeFigure.QUEEN, 'Q');
@@ -38,12 +36,6 @@ public class History implements Iterable<String> {
         notation.put(TypeFigure.KNIGHT, 'N');
         notation.put(TypeFigure.PAWN, 'P');
 
-        try {
-            addRecord(null);
-        } catch (ChessException | NullPointerException e) {
-            logger.error("Возникло исключение в истории {}", e.getMessage());
-            throw new ChessError(EXCEPTION_IN_HISTORY, e);
-        }
         logger.debug("История инициализирована");
     }
 
@@ -54,52 +46,52 @@ public class History implements Iterable<String> {
      * @param lastMove последний ход или null, если его не было
      * @return Строка - только что добавленная запись
      */
-    public String addRecord(Move lastMove) throws ChessException {
+    public String addRecord(Move lastMove) throws ChessException, ChessError {
         this.lastMove = lastMove;
 
-        String record = convertBoardToStringForsytheEdwards();
-        recordsList.add(record);
+        String rec = convertBoardToStringForsythEdwards();
+        recordsList.add(rec);
 
-        repetitionsMap.put(record, repetitionsMap.getOrDefault(record, 0) + 1);
-        logger.debug("Запись <{}> добавлена в историю", record);
+        repetitionsMap.put(rec, repetitionsMap.getOrDefault(rec, 0) + 1);
+        logger.debug("Запись <{}> добавлена в историю", rec);
 
         whiteStep = !whiteStep;
-        return record;
+        return rec;
     }
 
     public void checkAndAddPeaceMoveCount(Move move) throws ChessException {
         if (move.getMoveType() == MoveType.ATTACK
                 || move.getMoveType() == MoveType.EN_PASSANT
-                || board.getFigure(move.getTo()).getType() == TypeFigure.PAWN) peaceMoveCount = 0;
+                || gameSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
+            peaceMoveCount = 0;
         else ++peaceMoveCount;
     }
 
     /** @return Строка - запись в виде нотации Форсайта-Эдвардса */
-    private String convertBoardToStringForsytheEdwards() throws ChessException {
-        StringBuilder record = new StringBuilder(70);
+    private String convertBoardToStringForsythEdwards() throws ChessException, ChessError {
+        StringBuilder rec = new StringBuilder(70);
 
-        record.append(getConvertingFigurePosition());
+        rec.append(getConvertingFigurePosition());
 
-        record.append(' ').append(whiteStep ? 'w' : 'b');
+        rec.append(' ').append(whiteStep ? 'w' : 'b');
 
         String castlingPossibility = getCastlingPossibility();
-        if (!"".equals(castlingPossibility)) record.append(' ').append(castlingPossibility);
+        if (!"".equals(castlingPossibility)) rec.append(' ').append(castlingPossibility);
 
-        record.append(getPawnEnPassantPossibility());
+        rec.append(getPawnEnPassantPossibility());
 
-        return record.toString();
+        return rec.toString();
     }
 
     /** @return Строка - часть записи отвечающая за позиционирование фигур на доске */
     private String getConvertingFigurePosition() throws ChessException {
         StringBuilder result = new StringBuilder();
-        Figure currentFigure = null;
+        Figure currentFigure;
 
         for (int y = 0; y < Board.BOARD_SIZE; y++) {
             int emptySlots = 0;
             for (int x = 0; x < Board.BOARD_SIZE; x++) {
-
-                currentFigure = board.getFigure(new Cell(x, y));
+                currentFigure = gameSettings.board.getFigure(new Cell(x, y));
 
                 if (currentFigure == null) emptySlots++;
                 else {
@@ -122,27 +114,21 @@ public class History implements Iterable<String> {
         return result.toString();
     }
 
-    /** @return Строка - часть записи отвечающая, то можно ли использовать рокировки */
-    private String getCastlingPossibility() throws ChessException {
-        StringBuilder result = new StringBuilder(4);
-        Figure shortRook;
-        Figure longRook;
-        Figure whiteKing = board.getFigure(Cell.parse("e1"));
-        if (whiteKing != null && !whiteKing.wasMoved()) {
-            shortRook = board.getFigure(Cell.parse("h1"));
-            longRook = board.getFigure(Cell.parse("a1"));
-            if (shortRook != null && !shortRook.wasMoved()) result.append('K');
-            if (longRook != null && !longRook.wasMoved()) result.append('Q');
-        }
+    /** @return Строка - часть записи отвечающая, можно ли использовать рокировки */
+    private String getCastlingPossibility() throws ChessError {
+        return getCastlingPossibility(Color.WHITE) + getCastlingPossibility(Color.BLACK);
+    }
 
-        Figure blackKing = board.getFigure(Cell.parse("e8"));
-        if (blackKing != null && !blackKing.wasMoved()) {
-            shortRook = board.getFigure(Cell.parse("h8"));
-            longRook = board.getFigure(Cell.parse("a8"));
-            if (shortRook != null && !shortRook.wasMoved()) result.append('k');
-            if (longRook != null && !longRook.wasMoved()) result.append('q');
-        }
-        return result.toString();
+    private String getCastlingPossibility(Color color) throws ChessError {
+        String res = "";
+        Figure king = gameSettings.board.findKing(color);
+        Figure leftRook =
+                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
+        Figure rightRook =
+                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(1, 0));
+        if (rightRook != null && !rightRook.wasMoved()) res = "k";
+        if (leftRook != null && !leftRook.wasMoved()) res = res + "q";
+        return color == Color.WHITE ? res.toUpperCase() : res;
     }
 
     /**
@@ -153,7 +139,10 @@ public class History implements Iterable<String> {
         StringBuilder result = new StringBuilder();
         if (lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE) {
             result.append(' ').append(lastMove.getTo().toString().charAt(0));
-            result.append(board.getFigure(lastMove.getTo()).getColor() == Color.WHITE ? '3' : '6');
+            result.append(
+                    gameSettings.board.getFigure(lastMove.getTo()).getColor() == Color.WHITE
+                            ? '3'
+                            : '6');
         }
         return result.toString();
     }

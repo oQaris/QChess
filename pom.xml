@@ -87,6 +87,22 @@
       <groupId>com.google.guava</groupId>
       <version>30.1.1-jre</version>
     </dependency>
+    <!-- Jackson -->
+    <dependency>
+      <artifactId>jackson-core</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <version>2.10.2</version>
+    </dependency>
+    <dependency>
+      <artifactId>jackson-databind</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <version>2.10.2</version>
+    </dependency>
+    <dependency>
+      <artifactId>jackson-annotations</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <version>2.10.2</version>
+    </dependency>
   </dependencies>
 
   <properties>

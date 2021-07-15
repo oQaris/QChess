@@ -10,7 +10,6 @@ public enum ChessErrorCode {
     CONSOLE_PLAYER_ERROR("Произошла ошибка в классе игрока"),
     ERROR_WHEN_MOVING_FIGURE("Проверенный ход выдал ошибку при перемещении фигуры"),
     ERROR_WHILE_ADD_PEACE_MOVE_COUNT("Ошибка при добавлении ходов для ничьи"),
-    EXCEPTION_IN_HISTORY("Возникло исключение в истории"),
     PARSE_FIGURE_FROM_CHAR_FAILED("Ошибка создания фигуры по символу"),
     UNKNOWN_FIGURE_SELECTED("Выбрана неизвестная фигура");
 
