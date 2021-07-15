@@ -164,12 +164,24 @@ public class Board {
             throw new ChessError(KING_NOT_FOUND);
         }
         return king;
-        /*return Arrays.stream(cells)
-        .flatMap(Arrays::stream)
-        .filter(Objects::nonNull)
-        .filter(f -> f.getColor() == color && f.getType() == TypeFigure.KING)
-        .findAny()
-        .orElseThrow(() -> new ChessError(KING_NOT_FOUND));*/
+    }
+
+    /**
+     * Метод может быть небезопасным из-за смещения!
+     *
+     * @param cell стартовая клетка
+     * @param color цвет ладьи
+     * @param shift вектор смещения (поиск в эту сторону)
+     * @return ладья относительно стартовой клетки цвета color или null, если не найдена
+     */
+    public Figure findRook(Cell cell, Color color, Cell shift) {
+        while (isCorrectCell(cell.getColumn(), cell.getRow())) {
+            Figure figure = cells[cell.getRow()][cell.getColumn()];
+            if (figure != null && figure.getColor() == color && figure.getType() == TypeFigure.ROOK)
+                return figure;
+            cell = cell.createAdd(shift);
+        }
+        return null;
     }
 
     /**

@@ -80,6 +80,6 @@ public class HistoryTest {
     @Test
     public void testAddRecord() throws ChessException, ChessError {
         Assert.assertEquals(
-                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq", history.addRecord(null));
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq", history.addRecord(null));
     }
 }

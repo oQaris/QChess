@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,12 +122,13 @@ public class History implements Iterable<String> {
 
     private String getCastlingPossibility(Color color) throws ChessError {
         String res = "";
-        Set<MoveType> moveTypes =
-                gameSettings.board.findKing(Color.WHITE).getAllMoves(gameSettings).stream()
-                        .map(Move::getMoveType)
-                        .collect(Collectors.toSet());
-        if (moveTypes.contains(MoveType.SHORT_CASTLING)) res = res + 'k';
-        if (moveTypes.contains(MoveType.LONG_CASTLING)) res = res + 'q';
+        Figure king = gameSettings.board.findKing(color);
+        Figure leftRook =
+                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
+        Figure rightRook =
+                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(1, 0));
+        if (leftRook != null && !leftRook.wasMoved()) res = res + 'k';
+        if (rightRook != null && !rightRook.wasMoved()) res = res + 'q';
         if (color == Color.WHITE) res = res.toUpperCase();
         return res;
     }
