@@ -2,14 +2,20 @@ package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Cell {
-    private static final Logger logger = LoggerFactory.getLogger(Cell.class);
+    @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Cell.class);
+
+    @JsonProperty("column")
     private final int column;
+
+    @JsonProperty("row")
     private final int row;
 
     public Cell(int column, int row) {
