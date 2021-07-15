@@ -47,7 +47,7 @@ public abstract class Figure {
         logger.debug("Фигура {} была создана", this);
     }
 
-    public static Figure build(TypeFigure type, Color color, Cell position){
+    public static Figure build(TypeFigure type, Color color, Cell position) {
         return switch (type) {
             case BISHOP -> new Bishop(color, position);
             case KING -> new King(color, position);
@@ -133,8 +133,6 @@ public abstract class Figure {
         return color.toString() + " " + getType();
     }
 
-    /**
-     * @return тип фигуры
-     */
+    /** @return тип фигуры */
     public abstract TypeFigure getType();
 }

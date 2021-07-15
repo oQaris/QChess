@@ -2,11 +2,6 @@ package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.History;
-import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.MoveType;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
