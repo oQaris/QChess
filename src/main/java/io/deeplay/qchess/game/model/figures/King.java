@@ -4,11 +4,9 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,8 +36,8 @@ public class King extends Figure {
     }
 
     @Override
-    public TypeFigure getType() {
-        return TypeFigure.KING;
+    public FigureType getType() {
+        return FigureType.KING;
     }
 
     /** @return ходы без рокировки */
@@ -73,7 +71,7 @@ public class King extends Figure {
             Figure rook =
                     settings.board.getFigure(
                             position.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
-            return rook != null && !rook.wasMoved() && rook.getType() == TypeFigure.ROOK;
+            return rook != null && !rook.wasMoved() && rook.getType() == FigureType.ROOK;
         } catch (ChessException | NullPointerException e) {
             logger.warn("В проверке на рокировку возникло исключение: {}", e.getMessage());
             return false;

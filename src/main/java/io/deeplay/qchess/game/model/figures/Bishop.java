@@ -2,10 +2,8 @@ package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.Set;
 
 public class Bishop extends Figure {
@@ -20,7 +18,7 @@ public class Bishop extends Figure {
     }
 
     @Override
-    public TypeFigure getType() {
-        return TypeFigure.BISHOP;
+    public FigureType getType() {
+        return FigureType.BISHOP;
     }
 }

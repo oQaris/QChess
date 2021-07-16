@@ -1,4 +1,4 @@
-package io.deeplay.qchess.game.model.figures.interfaces;
+package io.deeplay.qchess.game.model;
 
 public enum Color {
     BLACK,

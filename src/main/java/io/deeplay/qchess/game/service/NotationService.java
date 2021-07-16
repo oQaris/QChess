@@ -1,30 +1,30 @@
-package io.deeplay.qchess.game.logics;
+package io.deeplay.qchess.game.service;
 
 import io.deeplay.qchess.game.exceptions.ChessErrorCode;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/** Используется для нотации Форсайта-Эдвардса (FEN) */
 public class NotationService {
-    private static final Character[] arr = {
-        '1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q', 'r', 'b',
-        'n', 'p'
-    };
+    private static final Set<Character> appropriateCharacters =
+            Set.of(
+                    '1', '2', '3', '4', '5', '6', '7', '8', 'K', 'Q', 'R', 'B', 'N', 'P', 'k', 'q',
+                    'r', 'b', 'n', 'p');
 
     private static final int PAWN_COUNT = 8;
     private static final int KQ_COUNT = 1;
@@ -62,9 +62,8 @@ public class NotationService {
     }
 
     private static boolean checkInappropriateCharacters(String placementRow) {
-        Set<Character> set = new HashSet<>(Arrays.asList(arr));
         for (Character c : placementRow.toCharArray()) {
-            if (!set.contains(c)) {
+            if (!appropriateCharacters.contains(c)) {
                 return false;
             }
         }
@@ -112,10 +111,9 @@ public class NotationService {
             for (int x = 1; x < Board.BOARD_SIZE + 2; x++) {
                 if (placementTable[y][x] == 'k') {
                     for (int detour = 0; detour < 9; detour++) {
-                        if (detour == 4) {
-                            continue;
-                        }
-                        if (placementTable[(detour / 3) - 1 + y][(detour % 3) - 1 + x] == 'k') {
+                        if (detour != 4
+                                && placementTable[(detour / 3) - 1 + y][(detour % 3) - 1 + x]
+                                        == 'k') {
                             return false;
                         }
                     }
