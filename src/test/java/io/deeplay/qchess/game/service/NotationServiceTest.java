@@ -5,12 +5,6 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.King;
-<<<<<<< HEAD:src/test/java/io/deeplay/qchess/game/logics/NotationServiceTest.java
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.service.NotationService;
-=======
->>>>>>> develop:src/test/java/io/deeplay/qchess/game/service/NotationServiceTest.java
 import org.junit.Assert;
 import org.junit.Test;
 

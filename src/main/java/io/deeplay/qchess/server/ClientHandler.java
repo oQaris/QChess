@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/** Устанавливает связь с клиентом */
 public class ClientHandler extends Thread {
     private boolean stop;
     private Socket socket;
