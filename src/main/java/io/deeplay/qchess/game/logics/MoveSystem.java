@@ -145,19 +145,42 @@ public class MoveSystem {
     /** @param move корректный ход */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
         logger.debug("Начата проверка виртуального хода {}", move);
-        Figure figureToMove = board.getFigure(move.getFrom());
+        return virtualMove(
+                move,
+                (figureToMove, virtualKilled) -> {
+                    if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
+                        logger.error("Срубили короля при проверке виртуального хода {}", move);
+                        throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
+                    }
+                    return !endGameDetector.isCheck(figureToMove.getColor());
+                });
+    }
+
+    /**
+     * Опасно! Выполняет ходы без проверки
+     *
+     * @param move Виртуальный ход.
+     * @param func Функция, выполняемая после виртуального хода.
+     * @return Результат функции func.
+     * @throws ChessException Если выбрасывается в функции func.
+     * @throws ChessError Если выбрасывается в функции func.
+     */
+    public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
+        logger.debug("Виртуальный ход {}", move);
+        Figure figureToMove = board.getFigureUgly(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
         Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
-            logger.error("Срубили короля при проверке виртуального хода {}", move);
-            throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
-        }
-        boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
+        T res = func.apply(figureToMove, virtualKilled);
         // отмена виртуального хода
         board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
         figureToMove.setWasMoved(hasBeenMoved);
         if (virtualKilled != null) board.setFigure(virtualKilled);
-        return !isCheck;
+        return res;
+    }
+
+    @FunctionalInterface
+    public interface ChessMoveFunc<T> {
+        T apply(Figure from, Figure to) throws ChessException, ChessError;
     }
 }

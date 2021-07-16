@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AttackBot extends Player {
-    private static final Logger logger = LoggerFactory.getLogger(AttackBot.class);
-    private static final Map<FigureType, Integer> grades = preparedGrades();
+    protected static final Logger logger = LoggerFactory.getLogger(AttackBot.class);
+    protected static final Map<FigureType, Integer> grades = preparedGrades();
 
     public AttackBot(GameSettings roomSettings, Color color) {
         super(roomSettings, color);

@@ -55,28 +55,27 @@ public class Selfplay {
             logger.info("Игра окончена: ничья");
             if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
                 logger.error(
-                        "Причина ничьи: на протяжении {} ходов ни одна пешка не ходила и никто не рубил",
+                        // "Причина ничьи: на протяжении {} ходов ни одна пешка не ходила и никто не
+                        // рубил",
                         "Ничья: {} ходов без взятия и хода пешки",
                         EndGameDetector.END_PEACE_MOVE_COUNT);
             if (roomSettings.endGameDetector.isDrawWithRepetitions())
                 logger.error(
-                        "Причина ничьи: было {} повторений позиций доски",
+                        // "Причина ничьи: было {} повторений позиций доски",
                         "Ничья: {} повторений позиций доски",
                         EndGameDetector.END_REPETITIONS_COUNT);
             if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
                 logger.error(
-                        "Причина ничьи: недостаточно фигур, чтобы поставить мат",
+                        // "Причина ничьи: недостаточно фигур, чтобы поставить мат",
                         "Ничья: недостаточно фигур, чтобы поставить мат");
         } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
             logger.error(
-                    "Игра окончена: мат {}",
-                    "Мат: {}",
-                    currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+                    // "Игра окончена: мат {}",
+                    "Мат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         else
             logger.error(
-                    "Игра окончена: пат {}",
-                    "Пат: {}",
-                    currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+                    // "Игра окончена: пат {}",
+                    "Пат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
 
         // TODO: конец игры, отправлять GameResponse
     }

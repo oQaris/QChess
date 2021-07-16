@@ -145,6 +145,14 @@ public class Board {
         return list;
     }
 
+    /** @return все фигуры на доске */
+    public List<Figure> getAllFigures() {
+        List<Figure> list = new ArrayList<>(32);
+        for (Figure[] figures : cells)
+            for (Figure figure : figures) if (figure != null) list.add(figure);
+        return list;
+    }
+
     /**
      * @param color цвет игрока
      * @return позиция короля определенного цвета
@@ -204,6 +212,13 @@ public class Board {
             logger.warn("Фигура не была установлена на клетку: {}", cell);
             throw new ChessException(INCORRECT_COORDINATES);
         }
+        return cells[y][x];
+    }
+
+    /** @return фигура или null, если клетка пуста. Опасно! Проверки не выполняются. */
+    public Figure getFigureUgly(Cell cell) {
+        int x = cell.getColumn();
+        int y = cell.getRow();
         return cells[y][x];
     }
 

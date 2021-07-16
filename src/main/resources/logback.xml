@@ -58,8 +58,8 @@
     </filter>
   </appender>
 
-  <root level="info">
-    <appender-ref ref="STDOUT"/>
+  <root level="error">
+    <!--<appender-ref ref="STDOUT"/>-->
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <!--<appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
     <appender-ref ref="FILE-LAST-SESSION-INFO"/>-->
