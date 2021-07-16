@@ -3,6 +3,7 @@ package io.deeplay.qchess.server;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/** Подключает новых клиентов */
 public class ClientHandlerManager extends Thread {
     private ServerSocket server;
     private boolean stop;
