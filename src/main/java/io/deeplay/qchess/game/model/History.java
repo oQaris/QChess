@@ -3,9 +3,8 @@ package io.deeplay.qchess.game.model;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
+import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class History implements Iterable<String> {
     private static final Logger logger = LoggerFactory.getLogger(History.class);
     private static final int AVERAGE_MAXIMUM_MOVES = 300;
-    private final Map<TypeFigure, Character> notation = new EnumMap<>(TypeFigure.class);
+    private final Map<FigureType, Character> notation = new EnumMap<>(FigureType.class);
     private final Map<String, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
     private final List<String> recordsList = new ArrayList<>(AVERAGE_MAXIMUM_MOVES);
     private final GameSettings gameSettings;
@@ -29,12 +28,12 @@ public class History implements Iterable<String> {
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
 
-        notation.put(TypeFigure.KING, 'K');
-        notation.put(TypeFigure.QUEEN, 'Q');
-        notation.put(TypeFigure.ROOK, 'R');
-        notation.put(TypeFigure.BISHOP, 'B');
-        notation.put(TypeFigure.KNIGHT, 'N');
-        notation.put(TypeFigure.PAWN, 'P');
+        notation.put(FigureType.KING, 'K');
+        notation.put(FigureType.QUEEN, 'Q');
+        notation.put(FigureType.ROOK, 'R');
+        notation.put(FigureType.BISHOP, 'B');
+        notation.put(FigureType.KNIGHT, 'N');
+        notation.put(FigureType.PAWN, 'P');
 
         logger.debug("История инициализирована");
     }
@@ -62,7 +61,7 @@ public class History implements Iterable<String> {
     public void checkAndAddPeaceMoveCount(Move move) throws ChessException {
         if (move.getMoveType() == MoveType.ATTACK
                 || move.getMoveType() == MoveType.EN_PASSANT
-                || gameSettings.board.getFigure(move.getTo()).getType() == TypeFigure.PAWN)
+                || gameSettings.board.getFigure(move.getTo()).getType() == FigureType.PAWN)
             peaceMoveCount = 0;
         else ++peaceMoveCount;
     }

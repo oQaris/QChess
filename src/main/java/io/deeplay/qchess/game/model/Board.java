@@ -7,12 +7,11 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.service.NotationService;
+import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Pawn;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
+import io.deeplay.qchess.game.service.NotationService;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -28,10 +27,10 @@ public class Board {
         try {
             switch (bf) {
                 case STANDARD -> fillBoardForFirstLine(
-                        new TypeFigure[] {
-                            TypeFigure.ROOK, TypeFigure.KNIGHT, TypeFigure.BISHOP,
-                            TypeFigure.QUEEN, TypeFigure.KING, TypeFigure.BISHOP,
-                            TypeFigure.KNIGHT, TypeFigure.ROOK
+                        new FigureType[] {
+                            FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
+                            FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
+                            FigureType.KNIGHT, FigureType.ROOK
                         });
                 case CHESS960 -> {
                     // todo Сделать рандомное заполнение Фишера
@@ -80,13 +79,13 @@ public class Board {
     public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
         for (Figure f : settings.board.getFigures(color))
             for (Move m :
-                    f.getType() == TypeFigure.KING
+                    f.getType() == FigureType.KING
                             ? ((King) f).getAttackedMoves(settings.board)
                             : f.getAllMoves(settings)) if (m.getTo().equals(cell)) return true;
         return false;
     }
 
-    private static char figureToIcon(Color color, TypeFigure figure) {
+    private static char figureToIcon(Color color, FigureType figure) {
         return switch (color) {
             case WHITE -> switch (figure) {
                 case BISHOP -> '♝';
@@ -107,15 +106,15 @@ public class Board {
         };
     }
 
-    private void fillBoardForFirstLine(TypeFigure[] orderFirstLine) throws ChessException {
+    private void fillBoardForFirstLine(FigureType[] orderFirstLine) throws ChessException {
         Cell startBlack = new Cell(0, 0);
         Cell startWhite = new Cell(0, Board.BOARD_SIZE - 1);
         Cell shift = new Cell(1, 0);
 
-        for (TypeFigure typeFigure : orderFirstLine) {
-            setFigure(Figure.build(typeFigure, Color.BLACK, startBlack));
+        for (FigureType figureType : orderFirstLine) {
+            setFigure(Figure.build(figureType, Color.BLACK, startBlack));
             setFigure(new Pawn(Color.BLACK, startBlack.createAdd(new Cell(0, 1))));
-            setFigure(Figure.build(typeFigure, Color.WHITE, startWhite));
+            setFigure(Figure.build(figureType, Color.WHITE, startWhite));
             setFigure(new Pawn(Color.WHITE, startWhite.createAdd(new Cell(0, -1))));
             startBlack = startBlack.createAdd(shift);
             startWhite = startWhite.createAdd(shift);
@@ -154,7 +153,7 @@ public class Board {
     public Figure findKing(Color color) throws ChessError {
         for (Figure[] figures : cells)
             for (Figure f : figures)
-                if (f != null && f.getColor() == color && f.getType() == TypeFigure.KING) return f;
+                if (f != null && f.getColor() == color && f.getType() == FigureType.KING) return f;
         logger.error("Король {} не был найден", color);
         throw new ChessError(KING_NOT_FOUND);
     }
@@ -168,7 +167,7 @@ public class Board {
     public Figure findRook(Cell cell, Color color, Cell shift) {
         while (isCorrectCell(cell.getColumn(), cell.getRow())) {
             Figure figure = cells[cell.getRow()][cell.getColumn()];
-            if (figure != null && figure.getColor() == color && figure.getType() == TypeFigure.ROOK)
+            if (figure != null && figure.getColor() == color && figure.getType() == FigureType.ROOK)
                 return figure;
             cell = cell.createAdd(shift);
         }

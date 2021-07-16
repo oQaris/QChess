@@ -4,11 +4,9 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.HashSet;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -32,7 +30,7 @@ public class Pawn extends Figure {
             Move prevMove = settings.history.getLastMove();
             if (prevMove == null) return false;
             Figure pawn = settings.board.getFigure(prevMove.getTo());
-            if (pawn == null || pawn.getType() != TypeFigure.PAWN) return false;
+            if (pawn == null || pawn.getType() != FigureType.PAWN) return false;
 
             Cell cellDown =
                     pawn.getColor() == Color.WHITE
@@ -108,7 +106,7 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public TypeFigure getType() {
-        return TypeFigure.PAWN;
+    public FigureType getType() {
+        return FigureType.PAWN;
     }
 }
