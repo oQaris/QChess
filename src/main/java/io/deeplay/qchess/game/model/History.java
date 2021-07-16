@@ -87,9 +87,9 @@ public class History implements Iterable<String> {
         StringBuilder result = new StringBuilder();
         Figure currentFigure;
 
-        for (int y = 0; y < Board.BOARD_SIZE; y++) {
+        for (int y = 0; y < gameSettings.board.boardSize; y++) {
             int emptySlots = 0;
-            for (int x = 0; x < Board.BOARD_SIZE; x++) {
+            for (int x = 0; x < gameSettings.board.boardSize; x++) {
                 currentFigure = gameSettings.board.getFigure(new Cell(x, y));
 
                 if (currentFigure == null) emptySlots++;

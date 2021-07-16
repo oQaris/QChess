@@ -42,7 +42,7 @@ public class MinimaxBot extends Player {
     @Override
     public Move getNextMove() throws ChessError {
         List<Move> topMoves = new ArrayList<>();
-        int maxGrade = 0;
+        int maxGrade = Integer.MIN_VALUE;
         for (Move move : ms.getAllCorrectMoves(color)) {
             int curGrade = 0;
             try {
@@ -61,11 +61,12 @@ public class MinimaxBot extends Player {
         return move;
     }
 
-    private int minimax(int depth, boolean isMaximisingPlayer) throws ChessError, ChessException {
+    public int minimax(int depth, boolean isMaximisingPlayer) throws ChessError, ChessException {
         if (depth == 0) return evaluateBoard();
         AtomicInteger bestGrade =
                 new AtomicInteger(isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE);
-        for (Move move : ms.getAllCorrectMoves(color)) {
+        // максимальное берём из наших, минимальное - из противника
+        for (Move move : ms.getAllCorrectMoves(isMaximisingPlayer ?color:color.inverse())) {
             bestGrade.set(
                     ms.virtualMove(
                             move,
@@ -79,7 +80,7 @@ public class MinimaxBot extends Player {
         return bestGrade.get();
     }
 
-    private int evaluateBoard() {
+    public int evaluateBoard() {
         int grade = 0;
         for (Figure figure : board.getAllFigures()) {
             int coef = (figure.getColor() == color ? 1 : -1);

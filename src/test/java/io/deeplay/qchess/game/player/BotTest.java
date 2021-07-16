@@ -3,15 +3,24 @@ package io.deeplay.qchess.game.player;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Board.BoardFilling;
+import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Rook;
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BotTest extends TestCase {
     private static final Logger log = LoggerFactory.getLogger(BotTest.class);
-    final int COUNT = 10_000;
+    final int COUNT = 1;
 
     public void testBotsRandom() throws ChessError {
         // ExecutorService executor = Executors.newCachedThreadPool();
@@ -69,12 +78,26 @@ public class BotTest extends TestCase {
         long m = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new MinimaxBot(roomSettings, Color.WHITE, 2);
-            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+            Player firstPlayer = new MinimaxBot(roomSettings, Color.WHITE, 1);
+            Player secondPlayer = new AttackBot(roomSettings, Color.BLACK);
             Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
             game.run();
             System.out.println("4 - " + (i + 1) + "/" + COUNT);
         }
         log.error("Time: {}\n", System.currentTimeMillis() - m);
     }
+
+    /*@Ignore
+    public void testMinimaxBot() throws ChessError, ChessException {
+       // Board.BOARD_SIZE = 3;
+        GameSettings roomSettings = new GameSettings(BoardFilling.EMPTY);
+        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(0, 0)));
+        roomSettings.board.setFigure(new Knight(Color.BLACK, new Cell(0, 1)));
+        roomSettings.board.setFigure(new Bishop(Color.BLACK, new Cell(2, 1)));
+        roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(1, 2)));
+
+        MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 2);
+        int grade = bot.minimax(2, true);
+        Assertions.assertEquals(-50, grade);
+    }*/
 }

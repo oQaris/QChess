@@ -10,13 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Cell {
+    @JsonIgnore
+    public static final int BOARD_SIZE = 8;
+
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Cell.class);
 
     @JsonProperty("column")
-    private final int column;
+    private int column;
 
     @JsonProperty("row")
-    private final int row;
+    private int row;
 
     public Cell(int column, int row) {
         this.column = column;
@@ -28,8 +31,8 @@ public class Cell {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
                 int digit = pos.charAt(1) - '0';
-                if (digit >= 1 && digit <= Board.BOARD_SIZE)
-                    return new Cell(letter - 'a', Board.BOARD_SIZE - digit);
+                if (digit >= 1 && digit <= BOARD_SIZE)
+                    return new Cell(letter - 'a', BOARD_SIZE - digit);
             }
         }
         logger.warn("Координаты клетки заданы некорректно");
@@ -39,6 +42,12 @@ public class Cell {
     /** @return создает новую клетку, суммируя с текущей */
     public Cell createAdd(Cell shiftCell) {
         return new Cell(column + shiftCell.column, row + shiftCell.row);
+    }
+
+    /** Сдвигает текущую клетку на указанный вектор */
+    public void shift(Cell shiftCell) {
+        column += shiftCell.column;
+        row += shiftCell.row;
     }
 
     @Override
@@ -56,7 +65,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        return String.format("%c%d", 'a' + column, Board.BOARD_SIZE - row);
+        return String.format("%c%d", 'a' + column, BOARD_SIZE - row);
     }
 
     public int getColumn() {

@@ -18,33 +18,47 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Board {
-    public static final int BOARD_SIZE = 8;
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
-    private final Figure[][] cells = new Figure[Board.BOARD_SIZE][Board.BOARD_SIZE];
+    public final int boardSize;
+    private final Figure[][] cells;
 
-    public Board(BoardFilling bf) {
-        logger.debug("Начато заполнение {} доски", bf);
-        try {
-            switch (bf) {
-                case STANDARD -> fillBoardForFirstLine(
-                        new FigureType[] {
-                            FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
-                            FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
-                            FigureType.KNIGHT, FigureType.ROOK
-                        });
-                case CHESS960 -> {
-                    // todo Сделать рандомное заполнение Фишера
-                }
-                case EMPTY -> {
-                }
-            }
-        } catch (ChessException | NullPointerException e) {
+    public Board(int size, BoardFilling fillingType) {
+        boardSize = size;
+        cells = new Figure[boardSize][boardSize];
+        try{
+            fill(fillingType);
+        }
+        catch (ChessException e){
             logger.error("Ошибка при заполнении доски");
         }
-        logger.debug("Доска {} инициализирована", bf);
+    }
+
+    public Board(BoardFilling fillingType) {
+        this(8, fillingType);
+    }
+
+    private void fill(BoardFilling fillingType) throws ChessException {
+        logger.debug("Начато заполнение {} доски", fillingType);
+        switch (fillingType) {
+            case STANDARD -> fillBoardForFirstLine(
+                new FigureType[] {
+                    FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
+                    FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
+                    FigureType.KNIGHT, FigureType.ROOK
+                });
+            case CHESS960 -> fillBoardForFirstLine(
+                //todo Добавить рандома
+                new FigureType[] {
+                    FigureType.KNIGHT, FigureType.QUEEN, FigureType.ROOK,
+                    FigureType.KING, FigureType.BISHOP, FigureType.ROOK,
+                    FigureType.KNIGHT, FigureType.BISHOP
+                });
+        }
+        logger.debug("Доска {} инициализирована", fillingType);
     }
 
     public Board(String placement) throws ChessError {
+        this(8, BoardFilling.EMPTY);
         try {
             if (!NotationService.checkValidityPlacement(placement)) {
                 logger.error(
@@ -71,8 +85,8 @@ public class Board {
     }
 
     /** @return true, если клетка принадлежит доске */
-    public static boolean isCorrectCell(int column, int row) {
-        return column >= 0 && row >= 0 && column < Board.BOARD_SIZE && row < Board.BOARD_SIZE;
+    public boolean isCorrectCell(int column, int row) {
+        return column >= 0 && row >= 0 && column < boardSize && row < boardSize;
     }
 
     /** @return true, если клетка cell атакуется цветом color */
@@ -108,7 +122,7 @@ public class Board {
 
     private void fillBoardForFirstLine(FigureType[] orderFirstLine) throws ChessException {
         Cell startBlack = new Cell(0, 0);
-        Cell startWhite = new Cell(0, Board.BOARD_SIZE - 1);
+        Cell startWhite = new Cell(0, boardSize- 1);
         Cell shift = new Cell(1, 0);
 
         for (FigureType figureType : orderFirstLine) {
@@ -125,7 +139,7 @@ public class Board {
     public void setFigure(Figure figure) throws ChessException {
         int x = figure.getCurrentPosition().getColumn();
         int y = figure.getCurrentPosition().getRow();
-        if (!Board.isCorrectCell(x, y)) {
+        if (!isCorrectCell(x, y)) {
             logger.warn("Ошибка установки фигуры {} на доску", figure);
             throw new ChessException(INCORRECT_COORDINATES);
         }
@@ -208,7 +222,7 @@ public class Board {
     public Figure getFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        if (!Board.isCorrectCell(x, y)) {
+        if (!isCorrectCell(x, y)) {
             logger.warn("Фигура не была установлена на клетку: {}", cell);
             throw new ChessException(INCORRECT_COORDINATES);
         }
@@ -230,7 +244,7 @@ public class Board {
     public Figure removeFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        if (!Board.isCorrectCell(x, y)) {
+        if (!isCorrectCell(x, y)) {
             logger.warn("Фигура не была удалена с клетки: {}", cell);
             throw new ChessException(INCORRECT_COORDINATES);
         }
@@ -243,7 +257,7 @@ public class Board {
     public boolean isEmptyCell(Cell cell) {
         int x = cell.getColumn();
         int y = cell.getRow();
-        return Board.isCorrectCell(x, y) && cells[y][x] == null;
+        return isCorrectCell(x, y) && cells[y][x] == null;
     }
 
     /**
@@ -253,7 +267,7 @@ public class Board {
     public boolean isEnemyFigureOn(Color color, Cell cell) {
         int x = cell.getColumn();
         int y = cell.getRow();
-        return Board.isCorrectCell(x, y) && cells[y][x] != null && cells[y][x].getColor() != color;
+        return isCorrectCell(x, y) && cells[y][x] != null && cells[y][x].getColor() != color;
     }
 
     @Override
