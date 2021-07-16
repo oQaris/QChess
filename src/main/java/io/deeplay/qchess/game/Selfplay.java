@@ -6,9 +6,9 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class Selfplay {
         boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && !isDraw) {
-            // TODO: получать json Move
+            // TODO: получать Action, сделать предложение ничьи и возможность сдаться
             Move move = currentPlayerToMove.getNextMove();
             logger.info("От игрока пришел ход: {}", move);
 
@@ -48,7 +48,7 @@ public class Selfplay {
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
-                // TODO: отправлять ответ, что ход некорректный
+                // TODO: отправлять ответ GameResponse, что ход некорректный
             }
         }
         if (isDraw) {
@@ -72,7 +72,7 @@ public class Selfplay {
                     "Игра окончена: пат {}",
                     currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
 
-        // TODO: конец игры
+        // TODO: конец игры, отправлять GameResponse
     }
 
     /** @return удаленная фигура или null, если клетка была пуста */

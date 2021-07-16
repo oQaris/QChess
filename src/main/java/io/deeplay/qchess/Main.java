@@ -4,7 +4,7 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.ConsolePlayer;
 import io.deeplay.qchess.game.player.Player;

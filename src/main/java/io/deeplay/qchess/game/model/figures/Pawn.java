@@ -4,11 +4,9 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.HashSet;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -32,7 +30,7 @@ public class Pawn extends Figure {
             Move prevMove = settings.history.getLastMove();
             if (prevMove == null) return false;
             Figure pawn = settings.board.getFigure(prevMove.getTo());
-            if (pawn == null || pawn.getType() != TypeFigure.PAWN) return false;
+            if (pawn == null || pawn.getType() != FigureType.PAWN) return false;
 
             Cell cellDown =
                     pawn.getColor() == Color.WHITE
@@ -55,9 +53,19 @@ public class Pawn extends Figure {
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
         Set<Move> result = new HashSet<>();
+
         Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
         addShortAndLongMove(settings, forwardShift, result);
-        addEnPassant(settings, forwardShift, result);
+
+        Move leftSpecialMove =
+                getSpecialMove(
+                        settings, position.createAdd(forwardShift).createAdd(new Cell(-1, 0)));
+        Move rightSpecialMove =
+                getSpecialMove(
+                        settings, position.createAdd(forwardShift).createAdd(new Cell(1, 0)));
+        if (leftSpecialMove != null) result.add(leftSpecialMove);
+        if (rightSpecialMove != null) result.add(rightSpecialMove);
+
         return result;
     }
 
@@ -79,31 +87,18 @@ public class Pawn extends Figure {
         }
     }
 
-    private void addEnPassant(GameSettings settings, Cell forwardShift, Set<Move> result) {
-        logger.trace("Начато добавление смещения {} для взятия на проходе", forwardShift);
-        Cell leftAttack = position.createAdd(forwardShift).createAdd(new Cell(-1, 0));
-        Cell rightAttack = position.createAdd(forwardShift).createAdd(new Cell(1, 0));
-
-        boolean isEnPassant =
-                isPawnEnPassant(settings, leftAttack) || isPawnEnPassant(settings, rightAttack);
-        MoveType specOrAttackMoveType = isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK;
-
-        if (settings.board.isEnemyFigureOn(color, leftAttack)
-                || isPawnEnPassant(settings, leftAttack)) {
-            result.add(
-                    new Move(
-                            isTurnInto(leftAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
-                            position,
-                            leftAttack));
+    private Move getSpecialMove(GameSettings settings, Cell attack) {
+        logger.trace("Начато добавление смещения {} для взятия на проходе", attack);
+        boolean isEnPassant = isPawnEnPassant(settings, attack);
+        if (settings.board.isEnemyFigureOn(color, attack) || isEnPassant) {
+            if (isTurnInto(attack)) {
+                return new Move(MoveType.TURN_INTO, position, attack);
+            } else {
+                return new Move(
+                        isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK, position, attack);
+            }
         }
-        if (settings.board.isEnemyFigureOn(color, rightAttack)
-                || isPawnEnPassant(settings, rightAttack)) {
-            result.add(
-                    new Move(
-                            isTurnInto(rightAttack) ? MoveType.TURN_INTO : specOrAttackMoveType,
-                            position,
-                            rightAttack));
-        }
+        return null;
     }
 
     private boolean isTurnInto(Cell end) {
@@ -111,7 +106,7 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public TypeFigure getType() {
-        return TypeFigure.PAWN;
+    public FigureType getType() {
+        return FigureType.PAWN;
     }
 }
