@@ -6,9 +6,9 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class Selfplay {
     }
 
     public void run() throws ChessError {
-        logger.info(roomSettings.board.toString());
+        // logger.info(roomSettings.board.toString());
         try {
             roomSettings.history.addRecord(null);
         } catch (ChessException | ChessError e) {
@@ -38,7 +38,7 @@ public class Selfplay {
         boolean isDraw = false;
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && !isDraw) {
-            // TODO: получать json Move
+            // TODO: получать Action, сделать предложение ничьи и возможность сдаться
             Move move = currentPlayerToMove.getNextMove();
             logger.info("От игрока пришел ход: {}", move);
 
@@ -48,31 +48,36 @@ public class Selfplay {
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
-                // TODO: отправлять ответ, что ход некорректный
+                // TODO: отправлять ответ GameResponse, что ход некорректный
             }
         }
         if (isDraw) {
             logger.info("Игра окончена: ничья");
             if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
-                logger.info(
-                        "Причина ничьи: на протяжении {} ходов ни одна пешка не ходила и никто не рубил",
+                logger.error(
+                        // "Причина ничьи: на протяжении {} ходов ни одна пешка не ходила и никто не
+                        // рубил",
+                        "Ничья: {} ходов без взятия и хода пешки",
                         EndGameDetector.END_PEACE_MOVE_COUNT);
             if (roomSettings.endGameDetector.isDrawWithRepetitions())
-                logger.info(
-                        "Причина ничьи: было {} повторений позиций доски",
+                logger.error(
+                        // "Причина ничьи: было {} повторений позиций доски",
+                        "Ничья: {} повторений позиций доски",
                         EndGameDetector.END_REPETITIONS_COUNT);
             if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
-                logger.info("Причина ничьи: недостаточно фигур, чтобы поставить мат");
+                logger.error(
+                        // "Причина ничьи: недостаточно фигур, чтобы поставить мат",
+                        "Ничья: недостаточно фигур, чтобы поставить мат");
         } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
-            logger.info(
-                    "Игра окончена: мат {}",
-                    currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+            logger.error(
+                    // "Игра окончена: мат {}",
+                    "Мат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         else
-            logger.info(
-                    "Игра окончена: пат {}",
-                    currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+            logger.error(
+                    // "Игра окончена: пат {}",
+                    "Пат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
 
-        // TODO: конец игры
+        // TODO: конец игры, отправлять GameResponse
     }
 
     /** @return удаленная фигура или null, если клетка была пуста */
@@ -84,7 +89,7 @@ public class Selfplay {
                     currentPlayerToMove,
                     move,
                     roomSettings.board.getFigure(move.getTo()));
-            logger.info(roomSettings.board.toString());
+            // logger.info(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException | NullPointerException e) {
             logger.error("Не удалось выполнить проверенный ход: {}", move);

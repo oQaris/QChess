@@ -5,12 +5,12 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.BOT_ERROR;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.Queen;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
-import io.deeplay.qchess.game.model.figures.interfaces.TypeFigure;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -21,20 +21,20 @@ import org.slf4j.LoggerFactory;
 
 public class AttackBot extends Player {
     private static final Logger logger = LoggerFactory.getLogger(AttackBot.class);
-    private static final Map<TypeFigure, Integer> grades = preparedGrades();
+    private static final Map<FigureType, Integer> grades = preparedGrades();
 
     public AttackBot(GameSettings roomSettings, Color color) {
         super(roomSettings, color);
     }
 
-    private static Map<TypeFigure, Integer> preparedGrades() {
-        Map<TypeFigure, Integer> res = new EnumMap<>(TypeFigure.class);
-        res.put(TypeFigure.PAWN, 1);
-        res.put(TypeFigure.KNIGHT, 3);
-        res.put(TypeFigure.BISHOP, 3);
-        res.put(TypeFigure.ROOK, 5);
-        res.put(TypeFigure.QUEEN, 9);
-        res.put(TypeFigure.KING, 100);
+    private static Map<FigureType, Integer> preparedGrades() {
+        Map<FigureType, Integer> res = new EnumMap<>(FigureType.class);
+        res.put(FigureType.PAWN, 1);
+        res.put(FigureType.KNIGHT, 3);
+        res.put(FigureType.BISHOP, 3);
+        res.put(FigureType.ROOK, 5);
+        res.put(FigureType.QUEEN, 9);
+        res.put(FigureType.KING, 100);
         return res;
     }
 

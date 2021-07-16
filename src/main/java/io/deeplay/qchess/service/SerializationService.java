@@ -1,15 +1,12 @@
-package io.deeplay.qchess.game.service;
+package io.deeplay.qchess.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.StringReader;
 
-public final class SerializationService {
+public class SerializationService {
     private static final ObjectMapper mapper = new ObjectMapper();
-
-    private SerializationService() {
-    }
 
     public static String serialize(Object obj) throws JsonProcessingException {
         return mapper.writeValueAsString(obj);
