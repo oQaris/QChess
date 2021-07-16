@@ -1,7 +1,7 @@
 package io.deeplay.qchess.game.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
+import io.deeplay.qchess.game.model.figures.Figure;
 import java.util.Objects;
 
 public class Move {

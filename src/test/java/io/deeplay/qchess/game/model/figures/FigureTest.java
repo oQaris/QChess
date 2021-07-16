@@ -4,10 +4,9 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.interfaces.Color;
-import io.deeplay.qchess.game.model.figures.interfaces.Figure;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
@@ -706,5 +705,30 @@ public class FigureTest {
         Assert.assertEquals(
                 toMoveSet(figureW3.getCurrentPosition(), MoveType.QUIET_MOVE, "b3"),
                 figureW3.getAllMoves(gameSettings));
+    }
+
+    @Test
+    public void testFalsePawnEnPassant()
+            throws ChessException, IllegalArgumentException, NoSuchFieldException,
+                    IllegalAccessException {
+
+        Figure whitePawn = new Pawn(Color.WHITE, Cell.parse("c5"));
+        Figure blackPawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));
+        Figure blackPawn2 = new Pawn(Color.BLACK, Cell.parse("c6"));
+
+        Move longMove = new Move(MoveType.LONG_MOVE, Cell.parse("d7"), Cell.parse("d5"));
+        Figure blackPawn3 = new Pawn(Color.BLACK, longMove.getTo());
+        setPrevMove(longMove);
+
+        board.setFigure(whitePawn);
+        board.setFigure(blackPawn1);
+        board.setFigure(blackPawn2);
+        board.setFigure(blackPawn3);
+
+        Set<Move> expected = toMoveSet(whitePawn.getCurrentPosition(), MoveType.ATTACK, "b6");
+        expected.add(
+                new Move(MoveType.EN_PASSANT, whitePawn.getCurrentPosition(), Cell.parse("d6")));
+
+        Assert.assertEquals(expected, whitePawn.getAllMoves(gameSettings));
     }
 }
