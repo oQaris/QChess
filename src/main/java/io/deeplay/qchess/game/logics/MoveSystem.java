@@ -94,8 +94,24 @@ public class MoveSystem {
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(64);
         for (Figure f : board.getFigures(color))
-            for (Move m : f.getAllMoves(roomSettings)) if (isCorrectMove(m)) res.add(m);
+            for (Move m : f.getAllMoves(roomSettings))
+                if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
         return res;
+    }
+
+    /** @return true если ход корректный */
+    public boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
+        try {
+            return move != null
+                    && checkCorrectnessIfSpecificMove(move)
+                    && isMoveOpenCheckToKing(move);
+        } catch (ChessException | NullPointerException e) {
+            logger.warn(
+                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
+                    move,
+                    e.getMessage());
+            return false;
+        }
     }
 
     /** @return true если ход корректный */
@@ -154,6 +170,19 @@ public class MoveSystem {
                     }
                     return !endGameDetector.isCheck(figureToMove.getColor());
                 });
+    }
+
+    /**
+     * @param move корректный ход
+     * @return true - если ход открывает шах своему королю
+     * @throws ChessError
+     * @throws ChessException
+     */
+    private boolean isMoveOpenCheckToKing(Move move) throws ChessError, ChessException {
+        logger.debug("Начата проверка виртуального хода {}", move);
+        return virtualMove(
+                move,
+                (figureToMove, virtualKilled) -> !endGameDetector.isCheck(figureToMove.getColor()));
     }
 
     /**

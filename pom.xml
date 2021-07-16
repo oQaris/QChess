@@ -4,9 +4,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>QChess</artifactId>
 
+  <version>0.0.1</version>
+  <modelVersion>4.0.0</modelVersion>
+
   <build>
     <plugins>
       <plugin>
+        <!-- А чё котлин убрали? -->
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <archive>
@@ -52,6 +56,7 @@
       </plugin>
     </plugins>
   </build>
+
   <dependencies>
     <!-- Tests -->
     <dependency>
@@ -102,13 +107,10 @@
   </dependencies>
   <groupId>io.deeplay</groupId>
 
-  <modelVersion>4.0.0</modelVersion>
   <properties>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <version>0.0.1</version>
 
 </project>

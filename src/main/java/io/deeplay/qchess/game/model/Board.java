@@ -2,7 +2,6 @@ package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -25,40 +24,19 @@ public class Board {
     public Board(int size, BoardFilling fillingType) {
         boardSize = size;
         cells = new Figure[boardSize][boardSize];
-        try{
+        try {
             fill(fillingType);
-        }
-        catch (ChessException e){
+        } catch (ChessException e) {
             logger.error("Ошибка при заполнении доски");
         }
     }
 
     public Board(BoardFilling fillingType) {
-        this(8, fillingType);
-    }
-
-    private void fill(BoardFilling fillingType) throws ChessException {
-        logger.debug("Начато заполнение {} доски", fillingType);
-        switch (fillingType) {
-            case STANDARD -> fillBoardForFirstLine(
-                new FigureType[] {
-                    FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
-                    FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
-                    FigureType.KNIGHT, FigureType.ROOK
-                });
-            case CHESS960 -> fillBoardForFirstLine(
-                //todo Добавить рандома
-                new FigureType[] {
-                    FigureType.KNIGHT, FigureType.QUEEN, FigureType.ROOK,
-                    FigureType.KING, FigureType.BISHOP, FigureType.ROOK,
-                    FigureType.KNIGHT, FigureType.BISHOP
-                });
-        }
-        logger.debug("Доска {} инициализирована", fillingType);
+        this(Cell.BOARD_SIZE, fillingType);
     }
 
     public Board(String placement) throws ChessError {
-        this(8, BoardFilling.EMPTY);
+        this(Cell.BOARD_SIZE, BoardFilling.EMPTY);
         try {
             if (!NotationService.checkValidityPlacement(placement)) {
                 logger.error(
@@ -82,11 +60,6 @@ public class Board {
             logger.error("Ошибка при установке фигуры на доску в конструкторе доски по строке");
             throw new ChessError(INCORRECT_COORDINATES);
         }
-    }
-
-    /** @return true, если клетка принадлежит доске */
-    public boolean isCorrectCell(int column, int row) {
-        return column >= 0 && row >= 0 && column < boardSize && row < boardSize;
     }
 
     /** @return true, если клетка cell атакуется цветом color */
@@ -120,9 +93,34 @@ public class Board {
         };
     }
 
+    private void fill(BoardFilling fillingType) throws ChessException {
+        logger.debug("Начато заполнение {} доски", fillingType);
+        switch (fillingType) {
+            case STANDARD -> fillBoardForFirstLine(
+                    new FigureType[] {
+                        FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
+                        FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
+                        FigureType.KNIGHT, FigureType.ROOK
+                    });
+            case CHESS960 -> fillBoardForFirstLine(
+                    // todo Добавить рандома
+                    new FigureType[] {
+                        FigureType.KNIGHT, FigureType.QUEEN, FigureType.ROOK,
+                        FigureType.KING, FigureType.BISHOP, FigureType.ROOK,
+                        FigureType.KNIGHT, FigureType.BISHOP
+                    });
+        }
+        logger.debug("Доска {} инициализирована", fillingType);
+    }
+
+    /** @return true, если клетка принадлежит доске */
+    public boolean isCorrectCell(int column, int row) {
+        return column >= 0 && row >= 0 && column < boardSize && row < boardSize;
+    }
+
     private void fillBoardForFirstLine(FigureType[] orderFirstLine) throws ChessException {
         Cell startBlack = new Cell(0, 0);
-        Cell startWhite = new Cell(0, boardSize- 1);
+        Cell startWhite = new Cell(0, boardSize - 1);
         Cell shift = new Cell(1, 0);
 
         for (FigureType figureType : orderFirstLine) {
@@ -170,14 +168,14 @@ public class Board {
     /**
      * @param color цвет игрока
      * @return позиция короля определенного цвета
-     * @throws ChessError если король не был найден
      */
-    public Figure findKing(Color color) throws ChessError {
+    public Figure findKing(Color color) {
         for (Figure[] figures : cells)
             for (Figure f : figures)
                 if (f != null && f.getColor() == color && f.getType() == FigureType.KING) return f;
         logger.error("Король {} не был найден", color);
-        throw new ChessError(KING_NOT_FOUND);
+        // throw new ChessError(KING_NOT_FOUND);
+        return null;
     }
 
     /**

@@ -66,7 +66,7 @@ public class MinimaxBot extends Player {
         AtomicInteger bestGrade =
                 new AtomicInteger(isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE);
         // максимальное берём из наших, минимальное - из противника
-        for (Move move : ms.getAllCorrectMoves(isMaximisingPlayer ?color:color.inverse())) {
+        for (Move move : ms.getAllCorrectMoves(isMaximisingPlayer ? color : color.inverse())) {
             bestGrade.set(
                     ms.virtualMove(
                             move,

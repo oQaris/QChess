@@ -10,8 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Cell {
-    @JsonIgnore
-    public static final int BOARD_SIZE = 8;
+    @JsonIgnore public static int BOARD_SIZE = 8;
 
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Cell.class);
 
