@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.deeplay</groupId>
-  <artifactId>QChess</artifactId>
+  <artifactId>QChess-server</artifactId>
   <version>0.0.1</version>
 
   <build>
@@ -15,7 +15,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>io.deeplay.qchess.Main</mainClass>
+              <mainClass>io.deeplay.qchess.server.Main</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
@@ -80,22 +80,6 @@
       <artifactId>logback-classic</artifactId>
       <groupId>ch.qos.logback</groupId>
       <version>1.2.3</version>
-    </dependency>
-    <!-- Jackson -->
-    <dependency>
-      <artifactId>jackson-core</artifactId>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <version>2.10.2</version>
-    </dependency>
-    <dependency>
-      <artifactId>jackson-databind</artifactId>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <version>2.10.2</version>
-    </dependency>
-    <dependency>
-      <artifactId>jackson-annotations</artifactId>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <version>2.10.2</version>
     </dependency>
   </dependencies>
 
