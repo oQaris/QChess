@@ -28,10 +28,9 @@ public class Selfplay {
     }
 
     public void run() throws ChessError {
-        logger.info(roomSettings.board.toString());
         try {
             roomSettings.history.addRecord(null);
-        } catch (ChessException | ChessError e) {
+        } catch (ChessException | ChessError | NullPointerException e) {
             logger.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
@@ -54,27 +53,20 @@ public class Selfplay {
         if (isDraw) {
             logger.info("Игра окончена: ничья");
             if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
-                logger.error(
-                        // "Причина ничьи: на протяжении {} ходов ни одна пешка не ходила и никто не
-                        // рубил",
+                logger.warn(
                         "Ничья: {} ходов без взятия и хода пешки",
                         EndGameDetector.END_PEACE_MOVE_COUNT);
             if (roomSettings.endGameDetector.isDrawWithRepetitions())
-                logger.error(
-                        // "Причина ничьи: было {} повторений позиций доски",
+                logger.warn(
                         "Ничья: {} повторений позиций доски",
                         EndGameDetector.END_REPETITIONS_COUNT);
             if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
-                logger.error(
-                        // "Причина ничьи: недостаточно фигур, чтобы поставить мат",
-                        "Ничья: недостаточно фигур, чтобы поставить мат");
+                logger.warn("Ничья: недостаточно фигур, чтобы поставить мат");
         } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
-            logger.error(
-                    // "Игра окончена: мат {}",
+            logger.warn(
                     "Мат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         else
-            logger.error(
-                    // "Игра окончена: пат {}",
+            logger.warn(
                     "Пат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
 
         // TODO: конец игры, отправлять GameResponse
@@ -89,7 +81,6 @@ public class Selfplay {
                     currentPlayerToMove,
                     move,
                     roomSettings.board.getFigure(move.getTo()));
-            logger.info(roomSettings.board.toString());
             return removedFigure;
         } catch (ChessException | NullPointerException e) {
             logger.error("Не удалось выполнить проверенный ход: {}", move);

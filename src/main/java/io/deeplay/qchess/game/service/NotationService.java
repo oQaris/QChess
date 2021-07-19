@@ -1,5 +1,7 @@
 package io.deeplay.qchess.game.service;
 
+import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
+
 import io.deeplay.qchess.game.exceptions.ChessErrorCode;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Cell;
@@ -86,12 +88,12 @@ public class NotationService {
     }
 
     private static char[][] getPlacementTable(String[] placementRows) {
-        char[][] placementTable = new char[Cell.BOARD_SIZE + 2][Cell.BOARD_SIZE + 2];
+        char[][] placementTable = new char[STD_BOARD_SIZE + 2][STD_BOARD_SIZE + 2];
         for (char[] row : placementTable) {
             Arrays.fill(row, 'e');
         }
 
-        for (int y = 1; y < Cell.BOARD_SIZE + 1; y++) {
+        for (int y = 1; y < STD_BOARD_SIZE + 1; y++) {
             int x = 1;
             for (Character c : placementRows[y - 1].toCharArray()) {
                 if (Character.isDigit(c)) {
@@ -106,8 +108,8 @@ public class NotationService {
     }
 
     private static boolean checkTwoKings(char[][] placementTable) {
-        for (int y = 1; y < Cell.BOARD_SIZE + 2; y++) {
-            for (int x = 1; x < Cell.BOARD_SIZE + 2; x++) {
+        for (int y = 1; y < STD_BOARD_SIZE + 2; y++) {
+            for (int x = 1; x < STD_BOARD_SIZE + 2; x++) {
                 if (placementTable[y][x] == 'k') {
                     for (int detour = 0; detour < 9; detour++) {
                         if (detour != 4

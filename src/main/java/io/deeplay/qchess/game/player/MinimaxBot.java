@@ -1,9 +1,10 @@
 package io.deeplay.qchess.game.player;
 
+import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
@@ -172,7 +173,7 @@ public class MinimaxBot extends Player {
             int absX = figure.getCurrentPosition().getColumn();
             int y = figure.getCurrentPosition().getRow();
             // разворачиваем массив ценностей для чёрных
-            int absY = figure.getColor() == Color.BLACK ? Cell.BOARD_SIZE - 1 - y : y;
+            int absY = figure.getColor() == Color.BLACK ? STD_BOARD_SIZE - 1 - y : y;
             int coef = figure.getColor() == color ? 1 : -1;
 
             grade += coef * grades.get(figure.getType())[absY][absX];

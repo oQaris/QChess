@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
+import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Cell {
-    @JsonIgnore public static int BOARD_SIZE = 8;
-
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Cell.class);
 
     @JsonProperty("column")
@@ -25,13 +24,14 @@ public class Cell {
         this.row = row;
     }
 
+    @Deprecated(since = "only for tests")
     public static Cell parse(String pos) throws ChessException {
         if (pos.length() == 2) {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
                 int digit = pos.charAt(1) - '0';
-                if (digit >= 1 && digit <= BOARD_SIZE)
-                    return new Cell(letter - 'a', BOARD_SIZE - digit);
+                // 8 - стандартный размер доски, не меняйте, пожалуйста
+                if (digit >= 1 && digit <= 8) return new Cell(letter - 'a', STD_BOARD_SIZE - digit);
             }
         }
         logger.warn("Координаты клетки заданы некорректно");
@@ -64,7 +64,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        return String.format("%c%d", 'a' + column, BOARD_SIZE - row);
+        return String.format("%c%d", 'a' + column, STD_BOARD_SIZE - row);
     }
 
     public int getColumn() {

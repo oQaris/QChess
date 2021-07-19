@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Board {
+    public static int STD_BOARD_SIZE = 8;
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
     public final int boardSize;
     private final Figure[][] cells;
@@ -32,11 +33,11 @@ public class Board {
     }
 
     public Board(BoardFilling fillingType) {
-        this(Cell.BOARD_SIZE, fillingType);
+        this(STD_BOARD_SIZE, fillingType);
     }
 
     public Board(String placement) throws ChessError {
-        this(Cell.BOARD_SIZE, BoardFilling.EMPTY);
+        this(STD_BOARD_SIZE, BoardFilling.EMPTY);
         try {
             if (!NotationService.checkValidityPlacement(placement)) {
                 logger.error(
