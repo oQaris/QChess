@@ -3,6 +3,7 @@ package io.deeplay.qchess.game.model;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Pawn;
@@ -95,10 +96,11 @@ public class BoardTest {
 
     @Test
     public void testIsCorrectCell() {
-        Assert.assertTrue(Board.isCorrectCell(0, 0));
-        Assert.assertFalse(Board.isCorrectCell(0, -1));
-        Assert.assertTrue(Board.isCorrectCell(7, 7));
-        Assert.assertFalse(Board.isCorrectCell(100, 100));
+        Board board = new Board(BoardFilling.STANDARD);
+        Assert.assertTrue(board.isCorrectCell(0, 0));
+        Assert.assertFalse(board.isCorrectCell(0, -1));
+        Assert.assertTrue(board.isCorrectCell(7, 7));
+        Assert.assertFalse(board.isCorrectCell(100, 100));
     }
 
     @Test
