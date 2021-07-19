@@ -2,7 +2,7 @@ package io.deeplay.qchess.gui;
 
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 
-import io.deeplay.qchess.client.IClientController;
+import io.deeplay.qchess.client.controller.ClientController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -31,7 +31,6 @@ import javax.swing.JPanel;
 public class Table {
     private final JFrame gameFrame;
     private final BoardPanel boardPanel;
-    private final IClientController cc;
     private final String figureStyle;
     private final boolean myColor;
 
@@ -53,9 +52,8 @@ public class Table {
     private int clickedCell;
     private Set<Integer> taggedCells = new HashSet<>();
 
-    public Table(String figureStyle, boolean myColor, IClientController cc) {
+    public Table(String figureStyle, boolean myColor) {
         this.myColor = myColor;
-        this.cc = cc;
         this.figureStyle = figureStyle;
         this.gameFrame = new JFrame("SHAKHMATY");
         this.gameFrame.setLayout(new BorderLayout());
@@ -114,7 +112,7 @@ public class Table {
     }
 
     private void waitChange() {
-        while (cc.isWhiteStep() != myColor) {//gif
+        while (ClientController.isWhiteStep() != myColor) {//gif
         }
         //убрать gif
         for (CellPanel cp : boardPanel.boardCells) {
@@ -162,9 +160,9 @@ public class Table {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            if (isLeftMouseButton(e) && cc.isWhiteStep() == myColor) {
+                            if (isLeftMouseButton(e) && ClientController.isWhiteStep() == myColor) {
                                 boolean twoClick = false;
-                                if (cc.checkFigure(
+                                if (ClientController.checkFigure(
                                         cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
                                     if (clickedCell != -1) {
                                         twoClick = clickedCell == cellId;
@@ -175,7 +173,7 @@ public class Table {
                                     }
                                 } else if (taggedCells.contains(cellId)) {
                                     // move
-                                    if (cc.makeMove(
+                                    if (ClientController.makeMove(
                                             clickedCell / BOARD_SIZE,
                                             clickedCell % BOARD_SIZE,
                                             cellId / BOARD_SIZE,
@@ -204,7 +202,7 @@ public class Table {
 
                         @Override
                         public void mouseEntered(MouseEvent e) {
-                            if (cc.isWhiteStep() == myColor) {
+                            if (ClientController.isWhiteStep() == myColor) {
                                 if (thisCellPanel.getBackground() == chooseCellColor) {
                                     thisCellPanel.setBackground(chooseHoverCellColor);
                                 } else if (thisCellPanel.getBackground()
@@ -212,7 +210,7 @@ public class Table {
                                     thisCellPanel.setBackground(quietPossibleHoverCellColor);
                                 } else if (thisCellPanel.getBackground() == attackCellColor) {
                                     thisCellPanel.setBackground(attackHoverCellColor);
-                                } else if (cc.checkFigure(
+                                } else if (ClientController.checkFigure(
                                         cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
                                     thisCellPanel.setBackground(hoverCellColor);
                                 }
@@ -221,7 +219,7 @@ public class Table {
 
                         @Override
                         public void mouseExited(MouseEvent e) {
-                            if (cc.isWhiteStep() == myColor) {
+                            if (ClientController.isWhiteStep() == myColor) {
                                 if (thisCellPanel.getBackground() == chooseHoverCellColor) {
                                     thisCellPanel.setBackground(chooseCellColor);
                                 } else if (thisCellPanel.getBackground()
@@ -229,7 +227,7 @@ public class Table {
                                     thisCellPanel.setBackground(quietPossibleCellColor);
                                 } else if (thisCellPanel.getBackground() == attackHoverCellColor) {
                                     thisCellPanel.setBackground(attackCellColor);
-                                } else if (cc.checkFigure(
+                                } else if (ClientController.checkFigure(
                                         cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
                                     assignCellColor();
                                 }
@@ -242,7 +240,7 @@ public class Table {
 
         private void assignCellFigureIcon() {
             this.removeAll();
-            ViewFigure figure = cc.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
+            ViewFigure figure = ClientController.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             if(figure != null) {
                 try {
                     final BufferedImage image = ImageIO.read(new File(
@@ -282,7 +280,7 @@ public class Table {
         private void setColorOnBoard() {
             clickedCell = cellId;
             this.setBackground(chooseHoverCellColor);
-            Set<ViewCell> cellList = cc.getAllMoves(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
+            Set<ViewCell> cellList = ClientController.getAllMoves(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             taggedCells.add(cellId);
             if (!cellList.isEmpty()) {
                 for (ViewCell cell : cellList) {
@@ -298,7 +296,3 @@ public class Table {
         }
     }
 }
-
-
-
-

@@ -3,8 +3,12 @@ package io.deeplay.qchess.client.controller;
 import io.deeplay.qchess.client.IClient;
 import io.deeplay.qchess.client.LocalClient;
 import io.deeplay.qchess.client.exceptions.ClientException;
+import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.view.IClientView;
+import io.deeplay.qchess.gui.ViewCell;
+import io.deeplay.qchess.gui.ViewFigure;
 import java.util.Optional;
+import java.util.Set;
 
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
@@ -96,5 +100,35 @@ public class ClientController {
      */
     public static void send(String json) throws ClientException {
         client.send(json);
+    }
+
+    // TODO: добавить javadoc
+    public static Set<ViewCell> getAllMoves(int row, int column) {
+        return GameGUIAdapterService.getAllMoves(row, column);
+    }
+
+    // TODO: добавить javadoc
+    public static boolean checkFigure(int row, int column) {
+        return GameGUIAdapterService.checkFigure(row, column);
+    }
+
+    // TODO: добавить javadoc
+    public static boolean checkFigure(int row, int column, boolean isWhite) {
+        return GameGUIAdapterService.checkFigure(row, column, isWhite);
+    }
+
+    // TODO: добавить javadoc
+    public static ViewFigure getFigure(int row, int column) {
+        return GameGUIAdapterService.getFigure(row, column);
+    }
+
+    // TODO: добавить javadoc
+    public static boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+        return GameGUIAdapterService.makeMove(rowFrom, columnFrom, rowTo, columnTo);
+    }
+
+    // TODO: добавить javadoc
+    public static boolean isWhiteStep() {
+        return GameGUIAdapterService.isWhiteStep();
     }
 }
