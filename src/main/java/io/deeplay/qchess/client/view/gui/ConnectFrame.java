@@ -1,4 +1,4 @@
-package io.deeplay.qchess.gui;
+package io.deeplay.qchess.client.view.gui;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;

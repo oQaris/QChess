@@ -1,33 +1,52 @@
-package io.deeplay.qchess.gui;
+package io.deeplay.qchess.client.service;
 
-import io.deeplay.qchess.client.IClientController;
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.Selfplay;
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.client.view.gui.ViewCell;
+import io.deeplay.qchess.client.view.gui.ViewFigure;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GuiController implements IClientController {
-    private final GameSettings gs;
-    private boolean isWhiteStep = true;
+public class GameGUIAdapterService {
+    // TODO: убрать отсюда куда-нибудь
+    private static Selfplay game;
+    private static GameSettings gs;
+    private static boolean isWhiteStep = true;
 
-    public GuiController(final GameSettings gs) {
-        this.gs = gs;
+    // TODO: убрать отсюда куда-нибудь
+    public static void init() {
+        gs = new GameSettings(BoardFilling.STANDARD);
+        try {
+            game =
+                    new Selfplay(
+                            gs,
+                            new RemotePlayer(gs, Color.WHITE, 1),
+                            new RemotePlayer(gs, Color.WHITE, 2));
+        } catch (ChessError ignore) {
+            // Стандартная расстановка доски верна всегда
+        }
     }
 
-    @Override
-    public Set<ViewCell> getAllMoves(int row, int column) {
+    public static Set<ViewCell> getAllMoves(int row, int column) {
         Cell cell = new Cell(column, row);
         Set<ViewCell> set = new HashSet<>();
         try {
-            for(Move move : gs.board.getFigure(cell).getAllMoves(new GameSettings(BoardFilling.STANDARD))) {
-                ViewCell vc = new ViewCell(move.getTo().getRow(), move.getTo().getColumn(), move.getMoveType() == MoveType.ATTACK);
+            for (Move move :
+                    gs.board.getFigure(cell).getAllMoves(new GameSettings(BoardFilling.STANDARD))) {
+                ViewCell vc =
+                        new ViewCell(
+                                move.getTo().getRow(),
+                                move.getTo().getColumn(),
+                                move.getMoveType() == MoveType.ATTACK);
                 set.add(vc);
             }
         } catch (ChessException e) {
@@ -36,8 +55,7 @@ public class GuiController implements IClientController {
         return set;
     }
 
-    @Override
-    public boolean checkFigure(int row, int column) {
+    public static boolean checkFigure(int row, int column) {
         Cell cell = new Cell(column, row);
         Figure figure = null;
         try {
@@ -48,8 +66,7 @@ public class GuiController implements IClientController {
         return figure != null;
     }
 
-    @Override
-    public boolean checkFigure(int row, int column, boolean isWhite) {
+    public static boolean checkFigure(int row, int column, boolean isWhite) {
         Cell cell = new Cell(column, row);
         Figure figure = null;
         try {
@@ -60,8 +77,7 @@ public class GuiController implements IClientController {
         return figure != null && (figure.getColor() == Color.WHITE) == isWhite;
     }
 
-    @Override
-    public ViewFigure getFigure(int row, int column) {
+    public static ViewFigure getFigure(int row, int column) {
         Cell cell = new Cell(column, row);
         Figure figure;
         ViewFigure vf = null;
@@ -77,12 +93,12 @@ public class GuiController implements IClientController {
         return vf;
     }
 
-    @Override
-    public boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+    public static boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
         Set<Move> set = null;
-        System.out.println("from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
+        System.out.println(
+                "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
         try {
             set = gs.board.getFigure(from).getAllMoves(new GameSettings(BoardFilling.STANDARD));
         } catch (ChessException e) {
@@ -90,7 +106,7 @@ public class GuiController implements IClientController {
             return false;
         }
         for (Move move : set) {
-            if(to.equals(move.getTo())) {
+            if (to.equals(move.getTo())) {
                 try {
                     gs.board.moveFigure(move);
                 } catch (ChessException e) {
@@ -98,7 +114,7 @@ public class GuiController implements IClientController {
                     return false;
                 }
                 isWhiteStep = !isWhiteStep;
-               // System.out.println(board.toString());
+                // System.out.println(board.toString());
                 return true;
             }
         }
@@ -106,8 +122,7 @@ public class GuiController implements IClientController {
         return false;
     }
 
-    @Override
-    public boolean isWhiteStep() {
+    public static boolean isWhiteStep() {
         return isWhiteStep;
     }
 }

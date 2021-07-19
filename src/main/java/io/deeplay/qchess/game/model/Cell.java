@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
+import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,23 +14,25 @@ public class Cell {
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Cell.class);
 
     @JsonProperty("column")
-    private final int column;
+    private int column;
 
     @JsonProperty("row")
-    private final int row;
+    private int row;
 
     public Cell(int column, int row) {
         this.column = column;
         this.row = row;
     }
 
+    /** @deprecated Использует стандартный размер доски - плохо для гибкости */
+    @Deprecated(since = "only for tests")
     public static Cell parse(String pos) throws ChessException {
         if (pos.length() == 2) {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
                 int digit = pos.charAt(1) - '0';
-                if (digit >= 1 && digit <= Board.BOARD_SIZE)
-                    return new Cell(letter - 'a', Board.BOARD_SIZE - digit);
+                if (digit >= 1 && digit <= STD_BOARD_SIZE)
+                    return new Cell(letter - 'a', STD_BOARD_SIZE - digit);
             }
         }
         logger.warn("Координаты клетки заданы некорректно");
@@ -39,6 +42,12 @@ public class Cell {
     /** @return создает новую клетку, суммируя с текущей */
     public Cell createAdd(Cell shiftCell) {
         return new Cell(column + shiftCell.column, row + shiftCell.row);
+    }
+
+    /** Сдвигает текущую клетку на указанный вектор */
+    public void shift(Cell shiftCell) {
+        column += shiftCell.column;
+        row += shiftCell.row;
     }
 
     @Override
@@ -54,9 +63,11 @@ public class Cell {
         return column == cell.column && row == cell.row;
     }
 
+    /** @deprecated Использует стандартный размер доски - плохо для гибкости */
+    @Deprecated
     @Override
     public String toString() {
-        return String.format("%c%d", 'a' + column, Board.BOARD_SIZE - row);
+        return String.format("%c%d", 'a' + column, STD_BOARD_SIZE - row);
     }
 
     public int getColumn() {

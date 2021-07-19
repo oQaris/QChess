@@ -14,14 +14,14 @@ import io.deeplay.qchess.server.service.ChatService;
 import io.deeplay.qchess.server.service.GameService;
 import java.io.IOException;
 import java.util.Map;
-import java.util.function.UnaryOperator;
+import java.util.function.BiFunction;
 
 /** Перенаправляет запрос требуемому сервису и запаковывает ответ от него */
 public class ClientRequestHandler {
-    private static final Map<RequestType, UnaryOperator<String>> redirector =
+    private static final Map<RequestType, BiFunction<String, Integer, String>> redirector =
             Map.of(
                     INCORRECT_REQUEST,
-                    s -> null,
+                    (json, id) -> null,
                     CHAT_MESSAGE,
                     ChatService::incomingMessage,
                     MOVE,
@@ -30,13 +30,13 @@ public class ClientRequestHandler {
     /**
      * @return json ответ сервера в виде ServerToClientDTO или null, если не нужно ничего отправлять
      */
-    public static String process(String jsonClientRequest) {
+    public static String process(String jsonClientRequest, int clientID) {
         ServerController.getView().ifPresent(v -> v.print("Пришел json: " + jsonClientRequest));
         String response;
         try {
             ClientToServerDTO dtoRequest =
                     SerializationService.deserialize(jsonClientRequest, ClientToServerDTO.class);
-            response = redirector.get(dtoRequest.requestType).apply(dtoRequest.request);
+            response = redirector.get(dtoRequest.requestType).apply(dtoRequest.request, clientID);
             if (response != null) {
                 response = convertToServerToClientDTO(dtoRequest.requestType, response);
             }

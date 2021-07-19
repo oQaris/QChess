@@ -2,7 +2,6 @@ package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
@@ -77,7 +76,7 @@ public class Pawn extends Figure {
         if (settings.board.isEmptyCell(move)) {
             result.add(
                     new Move(
-                            isTurnInto(move) ? MoveType.TURN_INTO : MoveType.QUIET_MOVE,
+                            isTurnInto(move, settings) ? MoveType.TURN_INTO : MoveType.QUIET_MOVE,
                             position,
                             move));
 
@@ -91,7 +90,7 @@ public class Pawn extends Figure {
         logger.trace("Начато добавление смещения {} для взятия на проходе", attack);
         boolean isEnPassant = isPawnEnPassant(settings, attack);
         if (settings.board.isEnemyFigureOn(color, attack) || isEnPassant) {
-            if (isTurnInto(attack)) {
+            if (isTurnInto(attack, settings)) {
                 return new Move(MoveType.TURN_INTO, position, attack);
             } else {
                 return new Move(
@@ -101,8 +100,8 @@ public class Pawn extends Figure {
         return null;
     }
 
-    private boolean isTurnInto(Cell end) {
-        return end.getRow() == (color == Color.WHITE ? 0 : Board.BOARD_SIZE - 1);
+    private boolean isTurnInto(Cell end, GameSettings settings) {
+        return end.getRow() == (color == Color.WHITE ? 0 : settings.board.boardSize - 1);
     }
 
     @Override

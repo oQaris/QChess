@@ -1,6 +1,6 @@
 package io.deeplay.qchess;
 
-import io.deeplay.qchess.client.view.ClientConsole;
+import io.deeplay.qchess.client.view.console.ClientConsole;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.server.view.IServerView;
