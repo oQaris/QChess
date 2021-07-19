@@ -108,7 +108,7 @@ public class MoveSystem {
      * @return все возможные ходы из клетки
      */
     public List<Move> getAllCorrectMoves(Cell cell) throws ChessError {
-        List<Move> res = new ArrayList<>(64);
+        List<Move> res = new ArrayList<>(27);
         if (!board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
         Figure figure = board.getFigureUgly(cell);
         for (Move m : figure.getAllMoves(roomSettings))
