@@ -10,9 +10,10 @@ public class ClientGUI implements IClientView {
     @Override
     public void startView() {
         // ConnectFrame connectFrame = new ConnectFrame();
-        GameGUIAdapterService.init();
-        Table tableWhite = new Table("twostyle", true);
-        Table tableBlack = new Table("onestyle", false);
+        ConnectFrame connectFrame = new ConnectFrame();
+        //GameGUIAdapterService.init();
+        //Table tableWhite = new Table("twostyle", true);
+        //Table tableBlack = new Table("onestyle", false);
     }
 
     @Override

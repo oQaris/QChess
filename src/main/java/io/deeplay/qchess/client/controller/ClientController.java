@@ -13,6 +13,7 @@ import java.util.Set;
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
     private static IClientView view;
+    public static boolean repaint = false;
 
     /** @return окружение клиента */
     public static Optional<IClientView> getView() {
@@ -124,7 +125,7 @@ public class ClientController {
 
     // TODO: добавить javadoc
     public static boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
-        return GameGUIAdapterService.makeMove(rowFrom, columnFrom, rowTo, columnTo);
+        return GameGUIAdapterService.makeMove(rowFrom, columnFrom, rowTo, columnTo) != null;
     }
 
     // TODO: добавить javadoc

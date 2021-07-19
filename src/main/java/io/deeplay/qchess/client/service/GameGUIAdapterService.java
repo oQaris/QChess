@@ -14,6 +14,7 @@ import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.gui.ViewFigure;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class GameGUIAdapterService {
@@ -30,7 +31,7 @@ public class GameGUIAdapterService {
                     new Selfplay(
                             gs,
                             new RemotePlayer(gs, Color.WHITE, 1),
-                            new RemotePlayer(gs, Color.WHITE, 2));
+                            new RemotePlayer(gs, Color.BLACK, 2));
         } catch (ChessError ignore) {
             // Стандартная расстановка доски верна всегда
         }
@@ -41,7 +42,7 @@ public class GameGUIAdapterService {
         Set<ViewCell> set = new HashSet<>();
         try {
             for (Move move :
-                    gs.board.getFigure(cell).getAllMoves(new GameSettings(BoardFilling.STANDARD))) {
+                    gs.moveSystem.getAllCorrectMoves(cell)) {
                 ViewCell vc =
                         new ViewCell(
                                 move.getTo().getRow(),
@@ -49,7 +50,7 @@ public class GameGUIAdapterService {
                                 move.getMoveType() == MoveType.ATTACK);
                 set.add(vc);
             }
-        } catch (ChessException e) {
+        } catch (ChessError e) {
             e.printStackTrace();
         }
         return set;
@@ -93,33 +94,33 @@ public class GameGUIAdapterService {
         return vf;
     }
 
-    public static boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+    public static Move makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
-        Set<Move> set = null;
+        List<Move> set = null;
         System.out.println(
                 "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
         try {
-            set = gs.board.getFigure(from).getAllMoves(new GameSettings(BoardFilling.STANDARD));
-        } catch (ChessException e) {
+            set = gs.moveSystem.getAllCorrectMoves(from);
+        } catch (ChessError e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
         for (Move move : set) {
             if (to.equals(move.getTo())) {
                 try {
-                    gs.board.moveFigure(move);
-                } catch (ChessException e) {
+                    game.move(move);
+                } catch (ChessError e) {
                     e.printStackTrace();
-                    return false;
+                    return null;
                 }
                 isWhiteStep = !isWhiteStep;
-                // System.out.println(board.toString());
-                return true;
+                System.out.println(gs.board.toString());
+                return move;
             }
         }
 
-        return false;
+        return null;
     }
 
     public static boolean isWhiteStep() {
