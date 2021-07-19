@@ -1,4 +1,4 @@
-package io.deeplay.qchess.gui;
+package io.deeplay.qchess.client.view.gui;
 
 import java.util.Objects;
 

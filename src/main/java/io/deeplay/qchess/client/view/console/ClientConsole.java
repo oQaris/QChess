@@ -1,7 +1,8 @@
-package io.deeplay.qchess.client.view;
+package io.deeplay.qchess.client.view.console;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
+import io.deeplay.qchess.client.view.IClientView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

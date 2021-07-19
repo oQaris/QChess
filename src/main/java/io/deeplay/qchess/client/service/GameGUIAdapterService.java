@@ -11,8 +11,8 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.gui.ViewCell;
-import io.deeplay.qchess.gui.ViewFigure;
+import io.deeplay.qchess.client.view.gui.ViewCell;
+import io.deeplay.qchess.client.view.gui.ViewFigure;
 import java.util.HashSet;
 import java.util.Set;
 

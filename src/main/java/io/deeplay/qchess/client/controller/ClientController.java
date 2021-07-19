@@ -5,8 +5,8 @@ import io.deeplay.qchess.client.LocalClient;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.view.IClientView;
-import io.deeplay.qchess.gui.ViewCell;
-import io.deeplay.qchess.gui.ViewFigure;
+import io.deeplay.qchess.client.view.gui.ViewCell;
+import io.deeplay.qchess.client.view.gui.ViewFigure;
 import java.util.Optional;
 import java.util.Set;
 
