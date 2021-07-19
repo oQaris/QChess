@@ -392,6 +392,34 @@ public class MoveSystemTest {
     }
 
     @Test
+    public void testMove_TURN_INTO() throws ChessException, ChessError {
+        Figure white = new Pawn(Color.WHITE, Cell.parse("d7"));
+        Figure black = new Pawn(Color.BLACK, Cell.parse("c2"));
+        Figure whiteQueen = new Queen(Color.WHITE, Cell.parse("d8"));
+        Figure blackQueen = new Queen(Color.BLACK, Cell.parse("c1"));
+        board.setFigure(white);
+        board.setFigure(black);
+        board.setFigure(new King(Color.WHITE, Cell.parse("a1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
+
+        Move move = new Move(MoveType.TURN_INTO, Cell.parse("d7"), Cell.parse("d8"));
+        move.setTurnInto(FigureType.QUEEN);
+        Figure removed = ms.move(move);
+
+        Assert.assertNull(removed);
+        Assert.assertNull(board.getFigure(Cell.parse("d7")));
+        Assert.assertEquals(whiteQueen, board.getFigure(Cell.parse("d8")));
+
+        move = new Move(MoveType.TURN_INTO, Cell.parse("c2"), Cell.parse("c1"));
+        move.setTurnInto(FigureType.QUEEN);
+        removed = ms.move(move);
+
+        Assert.assertNull(removed);
+        Assert.assertNull(board.getFigure(Cell.parse("c2")));
+        Assert.assertEquals(blackQueen, board.getFigure(Cell.parse("c1")));
+    }
+
+    @Test
     public void testMove_SHORT_CASTLING() throws ChessException, ChessError {
         Figure king = new King(Color.WHITE, Cell.parse("e1"));
         Figure rook = new Rook(Color.WHITE, Cell.parse("h1"));

@@ -30,9 +30,6 @@ public class Move {
         return turnInto;
     }
 
-    /**
-     * @param turnInto указывать from = this.to и to = this.to, как у этого мува, но необязательно
-     */
     public void setTurnInto(FigureType turnInto) {
         this.turnInto = turnInto;
     }
