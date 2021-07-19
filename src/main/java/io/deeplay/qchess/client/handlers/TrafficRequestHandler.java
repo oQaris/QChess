@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 /** Перенаправляет запрос требуемому сервису */
-public class ServerRequestHandler {
+public class TrafficRequestHandler {
     private static final Map<RequestType, UnaryOperator<String>> redirector =
             Map.of(INCORRECT_REQUEST, s -> null, CHAT_MESSAGE, ChatService::incomingMessage);
 

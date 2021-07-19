@@ -12,21 +12,21 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Client implements IClient {
-    private static final Logger logger = LoggerFactory.getLogger(Client.class);
-    private static Client client;
+public class LocalClient implements IClient {
+    private static final Logger logger = LoggerFactory.getLogger(LocalClient.class);
+    private static LocalClient localClient;
     private static String ip;
     private static int port;
     private final Object mutex = new Object();
     private InputTrafficHandler inputTrafficHandler;
     private volatile boolean isConnected;
 
-    private Client() {}
+    private LocalClient() {}
 
     /** @return возвращает экземпляр клиента */
-    public static Client getInstance() {
-        client = client != null ? client : new Client();
-        return client;
+    public static LocalClient getInstance() {
+        localClient = localClient != null ? localClient : new LocalClient();
+        return localClient;
     }
 
     @Override
@@ -39,8 +39,8 @@ public class Client implements IClient {
             }
             Socket socket;
             try {
-                Client.ip = ip;
-                Client.port = port;
+                LocalClient.ip = ip;
+                LocalClient.port = port;
                 socket = new Socket(ip, port);
                 logger.info("Клиент {} успешно подключился к серверу {}:{}", this, ip, port);
             } catch (IOException e) {
@@ -105,7 +105,7 @@ public class Client implements IClient {
                 throw new ClientException(CLIENT_IS_ALREADY_CONNECTED);
             }
         }
-        Client.port = port;
+        LocalClient.port = port;
     }
 
     @Override
@@ -121,7 +121,7 @@ public class Client implements IClient {
                 throw new ClientException(CLIENT_IS_ALREADY_CONNECTED);
             }
         }
-        Client.ip = ip;
+        LocalClient.ip = ip;
     }
 
     @Override

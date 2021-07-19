@@ -81,7 +81,7 @@ public class InputTrafficHandler extends Thread {
     private void inputTrafficHandlerUpdate() throws IOException {
         if (in.ready()) {
             String request = in.readLine();
-            String response = ServerRequestHandler.process(request);
+            String response = TrafficRequestHandler.process(request);
             send(response);
         }
     }

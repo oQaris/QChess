@@ -4,7 +4,7 @@ import static io.deeplay.qchess.clientserverconversation.dto.RequestType.CHAT_ME
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.client.handlers.ServerRequestHandler;
+import io.deeplay.qchess.client.handlers.TrafficRequestHandler;
 
 /** Обрабатывает текстовые команды */
 public class ClientCommandService {
@@ -13,7 +13,7 @@ public class ClientCommandService {
     public static void handleCommand(String command) throws ClientException {
         if (command.startsWith("msg ")) {
             ClientController.send(
-                    ServerRequestHandler.convertToClientToServerDTO(
+                    TrafficRequestHandler.convertToClientToServerDTO(
                             CHAT_MESSAGE, command.substring(4)));
         }
         if (command.equals("disconnect")) {

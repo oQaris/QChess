@@ -1,13 +1,13 @@
 package io.deeplay.qchess.client.controller;
 
-import io.deeplay.qchess.client.Client;
 import io.deeplay.qchess.client.IClient;
+import io.deeplay.qchess.client.LocalClient;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.view.IClientView;
 import java.util.Optional;
 
 public class ClientController {
-    private static final IClient client = Client.getInstance();
+    private static final IClient client = LocalClient.getInstance();
     private static IClientView view;
 
     /** @return окружение клиента */
