@@ -14,4 +14,8 @@ public interface IClientController {
     boolean checkFigure(int row, int column, boolean isWhite);
 
     ViewFigure getFigure(int row, int column);
+
+    boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo);
+
+    boolean isWhiteStep();
 }

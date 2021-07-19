@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class Table {
     private static final Color attackCellColor = Color.decode("#B22222");
     private static final Color attackHoverCellColor = Color.decode("#8B0000");
     private static final Color hoverCellColor = Color.CYAN;
-    private static final String defaultFigureImagesPath = "art/figures";
+    private static final String defaultFigureImagesPath = "src/main/resources/art/figures";
 
     private int clickedCell;
     private Set<Integer> taggedCells = new HashSet<>();
@@ -63,7 +64,7 @@ public class Table {
         this.gameFrame.setResizable(false);
 
         try {
-            final BufferedImage image = ImageIO.read(new File("art/other/icon.png"));
+            final BufferedImage image = ImageIO.read(new File("src/main/resources/art/other/icon.png"));
             this.gameFrame.setIconImage(image);
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,6 +80,12 @@ public class Table {
         this.gameFrame.setVisible(true);
 
         clickedCell = -1;
+        new Runnable() {
+            @Override
+            public void run() {
+                waitChange();
+            }
+        };
     }
 
     private JMenuBar createTableMenuBar() {
@@ -106,6 +113,15 @@ public class Table {
         return (1 - 2 * inverse) * (i - (size - 1) * inverse);
     }
 
+    private void waitChange() {
+        while (cc.isWhiteStep() != myColor) {//gif
+        }
+        //убрать gif
+        for (CellPanel cp : boardPanel.boardCells) {
+            cp.drawCell();
+        }
+    }
+
     private class BoardPanel extends JPanel {
         final List<CellPanel> boardCells;
 
@@ -118,6 +134,9 @@ public class Table {
                 this.boardCells.add(cellPanel);
                 this.add(cellPanel);
             }
+            if (!myColor) {
+                Collections.reverse(boardCells);
+            }
             this.setPreferredSize(Table.BOARD_PANEL_DIMENSION);
             this.validate();
         }
@@ -126,7 +145,6 @@ public class Table {
     private class CellPanel extends JPanel {
         private final int cellId;
         private final BoardPanel boardPanel;
-        private Color cellColor;
 
         CellPanel(final BoardPanel boardPanel, final int cellId) {
             super(new GridBagLayout());
@@ -144,7 +162,7 @@ public class Table {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            if (isLeftMouseButton(e)) {
+                            if (isLeftMouseButton(e) && cc.isWhiteStep() == myColor) {
                                 boolean twoClick = false;
                                 if (cc.checkFigure(
                                         cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
@@ -157,6 +175,25 @@ public class Table {
                                     }
                                 } else if (taggedCells.contains(cellId)) {
                                     // move
+                                    if (cc.makeMove(
+                                            clickedCell / BOARD_SIZE,
+                                            clickedCell % BOARD_SIZE,
+                                            cellId / BOARD_SIZE,
+                                            cellId % BOARD_SIZE)) {
+                                        System.out.println("Watafak1");
+
+                                        boardPanel.boardCells.get(clickedCell).drawCell();
+                                        thisCellPanel.drawCell();
+                                        clearColorOnBoard();
+                                        new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                waitChange();
+                                            }
+                                        };
+                                    } else {
+                                        clearColorOnBoard();
+                                    }
                                     System.out.println("Watafak");
                                 }
                             }
@@ -167,30 +204,35 @@ public class Table {
 
                         @Override
                         public void mouseEntered(MouseEvent e) {
-                            if (thisCellPanel.getBackground() == chooseCellColor) {
-                                thisCellPanel.setBackground(chooseHoverCellColor);
-                            } else if (thisCellPanel.getBackground() == quietPossibleCellColor) {
-                                thisCellPanel.setBackground(quietPossibleHoverCellColor);
-                            } else if (thisCellPanel.getBackground() == attackCellColor) {
-                                thisCellPanel.setBackground(attackHoverCellColor);
-                            } else if (cc.checkFigure(
-                                    cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
-                                thisCellPanel.setBackground(hoverCellColor);
+                            if (cc.isWhiteStep() == myColor) {
+                                if (thisCellPanel.getBackground() == chooseCellColor) {
+                                    thisCellPanel.setBackground(chooseHoverCellColor);
+                                } else if (thisCellPanel.getBackground()
+                                        == quietPossibleCellColor) {
+                                    thisCellPanel.setBackground(quietPossibleHoverCellColor);
+                                } else if (thisCellPanel.getBackground() == attackCellColor) {
+                                    thisCellPanel.setBackground(attackHoverCellColor);
+                                } else if (cc.checkFigure(
+                                        cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
+                                    thisCellPanel.setBackground(hoverCellColor);
+                                }
                             }
                         }
 
                         @Override
                         public void mouseExited(MouseEvent e) {
-                            if (thisCellPanel.getBackground() == chooseHoverCellColor) {
-                                thisCellPanel.setBackground(chooseCellColor);
-                            } else if (thisCellPanel.getBackground()
-                                    == quietPossibleHoverCellColor) {
-                                thisCellPanel.setBackground(quietPossibleCellColor);
-                            } else if (thisCellPanel.getBackground() == attackHoverCellColor) {
-                                thisCellPanel.setBackground(attackCellColor);
-                            } else if (cc.checkFigure(
-                                    cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
-                                assignCellColor();
+                            if (cc.isWhiteStep() == myColor) {
+                                if (thisCellPanel.getBackground() == chooseHoverCellColor) {
+                                    thisCellPanel.setBackground(chooseCellColor);
+                                } else if (thisCellPanel.getBackground()
+                                        == quietPossibleHoverCellColor) {
+                                    thisCellPanel.setBackground(quietPossibleCellColor);
+                                } else if (thisCellPanel.getBackground() == attackHoverCellColor) {
+                                    thisCellPanel.setBackground(attackCellColor);
+                                } else if (cc.checkFigure(
+                                        cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
+                                    assignCellColor();
+                                }
                             }
                         }
                     });
@@ -215,10 +257,18 @@ public class Table {
                     e.printStackTrace();
                 }
             }
+            this.repaint();
         }
 
         private void assignCellColor() {
             this.setBackground((cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0? Table.lightCellColor : Table.darkCellColor);
+        }
+
+        private void drawCell() {
+            assignCellColor();
+            assignCellFigureIcon();
+            validate();
+            repaint();
         }
 
         private void clearColorOnBoard() {
@@ -231,9 +281,8 @@ public class Table {
 
         private void setColorOnBoard() {
             clickedCell = cellId;
-            cellColor = chooseCellColor;
             this.setBackground(chooseHoverCellColor);
-            Set<ViewCell> cellList = cc.getAllMoves(inverseInt(cellId / BOARD_SIZE, BOARD_SIZE), inverseInt(cellId % BOARD_SIZE, BOARD_SIZE));
+            Set<ViewCell> cellList = cc.getAllMoves(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             taggedCells.add(cellId);
             if (!cellList.isEmpty()) {
                 for (ViewCell cell : cellList) {

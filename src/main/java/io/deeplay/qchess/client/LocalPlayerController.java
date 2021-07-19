@@ -26,4 +26,14 @@ public class LocalPlayerController implements IClientController {
     public ViewFigure getFigure(int row, int column) {
         return null;
     }
+
+    @Override
+    public boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+        return false;
+    }
+
+    @Override
+    public boolean isWhiteStep() {
+        return false;
+    }
 }

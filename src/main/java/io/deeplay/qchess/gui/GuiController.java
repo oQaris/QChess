@@ -14,19 +14,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class GuiController implements IClientController {
-    private final Board board;
+    private final GameSettings gs;
+    private boolean isWhiteStep = true;
 
-    public GuiController(final Board board) {
-        this.board = board;
+    public GuiController(final GameSettings gs) {
+        this.gs = gs;
     }
 
     @Override
     public Set<ViewCell> getAllMoves(int row, int column) {
         Cell cell = new Cell(column, row);
         Set<ViewCell> set = new HashSet<>();
-        System.out.println(row + " " + column);
         try {
-            for(Move move : board.getFigure(cell).getAllMoves(new GameSettings(BoardFilling.STANDARD))) {
+            for(Move move : gs.board.getFigure(cell).getAllMoves(new GameSettings(BoardFilling.STANDARD))) {
                 ViewCell vc = new ViewCell(move.getTo().getRow(), move.getTo().getColumn(), move.getMoveType() == MoveType.ATTACK);
                 set.add(vc);
             }
@@ -41,7 +41,7 @@ public class GuiController implements IClientController {
         Cell cell = new Cell(column, row);
         Figure figure = null;
         try {
-            figure = board.getFigure(cell);
+            figure = gs.board.getFigure(cell);
         } catch (ChessException e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class GuiController implements IClientController {
         Cell cell = new Cell(column, row);
         Figure figure = null;
         try {
-            figure = board.getFigure(cell);
+            figure = gs.board.getFigure(cell);
         } catch (ChessException e) {
             e.printStackTrace();
         }
@@ -66,7 +66,7 @@ public class GuiController implements IClientController {
         Figure figure;
         ViewFigure vf = null;
         try {
-            figure = board.getFigure(cell);
+            figure = gs.board.getFigure(cell);
             if (figure != null) {
                 vf = new ViewFigure(figure.getColor().toString(), figure.getType().toString());
             }
@@ -75,5 +75,39 @@ public class GuiController implements IClientController {
         }
 
         return vf;
+    }
+
+    @Override
+    public boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+        Cell from = new Cell(columnFrom, rowFrom);
+        Cell to = new Cell(columnTo, rowTo);
+        Set<Move> set = null;
+        System.out.println("from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
+        try {
+            set = gs.board.getFigure(from).getAllMoves(new GameSettings(BoardFilling.STANDARD));
+        } catch (ChessException e) {
+            e.printStackTrace();
+            return false;
+        }
+        for (Move move : set) {
+            if(to.equals(move.getTo())) {
+                try {
+                    gs.board.moveFigure(move);
+                } catch (ChessException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                isWhiteStep = !isWhiteStep;
+               // System.out.println(board.toString());
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isWhiteStep() {
+        return isWhiteStep;
     }
 }
