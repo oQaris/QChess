@@ -9,7 +9,7 @@ public class ChatService {
         ServerController.getView().ifPresent(v -> v.print("Пришло сообщение: " + json));
         try {
             // TODO: удалить/изменить. Отправляет сообщение всем, включая писавшего
-            ServerController.sendCommand("msg " + json);
+            ServerController.executeCommand("msg " + json);
         } catch (ServerException ignore) {
             // Сервис может вызываться только при открытом сервере
         }

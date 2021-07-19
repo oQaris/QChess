@@ -40,22 +40,27 @@ public class LocalHost implements IServer {
     @Override
     public void setPort(int port) throws ServerException {
         synchronized (mutex) {
-            if (isOpen) throw new ServerException(SERVER_IS_ALREADY_OPEN);
+            if (isOpen) {
+                logger.warn("Сервер уже открыт");
+                throw new ServerException(SERVER_IS_ALREADY_OPEN);
+            }
             LocalHost.port = port;
         }
     }
 
     @Override
-    public void sendCommand(String command) throws ServerException {
-        synchronized (mutex) {
-            if (!isOpen) throw new ServerException(SERVER_IS_NOT_OPENED);
-            ServerCommandService.handleCommand(command, this);
-        }
+    public void executeCommand(String command) throws ServerException {
+        ServerCommandService.handleCommand(command);
     }
 
-    public ClientHandlerManager getClientHandlerManager() {
+    @Override
+    public void sendAll(String json) throws ServerException {
         synchronized (mutex) {
-            return clientHandlerManager;
+            if (!isOpen) {
+                logger.warn("Сервер еще не запущен");
+                throw new ServerException(SERVER_IS_NOT_OPENED);
+            }
+            clientHandlerManager.sendAll(json);
         }
     }
 
@@ -67,7 +72,10 @@ public class LocalHost implements IServer {
     @Override
     public void setMaxClients(int maxClients) throws ServerException {
         synchronized (mutex) {
-            if (isOpen) throw new ServerException(SERVER_IS_ALREADY_OPEN);
+            if (isOpen) {
+                logger.warn("Сервер уже открыт");
+                throw new ServerException(SERVER_IS_ALREADY_OPEN);
+            }
             LocalHost.maxClients = maxClients;
         }
     }

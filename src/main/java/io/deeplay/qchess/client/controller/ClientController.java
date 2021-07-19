@@ -81,11 +81,20 @@ public class ClientController {
     }
 
     /**
-     * Отправляет команду клиенту
+     * Выполняет команду клиента
+     *
+     * @throws ClientException если при выполнении команды возникла ошибка
+     */
+    public static void executeCommand(String command) throws ClientException {
+        client.executeCommand(command);
+    }
+
+    /**
+     * Отправляет сообщение серверу
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void sendCommand(String command) throws ClientException {
-        client.sendCommand(command);
+    public static void send(String json) throws ClientException {
+        client.send(json);
     }
 }

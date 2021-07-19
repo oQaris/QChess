@@ -43,9 +43,16 @@ public interface IClient {
     void setIp(String ip) throws ClientException;
 
     /**
-     * Отправляет команду клиенту
+     * Выполняет команду клиента
+     *
+     * @throws ClientException если при выполнении команды возникла ошибка
+     */
+    void executeCommand(String command) throws ClientException;
+
+    /**
+     * Отправляет сообщение серверу
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    void sendCommand(String command) throws ClientException;
+    void send(String json) throws ClientException;
 }

@@ -42,9 +42,16 @@ public interface IServer {
     void setPort(int port) throws ServerException;
 
     /**
-     * Отправляет команду серверу
+     * Выполняет команду сервера
+     *
+     * @throws ServerException если при выполнении команды возникла ошибка
+     */
+    void executeCommand(String command) throws ServerException;
+
+    /**
+     * Отправляет сообщение всем клиентам
      *
      * @throws ServerException если сервер закрыт
      */
-    void sendCommand(String command) throws ServerException;
+    void sendAll(String json) throws ServerException;
 }

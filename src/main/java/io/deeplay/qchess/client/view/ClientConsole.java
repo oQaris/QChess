@@ -50,7 +50,7 @@ public class ClientConsole implements IClientView {
         try {
             if (in.ready()) {
                 String command = in.readLine();
-                ClientController.sendCommand(command);
+                ClientController.executeCommand(command);
                 if (command.equals("stop")) {
                     return -1;
                 }

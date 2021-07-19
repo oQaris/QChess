@@ -80,11 +80,20 @@ public class ServerController {
     }
 
     /**
-     * Отправляет команду серверу
+     * Выполняет команду сервера
+     *
+     * @throws ServerException если при выполнении команды возникла ошибка
+     */
+    public static void executeCommand(String command) throws ServerException {
+        server.executeCommand(command);
+    }
+
+    /**
+     * Отправляет сообщение всем клиентам
      *
      * @throws ServerException если сервер закрыт
      */
-    public static void sendCommand(String command) throws ServerException {
-        server.sendCommand(command);
+    public static void sendAll(String json) throws ServerException {
+        server.sendAll(json);
     }
 }

@@ -125,16 +125,18 @@ public class Client implements IClient {
     }
 
     @Override
-    public void sendCommand(String command) throws ClientException {
-        synchronized (mutex) {
-            if (!isConnected) throw new ClientException(CLIENT_IS_NOT_CONNECTED);
-            ClientCommandService.handleCommand(command, this);
-        }
+    public void executeCommand(String command) throws ClientException {
+        ClientCommandService.handleCommand(command);
     }
 
-    public InputTrafficHandler getInputTrafficHandler() {
+    @Override
+    public void send(String json) throws ClientException {
         synchronized (mutex) {
-            return inputTrafficHandler;
+            if (!isConnected) {
+                logger.warn("Клиент {} еще не подключен", this);
+                throw new ClientException(CLIENT_IS_NOT_CONNECTED);
+            }
+            inputTrafficHandler.send(json);
         }
     }
 }

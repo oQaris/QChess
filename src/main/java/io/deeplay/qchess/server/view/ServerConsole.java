@@ -41,7 +41,7 @@ public class ServerConsole implements IServerView {
         try {
             if (in.ready()) {
                 String command = in.readLine();
-                ServerController.sendCommand(command);
+                ServerController.executeCommand(command);
                 if (command.equals("stop")) {
                     return -1;
                 }
