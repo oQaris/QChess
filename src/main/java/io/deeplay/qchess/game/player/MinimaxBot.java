@@ -10,7 +10,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import io.deeplay.qchess.game.model.figures.Queen;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -24,8 +23,6 @@ import org.slf4j.LoggerFactory;
 public class MinimaxBot extends Player {
     private static final Logger logger = LoggerFactory.getLogger(MinimaxBot.class);
     private static final Map<FigureType, Integer[][]> grades;
-    private final int depth;
-
     private static final Integer[][] pawnEval = {
         {20, 20, 20, 20, 20, 20, 20, 20},
         {30, 30, 30, 30, 30, 30, 30, 30},
@@ -36,7 +33,6 @@ public class MinimaxBot extends Player {
         {21, 22, 22, 16, 16, 22, 22, 21},
         {20, 20, 20, 20, 20, 20, 20, 20},
     };
-
     private static final Integer[][] knightEval = {
         {50, 52, 54, 54, 54, 54, 52, 50},
         {52, 56, 60, 60, 60, 60, 56, 52},
@@ -47,7 +43,6 @@ public class MinimaxBot extends Player {
         {52, 56, 60, 61, 61, 60, 56, 52},
         {50, 52, 54, 54, 54, 54, 52, 50},
     };
-
     private static final Integer[][] bishopEval = {
         {56, 58, 58, 58, 58, 58, 58, 56},
         {58, 60, 60, 60, 60, 60, 60, 58},
@@ -100,6 +95,8 @@ public class MinimaxBot extends Player {
         grades = Collections.unmodifiableMap(res);
     }
 
+    private final int depth;
+
     public MinimaxBot(GameSettings roomSettings, Color color, int searchDepth) {
         super(roomSettings, color);
         depth = searchDepth;
@@ -143,25 +140,22 @@ public class MinimaxBot extends Player {
                 new AtomicInteger(isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE);
         // максимальное берём из наших, минимальное - из противника
         for (Move move : ms.getAllCorrectMoves(isMaximisingPlayer ? color : color.inverse())) {
-            int finalAlpha = alpha;
-            int finalBeta = beta;
+            turnIntoInQueen(move);
             bestGrade.set(
                     ms.virtualMove(
                             move,
                             (from, to) -> {
-                                // todo что то сделать с turnInto
-                                int newGrade =
-                                        minimax(
-                                                depth - 1,
-                                                finalAlpha,
-                                                finalBeta,
-                                                !isMaximisingPlayer);
+                                int newGrade = minimax(depth - 1, alpha, beta, !isMaximisingPlayer);
                                 if (isMaximisingPlayer) return Math.max(bestGrade.get(), newGrade);
                                 else return Math.min(bestGrade.get(), newGrade);
                             }));
-            if (isMaximisingPlayer) alpha = Math.max(alpha, bestGrade.get());
-            else beta = Math.min(beta, bestGrade.get());
-            if (beta <= alpha) return bestGrade.get();
+            int finalAlpha = alpha;
+            int finalBeta = beta;
+
+            if (isMaximisingPlayer) finalAlpha = Math.max(alpha, bestGrade.get());
+            else finalBeta = Math.min(beta, bestGrade.get());
+
+            if (finalBeta <= finalAlpha) return bestGrade.get();
         }
         logger.trace("Текущая оценка хода: {}", depth);
         return bestGrade.get();
@@ -183,7 +177,6 @@ public class MinimaxBot extends Player {
     }
 
     protected void turnIntoInQueen(Move move) {
-        if (move.getMoveType() == MoveType.TURN_INTO)
-            move.setTurnInto(new Queen(color, move.getTo()));
+        if (move.getMoveType() == MoveType.TURN_INTO) move.setTurnInto(FigureType.QUEEN);
     }
 }

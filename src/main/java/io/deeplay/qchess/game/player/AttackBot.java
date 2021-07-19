@@ -10,7 +10,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import io.deeplay.qchess.game.model.figures.Queen;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -62,7 +61,6 @@ public class AttackBot extends Player {
     }
 
     protected void turnIntoInQueen(Move move) {
-        if (move.getMoveType() == MoveType.TURN_INTO)
-            move.setTurnInto(new Queen(color, move.getTo()));
+        if (move.getMoveType() == MoveType.TURN_INTO) move.setTurnInto(FigureType.QUEEN);
     }
 }

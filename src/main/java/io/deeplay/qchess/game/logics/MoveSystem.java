@@ -52,8 +52,12 @@ public class MoveSystem {
                         }
                             // превращение пешки
                         case TURN_INTO -> {
-                            Figure turnIntoFigure = move.getTurnInto();
-                            turnIntoFigure.setCurrentPosition(move.getTo());
+                            FigureType turnIntoType = move.getTurnInto();
+                            Figure turnIntoFigure =
+                                    Figure.build(
+                                            turnIntoType,
+                                            board.getFigure(move.getFrom()).getColor(),
+                                            move.getTo());
                             Figure removed = board.moveFigure(move);
                             board.setFigure(turnIntoFigure);
                             yield removed;
@@ -141,12 +145,10 @@ public class MoveSystem {
         logger.debug("Начата проверка хода {} на превращение", move);
         if (move.getMoveType() == MoveType.TURN_INTO)
             return move.getTurnInto() != null
-                    && move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
-                    && move.getTurnInto().getCurrentPosition().equals(move.getTo())
-                    && (move.getTurnInto().getType() == FigureType.BISHOP
-                            || move.getTurnInto().getType() == FigureType.KNIGHT
-                            || move.getTurnInto().getType() == FigureType.QUEEN
-                            || move.getTurnInto().getType() == FigureType.ROOK);
+                    && (move.getTurnInto() == FigureType.BISHOP
+                            || move.getTurnInto() == FigureType.KNIGHT
+                            || move.getTurnInto() == FigureType.QUEEN
+                            || move.getTurnInto() == FigureType.ROOK);
         return true;
     }
 

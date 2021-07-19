@@ -145,7 +145,6 @@ public class BotTest extends TestCase {
         Move bestMove = bot.getNextMove();
 
         Assertions.assertEquals(-92, grade);
-        // почему так?
         Assertions.assertEquals(
                 new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }
