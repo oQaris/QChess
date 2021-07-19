@@ -15,8 +15,7 @@
   <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE-PARTIAL-STREAM">
     <append>true</append>
     <encoder>
-      <!--//[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - -->
-      <Pattern>%msg%n</Pattern>
+      <Pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</Pattern>
     </encoder>
 
     <file>logs/qchess-stream-part.log</file>
@@ -58,11 +57,11 @@
     </filter>
   </appender>
 
-  <root level="warn">
-    <!--<appender-ref ref="STDOUT"/>-->
+  <root level="debug">
+    <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
-    <!--<appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
-    <appender-ref ref="FILE-LAST-SESSION-INFO"/>-->
+    <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
+    <appender-ref ref="FILE-LAST-SESSION-INFO"/>
   </root>
 
 </configuration>

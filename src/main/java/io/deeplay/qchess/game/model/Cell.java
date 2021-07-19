@@ -24,14 +24,15 @@ public class Cell {
         this.row = row;
     }
 
+    /** @deprecated Использует стандартный размер доски - плохо для гибкости */
     @Deprecated(since = "only for tests")
     public static Cell parse(String pos) throws ChessException {
         if (pos.length() == 2) {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
                 int digit = pos.charAt(1) - '0';
-                // 8 - стандартный размер доски, не меняйте, пожалуйста
-                if (digit >= 1 && digit <= 8) return new Cell(letter - 'a', STD_BOARD_SIZE - digit);
+                if (digit >= 1 && digit <= STD_BOARD_SIZE)
+                    return new Cell(letter - 'a', STD_BOARD_SIZE - digit);
             }
         }
         logger.warn("Координаты клетки заданы некорректно");
@@ -62,6 +63,8 @@ public class Cell {
         return column == cell.column && row == cell.row;
     }
 
+    /** @deprecated Использует стандартный размер доски - плохо для гибкости */
+    @Deprecated
     @Override
     public String toString() {
         return String.format("%c%d", 'a' + column, STD_BOARD_SIZE - row);

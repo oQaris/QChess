@@ -78,8 +78,8 @@ public class BotTest extends TestCase {
         long m = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new AttackBot(roomSettings, Color.WHITE);
-            Player secondPlayer = new MinimaxBot(roomSettings, Color.BLACK, 1);
+            Player firstPlayer = new MinimaxBot(roomSettings, Color.WHITE, 1);
+            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
             game.run();
             System.out.println("4 - " + (i + 1) + "/" + COUNT);

@@ -17,8 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Board {
-    public static int STD_BOARD_SIZE = 8;
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
+    /** @deprecated Плохо для гибкости */
+    @Deprecated public static int STD_BOARD_SIZE = 8;
+
     public final int boardSize;
     private final Figure[][] cells;
 
@@ -168,14 +170,13 @@ public class Board {
 
     /**
      * @param color цвет игрока
-     * @return позиция короля определенного цвета
+     * @return позиция короля определенного цвета или null, если король не найден
      */
     public Figure findKing(Color color) {
         for (Figure[] figures : cells)
             for (Figure f : figures)
                 if (f != null && f.getColor() == color && f.getType() == FigureType.KING) return f;
         logger.error("Король {} не был найден", color);
-        // throw new ChessError(KING_NOT_FOUND);
         return null;
     }
 
@@ -228,11 +229,13 @@ public class Board {
         return cells[y][x];
     }
 
-    /** @return фигура или null, если клетка пуста. Опасно! Проверки не выполняются. */
+    /**
+     * Опасно! Проверки не выполняются.
+     *
+     * @return фигура или null, если клетка пуста.
+     */
     public Figure getFigureUgly(Cell cell) {
-        int x = cell.getColumn();
-        int y = cell.getRow();
-        return cells[y][x];
+        return cells[cell.getRow()][cell.getColumn()];
     }
 
     /**

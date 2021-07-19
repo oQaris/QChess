@@ -108,7 +108,7 @@ public class MoveSystem {
         try {
             return move != null
                     && checkCorrectnessIfSpecificMove(move)
-                    && isMoveOpenCheckToKing(move);
+                    && isCorrectVirtualMove(move);
         } catch (ChessException | NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
@@ -163,28 +163,34 @@ public class MoveSystem {
     /** @param move корректный ход */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
         logger.debug("Начата проверка виртуального хода {}", move);
-        return virtualMove(
-                move,
-                (figureToMove, virtualKilled) -> {
-                    if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
-                        logger.error("Срубили короля при проверке виртуального хода {}", move);
-                        throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
-                    }
-                    return !endGameDetector.isCheck(figureToMove.getColor());
-                });
-    }
+        Figure figureToMove = board.getFigure(move.getFrom());
+        boolean hasBeenMoved = figureToMove.wasMoved();
+        // виртуальный ход
+        Figure virtualKilled = board.moveFigure(move);
+        if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
+            logger.error("Срубили короля при проверке виртуального хода {}", move);
+            throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
+        }
+        boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
+        // отмена виртуального хода
+        board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
+        figureToMove.setWasMoved(hasBeenMoved);
+        if (virtualKilled != null) board.setFigure(virtualKilled);
+        return !isCheck;
+        // TODO: НЕ МЕНЯТЬ, что работает, только добавлять. пока не будет переделана история
+        //  НЕ трогать этот метод!
 
-    /**
-     * @param move корректный ход
-     * @return true - если ход открывает шах своему королю
-     * @throws ChessError
-     * @throws ChessException
-     */
-    private boolean isMoveOpenCheckToKing(Move move) throws ChessError, ChessException {
-        logger.debug("Начата проверка виртуального хода {}", move);
-        return virtualMove(
-                move,
-                (figureToMove, virtualKilled) -> !endGameDetector.isCheck(figureToMove.getColor()));
+        //        return virtualMove(
+        //                move,
+        //                (figureToMove, virtualKilled) -> {
+        //                    if (virtualKilled != null && virtualKilled.getType() ==
+        // FigureType.KING) {
+        //                        logger.error("Срубили короля при проверке виртуального хода {}",
+        // move);
+        //                        throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
+        //                    }
+        //                    return !endGameDetector.isCheck(figureToMove.getColor());
+        //                });
     }
 
     /**
@@ -197,6 +203,7 @@ public class MoveSystem {
      * @throws ChessError Если выбрасывается в функции func.
      */
     public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
+        // TODO: переделать с измененной историей
         logger.debug("Виртуальный ход {}", move);
         Figure figureToMove = board.getFigureUgly(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();

@@ -31,15 +31,15 @@ public class EndGameDetectorTest {
         endGameDetector = gs.endGameDetector;
     }
 
-    /*@Test(expected = ChessError.class)
-    public void testIsCheck_zeroFigures_1() throws ChessError {
-        endGameDetector.isCheck(Color.WHITE);
+    @Test
+    public void testIsCheck_zeroFigures_1() {
+        Assert.assertFalse(endGameDetector.isCheck(Color.WHITE));
     }
 
-    @Test(expected = ChessError.class)
-    public void testIsCheck_zeroFigures_2() throws ChessError {
-        endGameDetector.isCheck(Color.BLACK);
-    }*/
+    @Test
+    public void testIsCheck_zeroFigures_2() {
+        Assert.assertFalse(endGameDetector.isCheck(Color.BLACK));
+    }
 
     @Test
     public void testIsCheck() throws ChessError, ChessException {
