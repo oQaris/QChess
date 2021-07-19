@@ -5,7 +5,6 @@ import static io.deeplay.qchess.client.exceptions.ClientErrorCode.ERROR_GET_SOCK
 import static io.deeplay.qchess.client.exceptions.ClientErrorCode.ERROR_GET_SOCKET_OUTPUT;
 
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.client.view.IClientView;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,8 +15,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,13 +23,10 @@ public class InputTrafficHandler extends Thread {
     private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
-    private final Supplier<Optional<IClientView>> view;
     private volatile boolean stop;
 
-    public InputTrafficHandler(Socket socket, Supplier<Optional<IClientView>> view)
-            throws ClientException {
+    public InputTrafficHandler(Socket socket) throws ClientException {
         try {
-            this.view = view;
             this.socket = socket;
             InputStream socketInput = tryGetSocketInput(socket);
             OutputStream socketOutput = tryGetSocketOutput(socket);
@@ -87,7 +81,7 @@ public class InputTrafficHandler extends Thread {
     private void inputTrafficHandlerUpdate() throws IOException {
         if (in.ready()) {
             String request = in.readLine();
-            String response = ServerRequestHandler.process(request, view);
+            String response = ServerRequestHandler.process(request);
             send(response);
         }
     }
@@ -112,7 +106,7 @@ public class InputTrafficHandler extends Thread {
         logger.debug("Обработчик трафика {} завершил свою работу", this);
     }
 
-    /** Отправляет клиенту строку, никак не обрабатывая */
+    /** Отправляет серверу строку, никак не обрабатывая */
     public void send(String json) {
         if (json != null) {
             out.println(json);

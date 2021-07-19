@@ -1,7 +1,5 @@
 package io.deeplay.qchess.server;
 
-import static io.deeplay.qchess.server.exceptions.ServerErrorCode.CLIENT_HANDLER_MANAGER_ERROR;
-import static io.deeplay.qchess.server.exceptions.ServerErrorCode.ERROR_CLOSE_SERVER_SOCKET;
 import static io.deeplay.qchess.server.exceptions.ServerErrorCode.ERROR_PORT;
 import static io.deeplay.qchess.server.exceptions.ServerErrorCode.ERROR_WHILE_SERVER_OPENING;
 import static io.deeplay.qchess.server.exceptions.ServerErrorCode.SERVER_IS_ALREADY_OPEN;
@@ -9,6 +7,7 @@ import static io.deeplay.qchess.server.exceptions.ServerErrorCode.SERVER_IS_NOT_
 
 import io.deeplay.qchess.server.exceptions.ServerException;
 import io.deeplay.qchess.server.handlers.ClientHandlerManager;
+import io.deeplay.qchess.server.service.special.ServerCommandService;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -47,8 +46,17 @@ public class LocalHost implements IServer {
     }
 
     @Override
-    public void sendMessageAll(String message) {
-        clientHandlerManager.sendMessageAll(message);
+    public void sendCommand(String command) throws ServerException {
+        synchronized (mutex) {
+            if (!isOpen) throw new ServerException(SERVER_IS_NOT_OPENED);
+            ServerCommandService.handleCommand(command, this);
+        }
+    }
+
+    public ClientHandlerManager getClientHandlerManager() {
+        synchronized (mutex) {
+            return clientHandlerManager;
+        }
     }
 
     @Override
@@ -72,6 +80,7 @@ public class LocalHost implements IServer {
                 logger.warn("Сервер уже открыт");
                 throw new ServerException(SERVER_IS_ALREADY_OPEN);
             }
+            isOpen = true;
             try {
                 server = new ServerSocket(port);
                 logger.info("Сервер открыт!");
@@ -86,7 +95,6 @@ public class LocalHost implements IServer {
             }
             clientHandlerManager = new ClientHandlerManager(server, this::getMaxClients);
             clientHandlerManager.start();
-            isOpen = true;
         }
     }
 
@@ -106,8 +114,9 @@ public class LocalHost implements IServer {
         logger.info("Сервер закрыт.");
     }
 
-    private void closeClientHandlerManager() throws ServerException {
+    private void closeClientHandlerManager() {
         logger.debug("Закрытие менеджера обработчиков...");
+        if (clientHandlerManager == null) return;
         clientHandlerManager.terminate();
         try {
             // TODO: will remove with NIO
@@ -115,17 +124,16 @@ public class LocalHost implements IServer {
             clientHandlerManager.join();
         } catch (IOException | InterruptedException e) {
             logger.error("Обработчик клиентов убил сервер: {}", e.getMessage());
-            throw new ServerException(CLIENT_HANDLER_MANAGER_ERROR, e);
         }
     }
 
-    private void closeServerSocket() throws ServerException {
+    private void closeServerSocket() {
         logger.debug("Закрытие серверного сокета...");
+        if (server == null) return;
         try {
             server.close();
         } catch (IOException e) {
             logger.error("Возникла ошибка при закрытии серверного сокета: {}", e.getMessage());
-            throw new ServerException(ERROR_CLOSE_SERVER_SOCKET, e);
         }
     }
 

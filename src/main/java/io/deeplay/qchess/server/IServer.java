@@ -14,7 +14,7 @@ public interface IServer {
     /**
      * Закрывает сервер
      *
-     * @throws ServerException если сервер не запущен или возникла ошибка при закрытии
+     * @throws ServerException если сервер еще не запущен
      */
     void stopServer() throws ServerException;
 
@@ -41,5 +41,10 @@ public interface IServer {
      */
     void setPort(int port) throws ServerException;
 
-    void sendMessageAll(String message);
+    /**
+     * Отправляет команду серверу
+     *
+     * @throws ServerException если сервер закрыт
+     */
+    void sendCommand(String command) throws ServerException;
 }

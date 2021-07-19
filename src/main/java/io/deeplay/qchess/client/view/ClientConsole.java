@@ -10,9 +10,8 @@ import java.nio.charset.StandardCharsets;
 public class ClientConsole implements IClientView {
     private final BufferedReader in =
             new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-    private final String ip = "localhost";
-    private final int port = 8081;
-    private ClientController client;
+    public static final String IP = "localhost";
+    public static final int PORT = 8081;
 
     public ClientConsole() {}
 
@@ -23,22 +22,23 @@ public class ClientConsole implements IClientView {
 
     @Override
     public void startView() {
-        client = new ClientController(this);
+        ClientController.setView(this);
         try {
-            client.connect(ip, port);
+            ClientController.connect(IP, PORT);
         } catch (ClientException e) {
             System.out.println("Ошибка при подключении клиента");
             e.printStackTrace();
         }
         System.out.printf(
-                "Подключение к серверу %s:%d установлено%n", client.getIp(), client.getPort());
+                "Подключение к серверу %s:%d установлено%n",
+                ClientController.getIp(), ClientController.getPort());
 
-        while (client.isConnected()) {
+        while (ClientController.isConnected()) {
             if (update() != 0) break;
         }
 
         try {
-            client.disconnect();
+            ClientController.disconnect();
         } catch (ClientException e) {
             System.out.println("Ошибка при отключении от сервера");
             e.printStackTrace();
@@ -50,12 +50,12 @@ public class ClientConsole implements IClientView {
         try {
             if (in.ready()) {
                 String command = in.readLine();
-                client.sendMessageAll(command);
+                ClientController.sendCommand(command);
                 if (command.equals("stop")) {
                     return -1;
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | ClientException e) {
             System.out.println("Ошибка при вводе команды");
             e.printStackTrace();
         }

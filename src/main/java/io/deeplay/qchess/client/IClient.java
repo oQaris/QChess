@@ -15,7 +15,7 @@ public interface IClient {
     /**
      * Отключается от сервера
      *
-     * @throws ClientException если клиент не подключен к серверу или возникла ошибка при отключении
+     * @throws ClientException если клиент не подключен к серверу
      */
     void disconnect() throws ClientException;
 
@@ -42,5 +42,10 @@ public interface IClient {
      */
     void setIp(String ip) throws ClientException;
 
-    void sendMessageAll(String message);
+    /**
+     * Отправляет команду клиенту
+     *
+     * @throws ClientException если клиент не подключен к серверу
+     */
+    void sendCommand(String command) throws ClientException;
 }

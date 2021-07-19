@@ -6,17 +6,12 @@ import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.view.IClientView;
 import java.util.Optional;
 
-public class ClientController implements IClient {
-    private final IClient client;
-    private IClientView view;
-
-    public ClientController(IClientView view) {
-        this.view = view;
-        client = new Client(this::getView);
-    }
+public class ClientController {
+    private static final IClient client = Client.getInstance();
+    private static IClientView view;
 
     /** @return окружение клиента */
-    public Optional<IClientView> getView() {
+    public static Optional<IClientView> getView() {
         return Optional.of(view);
     }
 
@@ -29,46 +24,68 @@ public class ClientController implements IClient {
      *
      * @param view окружение клиента
      */
-    public void setView(IClientView view) {
-        this.view = view;
+    public static void setView(IClientView view) {
+        ClientController.view = view;
     }
 
-    @Override
-    public void connect(String ip, int port) throws ClientException {
+    /**
+     * Подключается к серверу
+     *
+     * @throws ClientException если клиент уже подключен к серверу или возникла ошибка при
+     *     подключении
+     */
+    public static void connect(String ip, int port) throws ClientException {
         client.connect(ip, port);
     }
 
-    @Override
-    public void disconnect() throws ClientException {
+    /**
+     * Отключается от сервера
+     *
+     * @throws ClientException если клиент не подключен к серверу
+     */
+    public static void disconnect() throws ClientException {
         client.disconnect();
     }
 
-    @Override
-    public boolean isConnected() {
+    /** @return true, если клиент подключен к серверу, false иначе */
+    public static boolean isConnected() {
         return client.isConnected();
     }
 
-    @Override
-    public int getPort() {
+    /** @return порт сервера, к которому подключен клиент */
+    public static int getPort() {
         return client.getPort();
     }
 
-    @Override
-    public void setPort(int port) throws ClientException {
+    /**
+     * Устанавливает порт сервера, к которому будет подключен клиент
+     *
+     * @throws ClientException если клиент уже подключен к серверу
+     */
+    public static void setPort(int port) throws ClientException {
         client.setPort(port);
     }
 
-    @Override
-    public String getIp() {
+    /** @return IP сервера, к которому подключен клиент */
+    public static String getIp() {
         return client.getIp();
     }
 
-    @Override
-    public void setIp(String ip) throws ClientException {
+    /**
+     * Устанавливает IP сервера, к которому будет подключен клиент
+     *
+     * @throws ClientException если клиент уже подключен к серверу
+     */
+    public static void setIp(String ip) throws ClientException {
         client.setIp(ip);
     }
 
-    public void sendMessageAll(String message) {
-        client.sendMessageAll(message);
+    /**
+     * Отправляет команду клиенту
+     *
+     * @throws ClientException если клиент не подключен к серверу
+     */
+    public static void sendCommand(String command) throws ClientException {
+        client.sendCommand(command);
     }
 }

@@ -1,4 +1,4 @@
-package io.deeplay.qchess.server.dto;
+package io.deeplay.qchess.clientserverconversation.dto;
 
 public enum RequestType {
     INCORRECT_REQUEST,

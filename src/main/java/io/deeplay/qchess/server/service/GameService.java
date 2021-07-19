@@ -7,7 +7,6 @@ public class GameService {
 
     /** Выполняет игровое действие */
     public static String action(String json) {
-        ServerController.getView().ifPresent(v -> v.print("Пришел json: " + json));
         return json;
     }
 }

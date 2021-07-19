@@ -6,26 +6,27 @@ import static io.deeplay.qchess.client.exceptions.ClientErrorCode.FAILED_CONNECT
 
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.handlers.InputTrafficHandler;
-import io.deeplay.qchess.client.service.ChatService;
-import io.deeplay.qchess.client.view.IClientView;
+import io.deeplay.qchess.client.service.special.ClientCommandService;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Optional;
-import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Client implements IClient {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
+    private static Client client;
+    private static String ip;
+    private static int port;
     private final Object mutex = new Object();
-    public Supplier<Optional<IClientView>> view;
     private InputTrafficHandler inputTrafficHandler;
-    private String ip;
-    private int port;
     private volatile boolean isConnected;
 
-    public Client(Supplier<Optional<IClientView>> view) {
-        this.view = view;
+    private Client() {}
+
+    /** @return возвращает экземпляр клиента */
+    public static Client getInstance() {
+        client = client != null ? client : new Client();
+        return client;
     }
 
     @Override
@@ -38,8 +39,8 @@ public class Client implements IClient {
             }
             Socket socket;
             try {
-                this.ip = ip;
-                this.port = port;
+                Client.ip = ip;
+                Client.port = port;
                 socket = new Socket(ip, port);
                 logger.info("Клиент {} успешно подключился к серверу {}:{}", this, ip, port);
             } catch (IOException e) {
@@ -48,7 +49,7 @@ public class Client implements IClient {
                 throw new ClientException(FAILED_CONNECT, e);
             }
             try {
-                inputTrafficHandler = new InputTrafficHandler(socket, view);
+                inputTrafficHandler = new InputTrafficHandler(socket);
                 logger.debug("Обработчик входящего трафика для клиента {} успешно создан", this);
                 inputTrafficHandler.start();
                 isConnected = true;
@@ -68,15 +69,20 @@ public class Client implements IClient {
                 throw new ClientException(CLIENT_IS_NOT_CONNECTED);
             }
             logger.info("Отключение клиента {} от сервера...", this);
-            inputTrafficHandler.terminate();
-            try {
-                inputTrafficHandler.join();
-            } catch (InterruptedException e) {
-                logger.error("Обработчик трафика убил клиента: {}", e.getMessage());
-            }
+            closeInputTrafficHandler();
             isConnected = false;
         }
         logger.info("Клиент {} отключен от сервера {}:{}", this, ip, port);
+    }
+
+    private void closeInputTrafficHandler() {
+        if (inputTrafficHandler == null) return;
+        inputTrafficHandler.terminate();
+        try {
+            inputTrafficHandler.join();
+        } catch (InterruptedException e) {
+            logger.error("Обработчик трафика убил клиента: {}", e.getMessage());
+        }
     }
 
     @Override
@@ -99,7 +105,7 @@ public class Client implements IClient {
                 throw new ClientException(CLIENT_IS_ALREADY_CONNECTED);
             }
         }
-        this.port = port;
+        Client.port = port;
     }
 
     @Override
@@ -115,11 +121,20 @@ public class Client implements IClient {
                 throw new ClientException(CLIENT_IS_ALREADY_CONNECTED);
             }
         }
-        this.ip = ip;
+        Client.ip = ip;
     }
 
     @Override
-    public void sendMessageAll(String message) {
-        inputTrafficHandler.send(ChatService.convertToClientToServerDTO(message));
+    public void sendCommand(String command) throws ClientException {
+        synchronized (mutex) {
+            if (!isConnected) throw new ClientException(CLIENT_IS_NOT_CONNECTED);
+            ClientCommandService.handleCommand(command, this);
+        }
+    }
+
+    public InputTrafficHandler getInputTrafficHandler() {
+        synchronized (mutex) {
+            return inputTrafficHandler;
+        }
     }
 }

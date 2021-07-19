@@ -1,7 +1,6 @@
 package io.deeplay.qchess.server.handlers;
 
 import io.deeplay.qchess.server.exceptions.ServerException;
-import io.deeplay.qchess.server.service.ChatService;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -72,10 +71,13 @@ public class ClientHandlerManager extends Thread {
         while (!allClientsWasClosed) Thread.onSpinWait();
     }
 
-    public void sendMessageAll(String message) {
+    /** Отправляет всем подключенным клиентам строку */
+    public void sendAll(String json) {
         synchronized (clients) {
-            for (ClientHandler clientHandler : clients)
-                clientHandler.send(ChatService.convertMessageToServerToClientDTO(message));
+            for (ClientHandler clientHandler : clients) clientHandler.send(json);
         }
     }
+
+    // TODO:
+    //    public void send(String json, ClientHandler toClient) {}
 }

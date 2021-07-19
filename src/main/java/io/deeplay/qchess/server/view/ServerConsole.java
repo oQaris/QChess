@@ -23,35 +23,30 @@ public class ServerConsole implements IServerView {
         ServerController.setView(this);
         try {
             ServerController.startServer();
+            System.out.println("Сервер запущен");
         } catch (ServerException e) {
             System.out.println("Ошибка при запуске сервера");
             e.printStackTrace();
         }
-        System.out.println("Сервер запущен");
 
         while (ServerController.isOpen()) {
-            if (update() != 0) break;
+            if (update() != 0) {
+                System.out.println("Сервер закрыт");
+                break;
+            }
         }
-
-        try {
-            ServerController.stopServer();
-        } catch (ServerException e) {
-            System.out.println("Ошибка при закрытии сервера");
-            e.printStackTrace();
-        }
-        System.out.println("Сервер закрыт");
     }
 
     private int update() {
         try {
             if (in.ready()) {
                 String command = in.readLine();
-                ServerController.sendMessageAll(command);
+                ServerController.sendCommand(command);
                 if (command.equals("stop")) {
                     return -1;
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | ServerException e) {
             System.out.println("Ошибка при вводе команды");
             e.printStackTrace();
         }

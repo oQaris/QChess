@@ -1,7 +1,6 @@
-package io.deeplay.qchess.server.dto.request;
+package io.deeplay.qchess.clientserverconversation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.deeplay.qchess.server.dto.RequestType;
 
 public class ClientToServerDTO {
     @JsonProperty("type")

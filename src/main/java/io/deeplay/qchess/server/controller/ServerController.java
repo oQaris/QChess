@@ -40,7 +40,7 @@ public class ServerController {
     /**
      * Закрывает сервер
      *
-     * @throws ServerException если сервер не запущен или возникла ошибка при закрытии
+     * @throws ServerException если сервер еще не запущен
      */
     public static void stopServer() throws ServerException {
         server.stopServer();
@@ -79,7 +79,12 @@ public class ServerController {
         server.setPort(port);
     }
 
-    public static void sendMessageAll(String message) {
-        server.sendMessageAll(message);
+    /**
+     * Отправляет команду серверу
+     *
+     * @throws ServerException если сервер закрыт
+     */
+    public static void sendCommand(String command) throws ServerException {
+        server.sendCommand(command);
     }
 }
