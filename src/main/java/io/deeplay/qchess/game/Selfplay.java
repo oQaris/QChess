@@ -19,22 +19,59 @@ public class Selfplay {
     private final Player firstPlayer;
     private final GameSettings roomSettings;
     private Player currentPlayerToMove;
+    private boolean isDraw;
 
-    public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer) {
+    /** @throws ChessError если заполнение доски некорректное */
+    public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer)
+            throws ChessError {
         this.roomSettings = roomSettings;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         currentPlayerToMove = firstPlayer;
-    }
-
-    public void run() throws ChessError {
         try {
             roomSettings.history.addRecord(null);
         } catch (ChessException | ChessError | NullPointerException e) {
             logger.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
-        boolean isDraw = false;
+    }
+
+    /**
+     * @return true, если ход корректный, иначе false
+     * @throws ChessError если во время игры случилась критическая ошибка
+     */
+    public boolean move(Move move) throws ChessError {
+        if (isCorrectPlayerColor(move) && roomSettings.moveSystem.isCorrectMove(move)) {
+            tryMove(move);
+            isDraw = roomSettings.endGameDetector.isDraw();
+            currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Обновляется после каждого хода
+     *
+     * @return игрок, чей ход следующий
+     */
+    public Player getCurrentPlayerToMove() {
+        return currentPlayerToMove;
+    }
+
+    private boolean isCorrectPlayerColor(Move move) {
+        try {
+            return roomSettings.board.getFigure(move.getFrom()).getColor()
+                    == currentPlayerToMove.getColor();
+        } catch (ChessException | NullPointerException e) {
+            return false;
+        }
+    }
+
+    /** @deprecated Можно запускать только один раз. Используется только для проверки игры */
+    @Deprecated
+    public void run() throws ChessError {
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
                 && !isDraw) {
             // TODO: получать Action, сделать предложение ничьи и возможность сдаться

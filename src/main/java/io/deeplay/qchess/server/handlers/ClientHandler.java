@@ -25,14 +25,16 @@ public class ClientHandler implements Runnable {
     private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
-    private final Consumer<ClientHandler> removeClientFromClientList;
+    private final Consumer<Integer> removeClientFromClientList;
+    private final int id;
     private volatile boolean stop;
 
-    public ClientHandler(Socket socket, Consumer<ClientHandler> removeClientFromClientList)
+    public ClientHandler(Socket socket, Consumer<Integer> removeClientFromClientList, int id)
             throws ServerException {
         try {
             this.socket = socket;
             this.removeClientFromClientList = removeClientFromClientList;
+            this.id = id;
             InputStream socketInput = tryGetSocketInput(socket);
             OutputStream socketOutput = tryGetSocketOutput(socket);
             in = new BufferedReader(new InputStreamReader(socketInput, StandardCharsets.UTF_8));
@@ -88,7 +90,7 @@ public class ClientHandler implements Runnable {
     private void clientHandlerUpdate() throws IOException {
         if (in.ready()) {
             String request = in.readLine();
-            String response = ClientRequestHandler.process(request);
+            String response = ClientRequestHandler.process(request, id);
             send(response);
         }
     }
@@ -109,7 +111,7 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             logger.warn("Ошибка закрытия сокета клиента в обработчике");
         }
-        removeClientFromClientList.accept(this);
+        removeClientFromClientList.accept(id);
         logger.debug("Обработчик клиента {} завершил свою работу", this);
     }
 

@@ -16,11 +16,7 @@ public class ServerCommandService {
                             CHAT_MESSAGE, command.substring(4)));
         }
         if (command.equals("stop")) {
-            try {
-                ServerController.stopServer();
-            } catch (ServerException ignore) {
-                // Сервис может вызываться только при открытом сервере
-            }
+            ServerController.stopServer();
         }
     }
 }
