@@ -111,6 +111,7 @@ public class MoveSystem {
         List<Move> res = new ArrayList<>(27);
         if (!board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
         Figure figure = board.getFigureUgly(cell);
+        if (figure == null) return res;
         for (Move m : figure.getAllMoves(roomSettings))
             if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
         return res;
