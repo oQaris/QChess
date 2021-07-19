@@ -117,9 +117,7 @@ public class Table {
         while (cc.isWhiteStep() != myColor) {//gif
         }
         //убрать gif
-        for (CellPanel cp : boardPanel.boardCells) {
-            cp.drawCell();
-        }
+        boardPanel.drawBoard();
     }
 
     private class BoardPanel extends JPanel {
@@ -139,6 +137,14 @@ public class Table {
             }
             this.setPreferredSize(Table.BOARD_PANEL_DIMENSION);
             this.validate();
+        }
+
+        private void drawBoard() {
+            validate();
+            repaint();
+            for (CellPanel cp : boardCells) {
+                cp.drawCell();
+            }
         }
     }
 
