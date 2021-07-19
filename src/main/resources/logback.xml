@@ -58,7 +58,7 @@
     </filter>
   </appender>
 
-  <root level="error">
+  <root level="warn">
     <!--<appender-ref ref="STDOUT"/>-->
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <!--<appender-ref ref="FILE-LAST-SESSION-DEBUG"/>

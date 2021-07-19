@@ -8,8 +8,8 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
@@ -281,55 +281,23 @@ public class MoveSystemTest {
         Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
 
         // в разные фигуры
-        move1.setTurnInto(new Bishop(Color.WHITE, Cell.parse("c8")));
+        move1.setTurnInto(FigureType.BISHOP);
         Assert.assertTrue(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(new King(Color.WHITE, Cell.parse("c8")));
+        move1.setTurnInto(FigureType.KING);
         Assert.assertFalse(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(new Knight(Color.WHITE, Cell.parse("c8")));
+        move1.setTurnInto(FigureType.KNIGHT);
         Assert.assertTrue(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(new Pawn(Color.WHITE, Cell.parse("c8")));
+        move1.setTurnInto(FigureType.PAWN);
         Assert.assertFalse(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(new Queen(Color.WHITE, Cell.parse("c8")));
+        move1.setTurnInto(FigureType.QUEEN);
         Assert.assertTrue(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(new Rook(Color.WHITE, Cell.parse("c8")));
+        move1.setTurnInto(FigureType.ROOK);
         Assert.assertTrue(ms.isCorrectMove(move1));
-    }
-
-    @Test
-    public void testIsCorrectPawnTurnInto_2() throws ChessException, ChessError {
-        board.setFigure(new King(Color.WHITE, Cell.parse("h1")));
-        board.setFigure(new Pawn(Color.WHITE, Cell.parse("c7")));
-
-        Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
-
-        // в другой цвет
-        move1.setTurnInto(new Queen(Color.BLACK, Cell.parse("c8")));
-        Assert.assertFalse(ms.isCorrectMove(move1));
-    }
-
-    @Test
-    public void testIsCorrectPawnTurnInto_3() throws ChessException, ChessError {
-        board.setFigure(new King(Color.WHITE, Cell.parse("h1")));
-        board.setFigure(new Pawn(Color.WHITE, Cell.parse("c7")));
-
-        Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
-
-        // в другую клетку
-        move1.setTurnInto(new Queen(Color.WHITE, Cell.parse("d8")));
-        Assert.assertFalse(ms.isCorrectMove(move1));
-
-        Move move2 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("d8"));
-
-        move2.setTurnInto(new Queen(Color.WHITE, Cell.parse("c8")));
-        Assert.assertFalse(ms.isCorrectMove(move2));
-
-        move2.setTurnInto(new Queen(Color.WHITE, Cell.parse("d8")));
-        Assert.assertFalse(ms.isCorrectMove(move2));
     }
 
     @Test
@@ -340,7 +308,7 @@ public class MoveSystemTest {
         // из другой фигуры
         board.setFigure(new Rook(Color.WHITE, Cell.parse("g7")));
         Move move3 = new Move(MoveType.TURN_INTO, Cell.parse("g7"), Cell.parse("g8"));
-        move3.setTurnInto(new Queen(Color.WHITE, Cell.parse("g8")));
+        move3.setTurnInto(FigureType.QUEEN);
         Assert.assertFalse(ms.isCorrectMove(move3));
     }
 
@@ -351,7 +319,7 @@ public class MoveSystemTest {
 
         // атакующим перемещением
         Move move4 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("d8"));
-        move4.setTurnInto(new Queen(Color.WHITE, Cell.parse("d8")));
+        move4.setTurnInto(FigureType.QUEEN);
         Assert.assertFalse(ms.isCorrectMove(move4));
 
         board.setFigure(new Rook(Color.BLACK, Cell.parse("d8")));
@@ -421,34 +389,6 @@ public class MoveSystemTest {
         Assert.assertEquals(black, board.getFigure(Cell.parse("c3")));
         Assert.assertNull(board.getFigure(Cell.parse("b4")));
         Assert.assertNull(board.getFigure(Cell.parse("c4")));
-    }
-
-    @Test
-    public void testMove_TURN_INTO() throws ChessException, ChessError {
-        Figure white = new Pawn(Color.WHITE, Cell.parse("d7"));
-        Figure black = new Pawn(Color.BLACK, Cell.parse("c2"));
-        Figure whiteQueen = new Queen(Color.WHITE, Cell.parse("d8"));
-        Figure blackQueen = new Queen(Color.BLACK, Cell.parse("c1"));
-        board.setFigure(white);
-        board.setFigure(black);
-        board.setFigure(new King(Color.WHITE, Cell.parse("a1")));
-        board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
-
-        Move move = new Move(MoveType.TURN_INTO, Cell.parse("d7"), Cell.parse("d8"));
-        move.setTurnInto(whiteQueen);
-        Figure removed = ms.move(move);
-
-        Assert.assertNull(removed);
-        Assert.assertNull(board.getFigure(Cell.parse("d7")));
-        Assert.assertEquals(whiteQueen, board.getFigure(Cell.parse("d8")));
-
-        move = new Move(MoveType.TURN_INTO, Cell.parse("c2"), Cell.parse("c1"));
-        move.setTurnInto(blackQueen);
-        removed = ms.move(move);
-
-        Assert.assertNull(removed);
-        Assert.assertNull(board.getFigure(Cell.parse("c2")));
-        Assert.assertEquals(blackQueen, board.getFigure(Cell.parse("c1")));
     }
 
     @Test

@@ -5,7 +5,7 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.List;
 import java.util.Random;
 
@@ -24,7 +24,6 @@ public class RandomBot extends Player {
     }
 
     protected void turnIntoInQueen(Move move) {
-        if (move.getMoveType() == MoveType.TURN_INTO)
-            move.setTurnInto(new Queen(color, move.getTo()));
+        if (move.getMoveType() == MoveType.TURN_INTO) move.setTurnInto(FigureType.QUEEN);
     }
 }

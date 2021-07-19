@@ -78,8 +78,8 @@ public class BotTest extends TestCase {
         long m = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new MinimaxBot(roomSettings, Color.WHITE, 3);
-            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+            Player firstPlayer = new AttackBot(roomSettings, Color.WHITE);
+            Player secondPlayer = new MinimaxBot(roomSettings, Color.BLACK, 1);
             Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
             game.run();
             System.out.println("4 - " + (i + 1) + "/" + COUNT);
@@ -145,7 +145,6 @@ public class BotTest extends TestCase {
         Move bestMove = bot.getNextMove();
 
         Assertions.assertEquals(-92, grade);
-        // почему так?
         Assertions.assertEquals(
                 new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }

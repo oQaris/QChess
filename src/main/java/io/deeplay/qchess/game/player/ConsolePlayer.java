@@ -5,15 +5,10 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.UNKNOWN_FIGURE_SE
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.Bishop;
-import io.deeplay.qchess.game.model.figures.Figure;
-import io.deeplay.qchess.game.model.figures.Knight;
-import io.deeplay.qchess.game.model.figures.Queen;
-import io.deeplay.qchess.game.model.figures.Rook;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Comparator;
@@ -85,11 +80,11 @@ public class ConsolePlayer extends Player {
     private void specificMoveModification(Move chosenMove) throws ChessError {
         if (chosenMove.getMoveType() == MoveType.TURN_INTO) {
             System.out.println(TURN_INTO_INVITE);
-            chosenMove.setTurnInto(readTurnInto(chosenMove.getTo()));
+            chosenMove.setTurnInto(readTurnInto());
         }
     }
 
-    private Figure readTurnInto(Cell to) throws ChessError {
+    private FigureType readTurnInto() throws ChessError {
         int numTurnIntoFigure = 0;
         final int maxCountFigures = 4;
         while (numTurnIntoFigure == 0) {
@@ -107,10 +102,10 @@ public class ConsolePlayer extends Player {
             }
         }
         return switch (numTurnIntoFigure) {
-            case 1 -> new Knight(color, to);
-            case 2 -> new Bishop(color, to);
-            case 3 -> new Rook(color, to);
-            case 4 -> new Queen(color, to);
+            case 1 -> FigureType.KNIGHT;
+            case 2 -> FigureType.BISHOP;
+            case 3 -> FigureType.ROOK;
+            case 4 -> FigureType.QUEEN;
             default -> {
                 logger.error(
                         "В консольном игроке выбрана неизвестная фигура: {}", numTurnIntoFigure);
