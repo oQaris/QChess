@@ -103,6 +103,19 @@ public class MoveSystem {
         return res;
     }
 
+    /**
+     * @param cell клетка
+     * @return все возможные ходы из клетки
+     */
+    public List<Move> getAllCorrectMoves(Cell cell) throws ChessError {
+        List<Move> res = new ArrayList<>(64);
+        if (!board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
+        Figure figure = board.getFigureUgly(cell);
+        for (Move m : figure.getAllMoves(roomSettings))
+            if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
+        return res;
+    }
+
     /** @return true если ход корректный */
     public boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
         try {
