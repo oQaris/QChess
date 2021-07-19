@@ -12,6 +12,13 @@ public class GameSettings {
     public final EndGameDetector endGameDetector;
     public final History history;
 
+    public GameSettings(int boardSize, Board.BoardFilling boardType) {
+        board = new Board(boardSize, boardType);
+        history = new History(this);
+        endGameDetector = new EndGameDetector(this);
+        moveSystem = new MoveSystem(this);
+    }
+
     public GameSettings(Board.BoardFilling boardType) {
         board = new Board(boardType);
         history = new History(this);

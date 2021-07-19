@@ -2,7 +2,6 @@ package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -18,33 +17,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Board {
-    public static final int BOARD_SIZE = 8;
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
-    private final Figure[][] cells = new Figure[Board.BOARD_SIZE][Board.BOARD_SIZE];
+    /** @deprecated Плохо для гибкости */
+    @Deprecated public static int STD_BOARD_SIZE = 8;
 
-    public Board(BoardFilling bf) {
-        logger.debug("Начато заполнение {} доски", bf);
+    public final int boardSize;
+    private final Figure[][] cells;
+
+    public Board(int size, BoardFilling fillingType) {
+        boardSize = size;
+        cells = new Figure[boardSize][boardSize];
         try {
-            switch (bf) {
-                case STANDARD -> fillBoardForFirstLine(
-                        new FigureType[] {
-                            FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
-                            FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
-                            FigureType.KNIGHT, FigureType.ROOK
-                        });
-                case CHESS960 -> {
-                    // todo Сделать рандомное заполнение Фишера
-                }
-                case EMPTY -> {
-                }
-            }
-        } catch (ChessException | NullPointerException e) {
+            fill(fillingType);
+        } catch (ChessException e) {
             logger.error("Ошибка при заполнении доски");
         }
-        logger.debug("Доска {} инициализирована", bf);
+    }
+
+    public Board(BoardFilling fillingType) {
+        this(STD_BOARD_SIZE, fillingType);
     }
 
     public Board(String placement) throws ChessError {
+        this(STD_BOARD_SIZE, BoardFilling.EMPTY);
         try {
             if (!NotationService.checkValidityPlacement(placement)) {
                 logger.error(
@@ -68,11 +63,6 @@ public class Board {
             logger.error("Ошибка при установке фигуры на доску в конструкторе доски по строке");
             throw new ChessError(INCORRECT_COORDINATES);
         }
-    }
-
-    /** @return true, если клетка принадлежит доске */
-    public static boolean isCorrectCell(int column, int row) {
-        return column >= 0 && row >= 0 && column < Board.BOARD_SIZE && row < Board.BOARD_SIZE;
     }
 
     /** @return true, если клетка cell атакуется цветом color */
@@ -106,9 +96,34 @@ public class Board {
         };
     }
 
+    private void fill(BoardFilling fillingType) throws ChessException {
+        logger.debug("Начато заполнение {} доски", fillingType);
+        switch (fillingType) {
+            case STANDARD -> fillBoardForFirstLine(
+                    new FigureType[] {
+                        FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
+                        FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
+                        FigureType.KNIGHT, FigureType.ROOK
+                    });
+            case CHESS960 -> fillBoardForFirstLine(
+                    // todo Добавить рандома
+                    new FigureType[] {
+                        FigureType.KNIGHT, FigureType.QUEEN, FigureType.ROOK,
+                        FigureType.KING, FigureType.BISHOP, FigureType.ROOK,
+                        FigureType.KNIGHT, FigureType.BISHOP
+                    });
+        }
+        logger.debug("Доска {} инициализирована", fillingType);
+    }
+
+    /** @return true, если клетка принадлежит доске */
+    public boolean isCorrectCell(int column, int row) {
+        return column >= 0 && row >= 0 && column < boardSize && row < boardSize;
+    }
+
     private void fillBoardForFirstLine(FigureType[] orderFirstLine) throws ChessException {
         Cell startBlack = new Cell(0, 0);
-        Cell startWhite = new Cell(0, Board.BOARD_SIZE - 1);
+        Cell startWhite = new Cell(0, boardSize - 1);
         Cell shift = new Cell(1, 0);
 
         for (FigureType figureType : orderFirstLine) {
@@ -125,7 +140,7 @@ public class Board {
     public void setFigure(Figure figure) throws ChessException {
         int x = figure.getCurrentPosition().getColumn();
         int y = figure.getCurrentPosition().getRow();
-        if (!Board.isCorrectCell(x, y)) {
+        if (!isCorrectCell(x, y)) {
             logger.warn("Ошибка установки фигуры {} на доску", figure);
             throw new ChessException(INCORRECT_COORDINATES);
         }
@@ -145,17 +160,24 @@ public class Board {
         return list;
     }
 
+    /** @return все фигуры на доске */
+    public List<Figure> getAllFigures() {
+        List<Figure> list = new ArrayList<>(32);
+        for (Figure[] figures : cells)
+            for (Figure figure : figures) if (figure != null) list.add(figure);
+        return list;
+    }
+
     /**
      * @param color цвет игрока
-     * @return позиция короля определенного цвета
-     * @throws ChessError если король не был найден
+     * @return позиция короля определенного цвета или null, если король не найден
      */
-    public Figure findKing(Color color) throws ChessError {
+    public Figure findKing(Color color) {
         for (Figure[] figures : cells)
             for (Figure f : figures)
                 if (f != null && f.getColor() == color && f.getType() == FigureType.KING) return f;
         logger.error("Король {} не был найден", color);
-        throw new ChessError(KING_NOT_FOUND);
+        return null;
     }
 
     /**
@@ -200,11 +222,20 @@ public class Board {
     public Figure getFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        if (!Board.isCorrectCell(x, y)) {
+        if (!isCorrectCell(x, y)) {
             logger.warn("Фигура не была установлена на клетку: {}", cell);
             throw new ChessException(INCORRECT_COORDINATES);
         }
         return cells[y][x];
+    }
+
+    /**
+     * Опасно! Проверки не выполняются.
+     *
+     * @return фигура или null, если клетка пуста.
+     */
+    public Figure getFigureUgly(Cell cell) {
+        return cells[cell.getRow()][cell.getColumn()];
     }
 
     /**
@@ -215,7 +246,7 @@ public class Board {
     public Figure removeFigure(Cell cell) throws ChessException {
         int x = cell.getColumn();
         int y = cell.getRow();
-        if (!Board.isCorrectCell(x, y)) {
+        if (!isCorrectCell(x, y)) {
             logger.warn("Фигура не была удалена с клетки: {}", cell);
             throw new ChessException(INCORRECT_COORDINATES);
         }
@@ -228,7 +259,7 @@ public class Board {
     public boolean isEmptyCell(Cell cell) {
         int x = cell.getColumn();
         int y = cell.getRow();
-        return Board.isCorrectCell(x, y) && cells[y][x] == null;
+        return isCorrectCell(x, y) && cells[y][x] == null;
     }
 
     /**
@@ -238,7 +269,7 @@ public class Board {
     public boolean isEnemyFigureOn(Color color, Cell cell) {
         int x = cell.getColumn();
         int y = cell.getRow();
-        return Board.isCorrectCell(x, y) && cells[y][x] != null && cells[y][x].getColor() != color;
+        return isCorrectCell(x, y) && cells[y][x] != null && cells[y][x].getColor() != color;
     }
 
     @Override

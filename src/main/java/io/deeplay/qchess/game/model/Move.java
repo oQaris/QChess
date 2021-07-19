@@ -1,7 +1,7 @@
 package io.deeplay.qchess.game.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.Objects;
 
 public class Move {
@@ -18,7 +18,7 @@ public class Move {
     // т.к. пешки на доске не знают во что превратиться без запроса игрока.
     // проверка вынесена в MoveSystem
     @JsonProperty("turnInto")
-    private Figure turnInto;
+    private FigureType turnInto;
 
     public Move(MoveType moveType, Cell from, Cell to) {
         this.moveType = moveType;
@@ -26,14 +26,11 @@ public class Move {
         this.to = to;
     }
 
-    public Figure getTurnInto() {
+    public FigureType getTurnInto() {
         return turnInto;
     }
 
-    /**
-     * @param turnInto указывать from = this.to и to = this.to, как у этого мува, но необязательно
-     */
-    public void setTurnInto(Figure turnInto) {
+    public void setTurnInto(FigureType turnInto) {
         this.turnInto = turnInto;
     }
 

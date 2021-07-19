@@ -54,4 +54,11 @@ public interface IServer {
      * @throws ServerException если сервер закрыт
      */
     void sendAll(String json) throws ServerException;
+
+    /**
+     * Отправляет сообщение клиенту
+     *
+     * @throws ServerException если сервер закрыт
+     */
+    void send(String json, int clientID) throws ServerException;
 }

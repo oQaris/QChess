@@ -1,5 +1,7 @@
 package io.deeplay.qchess.game.model;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -87,9 +89,9 @@ public class History implements Iterable<String> {
         StringBuilder result = new StringBuilder();
         Figure currentFigure;
 
-        for (int y = 0; y < Board.BOARD_SIZE; y++) {
+        for (int y = 0; y < gameSettings.board.boardSize; y++) {
             int emptySlots = 0;
-            for (int x = 0; x < Board.BOARD_SIZE; x++) {
+            for (int x = 0; x < gameSettings.board.boardSize; x++) {
                 currentFigure = gameSettings.board.getFigure(new Cell(x, y));
 
                 if (currentFigure == null) emptySlots++;
@@ -121,6 +123,7 @@ public class History implements Iterable<String> {
     private String getCastlingPossibility(Color color) throws ChessError {
         String res = "";
         Figure king = gameSettings.board.findKing(color);
+        if (king == null) throw new ChessError(KING_NOT_FOUND);
         Figure leftRook =
                 gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
         Figure rightRook =

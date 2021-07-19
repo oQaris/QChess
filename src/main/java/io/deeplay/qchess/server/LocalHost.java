@@ -65,6 +65,17 @@ public class LocalHost implements IServer {
     }
 
     @Override
+    public void send(String json, int clientID) throws ServerException {
+        synchronized (mutex) {
+            if (!isOpen) {
+                logger.warn("Сервер еще не запущен");
+                throw new ServerException(SERVER_IS_NOT_OPENED);
+            }
+            clientHandlerManager.send(json, clientID);
+        }
+    }
+
+    @Override
     public int getMaxClients() {
         return maxClients;
     }

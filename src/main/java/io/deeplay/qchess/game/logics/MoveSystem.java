@@ -52,8 +52,12 @@ public class MoveSystem {
                         }
                             // превращение пешки
                         case TURN_INTO -> {
-                            Figure turnIntoFigure = move.getTurnInto();
-                            turnIntoFigure.setCurrentPosition(move.getTo());
+                            FigureType turnIntoType = move.getTurnInto();
+                            Figure turnIntoFigure =
+                                    Figure.build(
+                                            turnIntoType,
+                                            board.getFigure(move.getFrom()).getColor(),
+                                            move.getTo());
                             Figure removed = board.moveFigure(move);
                             board.setFigure(turnIntoFigure);
                             yield removed;
@@ -62,14 +66,14 @@ public class MoveSystem {
                         case SHORT_CASTLING -> {
                             Cell from = move.getFrom().createAdd(new Cell(3, 0));
                             Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                            board.getFigure(from).setWasMoved(true);
+                            board.getFigureUgly(from).setWasMoved(true);
                             board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
                             yield board.moveFigure(move);
                         }
                         case LONG_CASTLING -> {
                             Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                             Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                            board.getFigure(from).setWasMoved(true);
+                            board.getFigureUgly(from).setWasMoved(true);
                             board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
                             yield board.moveFigure(move);
                         }
@@ -94,8 +98,24 @@ public class MoveSystem {
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(64);
         for (Figure f : board.getFigures(color))
-            for (Move m : f.getAllMoves(roomSettings)) if (isCorrectMove(m)) res.add(m);
+            for (Move m : f.getAllMoves(roomSettings))
+                if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
         return res;
+    }
+
+    /** @return true если ход корректный */
+    public boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
+        try {
+            return move != null
+                    && checkCorrectnessIfSpecificMove(move)
+                    && isCorrectVirtualMove(move);
+        } catch (ChessException | NullPointerException e) {
+            logger.warn(
+                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
+                    move,
+                    e.getMessage());
+            return false;
+        }
     }
 
     /** @return true если ход корректный */
@@ -125,12 +145,10 @@ public class MoveSystem {
         logger.debug("Начата проверка хода {} на превращение", move);
         if (move.getMoveType() == MoveType.TURN_INTO)
             return move.getTurnInto() != null
-                    && move.getTurnInto().getColor() == board.getFigure(move.getFrom()).getColor()
-                    && move.getTurnInto().getCurrentPosition().equals(move.getTo())
-                    && (move.getTurnInto().getType() == FigureType.BISHOP
-                            || move.getTurnInto().getType() == FigureType.KNIGHT
-                            || move.getTurnInto().getType() == FigureType.QUEEN
-                            || move.getTurnInto().getType() == FigureType.ROOK);
+                    && (move.getTurnInto() == FigureType.BISHOP
+                            || move.getTurnInto() == FigureType.KNIGHT
+                            || move.getTurnInto() == FigureType.QUEEN
+                            || move.getTurnInto() == FigureType.ROOK);
         return true;
     }
 
@@ -159,5 +177,48 @@ public class MoveSystem {
         figureToMove.setWasMoved(hasBeenMoved);
         if (virtualKilled != null) board.setFigure(virtualKilled);
         return !isCheck;
+        // TODO: НЕ МЕНЯТЬ, что работает, только добавлять. пока не будет переделана история
+        //  НЕ трогать этот метод!
+
+        //        return virtualMove(
+        //                move,
+        //                (figureToMove, virtualKilled) -> {
+        //                    if (virtualKilled != null && virtualKilled.getType() ==
+        // FigureType.KING) {
+        //                        logger.error("Срубили короля при проверке виртуального хода {}",
+        // move);
+        //                        throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
+        //                    }
+        //                    return !endGameDetector.isCheck(figureToMove.getColor());
+        //                });
+    }
+
+    /**
+     * Опасно! Выполняет ходы без проверки
+     *
+     * @param move Виртуальный ход.
+     * @param func Функция, выполняемая после виртуального хода.
+     * @return Результат функции func.
+     * @throws ChessException Если выбрасывается в функции func.
+     * @throws ChessError Если выбрасывается в функции func.
+     */
+    public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
+        // TODO: переделать с измененной историей
+        logger.debug("Виртуальный ход {}", move);
+        Figure figureToMove = board.getFigureUgly(move.getFrom());
+        boolean hasBeenMoved = figureToMove.wasMoved();
+        // виртуальный ход
+        Figure virtualKilled = board.moveFigure(move);
+        T res = func.apply(figureToMove, virtualKilled);
+        // отмена виртуального хода
+        board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
+        figureToMove.setWasMoved(hasBeenMoved);
+        if (virtualKilled != null) board.setFigure(virtualKilled);
+        return res;
+    }
+
+    @FunctionalInterface
+    public interface ChessMoveFunc<T> {
+        T apply(Figure from, Figure to) throws ChessException, ChessError;
     }
 }
