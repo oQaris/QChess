@@ -78,7 +78,7 @@ public class BotTest extends TestCase {
         long m = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new MinimaxBot(roomSettings, Color.WHITE, 3);
+            Player firstPlayer = new MinimaxBot(roomSettings, Color.WHITE, 1);
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
             game.run();

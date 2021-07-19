@@ -51,7 +51,7 @@ public class ConsolePlayer extends Player {
             specificMoveModification(chosenMove);
             return chosenMove;
         } catch (ChessError e) {
-            logger.error("Возникла ошибка в консольном игроке: {}", e);
+            logger.error("Возникла ошибка в консольном игроке: {}", e.getMessage());
             throw new ChessError(CONSOLE_PLAYER_ERROR, e);
         }
     }
