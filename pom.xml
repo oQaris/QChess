@@ -11,7 +11,6 @@
   <build>
     <plugins>
       <plugin>
-        <!-- А чё котлин убрали? -->
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <archive>
