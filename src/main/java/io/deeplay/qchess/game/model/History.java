@@ -7,7 +7,9 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +24,7 @@ public class History implements Iterable<String> {
     private final Map<FigureType, Character> notation = new EnumMap<>(FigureType.class);
     private final Map<String, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
     private final List<String> recordsList = new ArrayList<>(AVERAGE_MAXIMUM_MOVES);
+    private final Deque<Move> moves = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
     private final GameSettings gameSettings;
     private boolean whiteStep = true;
     private Move lastMove;
@@ -49,6 +52,8 @@ public class History implements Iterable<String> {
      */
     public String addRecord(Move lastMove) throws ChessException, ChessError {
         this.lastMove = lastMove;
+        if(lastMove!=null)
+            moves.add(lastMove);
 
         String rec = convertBoardToStringForsythEdwards();
         recordsList.add(rec);
@@ -165,6 +170,11 @@ public class History implements Iterable<String> {
     }
 
     public Move getLastMove() {
+        return lastMove;
+    }
+
+    public Move undo(){
+        lastMove = moves.pollLast();
         return lastMove;
     }
 
