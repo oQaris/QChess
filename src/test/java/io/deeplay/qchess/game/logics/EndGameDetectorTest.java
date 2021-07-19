@@ -31,7 +31,7 @@ public class EndGameDetectorTest {
         endGameDetector = gs.endGameDetector;
     }
 
-    @Test(expected = ChessError.class)
+    /*@Test(expected = ChessError.class)
     public void testIsCheck_zeroFigures_1() throws ChessError {
         endGameDetector.isCheck(Color.WHITE);
     }
@@ -39,7 +39,7 @@ public class EndGameDetectorTest {
     @Test(expected = ChessError.class)
     public void testIsCheck_zeroFigures_2() throws ChessError {
         endGameDetector.isCheck(Color.BLACK);
-    }
+    }*/
 
     @Test
     public void testIsCheck() throws ChessError, ChessException {

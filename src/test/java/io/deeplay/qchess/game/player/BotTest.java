@@ -8,6 +8,8 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Rook;
@@ -18,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 public class BotTest extends TestCase {
     private static final Logger log = LoggerFactory.getLogger(BotTest.class);
-    final int COUNT = 100;
+    final int COUNT = 1;
 
     public void testBotsRandom() throws ChessError {
         // ExecutorService executor = Executors.newCachedThreadPool();
@@ -76,8 +78,8 @@ public class BotTest extends TestCase {
         long m = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new MinimaxBot(roomSettings, Color.WHITE, 2);
-            Player secondPlayer = new AttackBot(roomSettings, Color.BLACK);
+            Player firstPlayer = new MinimaxBot(roomSettings, Color.WHITE, 3);
+            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
             game.run();
             System.out.println("4 - " + (i + 1) + "/" + COUNT);
@@ -94,7 +96,70 @@ public class BotTest extends TestCase {
         roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(1, 2)));
 
         MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 2);
-        int grade = bot.minimax(2, true);
-        Assertions.assertEquals(-5, grade);
+        int grade = bot.minimaxRoot(2, true);
+        Move bestMove = bot.getNextMove();
+
+        Assertions.assertEquals(-102, grade);
+        Assertions.assertEquals(
+                new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
+    }
+
+    public void testMinimaxBotMM() throws ChessError, ChessException {
+        GameSettings roomSettings = new GameSettings(4, BoardFilling.EMPTY);
+        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(0, 0)));
+        roomSettings.board.setFigure(new Knight(Color.BLACK, new Cell(0, 1)));
+        roomSettings.board.setFigure(new Bishop(Color.BLACK, new Cell(2, 1)));
+
+        MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 1);
+
+        roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(2, 3)));
+        int grade = bot.minimaxRoot(1, true);
+        Assertions.assertEquals(-102, grade);
+
+        roomSettings.board.moveFigure(
+                new Move(MoveType.QUIET_MOVE, new Cell(2, 3), new Cell(0, 3)));
+        grade = bot.minimaxRoot(1, true);
+        Assertions.assertEquals(-92, grade);
+
+        roomSettings.board.moveFigure(
+                new Move(MoveType.QUIET_MOVE, new Cell(0, 3), new Cell(0, 1)));
+        grade = bot.minimaxRoot(1, true);
+        Assertions.assertEquals(-99, grade);
+
+        // таким образом, это лучший ход
+        roomSettings.board.moveFigure(
+                new Move(MoveType.QUIET_MOVE, new Cell(0, 1), new Cell(2, 1)));
+        grade = bot.minimaxRoot(1, true);
+        Assertions.assertEquals(-38, grade);
+    }
+
+    public void testMinimaxBotAttack() throws ChessError, ChessException {
+        GameSettings roomSettings = new GameSettings(4, BoardFilling.EMPTY);
+        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(0, 0)));
+        roomSettings.board.setFigure(new Knight(Color.BLACK, new Cell(0, 1)));
+        roomSettings.board.setFigure(new Bishop(Color.BLACK, new Cell(2, 1)));
+        roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(1, 2)));
+
+        MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 1);
+        int grade = bot.minimaxRoot(1, true);
+        Move bestMove = bot.getNextMove();
+
+        Assertions.assertEquals(-92, grade);
+        // почему так?
+        Assertions.assertEquals(
+                new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
+    }
+
+    public void testEvaluateBoard() throws ChessException {
+        GameSettings roomSettings = new GameSettings(BoardFilling.STANDARD);
+        MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 2);
+
+        Assertions.assertEquals(0, bot.evaluateBoard());
+
+        roomSettings.board.removeFigure(new Cell(1, 0));
+        Assertions.assertEquals(52, bot.evaluateBoard());
+
+        roomSettings.board.removeFigure(new Cell(3, 7));
+        Assertions.assertEquals(-127, bot.evaluateBoard());
     }
 }
