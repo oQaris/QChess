@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -93,6 +95,16 @@ public class Table {
                     }
                 });
          */
+        this.gameFrame.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (ClientController.repaint) {
+                    boardPanel.drawBoard();
+                    ClientController.repaint = false;
+
+                }
+            }
+        });
     }
 
     private JMenuBar createTableMenuBar() {
