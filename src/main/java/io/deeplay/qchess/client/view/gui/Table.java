@@ -12,7 +12,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -80,19 +79,19 @@ public class Table {
         clickedCell = -1;
 
         /*this.gameFrame.addMouseMotionListener(
-                new MouseMotionListener() {
-                    @Override
-                    public void mouseDragged(MouseEvent e) {}
+               new MouseMotionListener() {
+                   @Override
+                   public void mouseDragged(MouseEvent e) {}
 
-                    @Override
-                    public void mouseMoved(MouseEvent e) {
-                        if (ClientController.repaint) {
-                            boardPanel.drawBoard();
-                            ClientController.repaint = false;
-                        }
-                    }
-                });
-         */
+                   @Override
+                   public void mouseMoved(MouseEvent e) {
+                       if (ClientController.repaint) {
+                           boardPanel.drawBoard();
+                           ClientController.repaint = false;
+                       }
+                   }
+               });
+        */
     }
 
     private JMenuBar createTableMenuBar() {
@@ -172,7 +171,7 @@ public class Table {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            if (isLeftMouseButton(e) && ClientController.isWhiteStep() == myColor) {
+                            if (isLeftMouseButton(e) && ClientController.isWhiteStep()) {
                                 // if (isLeftMouseButton(e)) {
                                 boolean twoClick = false;
                                 if (ClientController.checkFigure(
@@ -210,7 +209,7 @@ public class Table {
 
                         @Override
                         public void mouseEntered(MouseEvent e) {
-                            if (ClientController.isWhiteStep() == myColor) {
+                            if (ClientController.isWhiteStep()) {
                                 if (thisCellPanel.getBackground() == chooseCellColor) {
                                     thisCellPanel.setBackground(chooseHoverCellColor);
                                 } else if (thisCellPanel.getBackground()
@@ -227,7 +226,7 @@ public class Table {
 
                         @Override
                         public void mouseExited(MouseEvent e) {
-                            if (ClientController.isWhiteStep() == myColor) {
+                            if (ClientController.isWhiteStep()) {
                                 if (thisCellPanel.getBackground() == chooseHoverCellColor) {
                                     thisCellPanel.setBackground(chooseCellColor);
                                 } else if (thisCellPanel.getBackground()

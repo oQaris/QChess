@@ -12,13 +12,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class ConnectFrame {
+    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
     private final JFrame frame;
     private final JPanel panel;
     private final JTextField ipField;
     private final JTextField portField;
     private Table table;
-
-    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
 
     public ConnectFrame() {
         frame = new JFrame("Connect");
@@ -71,6 +70,7 @@ public class ConnectFrame {
                         frame.dispose();
                         frame.setVisible(false);
                         GameGUIAdapterService.init();
+                        if (!color) GameGUIAdapterService.changeIsWhiteStep();
                         table = new Table("onestyle", color);
                     }
 
