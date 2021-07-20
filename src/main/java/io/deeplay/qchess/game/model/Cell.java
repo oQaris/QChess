@@ -24,6 +24,8 @@ public class Cell {
         this.row = row;
     }
 
+    public Cell() {}
+
     /** @deprecated Использует стандартный размер доски - плохо для гибкости */
     @Deprecated(since = "only for tests")
     public static Cell parse(String pos) throws ChessException {
