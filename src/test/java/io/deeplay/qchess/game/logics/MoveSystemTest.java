@@ -318,7 +318,7 @@ public class MoveSystemTest {
         board.setFigure(new Pawn(Color.WHITE, Cell.parse("c7")));
 
         // атакующим перемещением
-        Move move4 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("d8"));
+        Move move4 = new Move(MoveType.TURN_INTO_ATTACK, Cell.parse("c7"), Cell.parse("d8"));
         move4.setTurnInto(FigureType.QUEEN);
         Assert.assertFalse(ms.isCorrectMove(move4));
 

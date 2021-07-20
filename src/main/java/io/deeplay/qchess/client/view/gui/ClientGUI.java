@@ -33,8 +33,7 @@ public class ClientGUI implements IClientView {
 
     @Override
     public ViewBoard getBoard() {
-        return null;
-        //        throw new UnsupportedOperationException("ВАСЯ СДЕЛАЙ НОРМАЛЬНО");
+        throw new UnsupportedOperationException("GUI не поддерживает доску");
     }
 
     @Override
