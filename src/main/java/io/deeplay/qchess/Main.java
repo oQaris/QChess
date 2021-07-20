@@ -2,19 +2,10 @@ package io.deeplay.qchess;
 
 import io.deeplay.qchess.client.view.ClientConsole;
 import io.deeplay.qchess.client.view.IClientView;
-import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.player.ConsolePlayer;
-import io.deeplay.qchess.game.player.MinimaxBot;
-import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.server.view.IServerView;
 import io.deeplay.qchess.server.view.ServerConsole;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Main {

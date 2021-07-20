@@ -104,7 +104,8 @@ public class MinimaxBot extends Player {
 
     @Override
     public Move getNextMove() throws ChessError {
-        List<Move> topMoves = new ArrayList<>();
+        //List<Move> topMoves = new ArrayList<>();
+        Move bestMove = null;
         int maxGrade = Integer.MIN_VALUE;
         for (Move move : ms.getAllCorrectMoves(color)) {
             AtomicInteger curGrade = new AtomicInteger();
@@ -113,15 +114,19 @@ public class MinimaxBot extends Player {
             } catch (ChessException e) {
                 e.printStackTrace();
             }
-            if (curGrade.get() > maxGrade) {
+            /*if (curGrade.get() > maxGrade) {
                 maxGrade = curGrade.get();
                 topMoves.clear();
             }
-            if (curGrade.get() >= maxGrade) topMoves.add(move);
+            if (curGrade.get() >= maxGrade) topMoves.add(move);*/
+            if (curGrade.get() > maxGrade) {
+                maxGrade = curGrade.get();
+                bestMove = move;
+            }
         }
-        Move move = topMoves.get(new Random().nextInt(topMoves.size()));
-        turnIntoInQueen(move);
-        return move;
+        //Move move = topMoves.get(new Random().nextInt(topMoves.size()));
+        turnIntoInQueen(bestMove);
+        return bestMove;
     }
 
     public int minimaxRoot(int depth, boolean isMaximisingPlayer)
