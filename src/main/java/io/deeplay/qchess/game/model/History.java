@@ -8,34 +8,25 @@ import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class History implements Iterable<String> {
+public class History {
     private static final Logger logger = LoggerFactory.getLogger(History.class);
-    private final Map<FigureType, Character> notation = new EnumMap<>(FigureType.class);
-
     private static final int AVERAGE_MAXIMUM_MOVES = 300;
-    private final Map<String, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
-    private final List<String> recordsList = new ArrayList<>(AVERAGE_MAXIMUM_MOVES);
-    private final Deque<Move> moves = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
-
+    private final Map<FigureType, Character> notation = new EnumMap<>(FigureType.class);
     private final GameSettings gameSettings;
-    private boolean whiteStep = true;
+
+    private final Map<BoardState, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
+    /** using like a stack */
+    private final Deque<BoardState> recordsList = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
+
     private Move lastMove;
     private int peaceMoveCount = 0;
-
-    private boolean isWhiteLongCastlingPossibility = true;
-    private boolean isBlackLongCastlingPossibility = true;
-    private boolean isWhiteShortCastlingPossibility = true;
-    private boolean isBlackShortCastlingPossibility = true;
 
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
@@ -59,49 +50,21 @@ public class History implements Iterable<String> {
      */
     public String addRecord(Move lastMove) throws ChessException, ChessError {
         this.lastMove = lastMove;
-        if (lastMove != null) moves.add(lastMove);
-
-        // handleCastlingPossibility(lastMove);
 
         String rec = convertBoardToStringForsythEdwards();
-        recordsList.add(rec);
+        BoardState boardState = new BoardState(rec, lastMove, peaceMoveCount);
+        recordsList.push(boardState);
 
-        repetitionsMap.put(rec, repetitionsMap.getOrDefault(rec, 0) + 1);
+        repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
         logger.debug("Запись <{}> добавлена в историю", rec);
 
-        whiteStep = !whiteStep;
         return rec;
     }
-
-    /* private void handleCastlingPossibility(Move move) throws ChessException {
-        if(!isWhiteLongCastlingPossibility && !isBlackLongCastlingPossibility
-            && !isWhiteShortCastlingPossibility && !isBlackShortCastlingPossibility)
-            return;
-
-        Figure figure = gameSettings.board.getFigure(move.getFrom());
-        FigureType type = figure.getType();
-        if(type!=FigureType.KING && type != FigureType.ROOK)
-            return;
-
-        if (figure.getColor() == Color.WHITE) {
-            if (type == FigureType.KING) {
-                isWhiteLongCastlingPossibility = false;
-                isWhiteShortCastlingPossibility = false;
-            }
-            else if(isWhiteLongCastlingPossibility && isBlackLongCastlingPossibility){
-                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
-            }
-            }
-
-        if(isWhiteCastlingPossibility && figure.getColor()==Color.WHITE)
-            isWhiteCastlingPossibility = false;
-        if(isBlackCastlingPossibility && figure.getColor()==Color.BLACK)
-            isBlackCastlingPossibility = false;
-    }*/
 
     public void checkAndAddPeaceMoveCount(Move move) throws ChessException {
         if (move.getMoveType() == MoveType.ATTACK
                 || move.getMoveType() == MoveType.EN_PASSANT
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK
                 || gameSettings.board.getFigure(move.getTo()).getType() == FigureType.PAWN)
             peaceMoveCount = 0;
         else ++peaceMoveCount;
@@ -112,7 +75,7 @@ public class History implements Iterable<String> {
         StringBuilder rec = new StringBuilder(70);
 
         rec.append(getConvertingFigurePosition());
-        rec.append(' ').append(whiteStep ? 'w' : 'b');
+        rec.append(' ').append(recordsList.size() % 2 == 0 ? 'w' : 'b');
 
         String castlingPossibility = getCastlingPossibility();
         if (!"".equals(castlingPossibility)) rec.append(' ').append(castlingPossibility);
@@ -176,7 +139,7 @@ public class History implements Iterable<String> {
     private String getPawnEnPassantPossibility() throws ChessException {
         StringBuilder result = new StringBuilder();
         if (lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE) {
-            result.append(' ').append(lastMove.getTo().toString().charAt(0));
+            result.append(' ').append((char) (lastMove.getTo().getColumn() + 'a'));
             result.append(
                     gameSettings.board.getFigure(lastMove.getTo()).getColor() == Color.WHITE
                             ? '3'
@@ -191,7 +154,8 @@ public class History implements Iterable<String> {
 
     /** @return Строка - последняя запись в списке */
     public String getLastRecord() {
-        return recordsList.get(recordsList.size() - 1);
+        assert recordsList.peek() != null;
+        return recordsList.peek().forsythEdwards;
     }
 
     /** @return true - если было минимум repetition-кратных повторений, false - если было меньше */
@@ -204,13 +168,29 @@ public class History implements Iterable<String> {
         return lastMove;
     }
 
-    public Move undo() {
-        lastMove = moves.pollLast();
-        return lastMove;
+    /**
+     * Отменяет последний ход в истории
+     *
+     * @return отмененное состояние доски
+     */
+    public BoardState undo() {
+        BoardState lastBoardState = recordsList.pop();
+        assert recordsList.peek() != null;
+        lastMove = recordsList.peek().lastMove;
+        peaceMoveCount = recordsList.peek().peaceMoveCount;
+        repetitionsMap.put(lastBoardState, repetitionsMap.getOrDefault(lastBoardState, 1) - 1);
+        return lastBoardState;
     }
 
-    @Override
-    public Iterator<String> iterator() {
-        return recordsList.iterator();
+    /**
+     * Возвращает последний ход в историю БЕЗ ПРОВЕРОК !!!
+     *
+     * @param boardState ход, который станет последним
+     */
+    public void redo(BoardState boardState) {
+        lastMove = boardState.lastMove;
+        peaceMoveCount = boardState.peaceMoveCount;
+        recordsList.push(boardState);
+        repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
     }
 }
