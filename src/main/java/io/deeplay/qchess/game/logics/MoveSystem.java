@@ -112,13 +112,24 @@ public class MoveSystem {
         if (!board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
         Figure figure = board.getFigureUgly(cell);
         if (figure == null) return res;
-        for (Move m : figure.getAllMoves(roomSettings))
-            if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
+        for (Move m : figure.getAllMoves(roomSettings)) if (isCorrectVirtualMoveSafe(m)) res.add(m);
         return res;
     }
 
+    private boolean isCorrectVirtualMoveSafe(Move move) throws ChessError {
+        try {
+            return move != null && isCorrectVirtualMove(move);
+        } catch (ChessException | NullPointerException e) {
+            logger.warn(
+                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
+                    move,
+                    e.getMessage());
+            return false;
+        }
+    }
+
     /** @return true если ход корректный */
-    public boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
+    private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
         try {
             return move != null
                     && checkCorrectnessIfSpecificMove(move)
