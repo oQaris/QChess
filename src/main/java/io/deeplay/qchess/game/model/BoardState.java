@@ -2,6 +2,7 @@ package io.deeplay.qchess.game.model;
 
 import java.util.Objects;
 
+/** Описывает состояние доски */
 public class BoardState {
     public final String forsythEdwards;
     public final Move lastMove;
