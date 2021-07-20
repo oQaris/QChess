@@ -13,6 +13,7 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Bishop;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Rook;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class BotTest extends TestCase {
     private static final Logger log = LoggerFactory.getLogger(BotTest.class);
-    final int COUNT = 1;
+    final int COUNT = 1000;
 
     public void testBotsRandom() throws ChessError {
         // ExecutorService executor = Executors.newCachedThreadPool();
@@ -150,9 +151,7 @@ public class BotTest extends TestCase {
                 new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }
 
-    // Должны работать, но пока не работают
-
-    /*public void testMinimaxBotStalemate1Step() throws ChessError, ChessException {
+    public void testMinimaxBotStalemate1Step() throws ChessError, ChessException {
         GameSettings roomSettings = new GameSettings(5, BoardFilling.EMPTY);
         roomSettings.board.setFigure(new King(Color.WHITE, Cell.parse("a8")));
         roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("c7")));
@@ -163,14 +162,15 @@ public class BotTest extends TestCase {
         Move bestMove = bot.getNextMove();
 
         Assertions.assertEquals(
-            new Move(MoveType.QUIET_MOVE, Cell.parse("d5"), Cell.parse("d8")), bestMove);
+                new Move(MoveType.QUIET_MOVE, Cell.parse("d5"), Cell.parse("d8")), bestMove);
     }
 
     public void testMinimaxBotStalemate2Step() throws ChessError, ChessException {
-        GameSettings roomSettings = new GameSettings(5, BoardFilling.EMPTY);
+        GameSettings roomSettings = new GameSettings(BoardFilling.EMPTY);
         roomSettings.board.setFigure(new King(Color.WHITE, Cell.parse("c4")));
-        roomSettings.board.setFigure(new King(Color.BLACK, Cell.parse("a8")));
-        roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("d7")));
+        roomSettings.board.setFigure(new King(Color.BLACK, Cell.parse("b8")));
+        roomSettings.board.setFigure(new Pawn(Color.BLACK, Cell.parse("h5")));
+        roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
         System.out.println(roomSettings.board);
 
@@ -178,17 +178,18 @@ public class BotTest extends TestCase {
 
         Move move1 = bot.getNextMove();
         Assertions.assertEquals(
-            new Move(MoveType.QUIET_MOVE, Cell.parse("b6"), Cell.parse("e6")), move1);
+                new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("f6")), move1);
 
         roomSettings.board.moveFigure(move1);
-        roomSettings.board.moveFigure(new Move(MoveType.QUIET_MOVE, Cell.parse("a8"), Cell.parse("b7")));
+        roomSettings.board.moveFigure(
+                new Move(MoveType.QUIET_MOVE, Cell.parse("b8"), Cell.parse("a8")));
 
         Move move2 = bot.getNextMove();
         Assertions.assertEquals(
-            new Move(MoveType.QUIET_MOVE, Cell.parse("e6"), Cell.parse("e8")), move2);
-    }*/
+                new Move(MoveType.QUIET_MOVE, Cell.parse("f6"), Cell.parse("f8")), move2);
+    }
 
-    public void testEvaluateBoard() throws ChessException {
+    public void testEvaluateBoard() throws ChessException, ChessError {
         GameSettings roomSettings = new GameSettings(BoardFilling.STANDARD);
         MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 2);
 

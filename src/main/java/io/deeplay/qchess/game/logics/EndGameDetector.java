@@ -146,7 +146,7 @@ public class EndGameDetector {
     }
 
     /** @return true если игроку с указанным цветом ставят шах */
-    boolean isCheck(Color color) {
+    public boolean isCheck(Color color) {
         Figure king = roomSettings.board.findKing(color);
         if (king == null) return false;
         return Board.isAttackedCell(roomSettings, king.getCurrentPosition(), color.inverse());
