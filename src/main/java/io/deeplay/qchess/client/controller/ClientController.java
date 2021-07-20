@@ -163,18 +163,6 @@ public class ClientController {
     }
 
     public static void drawBoard() {
-        for (int column = 0; column < 8; ++column) {
-            for (int row = 0; row < 8; ++row) {
-                Figure f = GameGUIAdapterService.getBoard().getFigureUgly(new Cell(column, row));
-                view.getBoard()
-                        .setFigure(
-                                column,
-                                row,
-                                new ViewFigure(
-                                        f.getColor().name(),
-                                        ViewFigureType.valueOf(f.getType().name())));
-            }
-        }
         view.drawBoard();
     }
 }
