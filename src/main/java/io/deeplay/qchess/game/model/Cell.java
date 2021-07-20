@@ -19,7 +19,7 @@ public class Cell {
     @JsonProperty("row")
     private int row;
 
-    public Cell(int column, int row) {
+    public Cell(final int column, final int row) {
         this.column = column;
         this.row = row;
     }

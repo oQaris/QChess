@@ -5,6 +5,8 @@ import static io.deeplay.qchess.client.exceptions.ClientErrorCode.ERROR_GET_SOCK
 import static io.deeplay.qchess.client.exceptions.ClientErrorCode.ERROR_GET_SOCKET_OUTPUT;
 
 import io.deeplay.qchess.client.exceptions.ClientException;
+import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,6 +17,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,11 +27,19 @@ public class InputTrafficHandler extends Thread {
     private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
+    private final Consumer<ServerToClientDTO> setLastResponse;
+    private final Supplier<Boolean> waitForResponse;
     private volatile boolean stop;
 
-    public InputTrafficHandler(Socket socket) throws ClientException {
+    public InputTrafficHandler(
+            Socket socket,
+            Consumer<ServerToClientDTO> setLastResponse,
+            Supplier<Boolean> waitForResponse)
+            throws ClientException {
         try {
             this.socket = socket;
+            this.setLastResponse = setLastResponse;
+            this.waitForResponse = waitForResponse;
             InputStream socketInput = tryGetSocketInput(socket);
             OutputStream socketOutput = tryGetSocketOutput(socket);
             in = new BufferedReader(new InputStreamReader(socketInput, StandardCharsets.UTF_8));
@@ -37,7 +49,7 @@ public class InputTrafficHandler extends Thread {
                                     new OutputStreamWriter(socketOutput, StandardCharsets.UTF_8)),
                             false);
         } catch (ClientException e) {
-            logger.warn("Ошибка создания обработчика трафика для клиента {}", this);
+            logger.warn("Ошибка создания обработчика трафика для клиента: {}", e.getMessage());
             closeHandler();
             throw new ClientException(ERROR_CREATE_TRAFFIC_HANDLER, e);
         }
@@ -47,7 +59,7 @@ public class InputTrafficHandler extends Thread {
         try {
             return socket.getInputStream();
         } catch (IOException e) {
-            logger.warn("Ошибка получения потока ввода сокета для клиента {}", this);
+            logger.warn("Ошибка получения потока ввода сокета для клиента: {}", e.getMessage());
             throw new ClientException(ERROR_GET_SOCKET_INPUT, e);
         }
     }
@@ -56,7 +68,7 @@ public class InputTrafficHandler extends Thread {
         try {
             return socket.getOutputStream();
         } catch (IOException e) {
-            logger.warn("Ошибка получения потока вывода сокета для клиента {}", this);
+            logger.warn("Ошибка получения потока вывода сокета для клиента: {}", e.getMessage());
             throw new ClientException(ERROR_GET_SOCKET_OUTPUT, e);
         }
     }
@@ -71,8 +83,8 @@ public class InputTrafficHandler extends Thread {
             while (!stop) {
                 inputTrafficHandlerUpdate();
             }
-        } catch (Exception e) {
-            logger.warn("Сервер разорвал подключение с обработчиком трафика {}", this);
+        } catch (IOException e) {
+            logger.warn("Сервер разорвал подключение с обработчиком трафика: {}", e.getMessage());
         } finally {
             closeHandler();
         }
@@ -82,7 +94,10 @@ public class InputTrafficHandler extends Thread {
         if (in.ready()) {
             String request = in.readLine();
             String response = TrafficRequestHandler.process(request);
-            send(response);
+            if (waitForResponse.get())
+                setLastResponse.accept(
+                        SerializationService.deserialize(request, ServerToClientDTO.class));
+            sendIfNotNull(response);
         }
     }
 
@@ -96,18 +111,18 @@ public class InputTrafficHandler extends Thread {
         try {
             if (in != null) in.close();
         } catch (IOException e) {
-            logger.warn("Ошибка закрытия потока ввода в обработчике трафика {}", this);
+            logger.warn("Ошибка закрытия потока ввода в обработчике трафика: {}", e.getMessage());
         }
         try {
             if (socket != null) socket.close();
         } catch (IOException e) {
-            logger.warn("Ошибка закрытия сокета клиента в обработчике трафика {}", this);
+            logger.warn("Ошибка закрытия сокета клиента в обработчике трафика: {}", e.getMessage());
         }
         logger.debug("Обработчик трафика {} завершил свою работу", this);
     }
 
-    /** Отправляет серверу строку, никак не обрабатывая */
-    public void send(String json) {
+    /** Отправляет серверу строку, если она не null */
+    public void sendIfNotNull(String json) {
         if (json != null) {
             out.println(json);
             out.flush();

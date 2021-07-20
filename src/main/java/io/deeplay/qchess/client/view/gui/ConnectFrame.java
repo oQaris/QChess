@@ -1,6 +1,7 @@
 package io.deeplay.qchess.client.view.gui;
 
 import io.deeplay.qchess.client.controller.ClientController;
+import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -36,7 +37,7 @@ public class ConnectFrame {
     }
 
     private JTextField getInputIP() {
-        return new JTextField("255.255.255.255");
+        return new JTextField("127.0.0.1");
     }
 
     private JTextField getInputPort() {
@@ -58,12 +59,19 @@ public class ConnectFrame {
                 int port = Integer.parseInt(portField.getText());
                 System.out.println(ip + ":" + port);
 
-               // if(ClientController.isConnected()) {
+                try {
+                    ClientController.connect(ip, port);
+                } catch (ClientException clientException) {
+                    clientException.printStackTrace();
+                    return;
+                }
+                while (!ClientController.isConnected()) Thread.onSpinWait();
+                boolean color = ClientController.waitForColor();
+
                     frame.dispose();
                     frame.setVisible(false);
                     GameGUIAdapterService.init();
-                    Table table = new Table("onestyle", true);
-                //}
+                    Table table = new Table("onestyle", color);
             }
 
             @Override

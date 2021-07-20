@@ -12,7 +12,7 @@ public class ServerController {
 
     /** @return окружение сервера */
     public static Optional<IServerView> getView() {
-        return Optional.of(view);
+        return Optional.ofNullable(view);
     }
 
     /**

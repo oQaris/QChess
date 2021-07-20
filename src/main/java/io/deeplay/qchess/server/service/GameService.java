@@ -1,6 +1,6 @@
 package io.deeplay.qchess.server.service;
 
-import static io.deeplay.qchess.clientserverconversation.dto.RequestType.MOVE;
+import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.MOVE;
 
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.GameSettings;
@@ -22,6 +22,13 @@ public class GameService {
     private static RemotePlayer firstPlayer;
     private static RemotePlayer secondPlayer;
 
+    public static Color getPlayerColor(int clientID) {
+        if (firstPlayer == null) return Color.WHITE;
+        return firstPlayer.getPlayerID() == clientID
+                ? firstPlayer.getColor()
+                : secondPlayer.getColor();
+    }
+
     /** Выполняет игровое действие */
     public static String action(String json, int clientID) {
         // TODO: ОСТОРОЖНО: ВОНЯЕТ ЖУТКИМ ГОВНОКОДОМ!!!
@@ -37,7 +44,7 @@ public class GameService {
         if (firstPlayer == null) {
             gs = new GameSettings(BoardFilling.STANDARD);
             firstPlayer = new RemotePlayer(gs, Color.WHITE, clientID);
-            return null; // игрок успешно добавлен
+            return SerializationService.serialize(Color.WHITE); // игрок успешно добавлен
         }
         // добавление 2 игрока
         else if (secondPlayer == null) {
@@ -47,7 +54,7 @@ public class GameService {
             } catch (ChessError chessError) {
                 // Стандартное заполнение доски верно всегда
             }
-            return null; // игрок успешно добавлен
+            return SerializationService.serialize(Color.BLACK); // игрок успешно добавлен
         }
 
         // игра, если подключены 2 игрока

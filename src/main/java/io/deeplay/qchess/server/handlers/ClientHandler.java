@@ -44,7 +44,7 @@ public class ClientHandler implements Runnable {
                                     new OutputStreamWriter(socketOutput, StandardCharsets.UTF_8)),
                             false);
         } catch (ServerException e) {
-            logger.warn("Ошибка создания обработчика для клиента {}", this);
+            logger.warn("Ошибка создания обработчика для клиента {}: {}", this, e.getMessage());
             closeClient();
             throw new ServerException(ERROR_CREATE_CLIENT_HANDLER, e);
         }
@@ -80,7 +80,7 @@ public class ClientHandler implements Runnable {
                 clientHandlerUpdate();
             }
         } catch (IOException e) {
-            logger.warn("Клиент {} разорвал подключение", this);
+            logger.warn("Клиент {} разорвал подключение: {}", this, e.getMessage());
         } finally {
             closeClient();
             logger.debug("Клиент {} удален", this);
@@ -91,7 +91,7 @@ public class ClientHandler implements Runnable {
         if (in.ready()) {
             String request = in.readLine();
             String response = ClientRequestHandler.process(request, id);
-            send(response);
+            sendIfNotNull(response);
         }
     }
 
@@ -115,8 +115,8 @@ public class ClientHandler implements Runnable {
         logger.debug("Обработчик клиента {} завершил свою работу", this);
     }
 
-    /** Отправляет клиенту строку, никак не обрабатывая */
-    public void send(String json) {
+    /** Отправляет клиенту строку, если она не null */
+    public void sendIfNotNull(String json) {
         if (json != null) {
             out.println(json);
             out.flush();

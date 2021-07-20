@@ -75,12 +75,12 @@ public class ClientHandlerManager extends Thread {
     /** Отправляет всем подключенным клиентам строку */
     public void sendAll(String json) {
         synchronized (clients) {
-            for (ClientHandler clientHandler : clients.values()) clientHandler.send(json);
+            for (ClientHandler clientHandler : clients.values()) clientHandler.sendIfNotNull(json);
         }
     }
 
     /** Отправляет клиенту строку, если он подключен */
     public void send(String json, int toClientID) {
-        clients.get(toClientID).send(json);
+        clients.get(toClientID).sendIfNotNull(json);
     }
 }

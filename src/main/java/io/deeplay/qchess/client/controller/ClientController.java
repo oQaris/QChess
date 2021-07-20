@@ -4,20 +4,25 @@ import io.deeplay.qchess.client.IClient;
 import io.deeplay.qchess.client.LocalClient;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
+import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.gui.ViewFigure;
+import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
+import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
+import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.Move;
 import java.util.Optional;
 import java.util.Set;
 
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
-    private static IClientView view;
     public static boolean repaint = false;
+    private static IClientView view;
 
     /** @return окружение клиента */
     public static Optional<IClientView> getView() {
-        return Optional.of(view);
+        return Optional.ofNullable(view);
     }
 
     /**
@@ -86,6 +91,18 @@ public class ClientController {
     }
 
     /**
+     * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
+     *
+     * @return true, если цвет игрока белый
+     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
+     *     было разорвано
+     */
+    public static boolean waitForColor() throws ClientException {
+        ServerToClientDTO dto = client.waitForResponse(GetRequestType.GET_COLOR);
+        return dto.request.equals(Color.WHITE.name());
+    }
+
+    /**
      * Выполняет команду клиента
      *
      * @throws ClientException если при выполнении команды возникла ошибка
@@ -95,12 +112,12 @@ public class ClientController {
     }
 
     /**
-     * Отправляет сообщение серверу
+     * Отправляет серверу строку, если она не null
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void send(String json) throws ClientException {
-        client.send(json);
+    public static void sendIfNotNull(String json) throws ClientException {
+        client.sendIfNotNull(json);
     }
 
     // TODO: добавить javadoc
@@ -125,7 +142,9 @@ public class ClientController {
 
     // TODO: добавить javadoc
     public static boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
-        return GameGUIAdapterService.makeMove(rowFrom, columnFrom, rowTo, columnTo) != null;
+        Move move = GameGUIAdapterService.makeMove(rowFrom, columnFrom, rowTo, columnTo);
+        GameService.sendMove(move);
+        return move != null;
     }
 
     // TODO: добавить javadoc

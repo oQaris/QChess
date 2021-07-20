@@ -7,7 +7,7 @@ import static io.deeplay.qchess.server.exceptions.ServerErrorCode.SERVER_IS_NOT_
 
 import io.deeplay.qchess.server.exceptions.ServerException;
 import io.deeplay.qchess.server.handlers.ClientHandlerManager;
-import io.deeplay.qchess.server.service.special.ServerCommandService;
+import io.deeplay.qchess.server.service.ServerCommandService;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 
 public class LocalHost implements IServer {
     private static final Logger logger = LoggerFactory.getLogger(LocalHost.class);
-    private static int maxClients = 5;
-    private static int port = 8081;
+    private static int maxClients = 2;
+    private static int port = 8080;
     private static LocalHost localHost;
     private final Object mutex = new Object();
     private ServerSocket server;

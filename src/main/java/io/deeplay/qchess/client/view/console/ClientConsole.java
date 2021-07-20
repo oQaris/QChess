@@ -9,10 +9,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class ClientConsole implements IClientView {
-    private final BufferedReader in =
-            new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
     public static final String IP = "localhost";
     public static final int PORT = 8081;
+    private final BufferedReader in =
+            new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
     public ClientConsole() {}
 
@@ -52,9 +52,10 @@ public class ClientConsole implements IClientView {
             if (in.ready()) {
                 String command = in.readLine();
                 ClientController.executeCommand(command);
-                if (command.equals("stop")) {
-                    return -1;
-                }
+                return switch (command) {
+                    case "stop" -> -1;
+                    default -> 0;
+                };
             }
         } catch (IOException | ClientException e) {
             System.out.println("Ошибка при вводе команды");
