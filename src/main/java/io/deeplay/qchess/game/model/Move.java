@@ -13,10 +13,11 @@ public class Move {
 
     @JsonProperty("to")
     private final Cell to;
-    // не должно влиять на equals и hashCode,
-    // чтобы, проверяя корректность ходов, у пешек не возникали дополнительные условия,
-    // т.к. пешки на доске не знают во что превратиться без запроса игрока.
-    // проверка вынесена в MoveSystem
+    /**
+     * Не должно влиять на equals и hashCode, чтобы, проверяя корректность ходов, у пешек не
+     * возникали дополнительные условия, т.к. пешки на доске не знают во что превратиться без
+     * запроса игрока. Проверка вынесена в MoveSystem
+     */
     @JsonProperty("turnInto")
     private FigureType turnInto;
 
@@ -46,10 +47,16 @@ public class Move {
         return to;
     }
 
+    /** @return полный хеш мува */
     public int fullHashCode() {
         return Objects.hash(moveType, from, to, turnInto);
     }
 
+    /**
+     * Не хеширует фигуру для превращения, читать подробнее: {@link #turnInto}
+     *
+     * <p>Для получения полного хеша используйте {@link #fullHashCode}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(moveType, from, to);
