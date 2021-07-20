@@ -135,4 +135,8 @@ public class GameGUIAdapterService {
     public static boolean isWhiteStep() {
         return isWhiteStep;
     }
+
+    public static void changeIsWhiteStep() {
+        isWhiteStep = !isWhiteStep;
+    }
 }

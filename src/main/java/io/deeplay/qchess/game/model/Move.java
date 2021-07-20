@@ -7,13 +7,13 @@ import java.util.Objects;
 
 public class Move {
     @JsonProperty("type")
-    private final MoveType moveType;
+    private MoveType moveType;
 
     @JsonProperty("from")
-    private final Cell from;
+    private Cell from;
 
     @JsonProperty("to")
-    private final Cell to;
+    private Cell to;
     // не должно влиять на equals и hashCode,
     // чтобы, проверяя корректность ходов, у пешек не возникали дополнительные условия,
     // т.к. пешки на доске не знают во что превратиться без запроса игрока.
@@ -26,6 +26,8 @@ public class Move {
         this.from = from;
         this.to = to;
     }
+
+    public Move() {}
 
     public FigureType getTurnInto() {
         return turnInto;

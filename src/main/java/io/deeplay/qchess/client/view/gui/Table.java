@@ -14,7 +14,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -184,7 +183,7 @@ public class Table {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            if (isLeftMouseButton(e) && ClientController.isWhiteStep() == myColor) {
+                            if (isLeftMouseButton(e) && ClientController.isWhiteStep()) {
                                 // if (isLeftMouseButton(e)) {
                                 boolean twoClick = false;
                                 if (ClientController.checkFigure(
@@ -222,7 +221,7 @@ public class Table {
 
                         @Override
                         public void mouseEntered(MouseEvent e) {
-                            if (ClientController.isWhiteStep() == myColor) {
+                            if (ClientController.isWhiteStep()) {
                                 if (thisCellPanel.getBackground() == chooseCellColor) {
                                     thisCellPanel.setBackground(chooseHoverCellColor);
                                 } else if (thisCellPanel.getBackground()
@@ -239,7 +238,7 @@ public class Table {
 
                         @Override
                         public void mouseExited(MouseEvent e) {
-                            if (ClientController.isWhiteStep() == myColor) {
+                            if (ClientController.isWhiteStep()) {
                                 if (thisCellPanel.getBackground() == chooseHoverCellColor) {
                                     thisCellPanel.setBackground(chooseCellColor);
                                 } else if (thisCellPanel.getBackground()

@@ -16,6 +16,7 @@ import java.io.IOException;
 
 /** Управляет играми */
 public class GameService {
+    private static final Object mutex = new Object();
     // TODO: вынести все в БД
     private static Selfplay game;
     private static GameSettings gs;
@@ -24,27 +25,28 @@ public class GameService {
 
     public static Color getPlayerColor(int clientID) {
         // TODO: ОСТОРОЖНО: ВОНЯЕТ ЖУТКИМ ГОВНОКОДОМ!!!
-
-        // добавление 1 игрока
-        if (firstPlayer == null) {
-            gs = new GameSettings(BoardFilling.STANDARD);
-            firstPlayer = new RemotePlayer(gs, Color.WHITE, clientID);
-            return Color.WHITE;
-        }
-        // добавление 2 игрока
-        else if (secondPlayer == null) {
-            secondPlayer = new RemotePlayer(gs, Color.BLACK, clientID);
-            try {
-                game = new Selfplay(gs, firstPlayer, secondPlayer);
-            } catch (ChessError chessError) {
-                // Стандартное заполнение доски верно всегда
+        synchronized (mutex) {
+            // добавление 1 игрока
+            if (firstPlayer == null) {
+                gs = new GameSettings(BoardFilling.STANDARD);
+                firstPlayer = new RemotePlayer(gs, Color.WHITE, clientID);
+                return Color.WHITE;
             }
-            return Color.BLACK;
-        }
+            // добавление 2 игрока
+            else if (secondPlayer == null) {
+                secondPlayer = new RemotePlayer(gs, Color.BLACK, clientID);
+                try {
+                    game = new Selfplay(gs, firstPlayer, secondPlayer);
+                } catch (ChessError chessError) {
+                    // Стандартное заполнение доски верно всегда
+                }
+                return Color.BLACK;
+            }
 
-        return firstPlayer.getPlayerID() == clientID
-                ? firstPlayer.getColor()
-                : secondPlayer.getColor();
+            return firstPlayer.getPlayerID() == clientID
+                    ? firstPlayer.getColor()
+                    : secondPlayer.getColor();
+        }
     }
 
     /** Выполняет игровое действие */
@@ -56,7 +58,8 @@ public class GameService {
             move = SerializationService.deserialize(json, Move.class);
         } catch (IOException e) {
             // TODO: некорректный запрос
-            ServerController.getView().ifPresent(v -> v.print("Некорректный запрос"));
+            ServerController.getView()
+                    .ifPresent(v -> v.print("Некорректный запрос: " + e.getMessage()));
             return null;
         }
         try {

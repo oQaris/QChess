@@ -19,6 +19,7 @@ public class GameService {
                     move.getFrom().getColumn(),
                     move.getTo().getRow(),
                     move.getTo().getColumn());
+            //            GameGUIAdapterService.changeIsWhiteStep();
             ClientController.drawBoard();
         } catch (IOException e) {
             e.printStackTrace();
