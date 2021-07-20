@@ -16,6 +16,7 @@ public class ConnectFrame {
     private final JPanel panel;
     private final JTextField ipField;
     private final JTextField portField;
+    private Table table;
 
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
 
@@ -70,7 +71,7 @@ public class ConnectFrame {
                         frame.dispose();
                         frame.setVisible(false);
                         GameGUIAdapterService.init();
-                        Table table = new Table("onestyle", color);
+                        table = new Table("onestyle", color);
                     }
 
                     @Override
@@ -84,5 +85,9 @@ public class ConnectFrame {
                 });
 
         return connectButton;
+    }
+
+    public Table getTable() {
+        return table;
     }
 }

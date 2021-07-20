@@ -79,7 +79,7 @@ public class Table {
 
         clickedCell = -1;
 
-        this.gameFrame.addMouseMotionListener(
+        /*this.gameFrame.addMouseMotionListener(
                 new MouseMotionListener() {
                     @Override
                     public void mouseDragged(MouseEvent e) {}
@@ -92,6 +92,7 @@ public class Table {
                         }
                     }
                 });
+         */
     }
 
     private JMenuBar createTableMenuBar() {
@@ -117,6 +118,10 @@ public class Table {
     private int inverseInt(int i, int size) {
         int inverse = myColor ? 0 : 1;
         return (1 - 2 * inverse) * (i - (size - 1) * inverse);
+    }
+
+    public void repaint() {
+        boardPanel.drawBoard();
     }
 
     private class BoardPanel extends JPanel {
