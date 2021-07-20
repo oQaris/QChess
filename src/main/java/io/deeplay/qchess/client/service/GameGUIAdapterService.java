@@ -54,7 +54,8 @@ public class GameGUIAdapterService {
                         new ViewCell(
                                 move.getTo().getRow(),
                                 move.getTo().getColumn(),
-                                move.getMoveType() == MoveType.ATTACK || move.getMoveType() == MoveType.TURN_INTO_ATTACK);
+                                move.getMoveType() == MoveType.ATTACK
+                                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK);
                 set.add(vc);
             }
         } catch (ChessError e) {
@@ -109,7 +110,7 @@ public class GameGUIAdapterService {
         Cell to = new Cell(columnTo, rowTo);
         List<Move> set = null;
         System.out.println(
-            "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
+                "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
         try {
             set = gs.moveSystem.getAllCorrectMoves(from);
         } catch (ChessError e) {
@@ -125,7 +126,8 @@ public class GameGUIAdapterService {
         return null;
     }
 
-    public static Move makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo, FigureType figureType) {
+    public static Move makeMove(
+            int rowFrom, int columnFrom, int rowTo, int columnTo, FigureType figureType) {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
         List<Move> set = null;
@@ -165,15 +167,15 @@ public class GameGUIAdapterService {
 
     public static String getStatus() {
         try {
-            if(gs.endGameDetector.isCheckmate(Color.WHITE)) {
+            if (gs.endGameDetector.isCheckmate(Color.WHITE)) {
                 return "Мат белых";
-            } else if(gs.endGameDetector.isCheckmate(Color.BLACK)) {
+            } else if (gs.endGameDetector.isCheckmate(Color.BLACK)) {
                 return "Мат черных";
-            } else if(gs.endGameDetector.isStalemate(Color.WHITE)) {
+            } else if (gs.endGameDetector.isStalemate(Color.WHITE)) {
                 return "Пат белых";
-            } else if(gs.endGameDetector.isStalemate(Color.BLACK)) {
+            } else if (gs.endGameDetector.isStalemate(Color.BLACK)) {
                 return "Пат черных";
-            } else if(gs.endGameDetector.isDraw()) {
+            } else if (gs.endGameDetector.isDraw()) {
                 return "Ничья";
             }
         } catch (ChessError chessError) {

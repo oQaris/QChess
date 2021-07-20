@@ -9,15 +9,12 @@ import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.EndGame;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
-import io.deeplay.qchess.client.view.model.ViewFigureType;
 import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
 import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
-import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.io.IOException;
 import java.util.Optional;
@@ -156,7 +153,9 @@ public class ClientController {
     // TODO: добавить javadoc
     public static int tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
         Move move = GameGUIAdapterService.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
-        if(move != null && (move.getMoveType() == MoveType.TURN_INTO || move.getMoveType() == MoveType.TURN_INTO_ATTACK)) {
+        if (move != null
+                && (move.getMoveType() == MoveType.TURN_INTO
+                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK)) {
             return 2;
         } else if (move != null) {
             return 1;
@@ -165,8 +164,11 @@ public class ClientController {
     }
 
     // TODO: добавить javadoc
-    public static void makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure) {
-        Move move = GameGUIAdapterService.makeMove(rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));
+    public static void makeMove(
+            int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure) {
+        Move move =
+                GameGUIAdapterService.makeMove(
+                        rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));
         GameService.sendMove(move);
     }
 

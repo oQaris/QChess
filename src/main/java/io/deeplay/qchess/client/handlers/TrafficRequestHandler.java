@@ -1,10 +1,10 @@
 package io.deeplay.qchess.client.handlers;
 
+import static io.deeplay.qchess.client.exceptions.ClientErrorCode.UNKNOWN_REQUEST;
 import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.CHAT_MESSAGE;
 import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.GET;
 import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.INCORRECT_REQUEST;
 import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.MOVE;
-import static io.deeplay.qchess.server.exceptions.ServerErrorCode.UNKNOWN_REQUEST;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.service.ChatService;

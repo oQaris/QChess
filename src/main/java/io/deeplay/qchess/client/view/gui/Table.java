@@ -10,8 +10,6 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -33,7 +31,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 public class Table {
     private static final int BOARD_SIZE = 8;
@@ -85,52 +82,46 @@ public class Table {
 
         clickedCell = -1;
 
-        this.gameFrame.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
+        this.gameFrame.addWindowListener(
+                new WindowListener() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {}
 
-            }
+                    @Override
+                    public void windowClosing(WindowEvent event) {
+                        Object[] options = {"Да", "Нет!"};
+                        int n =
+                                JOptionPane.showOptionDialog(
+                                        event.getWindow(),
+                                        "Закрыть окно?",
+                                        "Подтверждение",
+                                        JOptionPane.YES_NO_OPTION,
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        options,
+                                        options[0]);
+                        if (n == 0) {
+                            event.getWindow().setVisible(false);
+                            ClientController.disconnect();
+                            System.exit(0);
+                        }
+                    }
 
-            @Override
-            public void windowClosing(WindowEvent event) {
-                Object[] options = { "Да", "Нет!" };
-                int n = JOptionPane
-                    .showOptionDialog(event.getWindow(), "Закрыть окно?",
-                        "Подтверждение", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, null, options,
-                        options[0]);
-                if (n == 0) {
-                    event.getWindow().setVisible(false);
-                    ClientController.disconnect();
-                    System.exit(0);
-                }
-            }
+                    @Override
+                    public void windowClosed(WindowEvent e) {}
 
-            @Override
-            public void windowClosed(WindowEvent e) {
+                    @Override
+                    public void windowIconified(WindowEvent e) {}
 
-            }
+                    @Override
+                    public void windowDeiconified(WindowEvent e) {}
 
-            @Override
-            public void windowIconified(WindowEvent e) {
+                    @Override
+                    public void windowActivated(WindowEvent e) {}
 
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-
-            }
-        });
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {}
+                });
     }
 
     private JMenuBar createTableMenuBar() {
@@ -164,13 +155,18 @@ public class Table {
 
     public void endGame() {
         EndGame endGame = ClientController.getEndGame();
-        if(endGame.isEnd()) {
-            Object[] options = { "Да", "Нет!" };
-            int n = JOptionPane
-                .showOptionDialog(gameFrame, endGame.getStatus() + "\nЗакрыть окно?",
-                    "Подтверждение", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, options,
-                    options[0]);
+        if (endGame.isEnd()) {
+            Object[] options = {"Да", "Нет!"};
+            int n =
+                    JOptionPane.showOptionDialog(
+                            gameFrame,
+                            endGame.getStatus() + "\nЗакрыть окно?",
+                            "Подтверждение",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[0]);
             if (n == 0) {
                 gameFrame.setVisible(false);
                 ClientController.disconnect();
@@ -241,35 +237,41 @@ public class Table {
                                     }
                                 } else if (taggedCells.contains(cellId)) {
                                     // move
-                                    int action = ClientController.tryMakeMove(
-                                        clickedCell / BOARD_SIZE,
-                                        clickedCell % BOARD_SIZE,
-                                        cellId / BOARD_SIZE,
-                                        cellId % BOARD_SIZE);
+                                    int action =
+                                            ClientController.tryMakeMove(
+                                                    clickedCell / BOARD_SIZE,
+                                                    clickedCell % BOARD_SIZE,
+                                                    cellId / BOARD_SIZE,
+                                                    cellId % BOARD_SIZE);
                                     if (action > 0) {
                                         System.out.println("Watafak1");
 
                                         Object turnFigure = null;
                                         if (action == 2) {
-                                            turnFigure = JOptionPane.showInputDialog(
-                                                gameFrame,
-                                                "Выберите фигуру для замены :",
-                                                "Выбор фигуры",
-                                                JOptionPane.QUESTION_MESSAGE,
-                                                null, figures, figures[0]);
+                                            turnFigure =
+                                                    JOptionPane.showInputDialog(
+                                                            gameFrame,
+                                                            "Выберите фигуру для замены :",
+                                                            "Выбор фигуры",
+                                                            JOptionPane.QUESTION_MESSAGE,
+                                                            null,
+                                                            figures,
+                                                            figures[0]);
                                             // Диалоговое окно вывода сообщения
                                             JOptionPane.showMessageDialog(gameFrame, turnFigure);
                                         }
-                                        ClientController.makeMove(clickedCell / BOARD_SIZE,
-                                            clickedCell % BOARD_SIZE,
-                                            cellId / BOARD_SIZE,
-                                            cellId % BOARD_SIZE, turnFigure);
+                                        ClientController.makeMove(
+                                                clickedCell / BOARD_SIZE,
+                                                clickedCell % BOARD_SIZE,
+                                                cellId / BOARD_SIZE,
+                                                cellId % BOARD_SIZE,
+                                                turnFigure);
 
                                         boardPanel.boardCells.get(clickedCell).drawCell();
                                         thisCellPanel.drawCell();
                                         clearColorOnBoard();
                                         ClientController.repaint = true;
-                                    } else if (action == 0){
+                                    } else if (action == 0) {
                                         clearColorOnBoard();
                                     }
                                     System.out.println("Watafak");

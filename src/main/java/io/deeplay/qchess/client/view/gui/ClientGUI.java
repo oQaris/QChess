@@ -14,11 +14,10 @@ public class ClientGUI implements IClientView {
     @Override
     public void startView() {
         ClientController.setView(this);
-        // ConnectFrame connectFrame = new ConnectFrame();
-        connectFrame = new ConnectFrame();
         GameGUIAdapterService.init();
-        //Table tableWhite = new Table("onestyle", true);
-        //Table tableBlack = new Table("onestyle", false);
+        connectFrame = new ConnectFrame();
+        // Table tableWhite = new Table("onestyle", true);
+        // Table tableBlack = new Table("onestyle", false);
     }
 
     @Override
