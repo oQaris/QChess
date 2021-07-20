@@ -20,15 +20,22 @@ import org.slf4j.LoggerFactory;
 
 public class History implements Iterable<String> {
     private static final Logger logger = LoggerFactory.getLogger(History.class);
-    private static final int AVERAGE_MAXIMUM_MOVES = 300;
     private final Map<FigureType, Character> notation = new EnumMap<>(FigureType.class);
+
+    private static final int AVERAGE_MAXIMUM_MOVES = 300;
     private final Map<String, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
     private final List<String> recordsList = new ArrayList<>(AVERAGE_MAXIMUM_MOVES);
     private final Deque<Move> moves = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
+
     private final GameSettings gameSettings;
     private boolean whiteStep = true;
     private Move lastMove;
     private int peaceMoveCount = 0;
+
+    private boolean isWhiteLongCastlingPossibility = true;
+    private boolean isBlackLongCastlingPossibility = true;
+    private boolean isWhiteShortCastlingPossibility = true;
+    private boolean isBlackShortCastlingPossibility = true;
 
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
@@ -52,8 +59,9 @@ public class History implements Iterable<String> {
      */
     public String addRecord(Move lastMove) throws ChessException, ChessError {
         this.lastMove = lastMove;
-        if(lastMove!=null)
-            moves.add(lastMove);
+        if (lastMove != null) moves.add(lastMove);
+
+        // handleCastlingPossibility(lastMove);
 
         String rec = convertBoardToStringForsythEdwards();
         recordsList.add(rec);
@@ -64,6 +72,32 @@ public class History implements Iterable<String> {
         whiteStep = !whiteStep;
         return rec;
     }
+
+    /* private void handleCastlingPossibility(Move move) throws ChessException {
+        if(!isWhiteLongCastlingPossibility && !isBlackLongCastlingPossibility
+            && !isWhiteShortCastlingPossibility && !isBlackShortCastlingPossibility)
+            return;
+
+        Figure figure = gameSettings.board.getFigure(move.getFrom());
+        FigureType type = figure.getType();
+        if(type!=FigureType.KING && type != FigureType.ROOK)
+            return;
+
+        if (figure.getColor() == Color.WHITE) {
+            if (type == FigureType.KING) {
+                isWhiteLongCastlingPossibility = false;
+                isWhiteShortCastlingPossibility = false;
+            }
+            else if(isWhiteLongCastlingPossibility && isBlackLongCastlingPossibility){
+                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
+            }
+            }
+
+        if(isWhiteCastlingPossibility && figure.getColor()==Color.WHITE)
+            isWhiteCastlingPossibility = false;
+        if(isBlackCastlingPossibility && figure.getColor()==Color.BLACK)
+            isBlackCastlingPossibility = false;
+    }*/
 
     public void checkAndAddPeaceMoveCount(Move move) throws ChessException {
         if (move.getMoveType() == MoveType.ATTACK
@@ -78,14 +112,12 @@ public class History implements Iterable<String> {
         StringBuilder rec = new StringBuilder(70);
 
         rec.append(getConvertingFigurePosition());
-
         rec.append(' ').append(whiteStep ? 'w' : 'b');
 
         String castlingPossibility = getCastlingPossibility();
         if (!"".equals(castlingPossibility)) rec.append(' ').append(castlingPossibility);
 
         rec.append(getPawnEnPassantPossibility());
-
         return rec.toString();
     }
 
@@ -96,6 +128,7 @@ public class History implements Iterable<String> {
 
         for (int y = 0; y < gameSettings.board.boardSize; y++) {
             int emptySlots = 0;
+
             for (int x = 0; x < gameSettings.board.boardSize; x++) {
                 currentFigure = gameSettings.board.getFigure(new Cell(x, y));
 
@@ -110,13 +143,10 @@ public class History implements Iterable<String> {
                     emptySlots = 0;
                 }
             }
-
             if (emptySlots != 0) result.append(emptySlots);
             result.append('/');
         }
-
         result.deleteCharAt(result.length() - 1);
-
         return result.toString();
     }
 
@@ -129,12 +159,13 @@ public class History implements Iterable<String> {
         String res = "";
         Figure king = gameSettings.board.findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
+        if (king.wasMoved()) return res;
         Figure leftRook =
                 gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
         Figure rightRook =
                 gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(1, 0));
-        if (rightRook != null && !rightRook.wasMoved()) res = "k";
-        if (leftRook != null && !leftRook.wasMoved()) res = res + "q";
+        if (rightRook != null && !rightRook.wasMoved()) res += "k";
+        if (leftRook != null && !leftRook.wasMoved()) res += "q";
         return color == Color.WHITE ? res.toUpperCase() : res;
     }
 
@@ -173,7 +204,7 @@ public class History implements Iterable<String> {
         return lastMove;
     }
 
-    public Move undo(){
+    public Move undo() {
         lastMove = moves.pollLast();
         return lastMove;
     }
