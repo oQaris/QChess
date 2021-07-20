@@ -16,7 +16,9 @@ import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
@@ -152,10 +154,20 @@ public class ClientController {
     }
 
     // TODO: добавить javadoc
-    public static boolean makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
-        Move move = GameGUIAdapterService.makeMove(rowFrom, columnFrom, rowTo, columnTo);
+    public static int tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+        Move move = GameGUIAdapterService.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
+        if(move != null && (move.getMoveType() == MoveType.TURN_INTO || move.getMoveType() == MoveType.TURN_INTO_ATTACK)) {
+            return 2;
+        } else if (move != null) {
+            return 1;
+        }
+        return 0;
+    }
+
+    // TODO: добавить javadoc
+    public static void makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure) {
+        Move move = GameGUIAdapterService.makeMove(rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));
         GameService.sendMove(move);
-        return move != null;
     }
 
     // TODO: добавить javadoc
@@ -170,5 +182,19 @@ public class ClientController {
 
     public static void drawBoard() {
         view.drawBoard();
+    }
+
+    private static FigureType getFigureType(Object figure) {
+        String strFigure = (String) figure;
+        if ("Ферзь".equals(strFigure)) {
+            return FigureType.QUEEN;
+        } else if ("Ладья".equals(strFigure)) {
+            return FigureType.ROOK;
+        } else if ("Конь".equals(strFigure)) {
+            return FigureType.KNIGHT;
+        } else if ("Слон".equals(strFigure)) {
+            return FigureType.BISHOP;
+        }
+        return null;
     }
 }

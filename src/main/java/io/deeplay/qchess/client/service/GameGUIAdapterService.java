@@ -14,6 +14,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import java.util.HashSet;
 import java.util.List;
@@ -53,7 +54,7 @@ public class GameGUIAdapterService {
                         new ViewCell(
                                 move.getTo().getRow(),
                                 move.getTo().getColumn(),
-                                move.getMoveType() == MoveType.ATTACK);
+                                move.getMoveType() == MoveType.ATTACK || move.getMoveType() == MoveType.TURN_INTO_ATTACK);
                 set.add(vc);
             }
         } catch (ChessError e) {
@@ -103,7 +104,28 @@ public class GameGUIAdapterService {
         return vf;
     }
 
-    public static Move makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+    public static Move tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+        Cell from = new Cell(columnFrom, rowFrom);
+        Cell to = new Cell(columnTo, rowTo);
+        List<Move> set = null;
+        System.out.println(
+            "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
+        try {
+            set = gs.moveSystem.getAllCorrectMoves(from);
+        } catch (ChessError e) {
+            e.printStackTrace();
+            return null;
+        }
+        for (Move move : set) {
+            if (to.equals(move.getTo())) {
+                return move;
+            }
+        }
+
+        return null;
+    }
+
+    public static Move makeMove(int rowFrom, int columnFrom, int rowTo, int columnTo, FigureType figureType) {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
         List<Move> set = null;
@@ -118,6 +140,7 @@ public class GameGUIAdapterService {
         for (Move move : set) {
             if (to.equals(move.getTo())) {
                 try {
+                    move.setTurnInto(figureType);
                     game.move(move);
                 } catch (ChessError e) {
                     e.printStackTrace();

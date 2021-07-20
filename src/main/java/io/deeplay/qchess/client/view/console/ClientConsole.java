@@ -110,4 +110,9 @@ public class ClientConsole implements IClientView {
     public ViewBoard getBoard() {
         return board;
     }
+
+    @Override
+    public void endGame() {
+        throw new UnsupportedOperationException("Для GUI");
+    }
 }
