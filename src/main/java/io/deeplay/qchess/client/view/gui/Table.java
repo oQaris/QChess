@@ -3,7 +3,7 @@ package io.deeplay.qchess.client.view.gui;
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 
 import io.deeplay.qchess.client.controller.ClientController;
-import io.deeplay.qchess.client.service.GameGUIAdapterService;
+import io.deeplay.qchess.client.view.model.ViewFigure;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,7 +29,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class Table {
     private static final int BOARD_SIZE = 8;
@@ -50,8 +49,8 @@ public class Table {
     private final BoardPanel boardPanel;
     private final String figureStyle;
     private final boolean myColor;
-    private int clickedCell;
     private final Set<Integer> taggedCells = new HashSet<>();
+    private int clickedCell;
 
     public Table(String figureStyle, boolean myColor) {
         this.myColor = myColor;
@@ -80,20 +79,19 @@ public class Table {
 
         clickedCell = -1;
 
-        this.gameFrame.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
+        this.gameFrame.addMouseMotionListener(
+                new MouseMotionListener() {
+                    @Override
+                    public void mouseDragged(MouseEvent e) {}
 
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                if(ClientController.repaint) {
-                    boardPanel.drawBoard();
-                    ClientController.repaint = false;
-                }
-            }
-        });
+                    @Override
+                    public void mouseMoved(MouseEvent e) {
+                        if (ClientController.repaint) {
+                            boardPanel.drawBoard();
+                            ClientController.repaint = false;
+                        }
+                    }
+                });
     }
 
     private JMenuBar createTableMenuBar() {
@@ -170,7 +168,7 @@ public class Table {
                         @Override
                         public void mousePressed(MouseEvent e) {
                             if (isLeftMouseButton(e) && ClientController.isWhiteStep() == myColor) {
-                            //if (isLeftMouseButton(e)) {
+                                // if (isLeftMouseButton(e)) {
                                 boolean twoClick = false;
                                 if (ClientController.checkFigure(
                                         cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
@@ -210,7 +208,8 @@ public class Table {
                             if (ClientController.isWhiteStep() == myColor) {
                                 if (thisCellPanel.getBackground() == chooseCellColor) {
                                     thisCellPanel.setBackground(chooseHoverCellColor);
-                                } else if (thisCellPanel.getBackground() == quietPossibleCellColor) {
+                                } else if (thisCellPanel.getBackground()
+                                        == quietPossibleCellColor) {
                                     thisCellPanel.setBackground(quietPossibleHoverCellColor);
                                 } else if (thisCellPanel.getBackground() == attackCellColor) {
                                     thisCellPanel.setBackground(attackHoverCellColor);
@@ -256,7 +255,7 @@ public class Table {
                                                     Table.defaultFigureImagesPath,
                                                     figureStyle,
                                                     figure.getColor().toLowerCase(),
-                                                    figure.getType().toLowerCase())));
+                                                    figure.getType().toString().toLowerCase())));
 
                     ImageIcon icon =
                             new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));

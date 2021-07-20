@@ -1,5 +1,6 @@
 package io.deeplay.qchess.client.view;
 
+import io.deeplay.qchess.client.view.model.ViewBoard;
 import java.io.Closeable;
 
 /** Управляет окружением клиента */
@@ -10,4 +11,10 @@ public interface IClientView extends Closeable {
 
     /** Выводит сообщение */
     void print(String message);
+
+    /** Перерисовывает доску */
+    void drawBoard();
+
+    /** @return доска */
+    ViewBoard getBoard();
 }

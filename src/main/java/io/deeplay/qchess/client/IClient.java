@@ -2,7 +2,7 @@ package io.deeplay.qchess.client;
 
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
-import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
+import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
 
 public interface IClient {
 
@@ -53,7 +53,7 @@ public interface IClient {
      * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
      *     было разорвано
      */
-    ServerToClientDTO waitForResponse(GetRequestType getRequestType) throws ClientException;
+    GetRequestDTO waitForResponse(GetRequestType getRequestType) throws ClientException;
 
     /**
      * Выполняет команду клиента

@@ -1,7 +1,7 @@
 package io.deeplay.qchess;
 
-import io.deeplay.qchess.client.view.console.ClientConsole;
 import io.deeplay.qchess.client.view.IClientView;
+import io.deeplay.qchess.client.view.gui.ClientGUI;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.server.view.IServerView;
 import io.deeplay.qchess.server.view.ServerConsole;
@@ -28,7 +28,7 @@ public class Main {
             }
             case "c" -> // client
             {
-                IClientView view = new ClientConsole();
+                IClientView view = new ClientGUI();
                 view.startView();
                 view.close();
             }

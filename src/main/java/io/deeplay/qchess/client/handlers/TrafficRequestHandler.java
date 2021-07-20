@@ -27,7 +27,7 @@ public class TrafficRequestHandler {
                     ChatService::incomingMessage,
                     MOVE,
                     GameService::action,
-                    GET,// TODO: заменить на POST
+                    GET, // TODO: заменить на POST
                     s -> null); // TODO: убрать заглушку
 
     /**

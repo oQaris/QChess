@@ -7,11 +7,16 @@ import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.ViewCell;
-import io.deeplay.qchess.client.view.gui.ViewFigure;
+import io.deeplay.qchess.client.view.model.ViewFigure;
+import io.deeplay.qchess.client.view.model.ViewFigureType;
 import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
-import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
+import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationService;
+import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.Figure;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -98,8 +103,13 @@ public class ClientController {
      *     было разорвано
      */
     public static boolean waitForColor() throws ClientException {
-        ServerToClientDTO dto = client.waitForResponse(GetRequestType.GET_COLOR);
-        return dto.request.equals(Color.WHITE.name());
+        GetRequestDTO dto = client.waitForResponse(GetRequestType.GET_COLOR);
+        Color color = null;
+        try {
+            color = SerializationService.deserialize(dto.request, Color.class);
+        } catch (IOException ignore) {
+        }
+        return color == Color.WHITE;
     }
 
     /**
@@ -150,5 +160,20 @@ public class ClientController {
     // TODO: добавить javadoc
     public static boolean isWhiteStep() {
         return GameGUIAdapterService.isWhiteStep();
+    }
+
+    public static void drawBoard() {
+        for (int column = 0; column < 8; ++column) {
+            for (int row = 0; row < 8; ++row) {
+                Figure f = GameGUIAdapterService.getBoard().getFigureUgly(new Cell(column, row));
+                view.getBoard()
+                        .setFigure(
+                                column,
+                                row,
+                                new ViewFigure(
+                                        f.getColor().name(),
+                                        ViewFigureType.valueOf(f.getType().name())));
+            }
+        }
     }
 }

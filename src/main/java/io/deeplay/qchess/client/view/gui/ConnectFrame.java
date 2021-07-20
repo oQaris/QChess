@@ -47,48 +47,41 @@ public class ConnectFrame {
     private JButton addButtonConnect() {
         JButton connectButton = new JButton("Connect");
 
-        connectButton.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+        connectButton.addMouseListener(
+                new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {}
 
-            }
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        String ip = ipField.getText();
+                        int port = Integer.parseInt(portField.getText());
+                        System.out.println(ip + ":" + port);
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                String ip = ipField.getText();
-                int port = Integer.parseInt(portField.getText());
-                System.out.println(ip + ":" + port);
+                        try {
+                            ClientController.connect(ip, port);
+                        } catch (ClientException clientException) {
+                            clientException.printStackTrace();
+                            return;
+                        }
+                        while (!ClientController.isConnected()) Thread.onSpinWait();
+                        boolean color = ClientController.waitForColor();
 
-                try {
-                    ClientController.connect(ip, port);
-                } catch (ClientException clientException) {
-                    clientException.printStackTrace();
-                    return;
-                }
-                while (!ClientController.isConnected()) Thread.onSpinWait();
-                boolean color = ClientController.waitForColor();
+                        frame.dispose();
+                        frame.setVisible(false);
+                        GameGUIAdapterService.init();
+                        Table table = new Table("onestyle", color);
+                    }
 
-                    frame.dispose();
-                    frame.setVisible(false);
-                    GameGUIAdapterService.init();
-                    Table table = new Table("onestyle", color);
-            }
+                    @Override
+                    public void mouseReleased(MouseEvent e) {}
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {}
 
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
+                    @Override
+                    public void mouseExited(MouseEvent e) {}
+                });
 
         return connectButton;
     }

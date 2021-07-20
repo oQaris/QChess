@@ -145,7 +145,7 @@ public class LocalClient implements IClient {
     }
 
     @Override
-    public ServerToClientDTO waitForResponse(GetRequestType getRequestType) throws ClientException {
+    public GetRequestDTO waitForResponse(GetRequestType getRequestType) throws ClientException {
         synchronized (mutex) {
             logger.debug("Начало ожидания запроса {}...", getRequestType);
             if (!isConnected) {
@@ -180,17 +180,17 @@ public class LocalClient implements IClient {
                     GetRequestDTO getDTO = null;
                     try {
                         getDTO =
-                                SerializationService.deserialize(
-                                        lastResponse.request, GetRequestDTO.class);
+                                lastResponse != null && lastResponse.request != null
+                                        ? SerializationService.deserialize(
+                                                lastResponse.request, GetRequestDTO.class)
+                                        : null;
                     } catch (IOException ignore) {
                         // Ожидается другой ответ
                     }
-                    if (lastResponse != null
-                            && lastResponse.mainRequestType
+                    if (lastResponse.mainRequestType
                                     == MainRequestType.GET // TODO: заменить на POST
-                            && lastResponse.request != null
                             && getDTO != null
-                            && getDTO.requestType == getRequestType) return lastResponse;
+                            && getDTO.requestType == getRequestType) return getDTO;
                 }
             }
         }
