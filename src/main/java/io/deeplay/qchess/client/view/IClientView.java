@@ -17,4 +17,6 @@ public interface IClientView extends Closeable {
 
     /** @return доска */
     ViewBoard getBoard();
+
+    void endGame();
 }

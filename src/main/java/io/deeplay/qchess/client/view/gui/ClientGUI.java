@@ -15,10 +15,10 @@ public class ClientGUI implements IClientView {
     public void startView() {
         ClientController.setView(this);
         // ConnectFrame connectFrame = new ConnectFrame();
-        //connectFrame = new ConnectFrame();
+        connectFrame = new ConnectFrame();
         GameGUIAdapterService.init();
-        Table tableWhite = new Table("onestyle", true);
-        Table tableBlack = new Table("onestyle", false);
+        //Table tableWhite = new Table("onestyle", true);
+        //Table tableBlack = new Table("onestyle", false);
     }
 
     @Override
@@ -34,6 +34,11 @@ public class ClientGUI implements IClientView {
     @Override
     public ViewBoard getBoard() {
         throw new UnsupportedOperationException("GUI не поддерживает доску");
+    }
+
+    @Override
+    public void endGame() {
+        connectFrame.getTable().endGame();
     }
 
     @Override
