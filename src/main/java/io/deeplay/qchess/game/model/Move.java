@@ -50,6 +50,10 @@ public class Move {
         return to;
     }
 
+    public int fullHashCode() {
+        return Objects.hash(moveType, from, to, turnInto);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(moveType, from, to);

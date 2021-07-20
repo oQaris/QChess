@@ -6,7 +6,6 @@ import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,9 +51,12 @@ public class Cell {
         row += shiftCell.row;
     }
 
+    /** @deprecated Не использовать вне доски */
+    @Deprecated
     @Override
     public int hashCode() {
-        return Objects.hash(column, row);
+        // Из-за небольших размеров доски конкатенация чисел однозначно определяет клетку
+        return 10 * column + row;
     }
 
     @Override
