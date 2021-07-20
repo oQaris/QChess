@@ -1,6 +1,7 @@
 package io.deeplay.qchess.client.view.gui;
 
 import io.deeplay.qchess.client.controller.ClientController;
+import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.model.ViewBoard;
 
@@ -14,10 +15,10 @@ public class ClientGUI implements IClientView {
     public void startView() {
         ClientController.setView(this);
         // ConnectFrame connectFrame = new ConnectFrame();
-        connectFrame = new ConnectFrame();
-        // GameGUIAdapterService.init();
-        // Table tableWhite = new Table("twostyle", true);
-        // Table tableBlack = new Table("onestyle", false);
+        //connectFrame = new ConnectFrame();
+        GameGUIAdapterService.init();
+        Table tableWhite = new Table("onestyle", true);
+        Table tableBlack = new Table("onestyle", false);
     }
 
     @Override
