@@ -14,6 +14,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Table {
@@ -100,8 +103,68 @@ public class Table {
                 if (ClientController.repaint) {
                     boardPanel.drawBoard();
                     ClientController.repaint = false;
-
+                    EndGame endGame = ClientController.getEndGame();
+                    if(endGame.isEnd()) {
+                        Object[] options = { "Да", "Нет!" };
+                        int n = JOptionPane
+                            .showOptionDialog(gameFrame, endGame.getStatus() + "\nЗакрыть окно?",
+                                "Подтверждение", JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE, null, options,
+                                options[0]);
+                        if (n == 0) {
+                            gameFrame.setVisible(false);
+                            ClientController.disconnect();
+                            System.exit(0);
+                        }
+                    }
                 }
+            }
+        });
+
+        this.gameFrame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent event) {
+                Object[] options = { "Да", "Нет!" };
+                int n = JOptionPane
+                    .showOptionDialog(event.getWindow(), "Закрыть окно?",
+                        "Подтверждение", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, options,
+                        options[0]);
+                if (n == 0) {
+                    event.getWindow().setVisible(false);
+                    ClientController.disconnect();
+                    System.exit(0);
+                }
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
             }
         });
     }

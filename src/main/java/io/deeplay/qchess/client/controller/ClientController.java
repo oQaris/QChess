@@ -6,6 +6,7 @@ import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
+import io.deeplay.qchess.client.view.gui.EndGame;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.client.view.model.ViewFigureType;
@@ -160,6 +161,11 @@ public class ClientController {
     // TODO: добавить javadoc
     public static boolean isWhiteStep() {
         return GameGUIAdapterService.isWhiteStep();
+    }
+
+    // TODO: добавить javadoc
+    public static EndGame getEndGame() {
+        return new EndGame(GameGUIAdapterService.getStatus(), GameGUIAdapterService.getEnd());
     }
 
     public static void drawBoard() {

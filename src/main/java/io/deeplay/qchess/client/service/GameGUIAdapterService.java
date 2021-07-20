@@ -139,4 +139,27 @@ public class GameGUIAdapterService {
     public static void changeIsWhiteStep() {
         isWhiteStep = !isWhiteStep;
     }
+
+    public static String getStatus() {
+        try {
+            if(gs.endGameDetector.isCheckmate(Color.WHITE)) {
+                return "Мат белых";
+            } else if(gs.endGameDetector.isCheckmate(Color.BLACK)) {
+                return "Мат черных";
+            } else if(gs.endGameDetector.isStalemate(Color.WHITE)) {
+                return "Пат белых";
+            } else if(gs.endGameDetector.isStalemate(Color.BLACK)) {
+                return "Пат черных";
+            } else if(gs.endGameDetector.isDraw()) {
+                return "Ничья";
+            }
+        } catch (ChessError chessError) {
+            chessError.printStackTrace();
+        }
+        return "";
+    }
+
+    public static boolean getEnd() {
+        return !getStatus().isEmpty();
+    }
 }
