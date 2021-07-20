@@ -175,5 +175,6 @@ public class ClientController {
                                         ViewFigureType.valueOf(f.getType().name())));
             }
         }
+        view.drawBoard();
     }
 }
