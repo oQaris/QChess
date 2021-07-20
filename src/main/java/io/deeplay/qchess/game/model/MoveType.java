@@ -12,6 +12,8 @@ public enum MoveType {
     // Для рокировки
     SHORT_CASTLING,
     LONG_CASTLING,
-    // Для последнего хода-превращения пешки
-    TURN_INTO
+    // Для простого хода-превращения пешки
+    TURN_INTO,
+    // Для атакующего хода-превращения пешки
+    TURN_INTO_ATTACK
 }

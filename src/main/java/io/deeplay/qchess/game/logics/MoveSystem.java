@@ -143,7 +143,8 @@ public class MoveSystem {
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
         logger.debug("Начата проверка хода {} на превращение", move);
-        if (move.getMoveType() == MoveType.TURN_INTO)
+        if (move.getMoveType() == MoveType.TURN_INTO
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
             return move.getTurnInto() != null
                     && (move.getTurnInto() == FigureType.BISHOP
                             || move.getTurnInto() == FigureType.KNIGHT
