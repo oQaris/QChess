@@ -91,7 +91,7 @@ public class Pawn extends Figure {
         boolean isEnPassant = isPawnEnPassant(settings, attack);
         if (settings.board.isEnemyFigureOn(color, attack) || isEnPassant) {
             if (isTurnInto(attack, settings)) {
-                return new Move(MoveType.TURN_INTO, position, attack);
+                return new Move(MoveType.TURN_INTO_ATTACK, position, attack);
             } else {
                 return new Move(
                         isEnPassant ? MoveType.EN_PASSANT : MoveType.ATTACK, position, attack);

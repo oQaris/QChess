@@ -112,11 +112,12 @@ public class MoveSystem {
         if (!board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
         Figure figure = board.getFigureUgly(cell);
         if (figure == null) return res;
-        for (Move m : figure.getAllMoves(roomSettings)) if (isCorrectVirtualMoveSafe(m)) res.add(m);
+        for (Move m : figure.getAllMoves(roomSettings))
+            if (isCorrectVirtualMoveForCell(m)) res.add(m);
         return res;
     }
 
-    private boolean isCorrectVirtualMoveSafe(Move move) throws ChessError {
+    private boolean isCorrectVirtualMoveForCell(Move move) throws ChessError {
         try {
             return move != null && isCorrectVirtualMove(move);
         } catch (ChessException | NullPointerException e) {
@@ -168,7 +169,8 @@ public class MoveSystem {
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
         logger.debug("Начата проверка хода {} на превращение", move);
-        if (move.getMoveType() == MoveType.TURN_INTO)
+        if (move.getMoveType() == MoveType.TURN_INTO
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
             return move.getTurnInto() != null
                     && (move.getTurnInto() == FigureType.BISHOP
                             || move.getTurnInto() == FigureType.KNIGHT

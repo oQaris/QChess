@@ -149,6 +149,20 @@ public class BotTest extends TestCase {
                 new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }
 
+    /*public void testMinimaxBotStalemate() throws ChessError, ChessException {
+        GameSettings roomSettings = new GameSettings(5, BoardFilling.EMPTY);
+        roomSettings.board.setFigure(new King(Color.WHITE, new Cell(0, 0)));
+        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(3, 1)));
+        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(4, 4)));
+        System.out.println(roomSettings.board);
+
+        MinimaxBot bot = new MinimaxBot(roomSettings, Color.BLACK, 3);
+        Move bestMove = bot.getNextMove();
+
+        Assertions.assertEquals(
+            new Move(MoveType.QUIET_MOVE, new Cell(4, 4), new Cell(4, 0)), bestMove);
+    }*/
+
     public void testEvaluateBoard() throws ChessException {
         GameSettings roomSettings = new GameSettings(BoardFilling.STANDARD);
         MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 2);

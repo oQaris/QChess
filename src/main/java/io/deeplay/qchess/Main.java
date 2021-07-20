@@ -10,15 +10,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws ChessError, IOException {
-        // TODO: при создании комнаты
-        // BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        //
-        // GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-        // Player firstPlayer = new ConsolePlayer(roomSettings, Color.WHITE, in);
-        // Player secondPlayer = new AttackBot(roomSettings, Color.BLACK);
-        // Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
-        // game.run();
-
         switch (new Scanner(System.in).nextLine()) {
             case "s" -> // server
             {
