@@ -28,6 +28,9 @@ public class History {
     private Move lastMove;
     private int peaceMoveCount = 0;
 
+    private boolean isWhiteCastlingPossibility = true;
+    private boolean isBlackCastlingPossibility = true;
+
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
 
@@ -120,6 +123,9 @@ public class History {
 
     private String getCastlingPossibility(Color color) throws ChessError {
         String res = "";
+        if (color == Color.WHITE && !isWhiteCastlingPossibility) return res;
+        if (color == Color.BLACK && !isBlackCastlingPossibility) return res;
+
         Figure king = gameSettings.board.findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return res;
@@ -129,6 +135,11 @@ public class History {
                 gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(1, 0));
         if (rightRook != null && !rightRook.wasMoved()) res += "k";
         if (leftRook != null && !leftRook.wasMoved()) res += "q";
+
+        if (res.equals("")) {
+            if (color == Color.WHITE) isWhiteCastlingPossibility = false;
+            else isBlackCastlingPossibility = false;
+        }
         return color == Color.WHITE ? res.toUpperCase() : res;
     }
 
