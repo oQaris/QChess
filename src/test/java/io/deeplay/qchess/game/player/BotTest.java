@@ -11,7 +11,9 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Rook;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
@@ -149,21 +151,45 @@ public class BotTest extends TestCase {
                 new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }
 
-    /*public void testMinimaxBotStalemate() throws ChessError, ChessException {
+    public void testMinimaxBotStalemate1Step() throws ChessError, ChessException {
         GameSettings roomSettings = new GameSettings(5, BoardFilling.EMPTY);
-        roomSettings.board.setFigure(new King(Color.WHITE, new Cell(0, 0)));
-        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(3, 1)));
-        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(4, 4)));
+        roomSettings.board.setFigure(new King(Color.WHITE, Cell.parse("a8")));
+        roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("c7")));
+        roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("d5")));
         System.out.println(roomSettings.board);
 
-        MinimaxBot bot = new MinimaxBot(roomSettings, Color.BLACK, 3);
+        MinimaxBot bot = new MinimaxBot(roomSettings, Color.BLACK, 2);
         Move bestMove = bot.getNextMove();
 
         Assertions.assertEquals(
-            new Move(MoveType.QUIET_MOVE, new Cell(4, 4), new Cell(4, 0)), bestMove);
-    }*/
+                new Move(MoveType.QUIET_MOVE, Cell.parse("d5"), Cell.parse("d8")), bestMove);
+    }
 
-    public void testEvaluateBoard() throws ChessException {
+    public void testMinimaxBotStalemate2Step() throws ChessError, ChessException {
+        GameSettings roomSettings = new GameSettings(BoardFilling.EMPTY);
+        roomSettings.board.setFigure(new King(Color.WHITE, Cell.parse("c4")));
+        roomSettings.board.setFigure(new King(Color.BLACK, Cell.parse("b8")));
+        roomSettings.board.setFigure(new Pawn(Color.BLACK, Cell.parse("h5")));
+        roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
+        roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
+        System.out.println(roomSettings.board);
+
+        MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 3);
+
+        Move move1 = bot.getNextMove();
+        Assertions.assertEquals(
+                new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("f6")), move1);
+
+        roomSettings.board.moveFigure(move1);
+        roomSettings.board.moveFigure(
+                new Move(MoveType.QUIET_MOVE, Cell.parse("b8"), Cell.parse("a8")));
+
+        Move move2 = bot.getNextMove();
+        Assertions.assertEquals(
+                new Move(MoveType.QUIET_MOVE, Cell.parse("f6"), Cell.parse("f8")), move2);
+    }
+
+    public void testEvaluateBoard() throws ChessException, ChessError {
         GameSettings roomSettings = new GameSettings(BoardFilling.STANDARD);
         MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 2);
 

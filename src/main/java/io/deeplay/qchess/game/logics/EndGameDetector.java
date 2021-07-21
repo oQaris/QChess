@@ -21,6 +21,7 @@ public class EndGameDetector {
     private final GameSettings roomSettings;
     private final List<List<FigureType>> material =
             Arrays.asList(
+                    // todo Добавить Король против короля с 2 одноцветными слонами
                     Collections.singletonList(FigureType.KING),
                     Arrays.asList(FigureType.KING, FigureType.KNIGHT),
                     Arrays.asList(FigureType.KING, FigureType.BISHOP),
@@ -145,7 +146,7 @@ public class EndGameDetector {
     }
 
     /** @return true если игроку с указанным цветом ставят шах */
-    boolean isCheck(Color color) {
+    public boolean isCheck(Color color) {
         Figure king = roomSettings.board.findKing(color);
         if (king == null) return false;
         return Board.isAttackedCell(roomSettings, king.getCurrentPosition(), color.inverse());
