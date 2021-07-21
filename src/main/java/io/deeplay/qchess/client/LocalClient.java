@@ -31,6 +31,7 @@ public class LocalClient implements IClient {
     private final Object mutexLastResponse = new Object();
     private InputTrafficHandler inputTrafficHandler;
     private volatile boolean isConnected;
+    private volatile boolean killClient;
 
     private LocalClient() {}
 
@@ -50,16 +51,16 @@ public class LocalClient implements IClient {
     @Override
     public void connect(String ip, int port) throws ClientException {
         synchronized (mutex) {
-            logger.debug("Подключение клиента {} к серверу {}:{}", this, ip, port);
+            logger.debug("Подключение клиента к серверу {}:{}", ip, port);
             checkIsConnected();
             Socket socket;
             try {
                 LocalClient.ip = ip;
                 LocalClient.port = port;
                 socket = new Socket(ip, port);
-                logger.info("Клиент {} успешно подключился к серверу {}:{}", this, ip, port);
+                logger.info("Клиент успешно подключился к серверу {}:{}", ip, port);
             } catch (IOException e) {
-                logger.warn("Ошибка получения сокета для подключения клиента {}", this);
+                logger.warn("Ошибка получения сокета для подключения клиента: {}", e.getMessage());
                 disconnect();
                 throw new ClientException(FAILED_CONNECT, e);
             }
@@ -74,32 +75,15 @@ public class LocalClient implements IClient {
                 disconnect();
                 throw e;
             }
+            new ClientKiller().start();
         }
     }
 
     @Override
     public void disconnect() throws ClientException {
-        synchronized (mutex) {
-            logger.debug("Отключение клиента от сервера {}:{}", ip, port);
-            checkIsNotConnected();
-            logger.info("Отключение клиента от сервера...");
-            inputTrafficHandler.sendIfNotNull(
-                    TrafficRequestHandler.convertToClientToServerDTO(
-                            MainRequestType.DISCONNECT, null));
-            closeInputTrafficHandler();
-            isConnected = false;
-            logger.info("Клиент отключен от сервера {}:{}", ip, port);
-        }
-    }
-
-    private void closeInputTrafficHandler() {
-        if (inputTrafficHandler == null) return;
-        inputTrafficHandler.terminate();
-        try {
-            inputTrafficHandler.join();
-        } catch (InterruptedException e) {
-            logger.error("Обработчик трафика убил клиента: {}", e.getMessage());
-        }
+        logger.debug("Отключение клиента от сервера {}:{}", ip, port);
+        checkIsNotConnected();
+        killClient = true;
     }
 
     /** @throws ClientException если клиент не подключен */
@@ -174,15 +158,14 @@ public class LocalClient implements IClient {
                     }
                     Thread.onSpinWait();
                 }
+                if (!isConnected) {
+                    logger.warn("Соединение было разорвано");
+                    throw new ClientException(CONNECTION_WAS_BROKEN);
+                }
 
                 synchronized (mutexLastResponse) {
                     GetRequestDTO getDTO = null;
                     try {
-                        // TODO: ХЕРНЯ НЕ РАБОТАЕТ ХЗ ПОЧЕМУ МЬЮТЕКС ТУПОЙ ЗАСТЫВАЕТ ПРОГРА ЮЛЯТЬ
-                        if (lastResponse.mainRequestType == MainRequestType.DISCONNECT) {
-                            logger.warn("Соединение было разорвано");
-                            throw new ClientException(CONNECTION_WAS_BROKEN);
-                        }
                         getDTO =
                                 SerializationService.deserialize(
                                         lastResponse.request, GetRequestDTO.class);
@@ -208,6 +191,34 @@ public class LocalClient implements IClient {
         synchronized (mutex) {
             checkIsNotConnected();
             inputTrafficHandler.sendIfNotNull(json);
+        }
+    }
+
+    private class ClientKiller extends Thread {
+
+        @Override
+        public void run() {
+            while (!killClient) onSpinWait();
+            synchronized (mutex) {
+                logger.info("Отключение клиента от сервера...");
+                inputTrafficHandler.sendIfNotNull(
+                        TrafficRequestHandler.convertToClientToServerDTO(
+                                MainRequestType.DISCONNECT, null));
+                closeInputTrafficHandler();
+                isConnected = false;
+                logger.info("Клиент отключен от сервера {}:{}", ip, port);
+            }
+        }
+
+        private void closeInputTrafficHandler() {
+            if (inputTrafficHandler == null) return;
+            inputTrafficHandler.terminate();
+            try {
+                inputTrafficHandler.join();
+            } catch (InterruptedException e) {
+                logger.error(
+                        "Обработчик трафика убил убийцу обработчика трафика: {}", e.getMessage());
+            }
         }
     }
 }

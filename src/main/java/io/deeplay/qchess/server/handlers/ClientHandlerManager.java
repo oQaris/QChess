@@ -80,6 +80,7 @@ public class ClientHandlerManager extends Thread {
 
     private void closeAllClients() {
         logger.debug("Закрытие всех обработчиков клиентов");
+        allClientsWasClosed = false;
         synchronized (clients) {
             if (clients.isEmpty()) allClientsWasClosed = true;
             else for (ClientHandler clientHandler : clients.values()) clientHandler.terminate();
