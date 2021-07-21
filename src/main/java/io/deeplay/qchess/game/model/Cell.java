@@ -3,27 +3,24 @@ package io.deeplay.qchess.game.model;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Cell {
-    @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Cell.class);
+    private static final transient Logger logger = LoggerFactory.getLogger(Cell.class);
 
-    @JsonProperty("column")
+    @SerializedName("column")
     private int column;
 
-    @JsonProperty("row")
+    @SerializedName("row")
     private int row;
 
     public Cell(final int column, final int row) {
         this.column = column;
         this.row = row;
     }
-
-    public Cell() {}
 
     /** @deprecated Использует стандартный размер доски - плохо для гибкости */
     @Deprecated(since = "only for tests")

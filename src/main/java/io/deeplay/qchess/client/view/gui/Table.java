@@ -279,7 +279,6 @@ public class Table {
                                         boardPanel.boardCells.get(clickedCell).drawCell();
                                         thisCellPanel.drawCell();
                                         clearColorOnBoard();
-                                        ClientController.repaint = true;
                                     } else if (action == 0) {
                                         clearColorOnBoard();
                                     }

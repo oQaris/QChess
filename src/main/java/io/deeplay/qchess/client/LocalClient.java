@@ -12,7 +12,7 @@ import io.deeplay.qchess.client.service.ClientCommandService;
 import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
 import io.deeplay.qchess.clientserverconversation.dto.MainRequestType;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
-import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
+import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import java.io.IOException;
 import java.net.Socket;

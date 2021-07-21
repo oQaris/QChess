@@ -1,6 +1,6 @@
 package io.deeplay.qchess.server.service;
 
-import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
+import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import java.io.IOException;
 

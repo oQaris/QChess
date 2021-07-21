@@ -9,8 +9,8 @@ import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.EndGame;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
+import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
 import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
-import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
@@ -22,15 +22,16 @@ import java.util.Set;
 
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
-    public static boolean repaint = false;
     private static IClientView view;
+
+    private ClientController() {}
 
     /**
      * @deprecated Не безопасное использование View. Если необходимо использовать логику View, не
      *     считая простого вывода, лучше создать здесь метод и использовать его
      * @return окружение клиента
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static Optional<IClientView> getView() {
         return Optional.ofNullable(view);
     }
@@ -114,6 +115,7 @@ public class ClientController {
         try {
             color = SerializationService.deserialize(dto.request, Color.class);
         } catch (IOException ignore) {
+            // TODO: некорректный ответ сервера, и вынести отсюда в какой-нибудь сервис
         }
         return color == Color.WHITE;
     }

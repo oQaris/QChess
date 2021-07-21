@@ -2,7 +2,7 @@ package io.deeplay.qchess.client;
 
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
-import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
+import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
 
 public interface IClient {
 

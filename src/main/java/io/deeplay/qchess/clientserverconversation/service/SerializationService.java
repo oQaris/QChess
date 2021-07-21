@@ -1,23 +1,14 @@
 package io.deeplay.qchess.clientserverconversation.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import java.io.IOException;
-import java.io.StringReader;
 
 public class SerializationService {
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Gson gson = new Gson();
 
-    /**
-     * @return json
-     * @throws IllegalArgumentException если объект нельзя сериализовать
-     */
-    public static String serialize(Object obj) throws IllegalArgumentException {
-        try {
-            return mapper.writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Некорректный объект для сериализации", e);
-        }
+    /** @return json */
+    public static String serialize(Object obj) {
+        return gson.toJson(obj);
     }
 
     /**
@@ -25,6 +16,6 @@ public class SerializationService {
      * @throws IOException если json некорректный
      */
     public static <T> T deserialize(String json, Class<T> clazz) throws IOException {
-        return mapper.readValue(new StringReader(json), clazz);
+        return gson.fromJson(json, clazz);
     }
 }
