@@ -40,7 +40,7 @@ public class LocalClient implements IClient {
         return localClient;
     }
 
-    private synchronized void setLastResponse(final ServerToClientDTO lastResponse) {
+    private void setLastResponse(final ServerToClientDTO lastResponse) {
         synchronized (mutexLastResponse) {
             LocalClient.lastResponse = lastResponse;
             waitForResponse = false;

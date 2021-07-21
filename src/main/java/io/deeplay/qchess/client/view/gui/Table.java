@@ -15,8 +15,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,7 +46,7 @@ public class Table {
     private static final Color attackCellColor = Color.decode("#B22222");
     private static final Color attackHoverCellColor = Color.decode("#8B0000");
     private static final Color hoverCellColor = Color.CYAN;
-    private static final String defaultFigureImagesPath = "src/main/resources/art/figures";
+    private static final String defaultFigureImagesPath = "/art/figures";
     private static final String[] figures = {"Ферзь", "Ладья", "Конь", "Слон"};
     private final JFrame gameFrame;
     private final BoardPanel boardPanel;
@@ -64,11 +64,11 @@ public class Table {
         this.gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.gameFrame.setResizable(false);
 
-        try {
-            final BufferedImage image =
-                    ImageIO.read(new File("src/main/resources/art/other/icon.png"));
+        try (InputStream png = getClass().getResourceAsStream("/art/other/icon.png")) {
+            assert png != null;
+            final BufferedImage image = ImageIO.read(png);
             this.gameFrame.setIconImage(image);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -325,23 +325,24 @@ public class Table {
             ViewFigure figure =
                     ClientController.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             if (figure != null) {
-                try {
-                    final BufferedImage image =
-                            ImageIO.read(
-                                    new File(
-                                            String.format(
-                                                    "%s/%s/%s_%s.png",
-                                                    Table.defaultFigureImagesPath,
-                                                    figureStyle,
-                                                    figure.getColor().toLowerCase(),
-                                                    figure.getType().toString().toLowerCase())));
+                try (InputStream png =
+                        getClass()
+                                .getResourceAsStream(
+                                        String.format(
+                                                "%s/%s/%s_%s.png",
+                                                defaultFigureImagesPath,
+                                                figureStyle,
+                                                figure.getColor().toLowerCase(),
+                                                figure.getType().toString().toLowerCase()))) {
+                    assert png != null;
+                    final BufferedImage image = ImageIO.read(png);
 
                     ImageIcon icon =
                             new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
                     JLabel label = new JLabel(icon);
                     this.add(label);
 
-                } catch (IOException e) {
+                } catch (IOException | NullPointerException e) {
                     // logger + what do i can do?
                     e.printStackTrace();
                 }
