@@ -117,6 +117,11 @@ public class ClientConsole implements IClientView {
     }
 
     @Override
+    public void endGameInverse() {
+        throw new UnsupportedOperationException("Еще не реализовано");
+    }
+
+    @Override
     public void disconnect(String reason) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }

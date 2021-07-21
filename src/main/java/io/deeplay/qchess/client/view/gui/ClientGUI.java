@@ -39,6 +39,11 @@ public class ClientGUI implements IClientView {
     }
 
     @Override
+    public void endGameInverse() {
+        connectFrame.getTable().endGameInverse(true);
+    }
+
+    @Override
     public void disconnect(String reason) {
         print(reason);
     }

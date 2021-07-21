@@ -159,7 +159,12 @@ public class Table {
     }
 
     public void endGame() {
-        EndGame endGame = ClientController.getEndGame();
+        endGameInverse(false);
+    }
+
+    public void endGameInverse(boolean sign) {
+        System.out.println("END");
+        EndGame endGame = ClientController.getEndGame(myColor ^ sign);
         if (endGame.isEnd()) {
             Object[] options = {"Да", "Нет!"};
             int n =
@@ -232,8 +237,7 @@ public class Table {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            if (isLeftMouseButton(e) && ClientController.isWhiteStep()) {
-                                // if (isLeftMouseButton(e)) {
+                            if (isLeftMouseButton(e) && ClientController.isMyStep()) {
                                 boolean twoClick = false;
                                 if (ClientController.checkFigure(
                                         cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
@@ -269,17 +273,18 @@ public class Table {
                                             // Диалоговое окно вывода сообщения
                                             JOptionPane.showMessageDialog(gameFrame, turnFigure);
                                         }
+
                                         ClientController.makeMove(
                                                 clickedCell / BOARD_SIZE,
                                                 clickedCell % BOARD_SIZE,
                                                 cellId / BOARD_SIZE,
                                                 cellId % BOARD_SIZE,
                                                 turnFigure);
-
+                                        //boardPanel.drawBoard();
                                         boardPanel.boardCells.get(clickedCell).drawCell();
                                         thisCellPanel.drawCell();
                                         clearColorOnBoard();
-                                        ClientController.repaint = true;
+                                        ClientController.checkEndGame();
                                     } else if (action == 0) {
                                         clearColorOnBoard();
                                     }
@@ -293,7 +298,7 @@ public class Table {
 
                         @Override
                         public void mouseEntered(MouseEvent e) {
-                            if (ClientController.isWhiteStep()) {
+                            if (ClientController.isMyStep()) {
                                 if (thisCellPanel.getBackground() == chooseCellColor) {
                                     thisCellPanel.setBackground(chooseHoverCellColor);
                                 } else if (thisCellPanel.getBackground()
@@ -310,7 +315,7 @@ public class Table {
 
                         @Override
                         public void mouseExited(MouseEvent e) {
-                            if (ClientController.isWhiteStep()) {
+                            if (ClientController.isMyStep()) {
                                 if (thisCellPanel.getBackground() == chooseHoverCellColor) {
                                     thisCellPanel.setBackground(chooseCellColor);
                                 } else if (thisCellPanel.getBackground()

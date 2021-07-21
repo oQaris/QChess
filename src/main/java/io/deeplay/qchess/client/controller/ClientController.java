@@ -22,7 +22,6 @@ import java.util.Set;
 
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
-    public static boolean repaint = false;
     private static IClientView view;
 
     /** @return окружение клиента */
@@ -173,14 +172,18 @@ public class ClientController {
         GameService.sendMove(move);
     }
 
-    // TODO: добавить javadoc
-    public static boolean isWhiteStep() {
-        return GameGUIAdapterService.isWhiteStep();
+    public static void checkEndGame() {
+        getView().ifPresent(IClientView::endGame);
     }
 
     // TODO: добавить javadoc
-    public static EndGame getEndGame() {
-        return new EndGame(GameGUIAdapterService.getStatus(), GameGUIAdapterService.getEnd());
+    public static boolean isMyStep() {
+        return GameGUIAdapterService.isMyStep();
+    }
+
+    // TODO: добавить javadoc
+    public static EndGame getEndGame(boolean color) {
+        return new EndGame(GameGUIAdapterService.getStatus(color), GameGUIAdapterService.getEnd(color));
     }
 
     public static void drawBoard() {

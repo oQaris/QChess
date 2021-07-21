@@ -21,6 +21,8 @@ public interface IClientView extends Closeable {
     // TODO: javadoc
     void endGame();
 
+    void endGameInverse();
+
     /**
      * Вызывается при отключении от сервера
      *

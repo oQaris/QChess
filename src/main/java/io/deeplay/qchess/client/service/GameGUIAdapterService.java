@@ -1,5 +1,6 @@
 package io.deeplay.qchess.client.service;
 
+import io.deeplay.qchess.client.view.gui.ClientGUI;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.client.view.model.ViewFigureType;
@@ -24,7 +25,7 @@ public class GameGUIAdapterService {
     // TODO: убрать отсюда куда-нибудь
     private static Selfplay game;
     private static GameSettings gs;
-    private static boolean isWhiteStep = true;
+    private static boolean isMyStep = true;
 
     // TODO: убрать отсюда куда-нибудь
     public static void init() {
@@ -148,7 +149,7 @@ public class GameGUIAdapterService {
                     e.printStackTrace();
                     return null;
                 }
-                isWhiteStep = !isWhiteStep;
+                isMyStep = !isMyStep;
                 System.out.println(gs.board.toString());
                 return move;
             }
@@ -157,17 +158,17 @@ public class GameGUIAdapterService {
         return null;
     }
 
-    public static boolean isWhiteStep() {
-        return isWhiteStep;
+    public static boolean isMyStep() {
+        return isMyStep;
     }
 
     public static void changeIsWhiteStep() {
-        isWhiteStep = !isWhiteStep;
+        isMyStep = !isMyStep;
     }
 
-    public static String getStatus() {
+    public static String getStatus(boolean color) {
         try {
-            if (gs.endGameDetector.isCheckmate(Color.WHITE)) {
+            /*if (gs.endGameDetector.isCheckmate(Color.WHITE)) {
                 return "Мат белых";
             } else if (gs.endGameDetector.isCheckmate(Color.BLACK)) {
                 return "Мат черных";
@@ -177,6 +178,13 @@ public class GameGUIAdapterService {
                 return "Пат черных";
             } else if (gs.endGameDetector.isDraw()) {
                 return "Ничья";
+            }*/
+            if (gs.endGameDetector.isCheckmate(color? Color.BLACK : Color.WHITE)) {
+                return "Мат " + (color? "черным" : "белым");
+            } else if (gs.endGameDetector.isStalemate(color? Color.BLACK : Color.WHITE)) {
+                return "Пат " + (color? "черным" : "белым");
+            } else if (gs.endGameDetector.isDraw()) {
+                return "Ничья";
             }
         } catch (ChessError chessError) {
             chessError.printStackTrace();
@@ -184,7 +192,7 @@ public class GameGUIAdapterService {
         return "";
     }
 
-    public static boolean getEnd() {
-        return !getStatus().isEmpty();
+    public static boolean getEnd(boolean color) {
+        return !getStatus(color).isEmpty();
     }
 }

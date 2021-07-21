@@ -5,6 +5,7 @@ import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.MOV
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.handlers.TrafficRequestHandler;
+import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.model.Move;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class GameService {
                     move.getTurnInto());
             //            GameGUIAdapterService.changeIsWhiteStep();
             ClientController.drawBoard();
+            ClientController.getView().ifPresent(IClientView::endGameInverse);
         } catch (IOException e) {
             e.printStackTrace();
         }
