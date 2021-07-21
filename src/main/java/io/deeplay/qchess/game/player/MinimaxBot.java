@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,24 +102,49 @@ public class MinimaxBot extends Player {
 
     @Override
     public Move getNextMove() throws ChessError {
-        List<Move> topMoves = new ArrayList<>();
+        // List<Move> topMoves = new ArrayList<>();
+        Move bestMove = null;
         int maxGrade = Integer.MIN_VALUE;
         for (Move move : ms.getAllCorrectMoves(color)) {
-            AtomicInteger curGrade = new AtomicInteger();
+            int curGrade = 0;
             try {
-                curGrade.set(ms.virtualMove(move, (from, to) -> minimaxRoot(depth, false)));
+                curGrade = ms.virtualMove(move, (from, to) -> minimaxRoot(depth, false));
             } catch (ChessException e) {
                 e.printStackTrace();
             }
-            if (curGrade.get() > maxGrade) {
+            /*if (curGrade.get() > maxGrade) {
                 maxGrade = curGrade.get();
                 topMoves.clear();
             }
-            if (curGrade.get() >= maxGrade) topMoves.add(move);
+            if (curGrade.get() >= maxGrade) topMoves.add(move);*/
+            if (curGrade > maxGrade) {
+                maxGrade = curGrade;
+                bestMove = move;
+            }
         }
-        Move move = topMoves.get(new Random().nextInt(topMoves.size()));
-        turnIntoInQueen(move);
-        return move;
+        // Move bestMove = topMoves.get(new Random().nextInt(topMoves.size()));
+        turnIntoInQueen(bestMove);
+        return bestMove;
+    }
+
+    public List<Move> getNextMoves() throws ChessError {
+        List<Move> topMoves = new ArrayList<>();
+        int maxGrade = Integer.MIN_VALUE;
+        for (Move move : ms.getAllCorrectMoves(color)) {
+            int curGrade = 0;
+            try {
+                curGrade = ms.virtualMove(move, (from, to) -> minimaxRoot(depth, false));
+            } catch (ChessException e) {
+                e.printStackTrace();
+            }
+            if (curGrade > maxGrade) {
+                maxGrade = curGrade;
+                topMoves.clear();
+            }
+            if (curGrade >= maxGrade) topMoves.add(move);
+        }
+        for (Move move : topMoves) turnIntoInQueen(move);
+        return topMoves;
     }
 
     public int minimaxRoot(int depth, boolean isMaximisingPlayer)
@@ -136,29 +159,37 @@ public class MinimaxBot extends Player {
             throws ChessError, ChessException {
         logger.trace("Глубина поиска: {}", depth);
         if (depth == 0) return evaluateBoard();
-        AtomicInteger bestGrade =
-                new AtomicInteger(isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE);
+
+        int initGrade = isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        Integer bestGrade = initGrade / 2;
+
+        boolean flag = false;
         // максимальное берём из наших, минимальное - из противника
-        for (Move move : ms.getAllCorrectMoves(isMaximisingPlayer ? color : color.inverse())) {
+        Color curColor = isMaximisingPlayer ? color : color.inverse();
+        for (Move move : ms.getAllCorrectMoves(curColor)) {
             turnIntoInQueen(move);
-            bestGrade.set(
+            int finalBestGrade = bestGrade;
+            bestGrade =
                     ms.virtualMove(
                             move,
                             (from, to) -> {
                                 int newGrade = minimax(depth - 1, alpha, beta, !isMaximisingPlayer);
-                                if (isMaximisingPlayer) return Math.max(bestGrade.get(), newGrade);
-                                else return Math.min(bestGrade.get(), newGrade);
-                            }));
+                                if (isMaximisingPlayer) return Math.max(finalBestGrade, newGrade);
+                                else return Math.min(finalBestGrade, newGrade);
+                            });
             int finalAlpha = alpha;
             int finalBeta = beta;
 
-            if (isMaximisingPlayer) finalAlpha = Math.max(alpha, bestGrade.get());
-            else finalBeta = Math.min(beta, bestGrade.get());
+            if (isMaximisingPlayer) finalAlpha = Math.max(alpha, bestGrade);
+            else finalBeta = Math.min(beta, bestGrade);
 
-            if (finalBeta <= finalAlpha) return bestGrade.get();
+            if (finalBeta <= finalAlpha) return bestGrade;
+            flag = true;
         }
+        if (!flag && egd.isCheck(curColor)) return initGrade;
+
         logger.trace("Текущая оценка хода: {}", depth);
-        return bestGrade.get();
+        return bestGrade;
     }
 
     public int evaluateBoard() {
@@ -168,8 +199,8 @@ public class MinimaxBot extends Player {
             int y = figure.getCurrentPosition().getRow();
             // разворачиваем массив ценностей для чёрных
             int absY = figure.getColor() == Color.BLACK ? STD_BOARD_SIZE - 1 - y : y;
-            int coef = figure.getColor() == color ? 1 : -1;
 
+            int coef = figure.getColor() == color ? 1 : -1;
             grade += coef * grades.get(figure.getType())[absY][absX];
         }
         logger.trace("Оценка доски: {}", grade);

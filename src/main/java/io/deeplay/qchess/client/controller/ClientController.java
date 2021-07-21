@@ -24,7 +24,12 @@ public class ClientController {
     private static final IClient client = LocalClient.getInstance();
     private static IClientView view;
 
-    /** @return окружение клиента */
+    /**
+     * @deprecated Не безопасное использование View. Если необходимо использовать логику View, не
+     *     считая простого вывода, лучше создать здесь метод и использовать его
+     * @return окружение клиента
+     */
+    @Deprecated
     public static Optional<IClientView> getView() {
         return Optional.ofNullable(view);
     }

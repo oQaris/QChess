@@ -61,7 +61,7 @@ public class ConnectFrame {
                         try {
                             ClientController.connect(ip, port);
                         } catch (ClientException clientException) {
-                            clientException.printStackTrace();
+                            // TODO: окошко "не удалось подключиться к серверу"
                             return;
                         }
                         while (!ClientController.isConnected()) Thread.onSpinWait();

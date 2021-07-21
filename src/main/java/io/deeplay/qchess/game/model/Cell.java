@@ -56,7 +56,7 @@ public class Cell {
     @Override
     public int hashCode() {
         // Из-за небольших размеров доски конкатенация чисел однозначно определяет клетку
-        return 10 * column + row;
+        return STD_BOARD_SIZE * column + row;
     }
 
     @Override

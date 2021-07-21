@@ -2,6 +2,7 @@ package io.deeplay.qchess.game.player;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
@@ -11,10 +12,12 @@ public abstract class Player {
     protected Board board;
     protected Color color;
     protected MoveSystem ms;
+    protected EndGameDetector egd;
 
     protected Player(GameSettings roomSettings, Color color) {
         ms = roomSettings.moveSystem;
         board = roomSettings.board;
+        egd = roomSettings.endGameDetector;
         this.color = color;
     }
 
