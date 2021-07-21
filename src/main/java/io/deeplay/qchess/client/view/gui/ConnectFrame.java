@@ -65,13 +65,15 @@ public class ConnectFrame {
                             return;
                         }
                         while (!ClientController.isConnected()) Thread.onSpinWait();
-                        boolean color = ClientController.waitForColor();
-
-                        frame.dispose();
-                        frame.setVisible(false);
-                        GameGUIAdapterService.init();
-                        if (!color) GameGUIAdapterService.changeIsWhiteStep();
-                        table = new Table("onestyle", color);
+                        try {
+                            boolean color = ClientController.waitForColor();
+                            frame.dispose();
+                            GameGUIAdapterService.init();
+                            if (!color) GameGUIAdapterService.changeIsWhiteStep();
+                            table = new Table("onestyle", color);
+                        } catch (ClientException clientException) {
+                            System.err.println(clientException.getMessage());
+                        }
                     }
 
                     @Override

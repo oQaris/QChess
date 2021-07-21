@@ -51,10 +51,7 @@ public class LocalClient implements IClient {
     public void connect(String ip, int port) throws ClientException {
         synchronized (mutex) {
             logger.debug("Подключение клиента {} к серверу {}:{}", this, ip, port);
-            if (isConnected) {
-                logger.warn("Клиент {} уже подключен к серверу {}:{}", this, ip, port);
-                throw new ClientException(CLIENT_IS_ALREADY_CONNECTED);
-            }
+            checkIsConnected();
             Socket socket;
             try {
                 LocalClient.ip = ip;
@@ -70,7 +67,7 @@ public class LocalClient implements IClient {
                 inputTrafficHandler =
                         new InputTrafficHandler(
                                 socket, this::setLastResponse, () -> waitForResponse);
-                logger.debug("Обработчик входящего трафика для клиента {} успешно создан", this);
+                logger.debug("Обработчик входящего трафика для клиента успешно создан");
                 inputTrafficHandler.start();
                 isConnected = true;
             } catch (ClientException e) {
@@ -83,15 +80,15 @@ public class LocalClient implements IClient {
     @Override
     public void disconnect() throws ClientException {
         synchronized (mutex) {
-            logger.debug("Отключение клиента {} от сервера {}:{}", this, ip, port);
-            if (!isConnected) {
-                logger.warn("Клиент {} еще не подключен", this);
-                throw new ClientException(CLIENT_IS_NOT_CONNECTED);
-            }
-            logger.info("Отключение клиента {} от сервера...", this);
+            logger.debug("Отключение клиента от сервера {}:{}", ip, port);
+            checkIsNotConnected();
+            logger.info("Отключение клиента от сервера...");
+            inputTrafficHandler.sendIfNotNull(
+                    TrafficRequestHandler.convertToClientToServerDTO(
+                            MainRequestType.DISCONNECT, null));
             closeInputTrafficHandler();
             isConnected = false;
-            logger.info("Клиент {} отключен от сервера {}:{}", this, ip, port);
+            logger.info("Клиент отключен от сервера {}:{}", ip, port);
         }
     }
 
@@ -102,6 +99,22 @@ public class LocalClient implements IClient {
             inputTrafficHandler.join();
         } catch (InterruptedException e) {
             logger.error("Обработчик трафика убил клиента: {}", e.getMessage());
+        }
+    }
+
+    /** @throws ClientException если клиент не подключен */
+    private void checkIsNotConnected() throws ClientException {
+        if (!isConnected) {
+            logger.warn("Клиент еще не подключен");
+            throw new ClientException(CLIENT_IS_NOT_CONNECTED);
+        }
+    }
+
+    /** @throws ClientException если клиент подключен */
+    private void checkIsConnected() throws ClientException {
+        if (isConnected) {
+            logger.warn("Клиент уже подключен к серверу {}:{}", ip, port);
+            throw new ClientException(CLIENT_IS_ALREADY_CONNECTED);
         }
     }
 
@@ -120,10 +133,7 @@ public class LocalClient implements IClient {
     @Override
     public void setPort(int port) throws ClientException {
         synchronized (mutex) {
-            if (isConnected) {
-                logger.warn("Клиент {} уже подключен к серверу {}:{}", this, ip, port);
-                throw new ClientException(CLIENT_IS_ALREADY_CONNECTED);
-            }
+            checkIsConnected();
             LocalClient.port = port;
         }
     }
@@ -136,42 +146,31 @@ public class LocalClient implements IClient {
     @Override
     public void setIp(String ip) throws ClientException {
         synchronized (mutex) {
-            if (isConnected) {
-                logger.warn("Клиент {} уже подключен к серверу {}:{}", this, ip, port);
-                throw new ClientException(CLIENT_IS_ALREADY_CONNECTED);
-            }
+            checkIsConnected();
             LocalClient.ip = ip;
         }
     }
 
     @Override
     public GetRequestDTO waitForResponse(GetRequestType getRequestType) throws ClientException {
-        synchronized (mutex) {
-            logger.debug("Начало ожидания запроса {}...", getRequestType);
-            if (!isConnected) {
-                logger.warn("Клиент {} еще не подключен", this);
-                throw new ClientException(CLIENT_IS_NOT_CONNECTED);
-            }
-        }
+        logger.debug("Начало ожидания запроса {}...", getRequestType);
+        checkIsNotConnected();
 
         synchronized (mutexWaitForResponse) {
             synchronized (mutexLastResponse) {
                 lastResponse = null;
                 waitForResponse = true;
             }
+            inputTrafficHandler.sendIfNotNull(
+                    TrafficRequestHandler.convertToClientToServerDTO(
+                            MainRequestType.GET,
+                            SerializationService.serialize(
+                                    new GetRequestDTO(getRequestType, null))));
             while (true) {
-                inputTrafficHandler.sendIfNotNull(
-                        TrafficRequestHandler.convertToClientToServerDTO(
-                                MainRequestType.GET,
-                                SerializationService.serialize(
-                                        new GetRequestDTO(getRequestType, null))));
-
                 while (waitForResponse) {
                     if (!isConnected) {
-                        synchronized (mutex) {
-                            logger.warn("Соединение было разорвано");
-                            throw new ClientException(CONNECTION_WAS_BROKEN);
-                        }
+                        logger.warn("Соединение было разорвано");
+                        throw new ClientException(CONNECTION_WAS_BROKEN);
                     }
                     Thread.onSpinWait();
                 }
@@ -179,12 +178,15 @@ public class LocalClient implements IClient {
                 synchronized (mutexLastResponse) {
                     GetRequestDTO getDTO = null;
                     try {
+                        // TODO: ХЕРНЯ НЕ РАБОТАЕТ ХЗ ПОЧЕМУ МЬЮТЕКС ТУПОЙ ЗАСТЫВАЕТ ПРОГРА ЮЛЯТЬ
+                        if (lastResponse.mainRequestType == MainRequestType.DISCONNECT) {
+                            logger.warn("Соединение было разорвано");
+                            throw new ClientException(CONNECTION_WAS_BROKEN);
+                        }
                         getDTO =
-                                lastResponse != null && lastResponse.request != null
-                                        ? SerializationService.deserialize(
-                                                lastResponse.request, GetRequestDTO.class)
-                                        : null;
-                    } catch (IOException ignore) {
+                                SerializationService.deserialize(
+                                        lastResponse.request, GetRequestDTO.class);
+                    } catch (IOException | NullPointerException e) {
                         // Ожидается другой ответ
                     }
                     if (lastResponse.mainRequestType
@@ -204,10 +206,7 @@ public class LocalClient implements IClient {
     @Override
     public void sendIfNotNull(String json) throws ClientException {
         synchronized (mutex) {
-            if (!isConnected) {
-                logger.warn("Клиент {} еще не подключен", this);
-                throw new ClientException(CLIENT_IS_NOT_CONNECTED);
-            }
+            checkIsNotConnected();
             inputTrafficHandler.sendIfNotNull(json);
         }
     }

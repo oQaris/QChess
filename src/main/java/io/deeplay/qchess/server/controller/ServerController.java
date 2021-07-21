@@ -105,4 +105,13 @@ public class ServerController {
     public static void send(String json, int clientID) throws ServerException {
         server.send(json, clientID);
     }
+
+    /**
+     * Закрывает соединение с клиентом
+     *
+     * @throws ServerException если сервер закрыт
+     */
+    public static void closeConnection(int clientID) throws ServerException {
+        server.closeConnection(clientID);
+    }
 }

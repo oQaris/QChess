@@ -46,7 +46,7 @@ public class ClientConsole implements IClientView {
         }
 
         try {
-            ClientController.disconnect();
+            ClientController.disconnect("Клиент отключен");
         } catch (ClientException e) {
             System.out.println("Ошибка при отключении от сервера");
             e.printStackTrace();
@@ -113,6 +113,11 @@ public class ClientConsole implements IClientView {
 
     @Override
     public void endGame() {
-        throw new UnsupportedOperationException("Для GUI");
+        throw new UnsupportedOperationException("Еще не реализовано");
+    }
+
+    @Override
+    public void disconnect(String reason) {
+        throw new UnsupportedOperationException("Еще не реализовано");
     }
 }

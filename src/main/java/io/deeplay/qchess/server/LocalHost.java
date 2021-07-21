@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class LocalHost implements IServer {
     private static final Logger logger = LoggerFactory.getLogger(LocalHost.class);
-    private static int maxClients = 2;
+    private static int maxClients = 0;
     private static int port = 8080;
     private static LocalHost localHost;
     private final Object mutex = new Object();
@@ -40,10 +40,7 @@ public class LocalHost implements IServer {
     @Override
     public void setPort(int port) throws ServerException {
         synchronized (mutex) {
-            if (isOpen) {
-                logger.warn("Сервер уже открыт");
-                throw new ServerException(SERVER_IS_ALREADY_OPEN);
-            }
+            checkIsOpen();
             LocalHost.port = port;
         }
     }
@@ -56,10 +53,7 @@ public class LocalHost implements IServer {
     @Override
     public void sendAll(String json) throws ServerException {
         synchronized (mutex) {
-            if (!isOpen) {
-                logger.warn("Сервер еще не запущен");
-                throw new ServerException(SERVER_IS_NOT_OPENED);
-            }
+            checkIsNotOpen();
             clientHandlerManager.sendAll(json);
         }
     }
@@ -67,11 +61,36 @@ public class LocalHost implements IServer {
     @Override
     public void send(String json, int clientID) throws ServerException {
         synchronized (mutex) {
+            checkIsNotOpen();
+            clientHandlerManager.send(json, clientID);
+        }
+    }
+
+    @Override
+    public void closeConnection(int clientID) throws ServerException {
+        synchronized (mutex) {
+            checkIsNotOpen();
+            clientHandlerManager.closeConnection(clientID);
+        }
+    }
+
+    /** @throws ServerException если сервер закрыт */
+    private void checkIsNotOpen() throws ServerException {
+        synchronized (mutex) {
             if (!isOpen) {
                 logger.warn("Сервер еще не запущен");
                 throw new ServerException(SERVER_IS_NOT_OPENED);
             }
-            clientHandlerManager.send(json, clientID);
+        }
+    }
+
+    /** @throws ServerException если сервер открыт */
+    private void checkIsOpen() throws ServerException {
+        synchronized (mutex) {
+            if (isOpen) {
+                logger.warn("Сервер уже открыт");
+                throw new ServerException(SERVER_IS_ALREADY_OPEN);
+            }
         }
     }
 
@@ -83,10 +102,7 @@ public class LocalHost implements IServer {
     @Override
     public void setMaxClients(int maxClients) throws ServerException {
         synchronized (mutex) {
-            if (isOpen) {
-                logger.warn("Сервер уже открыт");
-                throw new ServerException(SERVER_IS_ALREADY_OPEN);
-            }
+            checkIsOpen();
             LocalHost.maxClients = maxClients;
         }
     }
@@ -95,10 +111,7 @@ public class LocalHost implements IServer {
     public void startServer() throws ServerException {
         logger.debug("Запуск сервера...");
         synchronized (mutex) {
-            if (isOpen) {
-                logger.warn("Сервер уже открыт");
-                throw new ServerException(SERVER_IS_ALREADY_OPEN);
-            }
+            checkIsOpen();
             isOpen = true;
             try {
                 server = new ServerSocket(port);
@@ -112,7 +125,7 @@ public class LocalHost implements IServer {
                 stopServer();
                 throw new ServerException(ERROR_WHILE_SERVER_OPENING, e);
             }
-            clientHandlerManager = new ClientHandlerManager(server, this::getMaxClients);
+            clientHandlerManager = new ClientHandlerManager(server);
             clientHandlerManager.start();
         }
     }
@@ -121,10 +134,7 @@ public class LocalHost implements IServer {
     public void stopServer() throws ServerException {
         logger.debug("Остановка сервера...");
         synchronized (mutex) {
-            if (!isOpen) {
-                logger.warn("Сервер еще не запущен");
-                throw new ServerException(SERVER_IS_NOT_OPENED);
-            }
+            checkIsNotOpen();
             logger.info("Закрытие сервера...");
             closeClientHandlerManager();
             closeServerSocket();

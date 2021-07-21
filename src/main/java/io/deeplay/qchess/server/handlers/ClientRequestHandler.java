@@ -2,6 +2,7 @@ package io.deeplay.qchess.server.handlers;
 
 import static io.deeplay.qchess.client.exceptions.ClientErrorCode.UNKNOWN_REQUEST;
 import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.CHAT_MESSAGE;
+import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.DISCONNECT;
 import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.GET;
 import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.INCORRECT_REQUEST;
 import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.MOVE;
@@ -12,6 +13,7 @@ import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.server.controller.ServerController;
 import io.deeplay.qchess.server.service.ChatService;
+import io.deeplay.qchess.server.service.ConnectionControlService;
 import io.deeplay.qchess.server.service.GameService;
 import io.deeplay.qchess.server.service.GetRequestService;
 import java.io.IOException;
@@ -29,7 +31,9 @@ public class ClientRequestHandler {
                     MOVE,
                     GameService::action,
                     GET,
-                    GetRequestService::process);
+                    GetRequestService::process,
+                    DISCONNECT,
+                    ConnectionControlService::disconnect);
 
     /**
      * @return json ответ сервера в виде ServerToClientDTO или null, если не нужно ничего отправлять

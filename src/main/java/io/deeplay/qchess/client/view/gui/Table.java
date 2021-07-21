@@ -3,6 +3,7 @@ package io.deeplay.qchess.client.view.gui;
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 
 import io.deeplay.qchess.client.controller.ClientController;
+import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -61,7 +62,7 @@ public class Table {
         this.gameFrame = new JFrame("SHAKHMATY");
         this.gameFrame.setLayout(new BorderLayout());
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
-        this.gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.gameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.gameFrame.setResizable(false);
 
         try (InputStream png = getClass().getResourceAsStream("/art/other/icon.png")) {
@@ -102,8 +103,12 @@ public class Table {
                                         options[0]);
                         if (n == 0) {
                             event.getWindow().setVisible(false);
-                            ClientController.disconnect();
-                            System.exit(0);
+                            try {
+                                ClientController.disconnect("Клиент отключен");
+                            } catch (ClientException e) {
+                                System.err.println(e.getMessage());
+                            }
+                            gameFrame.dispose();
                         }
                     }
 
@@ -138,7 +143,7 @@ public class Table {
         fileMenu.add(loadMenuItem);
 
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(e -> System.exit(0));
+        exitMenuItem.addActionListener(e -> gameFrame.dispose());
         fileMenu.add(exitMenuItem);
 
         return fileMenu;
@@ -169,8 +174,12 @@ public class Table {
                             options[0]);
             if (n == 0) {
                 gameFrame.setVisible(false);
-                ClientController.disconnect();
-                System.exit(0);
+                try {
+                    ClientController.disconnect("Игра окончена");
+                } catch (ClientException e) {
+                    System.err.println(e.getMessage());
+                }
+                gameFrame.dispose();
             }
         }
     }

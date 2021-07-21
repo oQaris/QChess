@@ -11,6 +11,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.server.controller.ServerController;
+import io.deeplay.qchess.server.exceptions.ServerException;
 import io.deeplay.qchess.server.handlers.ClientRequestHandler;
 import java.io.IOException;
 
@@ -23,30 +24,50 @@ public class GameService {
     private static RemotePlayer firstPlayer;
     private static RemotePlayer secondPlayer;
 
+    // TODO: вынести
     public static Color getPlayerColor(int clientID) {
         // TODO: ОСТОРОЖНО: ВОНЯЕТ ЖУТКИМ ГОВНОКОДОМ!!!
         synchronized (mutex) {
+            // новая игра
+            if (firstPlayer == null && secondPlayer == null) {
+                gs = new GameSettings(BoardFilling.STANDARD);
+            }
+            boolean newGame = false;
+            Color response = null;
+
             // добавление 1 игрока
             if (firstPlayer == null) {
-                gs = new GameSettings(BoardFilling.STANDARD);
                 firstPlayer = new RemotePlayer(gs, Color.WHITE, clientID);
-                return Color.WHITE;
+                response = Color.WHITE;
+                newGame = true;
             }
             // добавление 2 игрока
             else if (secondPlayer == null) {
                 secondPlayer = new RemotePlayer(gs, Color.BLACK, clientID);
+                response = Color.BLACK;
+                newGame = true;
+            }
+            // новая игра
+            if (newGame && firstPlayer != null && secondPlayer != null) {
                 try {
                     game = new Selfplay(gs, firstPlayer, secondPlayer);
                 } catch (ChessError chessError) {
                     // Стандартное заполнение доски верно всегда
                 }
-                return Color.BLACK;
             }
 
-            return firstPlayer.getPlayerID() == clientID
-                    ? firstPlayer.getColor()
-                    : secondPlayer.getColor();
+            return response != null
+                    ? response
+                    : firstPlayer.getPlayerID() == clientID
+                            ? firstPlayer.getColor()
+                            : secondPlayer.getColor();
         }
+    }
+
+    // TODO: вынести
+    public static void removePlayer(int clientID) {
+        if (firstPlayer != null && firstPlayer.getPlayerID() == clientID) firstPlayer = null;
+        else secondPlayer = null;
     }
 
     /** Выполняет игровое действие */
@@ -70,7 +91,10 @@ public class GameService {
             }
         } catch (ChessError chessError) {
             // TODO: критическая ошибка в игре
-            ServerController.executeCommand("msg " + json);
+            try {
+                ServerController.executeCommand("msg " + json);
+            } catch (ServerException ignore) {
+            }
         }
         // send move to second player
         int sendToClientID =
@@ -78,7 +102,10 @@ public class GameService {
                         ? firstPlayer.getPlayerID()
                         : secondPlayer.getPlayerID();
         final String finalResponse = ClientRequestHandler.convertToServerToClientDTO(MOVE, json);
-        ServerController.send(finalResponse, sendToClientID);
+        try {
+            ServerController.send(finalResponse, sendToClientID);
+        } catch (ServerException ignore) {
+        }
         ServerController.getView().ifPresent(v -> v.print("Отправлен json: " + finalResponse));
         return null;
     }

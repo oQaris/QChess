@@ -58,8 +58,9 @@ public class ClientController {
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void disconnect() throws ClientException {
+    public static void disconnect(String reason) throws ClientException {
         client.disconnect();
+        view.disconnect(reason);
     }
 
     /** @return true, если клиент подключен к серверу, false иначе */

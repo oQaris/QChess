@@ -17,7 +17,7 @@ public class ClientCommandService {
                             CHAT_MESSAGE, command.substring(4)));
         }
         if (command.equals("disconnect")) {
-            ClientController.disconnect();
+            ClientController.disconnect("Клиент отключен");
         }
     }
 }

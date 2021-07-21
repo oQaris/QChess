@@ -18,5 +18,13 @@ public interface IClientView extends Closeable {
     /** @return доска */
     ViewBoard getBoard();
 
+    // TODO: javadoc
     void endGame();
+
+    /**
+     * Вызывается при отключении от сервера
+     *
+     * @param reason причина отключения
+     */
+    void disconnect(String reason);
 }

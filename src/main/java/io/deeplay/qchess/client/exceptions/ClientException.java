@@ -1,6 +1,6 @@
 package io.deeplay.qchess.client.exceptions;
 
-public class ClientException extends RuntimeException {
+public class ClientException extends Exception {
 
     public ClientException(ClientErrorCode code, Throwable cause) {
         super(code.getMessage(), cause);

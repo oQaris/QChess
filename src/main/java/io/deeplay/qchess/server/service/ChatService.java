@@ -1,6 +1,7 @@
 package io.deeplay.qchess.server.service;
 
 import io.deeplay.qchess.server.controller.ServerController;
+import io.deeplay.qchess.server.exceptions.ServerException;
 
 public class ChatService {
 
@@ -13,7 +14,10 @@ public class ChatService {
                                                 "Пришло сообщение от клиента %d: %s",
                                                 clientID, json)));
         // TODO: удалить/изменить. Отправляет сообщение всем, включая писавшего
-        ServerController.executeCommand("msg " + json);
+        try {
+            ServerController.executeCommand("msg " + json);
+        } catch (ServerException ignore) {
+        }
         return null;
     }
 }
