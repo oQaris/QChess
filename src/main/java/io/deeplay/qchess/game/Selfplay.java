@@ -39,7 +39,7 @@ public class Selfplay {
                 && !isDraw) {
             // TODO: получать Action, сделать предложение ничьи и возможность сдаться
             Move move = currentPlayerToMove.getNextMove();
-            logger.info("От игрока пришел ход: {}", move);
+            logger.debug("От игрока пришел ход: {}", move);
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 tryMove(move);
@@ -76,7 +76,7 @@ public class Selfplay {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            logger.info(
+            logger.debug(
                     "{} сделал ход: {} фигурой: {}",
                     currentPlayerToMove,
                     move,

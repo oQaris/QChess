@@ -32,10 +32,8 @@ public class History implements Iterable<String> {
     private Move lastMove;
     private int peaceMoveCount = 0;
 
-    private boolean isWhiteLongCastlingPossibility = true;
-    private boolean isBlackLongCastlingPossibility = true;
-    private boolean isWhiteShortCastlingPossibility = true;
-    private boolean isBlackShortCastlingPossibility = true;
+    private boolean isWhiteCastlingPossibility = true;
+    private boolean isBlackCastlingPossibility = true;
 
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
@@ -61,8 +59,6 @@ public class History implements Iterable<String> {
         this.lastMove = lastMove;
         if (lastMove != null) moves.add(lastMove);
 
-        // handleCastlingPossibility(lastMove);
-
         String rec = convertBoardToStringForsythEdwards();
         recordsList.add(rec);
 
@@ -72,32 +68,6 @@ public class History implements Iterable<String> {
         whiteStep = !whiteStep;
         return rec;
     }
-
-    /* private void handleCastlingPossibility(Move move) throws ChessException {
-        if(!isWhiteLongCastlingPossibility && !isBlackLongCastlingPossibility
-            && !isWhiteShortCastlingPossibility && !isBlackShortCastlingPossibility)
-            return;
-
-        Figure figure = gameSettings.board.getFigure(move.getFrom());
-        FigureType type = figure.getType();
-        if(type!=FigureType.KING && type != FigureType.ROOK)
-            return;
-
-        if (figure.getColor() == Color.WHITE) {
-            if (type == FigureType.KING) {
-                isWhiteLongCastlingPossibility = false;
-                isWhiteShortCastlingPossibility = false;
-            }
-            else if(isWhiteLongCastlingPossibility && isBlackLongCastlingPossibility){
-                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
-            }
-            }
-
-        if(isWhiteCastlingPossibility && figure.getColor()==Color.WHITE)
-            isWhiteCastlingPossibility = false;
-        if(isBlackCastlingPossibility && figure.getColor()==Color.BLACK)
-            isBlackCastlingPossibility = false;
-    }*/
 
     public void checkAndAddPeaceMoveCount(Move move) throws ChessException {
         if (move.getMoveType() == MoveType.ATTACK
@@ -157,6 +127,9 @@ public class History implements Iterable<String> {
 
     private String getCastlingPossibility(Color color) throws ChessError {
         String res = "";
+        if (color == Color.WHITE && !isWhiteCastlingPossibility) return res;
+        if (color == Color.BLACK && !isBlackCastlingPossibility) return res;
+
         Figure king = gameSettings.board.findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return res;
@@ -166,6 +139,11 @@ public class History implements Iterable<String> {
                 gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(1, 0));
         if (rightRook != null && !rightRook.wasMoved()) res += "k";
         if (leftRook != null && !leftRook.wasMoved()) res += "q";
+
+        if (res.equals("")) {
+            if (color == Color.WHITE) isWhiteCastlingPossibility = false;
+            else isBlackCastlingPossibility = false;
+        }
         return color == Color.WHITE ? res.toUpperCase() : res;
     }
 
