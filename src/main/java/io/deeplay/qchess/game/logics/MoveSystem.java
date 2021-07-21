@@ -51,7 +51,7 @@ public class MoveSystem {
                             yield board.removeFigure(history.getLastMove().getTo());
                         }
                             // превращение пешки
-                        case TURN_INTO -> {
+                        case TURN_INTO, TURN_INTO_ATTACK -> {
                             FigureType turnIntoType = move.getTurnInto();
                             Figure turnIntoFigure =
                                     Figure.build(
