@@ -11,19 +11,19 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class ConnectFrame {
+public class ConnectFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
-    private final JFrame frame;
     private final JPanel panel;
     private final JTextField ipField;
     private final JTextField portField;
-    private Table table;
 
-    public ConnectFrame() {
+    public ConnectFrame(MainFrame mf) {
+        this.mf = mf;
         frame = new JFrame("Connect");
         frame.setSize(OUTER_FRAME_DIMENSION);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
         panel = new JPanel();
         ipField = getInputIP();
@@ -31,6 +31,7 @@ public class ConnectFrame {
         panel.add(ipField);
         panel.add(portField);
         panel.add(addButtonConnect());
+
         frame.add(panel);
 
         frame.setVisible(true);
@@ -61,7 +62,7 @@ public class ConnectFrame {
                         try {
                             ClientController.connect(ip, port);
                         } catch (ClientException clientException) {
-                            // TODO: окошко "не удалось подключиться к серверу"
+                            new MessageFrame(frame, "Предупреждение", "Не удалось подключиться к серверу");
                             return;
                         }
                         while (!ClientController.isConnected()) Thread.onSpinWait();
@@ -70,7 +71,9 @@ public class ConnectFrame {
                             frame.dispose();
                             GameGUIAdapterService.init();
                             if (!color) GameGUIAdapterService.changeIsWhiteStep();
-                            table = new Table("onestyle", color);
+
+                            mf.createChoosePlayerFrame(color);
+                            mf.destroyConnectFrame();
                         } catch (ClientException clientException) {
                             System.err.println(clientException.getMessage());
                         }
@@ -87,9 +90,5 @@ public class ConnectFrame {
                 });
 
         return connectButton;
-    }
-
-    public Table getTable() {
-        return table;
     }
 }

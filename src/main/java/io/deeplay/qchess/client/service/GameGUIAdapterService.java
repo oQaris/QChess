@@ -56,7 +56,8 @@ public class GameGUIAdapterService {
                                 move.getTo().getRow(),
                                 move.getTo().getColumn(),
                                 move.getMoveType() == MoveType.ATTACK
-                                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK);
+                                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK
+                                        || move.getMoveType() == MoveType.EN_PASSANT);
                 set.add(vc);
             }
         } catch (ChessError e) {
@@ -168,17 +169,6 @@ public class GameGUIAdapterService {
 
     public static String getStatus(boolean color) {
         try {
-            /*if (gs.endGameDetector.isCheckmate(Color.WHITE)) {
-                return "Мат белых";
-            } else if (gs.endGameDetector.isCheckmate(Color.BLACK)) {
-                return "Мат черных";
-            } else if (gs.endGameDetector.isStalemate(Color.WHITE)) {
-                return "Пат белых";
-            } else if (gs.endGameDetector.isStalemate(Color.BLACK)) {
-                return "Пат черных";
-            } else if (gs.endGameDetector.isDraw()) {
-                return "Ничья";
-            }*/
             if (gs.endGameDetector.isCheckmate(color? Color.BLACK : Color.WHITE)) {
                 return "Мат " + (color? "черным" : "белым");
             } else if (gs.endGameDetector.isStalemate(color? Color.BLACK : Color.WHITE)) {

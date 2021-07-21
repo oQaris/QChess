@@ -158,11 +158,14 @@ public class ClientController {
     // TODO: добавить javadoc
     public static int tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
         Move move = GameGUIAdapterService.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
-        if (move != null
-                && (move.getMoveType() == MoveType.TURN_INTO
-                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK)) {
-            return 2;
-        } else if (move != null) {
+        if (move != null) {
+            if (move.getMoveType() == MoveType.TURN_INTO || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+                return 2;
+            } else if(move.getMoveType() == MoveType.LONG_CASTLING || move.getMoveType() == MoveType.SHORT_CASTLING) {
+                return 3;
+            } else if(move.getMoveType() == MoveType.EN_PASSANT) {
+                return 4;
+            }
             return 1;
         }
         return 0;
@@ -207,5 +210,9 @@ public class ClientController {
             return FigureType.BISHOP;
         }
         return null;
+    }
+    
+    public static void chooseEnemy(int enemyNumber) {
+
     }
 }

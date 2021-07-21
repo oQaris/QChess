@@ -6,14 +6,17 @@ import io.deeplay.qchess.client.view.model.ViewBoard;
 
 public class ClientGUI implements IClientView {
 
-    private ConnectFrame connectFrame;
+    private final MainFrame mf;
 
-    public ClientGUI() {}
+    public ClientGUI() {
+        mf = new MainFrame();
+    }
 
     @Override
     public void startView() {
         ClientController.setView(this);
-        connectFrame = new ConnectFrame();
+        mf.createConnectFrame();
+        //connectFrame = new ConnectFrame();
         // Table tableWhite = new Table("onestyle", true);
         // Table tableBlack = new Table("onestyle", false);
     }
@@ -25,7 +28,7 @@ public class ClientGUI implements IClientView {
 
     @Override
     public void drawBoard() {
-        connectFrame.getTable().repaint();
+        mf.getTable().repaint();
     }
 
     @Override
@@ -35,12 +38,12 @@ public class ClientGUI implements IClientView {
 
     @Override
     public void endGame() {
-        connectFrame.getTable().endGame();
+        mf.getTable().endGame();
     }
 
     @Override
     public void endGameInverse() {
-        connectFrame.getTable().endGameInverse(true);
+        mf.getTable().endGameInverse(true);
     }
 
     @Override
