@@ -25,14 +25,16 @@ public class ClientHandler implements Runnable {
     private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
-    private final Consumer<ClientHandler> removeClientFromClientList;
+    private final Consumer<Integer> removeClientFromClientList;
+    private final int id;
     private volatile boolean stop;
 
-    public ClientHandler(Socket socket, Consumer<ClientHandler> removeClientFromClientList)
+    public ClientHandler(Socket socket, Consumer<Integer> removeClientFromClientList, int id)
             throws ServerException {
         try {
             this.socket = socket;
             this.removeClientFromClientList = removeClientFromClientList;
+            this.id = id;
             InputStream socketInput = tryGetSocketInput(socket);
             OutputStream socketOutput = tryGetSocketOutput(socket);
             in = new BufferedReader(new InputStreamReader(socketInput, StandardCharsets.UTF_8));
@@ -42,7 +44,7 @@ public class ClientHandler implements Runnable {
                                     new OutputStreamWriter(socketOutput, StandardCharsets.UTF_8)),
                             false);
         } catch (ServerException e) {
-            logger.warn("Ошибка создания обработчика для клиента {}", this);
+            logger.warn("Ошибка создания обработчика для клиента {}: {}", this, e.getMessage());
             closeClient();
             throw new ServerException(ERROR_CREATE_CLIENT_HANDLER, e);
         }
@@ -78,7 +80,7 @@ public class ClientHandler implements Runnable {
                 clientHandlerUpdate();
             }
         } catch (IOException e) {
-            logger.warn("Клиент {} разорвал подключение", this);
+            logger.warn("Клиент {} разорвал подключение: {}", this, e.getMessage());
         } finally {
             closeClient();
             logger.debug("Клиент {} удален", this);
@@ -88,8 +90,8 @@ public class ClientHandler implements Runnable {
     private void clientHandlerUpdate() throws IOException {
         if (in.ready()) {
             String request = in.readLine();
-            String response = ClientRequestHandler.process(request);
-            send(response);
+            String response = ClientRequestHandler.process(request, id);
+            sendIfNotNull(response);
         }
     }
 
@@ -109,12 +111,12 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             logger.warn("Ошибка закрытия сокета клиента в обработчике");
         }
-        removeClientFromClientList.accept(this);
+        removeClientFromClientList.accept(id);
         logger.debug("Обработчик клиента {} завершил свою работу", this);
     }
 
-    /** Отправляет клиенту строку, никак не обрабатывая */
-    public void send(String json) {
+    /** Отправляет клиенту строку, если она не null */
+    public void sendIfNotNull(String json) {
         if (json != null) {
             out.println(json);
             out.flush();

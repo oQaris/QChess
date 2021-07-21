@@ -1,6 +1,6 @@
-package io.deeplay.qchess.server.service.special;
+package io.deeplay.qchess.server.service;
 
-import static io.deeplay.qchess.clientserverconversation.dto.RequestType.CHAT_MESSAGE;
+import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.CHAT_MESSAGE;
 
 import io.deeplay.qchess.server.controller.ServerController;
 import io.deeplay.qchess.server.exceptions.ServerException;
@@ -16,11 +16,7 @@ public class ServerCommandService {
                             CHAT_MESSAGE, command.substring(4)));
         }
         if (command.equals("stop")) {
-            try {
-                ServerController.stopServer();
-            } catch (ServerException ignore) {
-                // Сервис может вызываться только при открытом сервере
-            }
+            ServerController.stopServer();
         }
     }
 }

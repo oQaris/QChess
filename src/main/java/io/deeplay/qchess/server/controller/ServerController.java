@@ -12,7 +12,7 @@ public class ServerController {
 
     /** @return окружение сервера */
     public static Optional<IServerView> getView() {
-        return Optional.of(view);
+        return Optional.ofNullable(view);
     }
 
     /**
@@ -95,5 +95,23 @@ public class ServerController {
      */
     public static void sendAll(String json) throws ServerException {
         server.sendAll(json);
+    }
+
+    /**
+     * Отправляет сообщение клиенту
+     *
+     * @throws ServerException если сервер закрыт
+     */
+    public static void send(String json, int clientID) throws ServerException {
+        server.send(json, clientID);
+    }
+
+    /**
+     * Закрывает соединение с клиентом
+     *
+     * @throws ServerException если сервер закрыт
+     */
+    public static void closeConnection(int clientID) throws ServerException {
+        server.closeConnection(clientID);
     }
 }

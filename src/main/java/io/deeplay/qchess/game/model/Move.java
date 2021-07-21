@@ -1,18 +1,20 @@
 package io.deeplay.qchess.game.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.Objects;
 
 public class Move {
     @JsonProperty("type")
-    private final MoveType moveType;
+    private MoveType moveType;
 
     @JsonProperty("from")
-    private final Cell from;
+    private Cell from;
 
     @JsonProperty("to")
-    private final Cell to;
+    private Cell to;
+
     /**
      * Не должно влиять на equals и hashCode, чтобы, проверяя корректность ходов, у пешек не
      * возникали дополнительные условия, т.к. пешки на доске не знают во что превратиться без
@@ -21,17 +23,20 @@ public class Move {
     @JsonProperty("turnInto")
     private FigureType turnInto;
 
-    public Move(MoveType moveType, Cell from, Cell to) {
+    public Move(final MoveType moveType, final Cell from, final Cell to) {
         this.moveType = moveType;
         this.from = from;
         this.to = to;
     }
 
+    public Move() {}
+
     public FigureType getTurnInto() {
         return turnInto;
     }
 
-    public void setTurnInto(FigureType turnInto) {
+    @JsonSetter
+    public void setTurnInto(final FigureType turnInto) {
         this.turnInto = turnInto;
     }
 

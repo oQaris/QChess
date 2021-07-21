@@ -1,6 +1,8 @@
 package io.deeplay.qchess.client;
 
 import io.deeplay.qchess.client.exceptions.ClientException;
+import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
+import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
 
 public interface IClient {
 
@@ -43,6 +45,17 @@ public interface IClient {
     void setIp(String ip) throws ClientException;
 
     /**
+     * Эта операция блокирует поток, пока не будет получено сообщение от сервера или не возникнет
+     * исключение
+     *
+     * @param getRequestType запрос, на который нужно ждать ответ
+     * @return сообщение от сервера
+     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
+     *     было разорвано
+     */
+    GetRequestDTO waitForResponse(GetRequestType getRequestType) throws ClientException;
+
+    /**
      * Выполняет команду клиента
      *
      * @throws ClientException если при выполнении команды возникла ошибка
@@ -50,9 +63,9 @@ public interface IClient {
     void executeCommand(String command) throws ClientException;
 
     /**
-     * Отправляет сообщение серверу
+     * Отправляет серверу строку, если она не null
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    void send(String json) throws ClientException;
+    void sendIfNotNull(String json) throws ClientException;
 }

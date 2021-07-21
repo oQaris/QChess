@@ -6,7 +6,9 @@ public enum ClientErrorCode {
     ERROR_GET_SOCKET_OUTPUT("Ошибка получения потока вывода сокета"),
     CLIENT_IS_ALREADY_CONNECTED("Клиент уже подключен к серверу"),
     CLIENT_IS_NOT_CONNECTED("Клиент еще не подключен"),
-    ERROR_CREATE_TRAFFIC_HANDLER("Ошибка создания обработчика трафика");
+    CONNECTION_WAS_BROKEN("Соединение было разорвано"),
+    ERROR_CREATE_TRAFFIC_HANDLER("Ошибка создания обработчика трафика"),
+    UNKNOWN_REQUEST("Неизвестный запрос");
 
     private final String message;
 

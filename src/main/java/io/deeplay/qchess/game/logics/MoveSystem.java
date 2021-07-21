@@ -51,7 +51,7 @@ public class MoveSystem {
                             yield board.removeFigure(history.getLastMove().getTo());
                         }
                             // превращение пешки
-                        case TURN_INTO -> {
+                        case TURN_INTO, TURN_INTO_ATTACK -> {
                             FigureType turnIntoType = move.getTurnInto();
                             Figure turnIntoFigure =
                                     Figure.build(
@@ -103,8 +103,34 @@ public class MoveSystem {
         return res;
     }
 
+    /**
+     * @param cell клетка
+     * @return все возможные ходы из клетки
+     */
+    public List<Move> getAllCorrectMoves(Cell cell) throws ChessError {
+        List<Move> res = new ArrayList<>(27);
+        if (!board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
+        Figure figure = board.getFigureUgly(cell);
+        if (figure == null) return res;
+        for (Move m : figure.getAllMoves(roomSettings))
+            if (isCorrectVirtualMoveForCell(m)) res.add(m);
+        return res;
+    }
+
+    private boolean isCorrectVirtualMoveForCell(Move move) throws ChessError {
+        try {
+            return move != null && isCorrectVirtualMove(move);
+        } catch (ChessException | NullPointerException e) {
+            logger.warn(
+                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
+                    move,
+                    e.getMessage());
+            return false;
+        }
+    }
+
     /** @return true если ход корректный */
-    public boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
+    private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
         try {
             return move != null
                     && checkCorrectnessIfSpecificMove(move)

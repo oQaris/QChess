@@ -3,16 +3,36 @@ package io.deeplay.qchess.client.controller;
 import io.deeplay.qchess.client.IClient;
 import io.deeplay.qchess.client.LocalClient;
 import io.deeplay.qchess.client.exceptions.ClientException;
+import io.deeplay.qchess.client.service.GameGUIAdapterService;
+import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
+import io.deeplay.qchess.client.view.gui.EndGame;
+import io.deeplay.qchess.client.view.gui.ViewCell;
+import io.deeplay.qchess.client.view.model.ViewFigure;
+import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
+import io.deeplay.qchess.clientserverconversation.dto.other.GetRequestDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationService;
+import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.FigureType;
+import java.io.IOException;
 import java.util.Optional;
+import java.util.Set;
 
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
+    public static boolean repaint = false;
     private static IClientView view;
 
-    /** @return окружение клиента */
+    /**
+     * @deprecated Не безопасное использование View. Если необходимо использовать логику View, не
+     *     считая простого вывода, лучше создать здесь метод и использовать его
+     * @return окружение клиента
+     */
+    @Deprecated
     public static Optional<IClientView> getView() {
-        return Optional.of(view);
+        return Optional.ofNullable(view);
     }
 
     /**
@@ -43,8 +63,9 @@ public class ClientController {
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void disconnect() throws ClientException {
+    public static void disconnect(String reason) throws ClientException {
         client.disconnect();
+        view.disconnect(reason);
     }
 
     /** @return true, если клиент подключен к серверу, false иначе */
@@ -81,6 +102,23 @@ public class ClientController {
     }
 
     /**
+     * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
+     *
+     * @return true, если цвет игрока белый
+     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
+     *     было разорвано
+     */
+    public static boolean waitForColor() throws ClientException {
+        GetRequestDTO dto = client.waitForResponse(GetRequestType.GET_COLOR);
+        Color color = null;
+        try {
+            color = SerializationService.deserialize(dto.request, Color.class);
+        } catch (IOException ignore) {
+        }
+        return color == Color.WHITE;
+    }
+
+    /**
      * Выполняет команду клиента
      *
      * @throws ClientException если при выполнении команды возникла ошибка
@@ -90,11 +128,81 @@ public class ClientController {
     }
 
     /**
-     * Отправляет сообщение серверу
+     * Отправляет серверу строку, если она не null
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void send(String json) throws ClientException {
-        client.send(json);
+    public static void sendIfNotNull(String json) throws ClientException {
+        client.sendIfNotNull(json);
+    }
+
+    // TODO: добавить javadoc
+    public static Set<ViewCell> getAllMoves(int row, int column) {
+        return GameGUIAdapterService.getAllMoves(row, column);
+    }
+
+    // TODO: добавить javadoc
+    public static boolean checkFigure(int row, int column) {
+        return GameGUIAdapterService.checkFigure(row, column);
+    }
+
+    // TODO: добавить javadoc
+    public static boolean checkFigure(int row, int column, boolean isWhite) {
+        return GameGUIAdapterService.checkFigure(row, column, isWhite);
+    }
+
+    // TODO: добавить javadoc
+    public static ViewFigure getFigure(int row, int column) {
+        return GameGUIAdapterService.getFigure(row, column);
+    }
+
+    // TODO: добавить javadoc
+    public static int tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+        Move move = GameGUIAdapterService.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
+        if (move != null
+                && (move.getMoveType() == MoveType.TURN_INTO
+                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK)) {
+            return 2;
+        } else if (move != null) {
+            return 1;
+        }
+        return 0;
+    }
+
+    // TODO: добавить javadoc
+    public static void makeMove(
+            int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure) {
+        Move move =
+                GameGUIAdapterService.makeMove(
+                        rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));
+        GameService.sendMove(move);
+    }
+
+    // TODO: добавить javadoc
+    public static boolean isWhiteStep() {
+        return GameGUIAdapterService.isWhiteStep();
+    }
+
+    // TODO: добавить javadoc
+    public static EndGame getEndGame() {
+        return new EndGame(GameGUIAdapterService.getStatus(), GameGUIAdapterService.getEnd());
+    }
+
+    public static void drawBoard() {
+        view.drawBoard();
+    }
+
+    private static FigureType getFigureType(Object figure) {
+        String strFigure = (String) figure;
+        if ("Ферзь".equals(strFigure)) {
+            return FigureType.QUEEN;
+        } else if ("Ладья".equals(strFigure)) {
+            return FigureType.ROOK;
+        } else if ("Конь".equals(strFigure)) {
+            return FigureType.KNIGHT;
+        } else if ("Слон".equals(strFigure)) {
+            return FigureType.BISHOP;
+        }
+        return null;
     }
 }
