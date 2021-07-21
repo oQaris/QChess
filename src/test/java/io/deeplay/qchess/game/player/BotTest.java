@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class BotTest extends TestCase {
     private static final Logger log = LoggerFactory.getLogger(BotTest.class);
-    final int COUNT = 1000;
+    final int COUNT = 1;
 
     public void testBotsRandom() throws ChessError {
         // ExecutorService executor = Executors.newCachedThreadPool();
