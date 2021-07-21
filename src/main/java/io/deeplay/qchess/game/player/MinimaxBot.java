@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +104,7 @@ public class MinimaxBot extends Player {
     @Override
     public Move getNextMove() throws ChessError {
         List<Move> topMoves = new ArrayList<>();
-        ///Move bestMove = null;
+        Move bestMove = null;
         int maxGrade = Integer.MIN_VALUE;
         for (Move move : ms.getAllCorrectMoves(color)) {
             AtomicInteger curGrade = new AtomicInteger();
@@ -114,17 +113,17 @@ public class MinimaxBot extends Player {
             } catch (ChessException e) {
                 e.printStackTrace();
             }
-            if (curGrade.get() > maxGrade) {
+            /*if (curGrade.get() > maxGrade) {
                 maxGrade = curGrade.get();
                 topMoves.clear();
             }
-            if (curGrade.get() >= maxGrade) topMoves.add(move);
-            /*if (curGrade.get() > maxGrade) {
+            if (curGrade.get() >= maxGrade) topMoves.add(move);*/
+            if (curGrade.get() > maxGrade) {
                 maxGrade = curGrade.get();
                 bestMove = move;
-            }*/
+            }
         }
-        Move bestMove = topMoves.get(new Random().nextInt(topMoves.size()));
+        // Move bestMove = topMoves.get(new Random().nextInt(topMoves.size()));
         turnIntoInQueen(bestMove);
         return bestMove;
     }

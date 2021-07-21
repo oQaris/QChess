@@ -189,7 +189,7 @@ public class BotTest extends TestCase {
                 new Move(MoveType.QUIET_MOVE, Cell.parse("f6"), Cell.parse("f8")), move2);
     }
 
-    public void testEvaluateBoard() throws ChessException, ChessError {
+    public void testEvaluateBoard() throws ChessException {
         GameSettings roomSettings = new GameSettings(BoardFilling.STANDARD);
         MinimaxBot bot = new MinimaxBot(roomSettings, Color.WHITE, 2);
 
