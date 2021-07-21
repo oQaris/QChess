@@ -1,6 +1,6 @@
 package io.deeplay.qchess.server.service;
 
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.MOVE;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.MOVE;
 
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.GameSettings;

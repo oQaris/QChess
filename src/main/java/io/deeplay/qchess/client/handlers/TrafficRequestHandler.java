@@ -1,17 +1,17 @@
 package io.deeplay.qchess.client.handlers;
 
 import static io.deeplay.qchess.client.exceptions.ClientErrorCode.UNKNOWN_REQUEST;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.CHAT_MESSAGE;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.DISCONNECT;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.GET;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.INCORRECT_REQUEST;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.MOVE;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.CHAT_MESSAGE;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.DISCONNECT;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.GET;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.INCORRECT_REQUEST;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.MOVE;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.ChatService;
 import io.deeplay.qchess.client.service.GameService;
-import io.deeplay.qchess.clientserverconversation.dto.MainRequestType;
+import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
 import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerDTO;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
@@ -21,7 +21,7 @@ import java.util.function.UnaryOperator;
 
 /** Перенаправляет запрос требуемому сервису */
 public class TrafficRequestHandler {
-    private static final Map<MainRequestType, UnaryOperator<String>> redirector =
+    private static final Map<ServerToClientType, UnaryOperator<String>> redirector =
             Map.of(
                     INCORRECT_REQUEST,
                     s -> null,
@@ -49,9 +49,9 @@ public class TrafficRequestHandler {
         try {
             ServerToClientDTO dtoRequest =
                     SerializationService.deserialize(jsonServerRequest, ServerToClientDTO.class);
-            response = redirector.get(dtoRequest.mainRequestType).apply(dtoRequest.request);
+            response = redirector.get(dtoRequest.type).apply(dtoRequest.request);
             if (response != null) {
-                response = convertToClientToServerDTO(dtoRequest.mainRequestType, response);
+                response = convertToClientToServerDTO(dtoRequest.type, response);
             }
         } catch (IOException e) {
             response = convertToClientToServerDTO(INCORRECT_REQUEST, UNKNOWN_REQUEST.getMessage());
@@ -64,7 +64,7 @@ public class TrafficRequestHandler {
      *
      * @return json
      */
-    public static String convertToClientToServerDTO(MainRequestType mainRequestType, String json) {
+    public static String convertToClientToServerDTO(ServerToClientType mainRequestType, String json) {
         return SerializationService.serialize(new ClientToServerDTO(mainRequestType, json));
     }
 }

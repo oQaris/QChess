@@ -1,6 +1,6 @@
 package io.deeplay.qchess.client.service;
 
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.MOVE;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.MOVE;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;

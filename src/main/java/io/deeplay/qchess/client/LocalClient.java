@@ -9,10 +9,10 @@ import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.handlers.InputTrafficHandler;
 import io.deeplay.qchess.client.handlers.TrafficRequestHandler;
 import io.deeplay.qchess.client.service.ClientCommandService;
-import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
-import io.deeplay.qchess.clientserverconversation.dto.MainRequestType;
-import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
 import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
+import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
+import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
+import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import java.io.IOException;
 import java.net.Socket;
@@ -25,7 +25,10 @@ public class LocalClient implements IClient {
     private static String ip;
     private static int port;
     private static volatile boolean waitForResponse;
+
+    /** volatile используется, т.к. нужно следить за изменением ссылки, а не объекта */
     private static volatile ServerToClientDTO lastResponse;
+
     private final Object mutex = new Object();
     private final Object mutexWaitForResponse = new Object();
     private final Object mutexLastResponse = new Object();
@@ -147,7 +150,7 @@ public class LocalClient implements IClient {
             }
             inputTrafficHandler.sendIfNotNull(
                     TrafficRequestHandler.convertToClientToServerDTO(
-                            MainRequestType.GET,
+                            ServerToClientType.GET,
                             SerializationService.serialize(
                                     new GetRequestDTO(getRequestType, null))));
             while (true) {
@@ -172,8 +175,8 @@ public class LocalClient implements IClient {
                     } catch (IOException | NullPointerException e) {
                         // Ожидается другой ответ
                     }
-                    if (lastResponse.mainRequestType
-                                    == MainRequestType.GET // TODO: заменить на POST
+                    if (lastResponse.type
+                                    == ServerToClientType.GET // TODO: заменить на POST
                             && getDTO != null
                             && getDTO.requestType == getRequestType) return getDTO;
                 }
@@ -203,7 +206,7 @@ public class LocalClient implements IClient {
                 logger.info("Отключение клиента от сервера...");
                 inputTrafficHandler.sendIfNotNull(
                         TrafficRequestHandler.convertToClientToServerDTO(
-                                MainRequestType.DISCONNECT, null));
+                                ServerToClientType.DISCONNECT, null));
                 closeInputTrafficHandler();
                 isConnected = false;
                 logger.info("Клиент отключен от сервера {}:{}", ip, port);

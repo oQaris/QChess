@@ -1,6 +1,6 @@
 package io.deeplay.qchess.client.service;
 
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.CHAT_MESSAGE;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.CHAT_MESSAGE;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;

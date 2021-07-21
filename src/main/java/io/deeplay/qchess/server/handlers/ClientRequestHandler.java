@@ -1,13 +1,13 @@
 package io.deeplay.qchess.server.handlers;
 
 import static io.deeplay.qchess.client.exceptions.ClientErrorCode.UNKNOWN_REQUEST;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.CHAT_MESSAGE;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.DISCONNECT;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.GET;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.INCORRECT_REQUEST;
-import static io.deeplay.qchess.clientserverconversation.dto.MainRequestType.MOVE;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.CHAT_MESSAGE;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.DISCONNECT;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.GET;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.INCORRECT_REQUEST;
+import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.MOVE;
 
-import io.deeplay.qchess.clientserverconversation.dto.MainRequestType;
+import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
 import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerDTO;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
@@ -22,7 +22,7 @@ import java.util.function.BiFunction;
 
 /** Перенаправляет запрос требуемому сервису и запаковывает ответ от него */
 public class ClientRequestHandler {
-    private static final Map<MainRequestType, BiFunction<String, Integer, String>> redirector =
+    private static final Map<ServerToClientType, BiFunction<String, Integer, String>> redirector =
             Map.of(
                     INCORRECT_REQUEST,
                     (json, id) -> null,
@@ -62,7 +62,7 @@ public class ClientRequestHandler {
      *
      * @return json
      */
-    public static String convertToServerToClientDTO(MainRequestType mainRequestType, String json) {
+    public static String convertToServerToClientDTO(ServerToClientType mainRequestType, String json) {
         return SerializationService.serialize(new ServerToClientDTO(mainRequestType, json));
     }
 }

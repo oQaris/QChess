@@ -1,17 +1,17 @@
 package io.deeplay.qchess.clientserverconversation.dto.main;
 
 import com.google.gson.annotations.SerializedName;
-import io.deeplay.qchess.clientserverconversation.dto.MainRequestType;
 
-public class ClientToServerDTO {
+/** Запрос от клиента к серверу */
+public abstract class ClientToServerDTO {
     @SerializedName("type")
-    public final MainRequestType mainRequestType;
+    public final ClientToServerType type;
 
-    @SerializedName("request")
-    public final String request;
+    @SerializedName("sessionToken")
+    public final String sessionToken;
 
-    public ClientToServerDTO(final MainRequestType mainRequestType, final String request) {
-        this.mainRequestType = mainRequestType;
-        this.request = request;
+    protected ClientToServerDTO(final ClientToServerType type, final String sessionToken) {
+        this.type = type;
+        this.sessionToken = sessionToken;
     }
 }
