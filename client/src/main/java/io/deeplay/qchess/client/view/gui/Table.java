@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -76,9 +77,6 @@ public class Table extends Frame {
         this.boardPanel = new BoardPanel();
         this.frame.add(boardPanel, BorderLayout.CENTER);
 
-        final JMenuBar tableMenuBar = createTableMenuBar();
-        this.frame.setJMenuBar(tableMenuBar);
-
         this.frame.setVisible(true);
 
         clickedCell = -1;
@@ -118,25 +116,17 @@ public class Table extends Frame {
         System.out.println("END");
         EndGame endGame = ClientController.getEndGame(myColor ^ sign);
         if (endGame.isEnd()) {
-            Object[] options = {"Да", "Нет!"};
-            int n =
-                    JOptionPane.showOptionDialog(
-                            frame,
-                            endGame.getStatus() + "\nЗакрыть окно?",
-                            "Подтверждение",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[0]);
-            if (n == 0) {
-                mf.destroyTable();
-                try {
-                    ClientController.disconnect("Игра окончена");
-                } catch (ClientException e) {
-                    System.err.println(e.getMessage());
-                }
-            }
+            closeGame(endGame.getStatus());
+        }
+    }
+
+    public void closeGame(String message) {
+        new MessageFrame(frame, "Игра окончена", message);
+        mf.destroyTable();
+        try {
+            ClientController.disconnect("Игра окончена");
+        } catch (ClientException e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -149,6 +139,7 @@ public class Table extends Frame {
             int size = BOARD_SIZE * BOARD_SIZE;
             for (int i = 0; i < size; i++) {
                 final CellPanel cellPanel = new CellPanel(this, inverseInt(i, size));
+                cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 this.boardCells.add(cellPanel);
                 this.add(cellPanel);
             }

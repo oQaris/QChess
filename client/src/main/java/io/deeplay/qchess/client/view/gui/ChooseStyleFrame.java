@@ -2,6 +2,8 @@ package io.deeplay.qchess.client.view.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
@@ -19,7 +21,7 @@ public class ChooseStyleFrame extends Frame {
     private final JPanel panel;
     private final ButtonGroup buttonGroup;
     private final Map<JRadioButton, String> rbs = new HashMap<>();
-    private int enemyNumber;
+    private final GridBagConstraints gbc;
 
     public ChooseStyleFrame(MainFrame mf) {
         this.mf = mf;
@@ -28,25 +30,30 @@ public class ChooseStyleFrame extends Frame {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        enemyNumber = 0;
 
         panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
 
         buttonGroup = new ButtonGroup();
+
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.anchor = GridBagConstraints.WEST;
 
         addRadioButton("По-умолчанию", true, "onestyle");
         addRadioButton("Красивый", false, "twostyle");
 
-        panel.add(addButtonConnect());
+        panel.add(addButtonConnect(), gbc);
         frame.add(panel, BorderLayout.CENTER);
 
-        this.frame.addWindowListener(new CloseFrameListener(this));
+        //this.frame.addWindowListener(new CloseFrameListener(this));
 
         frame.setVisible(true);
     }
 
     private JButton addButtonConnect() {
-        JButton continueButton = new JButton("Continue");
+        JButton continueButton = new JButton("Продолжить");
 
         continueButton.addMouseListener(
                 new MouseAdapter() {
@@ -60,7 +67,7 @@ public class ChooseStyleFrame extends Frame {
                                 break;
                             }
                         }
-                        mf.createTable(style);
+                        mf.createConnectFrame(style);
                         mf.destroyChooseStyleFrame();
                     }
                 });
@@ -72,7 +79,7 @@ public class ChooseStyleFrame extends Frame {
         JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
-        panel.add(button);
+        panel.add(button, gbc);
 
         rbs.put(button, text);
     }
