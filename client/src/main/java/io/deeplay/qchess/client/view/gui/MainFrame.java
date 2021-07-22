@@ -51,7 +51,6 @@ public class MainFrame {
     }
 
     public void createTable(boolean color) {
-        this.color = color;
         table = new Table(style, color, this);
     }
 

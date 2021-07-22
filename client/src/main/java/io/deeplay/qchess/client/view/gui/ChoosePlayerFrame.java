@@ -82,7 +82,7 @@ public class ChoosePlayerFrame extends Frame {
         JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
-        panel.add(button);
+        panel.add(button, gbc);
 
         rbs.put(button, enemyType);
     }
