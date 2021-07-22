@@ -19,8 +19,6 @@ public class ChoosePlayerFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
     private final JPanel panel;
     private final ButtonGroup buttonGroup;
-    private int enemyNumber;
-    private final Map<JRadioButton, EnemyNumber> rbs = new HashMap<>();
     private final GridBagConstraints gbc;
     private final Map<JRadioButton, EnemyType> rbs = new HashMap<>();
 
@@ -31,7 +29,6 @@ public class ChoosePlayerFrame extends Frame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        enemyNumber = 0;
 
         panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -43,10 +40,10 @@ public class ChoosePlayerFrame extends Frame {
         gbc.gridy = GridBagConstraints.RELATIVE;
         gbc.anchor = GridBagConstraints.WEST;
 
-        addRadioButton("Человек", true, EnemyNumber.USER);
-        addRadioButton("Слабый бот", false, EnemyNumber.EASYBOT);
-        addRadioButton("Нормальный бот", false, EnemyNumber.MEDIUMBOT);
-        addRadioButton("Сильный бот", false, EnemyNumber.HARDBOT);
+        addRadioButton("Человек", true, EnemyType.USER);
+        addRadioButton("Слабый бот", false, EnemyType.EASYBOT);
+        addRadioButton("Нормальный бот", false, EnemyType.MEDIUMBOT);
+        addRadioButton("Сильный бот", false, EnemyType.HARDBOT);
 
         panel.add(addButtonConnect(), gbc);
         frame.add(panel, BorderLayout.CENTER);
@@ -81,12 +78,12 @@ public class ChoosePlayerFrame extends Frame {
         return continueButton;
     }
 
-    public void addRadioButton(String name, boolean pressed, EnemyNumber enemyNumber) {
+    public void addRadioButton(String name, boolean pressed, EnemyType enemyType) {
         JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
         panel.add(button);
 
-        rbs.put(button, enemyNumber);
+        rbs.put(button, enemyType);
     }
 }
