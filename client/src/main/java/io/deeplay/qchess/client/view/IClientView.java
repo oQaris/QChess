@@ -23,7 +23,7 @@ public interface IClientView extends Closeable {
 
     void endGameInverse();
 
-    void closeGame();
+    void closeGame(String reason);
 
     /**
      * Вызывается при отключении от сервера

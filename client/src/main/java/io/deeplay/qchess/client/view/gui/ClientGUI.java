@@ -47,8 +47,8 @@ public class ClientGUI implements IClientView {
     }
 
     @Override
-    public void closeGame() {
-        mf.getTable().closeGame("Противник преждевременно отключился, вы победили.");
+    public void closeGame(String reason) {
+        mf.getTable().closeGame(reason);
     }
 
     @Override

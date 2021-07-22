@@ -222,9 +222,8 @@ public class ClientController {
         view.endGameInverse();
     }
 
-    public static String closeGame() {
-        view.closeGame();
-        return "";
+    public static void closeGame(String reason) {
+        view.closeGame(reason);
     }
 
     /** Инициализирует игру у клиента */

@@ -7,6 +7,7 @@ import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ActionDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.GameSettings;
@@ -23,6 +24,14 @@ import io.deeplay.qchess.game.player.RemotePlayer;
 
 public class GameService {
 
+    public static String endGame(ServerToClientType type, String json)
+            throws SerializationException {
+        assert type.getDTO() == EndGameDTO.class;
+        EndGameDTO dto = SerializationService.serverToClientDTORequest(json, EndGameDTO.class);
+        ClientController.closeGame(dto.reason);
+        return null;
+    }
+
     public static void chooseEnemy(EnemyType enemyType) {
         GameDAO.setEnemy(enemyType);
     }
@@ -31,17 +40,22 @@ public class GameService {
         GameSettings gs = new GameSettings(BoardFilling.STANDARD);
         Player enemy =
                 switch (GameDAO.getEnemyType()) {
-                    case USER -> new RemotePlayer(gs, color ? Color.WHITE : Color.BLACK, "enemy");
-                    case EASYBOT -> new RandomBot(gs, color ? Color.WHITE : Color.BLACK);
-                    case MEDIUMBOT -> new AttackBot(gs, color ? Color.WHITE : Color.BLACK);
-                    case HARDBOT -> new MinimaxBot(gs, color ? Color.WHITE : Color.BLACK, 3);
+                    case USER -> new RemotePlayer(gs, color ? Color.BLACK : Color.WHITE, "enemy");
+                    case EASYBOT -> new RandomBot(gs, color ? Color.BLACK : Color.WHITE);
+                    case MEDIUMBOT -> new AttackBot(gs, color ? Color.BLACK : Color.WHITE);
+                    case HARDBOT -> new MinimaxBot(gs, color ? Color.BLACK : Color.WHITE, 3);
                 };
         try {
-            Selfplay game =
-                    new Selfplay(
-                            gs,
-                            new RemotePlayer(gs, color ? Color.BLACK : Color.WHITE, "me"),
-                            enemy);
+            Player player1;
+            Player player2;
+            if (color) {
+                player1 = new RemotePlayer(gs, Color.WHITE, "me");
+                player2 = enemy;
+            } else {
+                player1 = enemy;
+                player2 = new RemotePlayer(gs, Color.BLACK, "me");
+            }
+            Selfplay game = new Selfplay(gs, player1, player2);
             GameDAO.newGame(gs, game);
         } catch (ChessError ignore) {
             // Стандартная расстановка доски верна всегда
