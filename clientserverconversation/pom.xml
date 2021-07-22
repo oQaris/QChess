@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.deeplay</groupId>
+    <artifactId>QChess</artifactId>
+    <version>0.0.1</version>
+  </parent>
+
+  <artifactId>QChess-client-server-conversation</artifactId>
+  <version>0.0.1</version>
+
+  <dependencies>
+    <!-- Logger -->
+    <dependency>
+      <artifactId>slf4j-api</artifactId>
+      <groupId>org.slf4j</groupId>
+      <version>1.7.31</version>
+    </dependency>
+    <dependency>
+      <artifactId>logback-classic</artifactId>
+      <groupId>ch.qos.logback</groupId>
+      <version>1.2.3</version>
+    </dependency>
+    <!-- Gson -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.7</version>
+    </dependency>
+    <!-- QChess modules -->
+    <dependency>
+      <artifactId>QChess-game</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>14</maven.compiler.source>
+    <maven.compiler.target>14</maven.compiler.target>
+  </properties>
+
+</project>
