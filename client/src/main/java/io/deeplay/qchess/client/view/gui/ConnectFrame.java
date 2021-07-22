@@ -3,10 +3,13 @@ package io.deeplay.qchess.client.view.gui;
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -15,21 +18,37 @@ public class ConnectFrame extends Frame {
     private final JPanel panel;
     private final JTextField ipField;
     private final JTextField portField;
+    private final GridBagConstraints gbc;
 
     public ConnectFrame(MainFrame mf) {
         this.mf = mf;
-        frame = new JFrame("Connect");
+        frame = new JFrame("Присоединиться");
         frame.setSize(OUTER_FRAME_DIMENSION);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
 
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.anchor = GridBagConstraints.WEST;
+
         panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        JPanel ipPanel = new JPanel();
+        JPanel portPanel = new JPanel();
+
         ipField = getInputIP();
         portField = getInputPort();
-        panel.add(ipField);
-        panel.add(portField);
-        panel.add(addButtonConnect());
+
+        ipPanel.add(new JLabel("IP: "));
+        ipPanel.add(ipField);
+        portPanel.add(new JLabel("Port: "));
+        portPanel.add(portField);
+
+        panel.add(ipPanel, gbc);
+        panel.add(portPanel, gbc);
+        panel.add(addButtonConnect(), gbc);
 
         frame.add(panel);
 

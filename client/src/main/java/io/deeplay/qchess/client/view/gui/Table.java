@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -75,34 +76,11 @@ public class Table extends Frame {
         this.boardPanel = new BoardPanel();
         this.frame.add(boardPanel, BorderLayout.CENTER);
 
-        final JMenuBar tableMenuBar = createTableMenuBar();
-        this.frame.setJMenuBar(tableMenuBar);
-
         this.frame.setVisible(true);
 
         clickedCell = -1;
 
         this.frame.addWindowListener(new CloseFrameListener(this));
-    }
-
-    private JMenuBar createTableMenuBar() {
-        final JMenuBar tableMenuBar = new JMenuBar();
-        tableMenuBar.add(createFileMenu());
-        return tableMenuBar;
-    }
-
-    private JMenu createFileMenu() {
-        final JMenu fileMenu = new JMenu("File");
-
-        final JMenuItem loadMenuItem = new JMenuItem("Load");
-        loadMenuItem.addActionListener(e -> System.out.println("loading..."));
-        fileMenu.add(loadMenuItem);
-
-        final JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(e -> frame.dispose());
-        fileMenu.add(exitMenuItem);
-
-        return fileMenu;
     }
 
     private int inverseInt(int i, int size) {
@@ -145,6 +123,7 @@ public class Table extends Frame {
             int size = BOARD_SIZE * BOARD_SIZE;
             for (int i = 0; i < size; i++) {
                 final CellPanel cellPanel = new CellPanel(this, inverseInt(i, size));
+                cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 this.boardCells.add(cellPanel);
                 this.add(cellPanel);
             }
