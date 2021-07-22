@@ -10,10 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 public class ConnectFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
-    private final JPanel panel;
     private final JTextField ipField;
     private final JTextField portField;
 
@@ -21,11 +21,11 @@ public class ConnectFrame extends Frame {
         this.mf = mf;
         frame = new JFrame("Connect");
         frame.setSize(OUTER_FRAME_DIMENSION);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
 
-        panel = new JPanel();
+        JPanel panel = new JPanel();
         ipField = getInputIP();
         portField = getInputPort();
         panel.add(ipField);

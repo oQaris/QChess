@@ -30,6 +30,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 public class Table extends Frame {
     private static final int BOARD_SIZE = 8;
@@ -60,7 +61,7 @@ public class Table extends Frame {
         this.frame = new JFrame("QChess");
         this.frame.setLayout(new BorderLayout());
         this.frame.setSize(OUTER_FRAME_DIMENSION);
-        this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.frame.setResizable(false);
         this.frame.setLocationRelativeTo(null);
 
@@ -103,11 +104,6 @@ public class Table extends Frame {
         fileMenu.add(exitMenuItem);
 
         return fileMenu;
-    }
-
-    private int inverseInt(int i, int size) {
-        int inverse = myColor ? 0 : 1;
-        return (1 - 2 * inverse) * (i - (size - 1) * inverse);
     }
 
     public void repaint() {
@@ -163,9 +159,14 @@ public class Table extends Frame {
             this.validate();
         }
 
+        private int inverseInt(int i, int size) {
+            int inverse = myColor ? 0 : 1;
+            return (1 - 2 * inverse) * (i - (size - 1) * inverse);
+        }
+
         private void drawBoard() {
             validate();
-            repaint();
+            super.repaint();
             for (CellPanel cp : boardCells) {
                 cp.drawCell();
             }
@@ -192,6 +193,7 @@ public class Table extends Frame {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
+                            // Refactor this method to reduce its Cognitive Complexity
                             if (isLeftMouseButton(e) && ClientController.isMyStep()) {
                                 boolean twoClick = false;
                                 if (ClientController.checkFigure(
@@ -332,7 +334,7 @@ public class Table extends Frame {
                     e.printStackTrace();
                 }
             }
-            this.repaint();
+            super.repaint();
         }
 
         private void assignCellColor() {
@@ -346,7 +348,7 @@ public class Table extends Frame {
             assignCellColor();
             assignCellFigureIcon();
             validate();
-            repaint();
+            super.repaint();
         }
 
         private void clearColorOnBoard() {

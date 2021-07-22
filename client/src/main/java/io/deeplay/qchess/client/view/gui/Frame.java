@@ -4,8 +4,8 @@ import java.awt.Component;
 import javax.swing.JFrame;
 
 public abstract class Frame extends Component {
-    protected JFrame frame;
-    protected MainFrame mf;
+    protected JFrame frame; // A field should not duplicate the name of its containing class
+    protected MainFrame mf; // Make "mf" transient or serializable.
 
     void destroy() {
         frame.setVisible(false);

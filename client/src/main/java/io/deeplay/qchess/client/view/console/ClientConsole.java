@@ -84,6 +84,7 @@ public class ClientConsole implements IClientView {
     }
 
     private char figureToIcon(ViewColor color, ViewFigureType figure) {
+        // дублируется код из борды
         return switch (color) {
             case WHITE -> switch (figure) {
                 case BISHOP -> '♝';

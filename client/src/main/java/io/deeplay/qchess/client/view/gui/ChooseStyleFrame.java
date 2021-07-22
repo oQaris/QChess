@@ -6,24 +6,26 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.WindowConstants;
 
 public class ChooseStyleFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
     private final JPanel panel;
     private final ButtonGroup buttonGroup;
-    private int enemyNumber;
     private final Map<JRadioButton, String> rbs = new HashMap<>();
+    private int enemyNumber;
 
     public ChooseStyleFrame(MainFrame mf) {
         this.mf = mf;
         frame = new JFrame("Choose Enemy");
         frame.setSize(OUTER_FRAME_DIMENSION);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         enemyNumber = 0;
@@ -52,9 +54,9 @@ public class ChooseStyleFrame extends Frame {
                     public void mousePressed(MouseEvent e) {
                         super.mousePressed(e);
                         String style = null;
-                        for (JRadioButton rb : rbs.keySet()) {
-                            if (rb.isSelected()) {
-                                style = rbs.get(rb);
+                        for (Entry<JRadioButton, String> rb : rbs.entrySet()) {
+                            if (rb.getKey().isSelected()) {
+                                style = rb.getValue();
                                 break;
                             }
                         }

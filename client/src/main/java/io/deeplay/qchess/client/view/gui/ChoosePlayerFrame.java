@@ -12,19 +12,20 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.WindowConstants;
 
 public class ChoosePlayerFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
     private final JPanel panel;
     private final ButtonGroup buttonGroup;
-    private int enemyNumber;
     private final List<JRadioButton> rbs = new ArrayList<>();
+    private int enemyNumber;
 
     public ChoosePlayerFrame(MainFrame mf) {
         this.mf = mf;
         frame = new JFrame("Choose Enemy");
         frame.setSize(OUTER_FRAME_DIMENSION);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         enemyNumber = 0;
