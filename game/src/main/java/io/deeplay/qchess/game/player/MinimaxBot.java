@@ -127,6 +127,11 @@ public class MinimaxBot extends Player {
         return bestMove;
     }
 
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.MINIMAX_BOT;
+    }
+
     public List<Move> getNextMoves() throws ChessError {
         List<Move> topMoves = new ArrayList<>();
         int maxGrade = Integer.MIN_VALUE;

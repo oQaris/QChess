@@ -18,6 +18,11 @@ public class RemotePlayer extends Player {
         throw new UnsupportedOperationException("Удаленный игрок не может ходить");
     }
 
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.REMOTE_PLAYER;
+    }
+
     public String getSessionToken() {
         return sessionToken;
     }

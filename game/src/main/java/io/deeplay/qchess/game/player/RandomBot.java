@@ -23,6 +23,11 @@ public class RandomBot extends Player {
         return move;
     }
 
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.RANDOM_BOT;
+    }
+
     protected void turnIntoInQueen(Move move) {
         if (move.getMoveType() == MoveType.TURN_INTO) move.setTurnInto(FigureType.QUEEN);
     }

@@ -51,6 +51,11 @@ public class ConsolePlayer extends Player {
         }
     }
 
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.CONSOLE_PLAYER;
+    }
+
     private void printMoves(List<Move> allMoves) {
         System.out.println("Выберите ход:");
         allMoves.sort(Comparator.comparing(Move::toString));
