@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -47,9 +48,6 @@ public class ChoosePlayerFrame extends Frame {
 
         panel.add(addButtonConnect(), gbc);
         frame.add(panel, BorderLayout.CENTER);
-
-        //this.frame.addWindowListener(new CloseFrameListener(this));
-
         frame.setVisible(true);
     }
 

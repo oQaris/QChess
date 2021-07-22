@@ -24,18 +24,20 @@ public class MainFrame {
         frame.setLocationRelativeTo(null);
 
         JButton startButton = new JButton("Начать");
-        startButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                createChoosePlayerFrame();
-                frame.setVisible(false);
-                frame.dispose();
-            }
-        });
+        startButton.addMouseListener(
+                new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        super.mousePressed(e);
+                        createChoosePlayerFrame();
+                        frame.setVisible(false);
+                        frame.dispose();
+                    }
+                });
         frame.add(startButton);
         frame.setVisible(true);
     }
+
     public void createChoosePlayerFrame() {
         choosePlayerFrame = new ChoosePlayerFrame(this);
     }

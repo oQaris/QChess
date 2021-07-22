@@ -47,7 +47,7 @@ public class ChooseStyleFrame extends Frame {
         panel.add(addButtonConnect(), gbc);
         frame.add(panel, BorderLayout.CENTER);
 
-        //this.frame.addWindowListener(new CloseFrameListener(this));
+        // this.frame.addWindowListener(new CloseFrameListener(this));
 
         frame.setVisible(true);
     }

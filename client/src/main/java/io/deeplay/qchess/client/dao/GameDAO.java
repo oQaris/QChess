@@ -4,7 +4,6 @@ import io.deeplay.qchess.client.database.Database;
 import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
-import io.deeplay.qchess.game.player.Player;
 
 public class GameDAO {
 
