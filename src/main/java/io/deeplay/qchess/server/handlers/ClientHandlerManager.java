@@ -52,7 +52,8 @@ public class ClientHandlerManager extends Thread {
                             new ClientHandler(socket, this::removeClientFromClientList, id);
 
                     if (clients.size() == ServerController.getMaxClients()) {
-                        client.sendIfNotNull(ConnectionControlService.getJsonToDisconnect());
+                        client.sendIfNotNull(
+                                ConnectionControlService.getJsonToDisconnect("Сервер заполнен"));
                         client.terminate();
                     } else {
                         // синхронизация нужна, чтобы нельзя было отправить клиенту запрос, пока

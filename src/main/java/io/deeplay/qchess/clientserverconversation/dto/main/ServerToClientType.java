@@ -1,7 +1,9 @@
 package io.deeplay.qchess.clientserverconversation.dto.main;
 
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.AcceptConnectionDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ActionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.BadRequestDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ChatMessageDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.DisconnectedDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
@@ -14,26 +16,32 @@ public enum ServerToClientType {
     ACCEPT_CONNECTION(AcceptConnectionDTO.class),
     DISCONNECTED(DisconnectedDTO.class),
     END_GAME(EndGameDTO.class),
-    GAME_SETTINGS(GameSettingsDTO.class);
+    GAME_SETTINGS(GameSettingsDTO.class),
+    GAME_ACTION(ActionDTO.class),
+    CHAT_MESSAGE(ChatMessageDTO.class);
 
-    private static final Map<Class<? extends ServerToClientDTO>, ServerToClientType> type =
+    private static final Map<Class<? extends IServerToClientDTO>, ServerToClientType> type =
             new HashMap<>();
 
     static {
         for (ServerToClientType t : ServerToClientType.values()) type.put(t.dto, t);
     }
 
-    private final Class<? extends ServerToClientDTO> dto;
+    private final Class<? extends IServerToClientDTO> dto;
 
-    ServerToClientType(Class<? extends ServerToClientDTO> dto) {
+    ServerToClientType(Class<? extends IServerToClientDTO> dto) {
         this.dto = dto;
     }
 
-    public static ServerToClientType valueOf(Class<? extends ServerToClientDTO> dtoClass) {
+    public static <T extends IServerToClientDTO> ServerToClientType valueOf(Class<T> dtoClass) {
         return Objects.requireNonNull(type.get(dtoClass), "DTO сервера не найдено");
     }
 
-    public Class<? extends ServerToClientDTO> getDTO() {
+    public static ServerToClientType valueOf(IServerToClientDTO dto) {
+        return valueOf(dto.getClass());
+    }
+
+    public Class<? extends IServerToClientDTO> getDTO() {
         return dto;
     }
 }

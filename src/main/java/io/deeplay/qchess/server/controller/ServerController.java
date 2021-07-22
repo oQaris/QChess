@@ -4,15 +4,14 @@ import io.deeplay.qchess.server.IServer;
 import io.deeplay.qchess.server.LocalHost;
 import io.deeplay.qchess.server.exceptions.ServerException;
 import io.deeplay.qchess.server.view.IServerView;
-import java.util.Optional;
 
 public class ServerController {
     private static final IServer server = LocalHost.getInstance();
     private static IServerView view;
 
-    /** @return окружение сервера */
-    public static Optional<IServerView> getView() {
-        return Optional.ofNullable(view);
+    /** Отправляет сообщение View, если view и message не null */
+    public static void print(String message) {
+        if (view != null && message != null) view.print(message);
     }
 
     /**

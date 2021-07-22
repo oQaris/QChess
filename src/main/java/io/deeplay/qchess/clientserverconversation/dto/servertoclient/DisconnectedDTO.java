@@ -1,16 +1,14 @@
 package io.deeplay.qchess.clientserverconversation.dto.servertoclient;
 
 import com.google.gson.annotations.SerializedName;
-import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
-import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
+import io.deeplay.qchess.clientserverconversation.dto.main.IServerToClientDTO;
 
 /** Отключение клиента */
-public class DisconnectedDTO extends ServerToClientDTO {
+public class DisconnectedDTO extends IServerToClientDTO {
     @SerializedName("reason")
     public final String reason;
 
     public DisconnectedDTO(final String reason) {
-        super(ServerToClientType.valueOf(DisconnectedDTO.class));
         this.reason = reason;
     }
 }

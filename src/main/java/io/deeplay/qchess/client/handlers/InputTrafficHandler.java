@@ -6,6 +6,7 @@ import static io.deeplay.qchess.client.exceptions.ClientErrorCode.ERROR_GET_SOCK
 
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -94,9 +95,13 @@ public class InputTrafficHandler extends Thread {
         if (in.ready()) {
             String request = in.readLine();
             String response = TrafficRequestHandler.process(request);
-            if (waitForResponse.get())
-                setLastResponse.accept(
-                        SerializationService.deserialize(request, ServerToClientDTO.class));
+            if (waitForResponse.get()) {
+                try {
+                    setLastResponse.accept(SerializationService.serverToClientDTOMain(request));
+                } catch (SerializationException ignore) {
+                    // Уже проверили в обработчике
+                }
+            }
             sendIfNotNull(response);
         }
     }

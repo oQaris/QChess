@@ -2,6 +2,7 @@ package io.deeplay.qchess.client.controller;
 
 import io.deeplay.qchess.client.IClient;
 import io.deeplay.qchess.client.LocalClient;
+import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.service.GameService;
@@ -9,15 +10,14 @@ import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.EndGame;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
-import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
-import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
-import io.deeplay.qchess.clientserverconversation.service.SerializationService;
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.GetGameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.AcceptConnectionDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import java.io.IOException;
-import java.util.Optional;
 import java.util.Set;
 
 public class ClientController {
@@ -25,16 +25,6 @@ public class ClientController {
     private static IClientView view;
 
     private ClientController() {}
-
-    /**
-     * @deprecated Не безопасное использование View. Если необходимо использовать логику View, не
-     *     считая простого вывода, лучше создать здесь метод и использовать его
-     * @return окружение клиента
-     */
-    @Deprecated(forRemoval = true)
-    public static Optional<IClientView> getView() {
-        return Optional.ofNullable(view);
-    }
 
     /**
      * Устанавливает окружение клиента
@@ -47,6 +37,11 @@ public class ClientController {
      */
     public static void setView(IClientView view) {
         ClientController.view = view;
+    }
+
+    /** Отправляет сообщение View, если view и message не null */
+    public static void print(String message) {
+        if (view != null && message != null) view.print(message);
     }
 
     /**
@@ -109,15 +104,17 @@ public class ClientController {
      * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
      *     было разорвано
      */
-    public static boolean waitForColor() throws ClientException {
-        GetRequestDTO dto = client.waitForResponse(GetRequestType.GET_COLOR);
-        Color color = null;
-        try {
-            color = SerializationService.deserialize(dto.request, Color.class);
-        } catch (IOException ignore) {
-            // TODO: некорректный ответ сервера, и вынести отсюда в какой-нибудь сервис
-        }
-        return color == Color.WHITE;
+    public static boolean waitForGameSettings() throws ClientException {
+        GameSettingsDTO dto =
+                client.waitForResponse(
+                        new GetGameSettingsDTO(SessionDAO.getSessionToken()),
+                        GameSettingsDTO.class);
+        return dto.color == Color.WHITE;
+    }
+
+    // TODO: javadoc
+    public static void waitForAcceptConnection() throws ClientException {
+        client.waitForResponse(new ConnectionDTO(null, true), AcceptConnectionDTO.class);
     }
 
     /**
@@ -172,8 +169,10 @@ public class ClientController {
     }
 
     // TODO: добавить javadoc
+    /** @throws ClientException если клиент не подключен к серверу */
     public static void makeMove(
-            int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure) {
+            int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure)
+            throws ClientException {
         Move move =
                 GameGUIAdapterService.makeMove(
                         rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));

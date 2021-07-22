@@ -5,14 +5,16 @@ import static io.deeplay.qchess.client.exceptions.ClientErrorCode.CLIENT_IS_NOT_
 import static io.deeplay.qchess.client.exceptions.ClientErrorCode.CONNECTION_WAS_BROKEN;
 import static io.deeplay.qchess.client.exceptions.ClientErrorCode.FAILED_CONNECT;
 
+import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.handlers.InputTrafficHandler;
-import io.deeplay.qchess.client.handlers.TrafficRequestHandler;
 import io.deeplay.qchess.client.service.ClientCommandService;
-import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
-import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
-import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
+import io.deeplay.qchess.clientserverconversation.dto.main.IClientToServerDTO;
+import io.deeplay.qchess.clientserverconversation.dto.main.IServerToClientDTO;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
+import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
+import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import java.io.IOException;
 import java.net.Socket;
@@ -40,7 +42,7 @@ public class LocalClient implements IClient {
 
     /** @return возвращает экземпляр клиента */
     public static LocalClient getInstance() {
-        localClient = localClient != null ? localClient : new LocalClient();
+        if (localClient == null) localClient = new LocalClient();
         return localClient;
     }
 
@@ -139,8 +141,9 @@ public class LocalClient implements IClient {
     }
 
     @Override
-    public GetRequestDTO waitForResponse(GetRequestType getRequestType) throws ClientException {
-        logger.debug("Начало ожидания запроса {}...", getRequestType);
+    public <T extends IServerToClientDTO> T waitForResponse(
+            IClientToServerDTO dto, Class<T> forDTOClass) throws ClientException {
+        logger.debug("Начало ожидания запроса {}...", dto);
         checkIsNotConnected();
 
         synchronized (mutexWaitForResponse) {
@@ -148,12 +151,10 @@ public class LocalClient implements IClient {
                 lastResponse = null;
                 waitForResponse = true;
             }
-            inputTrafficHandler.sendIfNotNull(
-                    TrafficRequestHandler.convertToClientToServerDTO(
-                            ServerToClientType.GET,
-                            SerializationService.serialize(
-                                    new GetRequestDTO(getRequestType, null))));
             while (true) {
+                inputTrafficHandler.sendIfNotNull(
+                        SerializationService.makeMainDTOJsonToServer(dto));
+
                 while (waitForResponse) {
                     if (!isConnected) {
                         logger.warn("Соединение было разорвано");
@@ -167,18 +168,13 @@ public class LocalClient implements IClient {
                 }
 
                 synchronized (mutexLastResponse) {
-                    GetRequestDTO getDTO = null;
                     try {
-                        getDTO =
-                                SerializationService.deserialize(
-                                        lastResponse.request, GetRequestDTO.class);
-                    } catch (IOException | NullPointerException e) {
+                        if (lastResponse.type == ServerToClientType.valueOf(forDTOClass))
+                            return SerializationService.serverToClientDTORequest(
+                                    lastResponse.json, forDTOClass);
+                    } catch (SerializationException | NullPointerException e) {
                         // Ожидается другой ответ
                     }
-                    if (lastResponse.type
-                                    == ServerToClientType.GET // TODO: заменить на POST
-                            && getDTO != null
-                            && getDTO.requestType == getRequestType) return getDTO;
                 }
             }
         }
@@ -205,8 +201,8 @@ public class LocalClient implements IClient {
             synchronized (mutex) {
                 logger.info("Отключение клиента от сервера...");
                 inputTrafficHandler.sendIfNotNull(
-                        TrafficRequestHandler.convertToClientToServerDTO(
-                                ServerToClientType.DISCONNECT, null));
+                        SerializationService.makeMainDTOJsonToServer(
+                                new ConnectionDTO(SessionDAO.getSessionToken(), false)));
                 closeInputTrafficHandler();
                 isConnected = false;
                 logger.info("Клиент отключен от сервера {}:{}", ip, port);

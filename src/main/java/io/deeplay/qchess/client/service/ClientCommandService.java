@@ -1,10 +1,10 @@
 package io.deeplay.qchess.client.service;
 
-import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.CHAT_MESSAGE;
-
 import io.deeplay.qchess.client.controller.ClientController;
+import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.client.handlers.TrafficRequestHandler;
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ChatMessageDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 
 /** Обрабатывает текстовые команды */
 public class ClientCommandService {
@@ -13,8 +13,9 @@ public class ClientCommandService {
     public static void handleCommand(String command) throws ClientException {
         if (command.startsWith("msg ")) {
             ClientController.sendIfNotNull(
-                    TrafficRequestHandler.convertToClientToServerDTO(
-                            CHAT_MESSAGE, command.substring(4)));
+                    SerializationService.makeMainDTOJsonToServer(
+                            new ChatMessageDTO(
+                                    SessionDAO.getSessionToken(), command.substring(4))));
         }
         if (command.equals("disconnect")) {
             ClientController.disconnect("Клиент отключен");

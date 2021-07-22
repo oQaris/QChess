@@ -1,112 +1,85 @@
 package io.deeplay.qchess.server.service;
 
-import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.MOVE;
-
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ActionDTO;
+import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerType;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.DisconnectedDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
-import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.Selfplay;
-import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.model.Board.BoardFilling;
-import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.server.controller.ServerController;
+import io.deeplay.qchess.server.dao.ConnectionControlDAO;
+import io.deeplay.qchess.server.dao.GameDAO;
+import io.deeplay.qchess.server.database.Room;
 import io.deeplay.qchess.server.exceptions.ServerException;
-import io.deeplay.qchess.server.handlers.ClientRequestHandler;
-import java.io.IOException;
 
 /** Управляет играми */
 public class GameService {
-    private static final Object mutex = new Object();
-    // TODO: вынести все в БД
-    private static Selfplay game;
-    private static GameSettings gs;
-    private static RemotePlayer firstPlayer;
-    private static RemotePlayer secondPlayer;
 
-    // TODO: вынести
-    public static Color getPlayerColor(int clientID) {
-        // TODO: ОСТОРОЖНО: ВОНЯЕТ ЖУТКИМ ГОВНОКОДОМ!!!
-        synchronized (mutex) {
-            // новая игра
-            if (firstPlayer == null && secondPlayer == null) {
-                gs = new GameSettings(BoardFilling.STANDARD);
-            }
-            boolean newGame = false;
-            Color response = null;
-
-            // добавление 1 игрока
-            if (firstPlayer == null) {
-                firstPlayer = new RemotePlayer(gs, Color.WHITE, clientID);
-                response = Color.WHITE;
-                newGame = true;
-            }
-            // добавление 2 игрока
-            else if (secondPlayer == null) {
-                secondPlayer = new RemotePlayer(gs, Color.BLACK, clientID);
-                response = Color.BLACK;
-                newGame = true;
-            }
-            // новая игра
-            if (newGame && firstPlayer != null && secondPlayer != null) {
-                try {
-                    game = new Selfplay(gs, firstPlayer, secondPlayer);
-                } catch (ChessError chessError) {
-                    // Стандартное заполнение доски верно всегда
-                }
-            }
-
-            return response != null
-                    ? response
-                    : firstPlayer.getPlayerID() == clientID
-                            ? firstPlayer.getColor()
-                            : secondPlayer.getColor();
+    public static void addOrReplacePlayer(String sessionToken) {
+        Room room = GameDAO.getRoom();
+        room.addPlayer(sessionToken);
+        if (room.isFull()) room.startGame();
+        if (room.isError()) {
+            // TODO: критическая ошибка в игре
         }
     }
 
-    // TODO: вынести
-    public static void removePlayer(int clientID) {
-        if (firstPlayer != null && firstPlayer.getPlayerID() == clientID) firstPlayer = null;
-        else secondPlayer = null;
+    public static void removePlayer(String sessionToken) {
+        Room room = GameDAO.getRoom();
+        Integer opponentID = ConnectionControlDAO.getID(room.getOpponentSessionToken(sessionToken));
+        if (room.removePlayer(sessionToken)) {
+            if (opponentID != null) {
+                try {
+                    ServerController.send(
+                            SerializationService.makeMainDTOJsonToClient(
+                                    new EndGameDTO("Оппонент покинул игру, вы победили!")),
+                            opponentID);
+                    ServerController.send(
+                            SerializationService.makeMainDTOJsonToClient(
+                                    new DisconnectedDTO("Игра окончена")),
+                            opponentID);
+                } catch (ServerException ignore) {
+                    // Сервис вызывается при открытом сервере
+                }
+            }
+        }
     }
 
     /** Выполняет игровое действие */
-    public static String action(String json, int clientID) {
-        if (firstPlayer == null || secondPlayer == null) return null;
-        // игра, если подключены 2 игрока
-        Move move;
-        try {
-            move = SerializationService.deserialize(json, Move.class);
-        } catch (IOException e) {
-            // TODO: некорректный запрос
-            ServerController.getView()
-                    .ifPresent(v -> v.print("Некорректный запрос: " + e.getMessage()));
-            return null;
-        }
-        try {
-            boolean complete = game.move(move);
-            if (!complete) {
+    public static String action(ClientToServerType type, String json, int clientID)
+            throws SerializationException {
+        assert type.getDTO() == ActionDTO.class;
+        ActionDTO dto = SerializationService.clientToServerDTORequest(json, ActionDTO.class);
+
+        Room room = GameDAO.getRoom();
+        if (room.isStarted()) {
+            boolean correct = room.move(dto.move);
+            if (room.isError()) {
+                // TODO: критическая ошибка в игре
+                return null;
+            }
+            if (!correct) {
                 // TODO: некорректный ход
-                ServerController.getView().ifPresent(v -> v.print("Некорректный ход"));
+                return null;
             }
-        } catch (ChessError chessError) {
-            // TODO: критическая ошибка в игре
+            // todo send 2 player
+            int player2id =
+                    ConnectionControlDAO.getID(room.getOpponentSessionToken(dto.sessionToken));
             try {
-                ServerController.executeCommand("msg " + json);
+                sendMove(dto.move, player2id);
             } catch (ServerException ignore) {
+                // Сервис вызывается при открытом сервере
             }
         }
-        // send move to second player
-        int sendToClientID =
-                game.getCurrentPlayerToMove() == firstPlayer
-                        ? firstPlayer.getPlayerID()
-                        : secondPlayer.getPlayerID();
-        final String finalResponse = ClientRequestHandler.convertToServerToClientDTO(MOVE, json);
-        try {
-            ServerController.send(finalResponse, sendToClientID);
-        } catch (ServerException ignore) {
-        }
-        ServerController.getView().ifPresent(v -> v.print("Отправлен json: " + finalResponse));
         return null;
+    }
+
+    public static void sendMove(Move move, int clientID) throws ServerException {
+        ServerController.send(
+                SerializationService.makeMainDTOJsonToClient(
+                        new io.deeplay.qchess.clientserverconversation.dto.servertoclient.ActionDTO(
+                                move)),
+                clientID);
     }
 }

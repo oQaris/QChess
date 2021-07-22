@@ -1,8 +1,8 @@
 package io.deeplay.qchess.client;
 
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.clientserverconversation.dto.GetRequestType;
-import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
+import io.deeplay.qchess.clientserverconversation.dto.main.IClientToServerDTO;
+import io.deeplay.qchess.clientserverconversation.dto.main.IServerToClientDTO;
 
 public interface IClient {
 
@@ -48,12 +48,14 @@ public interface IClient {
      * Эта операция блокирует поток, пока не будет получено сообщение от сервера или не возникнет
      * исключение
      *
-     * @param getRequestType запрос, на который нужно ждать ответ
+     * @param dto запрос, на который нужно ждать ответ
+     * @param forDTOClass класс запроса, который должен прийти
      * @return сообщение от сервера
      * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
      *     было разорвано
      */
-    GetRequestDTO waitForResponse(GetRequestType getRequestType) throws ClientException;
+    <T extends IServerToClientDTO> T waitForResponse(IClientToServerDTO dto, Class<T> forDTOClass)
+            throws ClientException;
 
     /**
      * Выполняет команду клиента

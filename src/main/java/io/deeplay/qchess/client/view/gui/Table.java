@@ -269,12 +269,16 @@ public class Table {
                                             // Диалоговое окно вывода сообщения
                                             JOptionPane.showMessageDialog(gameFrame, turnFigure);
                                         }
-                                        ClientController.makeMove(
-                                                clickedCell / BOARD_SIZE,
-                                                clickedCell % BOARD_SIZE,
-                                                cellId / BOARD_SIZE,
-                                                cellId % BOARD_SIZE,
-                                                turnFigure);
+                                        try {
+                                            ClientController.makeMove(
+                                                    clickedCell / BOARD_SIZE,
+                                                    clickedCell % BOARD_SIZE,
+                                                    cellId / BOARD_SIZE,
+                                                    cellId % BOARD_SIZE,
+                                                    turnFigure);
+                                        } catch (ClientException clientException) {
+                                            clientException.printStackTrace();
+                                        }
 
                                         boardPanel.boardCells.get(clickedCell).drawCell();
                                         thisCellPanel.drawCell();

@@ -7,6 +7,7 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Cell;
@@ -33,8 +34,8 @@ public class GameGUIAdapterService {
             game =
                     new Selfplay(
                             gs,
-                            new RemotePlayer(gs, Color.WHITE, 1),
-                            new RemotePlayer(gs, Color.BLACK, 2));
+                            new RemotePlayer(gs, Color.WHITE, "1"),
+                            new RemotePlayer(gs, Color.BLACK, "2"));
         } catch (ChessError ignore) {
             // Стандартная расстановка доски верна всегда
         }
@@ -108,7 +109,7 @@ public class GameGUIAdapterService {
     public static Move tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
-        List<Move> set = null;
+        List<Move> set;
         System.out.println(
                 "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
         try {
@@ -130,7 +131,7 @@ public class GameGUIAdapterService {
             int rowFrom, int columnFrom, int rowTo, int columnTo, FigureType figureType) {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
-        List<Move> set = null;
+        List<Move> set;
         System.out.println(
                 "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
         try {
@@ -167,16 +168,26 @@ public class GameGUIAdapterService {
 
     public static String getStatus() {
         try {
-            if (gs.endGameDetector.isCheckmate(Color.WHITE)) {
-                return "Мат белых";
+            if (gs.endGameDetector.isDraw()) {
+                if (gs.endGameDetector.isDrawWithPeaceMoves()) {
+                    return String.format(
+                            "Ничья: %d ходов без взятия и хода пешки",
+                            EndGameDetector.END_PEACE_MOVE_COUNT);
+                } else if (gs.endGameDetector.isDrawWithRepetitions()) {
+                    return String.format(
+                            "Ничья: %d повторений позиций доски",
+                            EndGameDetector.END_REPETITIONS_COUNT);
+                } else if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate()) {
+                    return "Ничья: недостаточно фигур, чтобы поставить мат";
+                }
+            } else if (gs.endGameDetector.isCheckmate(Color.WHITE)) {
+                return "Мат белым";
             } else if (gs.endGameDetector.isCheckmate(Color.BLACK)) {
-                return "Мат черных";
+                return "Мат черным";
             } else if (gs.endGameDetector.isStalemate(Color.WHITE)) {
-                return "Пат белых";
+                return "Пат белым";
             } else if (gs.endGameDetector.isStalemate(Color.BLACK)) {
-                return "Пат черных";
-            } else if (gs.endGameDetector.isDraw()) {
-                return "Ничья";
+                return "Пат черным";
             }
         } catch (ChessError chessError) {
             chessError.printStackTrace();

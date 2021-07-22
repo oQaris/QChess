@@ -66,7 +66,8 @@ public class ConnectFrame {
                         }
                         while (!ClientController.isConnected()) Thread.onSpinWait();
                         try {
-                            boolean color = ClientController.waitForColor();
+                            ClientController.waitForAcceptConnection();
+                            boolean color = ClientController.waitForGameSettings();
                             frame.dispose();
                             GameGUIAdapterService.init();
                             if (!color) GameGUIAdapterService.changeIsWhiteStep();

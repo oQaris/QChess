@@ -1,22 +1,21 @@
 package io.deeplay.qchess.server.service;
 
-import io.deeplay.qchess.clientserverconversation.dto.GetRequestDTO;
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.GetGameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerType;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
-import java.io.IOException;
+import io.deeplay.qchess.server.dao.GameDAO;
 
 public class GetRequestService {
 
-    public static String process(String getRequest, int clientID) {
-        try {
-            GetRequestDTO dto = SerializationService.deserialize(getRequest, GetRequestDTO.class);
-            String response =
-                    switch (dto.requestType) {
-                        case GET_COLOR -> SerializationService.serialize(
-                                GameService.getPlayerColor(clientID));
-                    };
-            return SerializationService.serialize(new GetRequestDTO(dto.requestType, response));
-        } catch (IOException e) {
-            return null;
-        }
+    public static String getGameSettings(ClientToServerType type, String json, int clientID)
+            throws SerializationException {
+        assert type.getDTO() == GetGameSettingsDTO.class;
+        GetGameSettingsDTO dto =
+                SerializationService.clientToServerDTORequest(json, GetGameSettingsDTO.class);
+
+        return SerializationService.makeMainDTOJsonToClient(
+                new GameSettingsDTO(GameDAO.getColor(dto.sessionToken)));
     }
 }

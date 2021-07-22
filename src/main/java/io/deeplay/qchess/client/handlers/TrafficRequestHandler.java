@@ -1,70 +1,67 @@
 package io.deeplay.qchess.client.handlers;
 
-import static io.deeplay.qchess.client.exceptions.ClientErrorCode.UNKNOWN_REQUEST;
-import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.CHAT_MESSAGE;
-import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.DISCONNECT;
-import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.GET;
-import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.INCORRECT_REQUEST;
-import static io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType.MOVE;
-
-import io.deeplay.qchess.client.controller.ClientController;
-import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.ChatService;
 import io.deeplay.qchess.client.service.GameService;
-import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
-import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerDTO;
+import io.deeplay.qchess.client.service.SessionService;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
+import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
+import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
-import java.io.IOException;
+import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.UnaryOperator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Перенаправляет запрос требуемому сервису */
 public class TrafficRequestHandler {
-    private static final Map<ServerToClientType, UnaryOperator<String>> redirector =
-            Map.of(
-                    INCORRECT_REQUEST,
-                    s -> null,
-                    CHAT_MESSAGE,
-                    ChatService::incomingMessage,
-                    MOVE,
-                    GameService::action,
-                    GET, // TODO: заменить на POST при запросе Color
-                    s -> null, // TODO: убрать заглушку
-                    DISCONNECT,
-                    s -> { // TODO: сделать нормально
-                        try {
-                            ClientController.disconnect("Сервер разорвал соединение");
-                        } catch (ClientException ignore) {
-                        }
-                        return null;
-                    });
+    private static final Logger logger = LoggerFactory.getLogger(TrafficRequestHandler.class);
+    private static final Map<ServerToClientType, Handler> redirector =
+            new EnumMap<>(ServerToClientType.class);
+
+    static {
+        redirector.putAll(
+                Map.of(
+                        ServerToClientType.INCORRECT_REQUEST,
+                        (type, json) -> null,
+                        ServerToClientType.DISCONNECTED,
+                        SessionService::disconnect,
+                        ServerToClientType.ACCEPT_CONNECTION,
+                        SessionService::acceptConnection,
+                        ServerToClientType.GAME_SETTINGS,
+                        (type, json) -> null, // без запроса игнорируется
+                        ServerToClientType.GAME_ACTION,
+                        GameService::action,
+                        ServerToClientType.END_GAME,
+                        (type, json) -> null, // TODO: убрать заглушку
+                        ServerToClientType.CHAT_MESSAGE,
+                        ChatService::incomingMessage));
+        assert redirector.size() == ServerToClientType.values().length;
+    }
 
     /**
      * @return json ответ клиента в виде ClientToServerDTO или null, если не нужно ничего отправлять
      */
     public static String process(String jsonServerRequest) {
-        ClientController.getView().ifPresent(v -> v.print("Пришел json: " + jsonServerRequest));
-        String response;
+        logger.debug("Пришел json: {}", jsonServerRequest);
         try {
-            ServerToClientDTO dtoRequest =
-                    SerializationService.deserialize(jsonServerRequest, ServerToClientDTO.class);
-            response = redirector.get(dtoRequest.type).apply(dtoRequest.request);
-            if (response != null) {
-                response = convertToClientToServerDTO(dtoRequest.type, response);
-            }
-        } catch (IOException e) {
-            response = convertToClientToServerDTO(INCORRECT_REQUEST, UNKNOWN_REQUEST.getMessage());
+            ServerToClientDTO mainDTO =
+                    SerializationService.serverToClientDTOMain(jsonServerRequest);
+            String response = redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json);
+
+            if (response != null) logger.debug("Отправлен json серверу: {}", jsonServerRequest);
+
+            return response;
+        } catch (SerializationException e) {
+            logger.warn("Пришел некорректный json от сервера: {}", jsonServerRequest);
+            return null;
+        } catch (NullPointerException e) {
+            logger.warn("Получен неизвестный запрос от сервера: {}", jsonServerRequest);
+            return null;
         }
-        return response;
     }
 
-    /**
-     * Создает ClientToServerDTO из mainRequestType и json, затем сериализует
-     *
-     * @return json
-     */
-    public static String convertToClientToServerDTO(ServerToClientType mainRequestType, String json) {
-        return SerializationService.serialize(new ClientToServerDTO(mainRequestType, json));
+    @FunctionalInterface
+    private interface Handler {
+        String handle(ServerToClientType type, String json) throws SerializationException;
     }
 }

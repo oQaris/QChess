@@ -28,7 +28,7 @@ public class LocalHost implements IServer {
 
     /** @return возвращает экземпляр сервера */
     public static LocalHost getInstance() {
-        localHost = localHost != null ? localHost : new LocalHost();
+        if (localHost == null) localHost = new LocalHost();
         return localHost;
     }
 

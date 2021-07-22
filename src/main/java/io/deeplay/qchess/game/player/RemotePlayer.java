@@ -6,11 +6,11 @@ import io.deeplay.qchess.game.model.Move;
 
 public class RemotePlayer extends Player {
 
-    private final int playerID;
+    private final String sessionToken;
 
-    public RemotePlayer(GameSettings roomSettings, Color color, int playerID) {
+    public RemotePlayer(GameSettings roomSettings, Color color, String sessionToken) {
         super(roomSettings, color);
-        this.playerID = playerID;
+        this.sessionToken = sessionToken;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class RemotePlayer extends Player {
         throw new UnsupportedOperationException("Удаленный игрок не может ходить");
     }
 
-    public int getPlayerID() {
-        return playerID;
+    public String getSessionToken() {
+        return sessionToken;
     }
 }
