@@ -1,6 +1,7 @@
 package io.deeplay.qchess.client.view.gui;
 
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
@@ -20,9 +21,10 @@ public class MainFrame {
         frame.setSize(new Dimension(200, 200));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
+        frame.setLayout(new GridBagLayout());
         frame.setLocationRelativeTo(null);
 
-        JButton startButton = new JButton("Start");
+        JButton startButton = new JButton("Начать");
         startButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -50,6 +52,7 @@ public class MainFrame {
     }
 
     public void createTable(boolean color) {
+        this.color = color;
         table = new Table(style, color, this);
     }
 

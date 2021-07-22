@@ -3,6 +3,8 @@ package io.deeplay.qchess.client.view.gui;
 import io.deeplay.qchess.client.controller.ClientController;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;;
@@ -19,6 +21,7 @@ public class ChoosePlayerFrame extends Frame {
     private final ButtonGroup buttonGroup;
     private int enemyNumber;
     private final Map<JRadioButton, EnemyNumber> rbs = new HashMap<>();
+    private final GridBagConstraints gbc;
 
     public ChoosePlayerFrame(MainFrame mf) {
         this.mf = mf;
@@ -30,15 +33,21 @@ public class ChoosePlayerFrame extends Frame {
         enemyNumber = 0;
 
         panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
 
         buttonGroup = new ButtonGroup();
+
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.anchor = GridBagConstraints.WEST;
 
         addRadioButton("Человек", true, EnemyNumber.USER);
         addRadioButton("Слабый бот", false, EnemyNumber.EASYBOT);
         addRadioButton("Нормальный бот", false, EnemyNumber.MEDIUMBOT);
         addRadioButton("Сильный бот", false, EnemyNumber.HARDBOT);
 
-        panel.add(addButtonConnect());
+        panel.add(addButtonConnect(), gbc);
         frame.add(panel, BorderLayout.CENTER);
 
         //this.frame.addWindowListener(new CloseFrameListener(this));
@@ -47,7 +56,7 @@ public class ChoosePlayerFrame extends Frame {
     }
 
     private JButton addButtonConnect() {
-        JButton continueButton = new JButton("Continue");
+        JButton continueButton = new JButton("Продолжить");
 
         continueButton.addMouseListener(
                 new MouseAdapter() {
@@ -75,7 +84,7 @@ public class ChoosePlayerFrame extends Frame {
         JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
-        panel.add(button);
+        panel.add(button, gbc);
 
         rbs.put(button, enemyNumber);
     }
