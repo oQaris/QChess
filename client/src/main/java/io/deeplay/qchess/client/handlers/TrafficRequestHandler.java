@@ -1,5 +1,6 @@
 package io.deeplay.qchess.client.handlers;
 
+import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.service.ChatService;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.service.SessionService;
@@ -34,7 +35,7 @@ public class TrafficRequestHandler {
                         ServerToClientType.GAME_ACTION,
                         GameService::action,
                         ServerToClientType.END_GAME,
-                        (type, json) -> null, // TODO: убрать заглушку
+                        (type, json) -> ClientController.closeGame(),
                         ServerToClientType.CHAT_MESSAGE,
                         ChatService::incomingMessage));
         assert redirector.size() == ServerToClientType.values().length;

@@ -120,6 +120,11 @@ public class ClientConsole implements IClientView {
     }
 
     @Override
+    public void closeGame() {
+
+    }
+
+    @Override
     public void disconnect(String reason) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }

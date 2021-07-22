@@ -1,5 +1,11 @@
 package io.deeplay.qchess.client.view.gui;
 
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
 public class MainFrame {
     private ConnectFrame connectFrame;
     private ChoosePlayerFrame choosePlayerFrame;
@@ -9,12 +15,27 @@ public class MainFrame {
     private String style;
     private boolean color;
 
-    public void createConnectFrame() {
-        connectFrame = new ConnectFrame(this);
-    }
+    public void createStartFrame() {
+        JFrame frame = new JFrame("Начало");
+        frame.setSize(new Dimension(200, 200));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
-    public void createChoosePlayerFrame(boolean color) {
-        this.color = color;
+        JButton startButton = new JButton("Start");
+        startButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                createChoosePlayerFrame();
+                frame.setVisible(false);
+                frame.dispose();
+            }
+        });
+        frame.add(startButton);
+        frame.setVisible(true);
+    }
+    public void createChoosePlayerFrame() {
         choosePlayerFrame = new ChoosePlayerFrame(this);
     }
 
@@ -23,14 +44,13 @@ public class MainFrame {
         chooseStyleFrame = new ChooseStyleFrame(this);
     }
 
-    public void createTable(String style) {
+    public void createConnectFrame(String style) {
         this.style = style;
-        table = new Table(style, color, this);
+        connectFrame = new ConnectFrame(this);
     }
 
-    public void destroyConnectFrame() {
-        connectFrame.destroy();
-        connectFrame = null;
+    public void createTable(boolean color) {
+        table = new Table(style, color, this);
     }
 
     public void destroyChoosePlayerFrame() {
@@ -41,6 +61,11 @@ public class MainFrame {
     public void destroyChooseStyleFrame() {
         chooseStyleFrame.destroy();
         chooseStyleFrame = null;
+    }
+
+    public void destroyConnectFrame() {
+        connectFrame.destroy();
+        connectFrame = null;
     }
 
     public void destroyTable() {

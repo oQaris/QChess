@@ -15,7 +15,7 @@ public class ClientGUI implements IClientView {
     @Override
     public void startView() {
         ClientController.setView(this);
-        mf.createConnectFrame();
+        mf.createStartFrame();
         // connectFrame = new ConnectFrame();
         // Table tableWhite = new Table("onestyle", true);
         // Table tableBlack = new Table("onestyle", false);
@@ -44,6 +44,11 @@ public class ClientGUI implements IClientView {
     @Override
     public void endGameInverse() {
         mf.getTable().endGameInverse(true);
+    }
+
+    @Override
+    public void closeGame() {
+        mf.getTable().closeGame("Противник преждевременно отключился, вы победили.");
     }
 
     @Override

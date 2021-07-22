@@ -29,6 +29,7 @@ public class GameService {
                 dto.move.getTurnInto());
 
         ClientController.drawBoard();
+        ClientController.endGameInverse();
         return null;
     }
 

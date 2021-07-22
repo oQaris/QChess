@@ -122,25 +122,17 @@ public class Table extends Frame {
         System.out.println("END");
         EndGame endGame = ClientController.getEndGame(myColor ^ sign);
         if (endGame.isEnd()) {
-            Object[] options = {"Да", "Нет!"};
-            int n =
-                    JOptionPane.showOptionDialog(
-                            frame,
-                            endGame.getStatus() + "\nЗакрыть окно?",
-                            "Подтверждение",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[0]);
-            if (n == 0) {
-                mf.destroyTable();
-                try {
-                    ClientController.disconnect("Игра окончена");
-                } catch (ClientException e) {
-                    System.err.println(e.getMessage());
-                }
-            }
+            closeGame(endGame.getStatus());
+        }
+    }
+
+    public void closeGame(String message) {
+        new MessageFrame(frame, "Игра окончена", message);
+        mf.destroyTable();
+        try {
+            ClientController.disconnect("Игра окончена");
+        } catch (ClientException e) {
+            System.err.println(e.getMessage());
         }
     }
 

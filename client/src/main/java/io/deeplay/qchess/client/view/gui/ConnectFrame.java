@@ -73,7 +73,7 @@ public class ConnectFrame extends Frame {
                             frame.dispose();
                             GameGUIAdapterService.init(); // TODO: убрать костыль
 
-                            mf.createChoosePlayerFrame(color);
+                            mf.createTable(color);
                             mf.destroyConnectFrame();
                         } catch (ClientException clientException) {
                             System.err.println(clientException.getMessage());

@@ -218,4 +218,13 @@ public class ClientController {
     }
 
     public static void chooseEnemy(int enemyNumber) {}
+
+    public static void endGameInverse() {
+        view.endGameInverse();
+    }
+
+    public static String closeGame() {
+        view.closeGame();
+        return "";
+    }
 }

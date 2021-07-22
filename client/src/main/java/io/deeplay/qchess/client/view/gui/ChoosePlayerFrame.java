@@ -41,7 +41,7 @@ public class ChoosePlayerFrame extends Frame {
         panel.add(addButtonConnect());
         frame.add(panel, BorderLayout.CENTER);
 
-        this.frame.addWindowListener(new CloseFrameListener(this));
+        //this.frame.addWindowListener(new CloseFrameListener(this));
 
         frame.setVisible(true);
     }
