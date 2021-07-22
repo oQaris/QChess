@@ -1,18 +1,42 @@
 package io.deeplay.qchess.client.service;
 
 import io.deeplay.qchess.client.controller.ClientController;
+import io.deeplay.qchess.client.dao.GameDAO;
 import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ActionDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
+import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.Selfplay;
+import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.player.RemotePlayer;
 
 public class GameService {
 
+    public static void chooseEnemy(int enemyNumber) {
+        // TODO
+    }
+
+    public static void initGame() {
+        GameSettings gs = new GameSettings(BoardFilling.STANDARD);
+        try {
+            Selfplay game =
+                    new Selfplay(
+                            gs,
+                            new RemotePlayer(gs, GameDAO.getEnemy().getColor().inverse(), "me"),
+                            new RemotePlayer(gs, GameDAO.getEnemy().getColor(), "enemy"));
+            GameDAO.newGame(gs, game);
+        } catch (ChessError ignore) {
+            // Стандартная расстановка доски верна всегда
+        }
+    }
+
     public static String startGame(ServerToClientType type, String json) {
-        GameGUIAdapterService.changeIsMyStep();
+        GameDAO.changeIsMyStep();
         return null;
     }
 

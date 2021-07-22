@@ -13,7 +13,6 @@ public class MainFrame {
     private Table table;
     private int enemyNumber;
     private String style;
-    private boolean color;
 
     public void createStartFrame() {
         JFrame frame = new JFrame("Начало");
@@ -83,9 +82,5 @@ public class MainFrame {
 
     public String getStyle() {
         return style;
-    }
-
-    public boolean isColor() {
-        return color;
     }
 }

@@ -2,7 +2,6 @@ package io.deeplay.qchess.client.view.gui;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -71,7 +70,7 @@ public class ConnectFrame extends Frame {
                             ClientController.waitForAcceptConnection();
                             boolean color = ClientController.waitForGameSettings();
                             frame.dispose();
-                            GameGUIAdapterService.init(); // TODO: убрать костыль
+                            ClientController.initGame();
 
                             mf.createTable(color);
                             mf.destroyConnectFrame();
