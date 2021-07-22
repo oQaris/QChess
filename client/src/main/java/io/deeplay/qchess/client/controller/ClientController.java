@@ -9,6 +9,7 @@ import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.EndGame;
+import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
@@ -213,8 +214,8 @@ public class ClientController {
         return null;
     }
 
-    public static void chooseEnemy(int enemyNumber) {
-        GameService.chooseEnemy(enemyNumber);
+    public static void chooseEnemy(EnemyType enemyType) {
+        GameService.chooseEnemy(enemyType);
     }
 
     public static void endGameInverse() {
@@ -226,7 +227,8 @@ public class ClientController {
         return "";
     }
 
-    public static void initGame() {
-        GameService.initGame();
+    /** Инициализирует игру у клиента */
+    public static void initGame(boolean color) {
+        GameService.initGame(color);
     }
 }

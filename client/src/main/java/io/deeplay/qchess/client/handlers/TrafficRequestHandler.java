@@ -35,7 +35,8 @@ public class TrafficRequestHandler {
                         ServerToClientType.GAME_ACTION,
                         GameService::action,
                         ServerToClientType.END_GAME,
-                        (type, json) -> ClientController.closeGame(),
+                        (type, json) ->
+                                ClientController.closeGame(), // TODO: перенаправить в сервис
                         ServerToClientType.CHAT_MESSAGE,
                         ChatService::incomingMessage));
         assert redirector.size() == ServerToClientType.values().length;

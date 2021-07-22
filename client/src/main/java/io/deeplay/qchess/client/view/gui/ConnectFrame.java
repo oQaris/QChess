@@ -70,7 +70,7 @@ public class ConnectFrame extends Frame {
                             ClientController.waitForAcceptConnection();
                             boolean color = ClientController.waitForGameSettings();
                             frame.dispose();
-                            ClientController.initGame();
+                            ClientController.initGame(color);
 
                             mf.createTable(color);
                             mf.destroyConnectFrame();

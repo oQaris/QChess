@@ -1,8 +1,8 @@
 package io.deeplay.qchess.client.database;
 
+import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
-import io.deeplay.qchess.game.player.Player;
 
 public class Database {
     private static Database database;
@@ -10,7 +10,7 @@ public class Database {
     private Selfplay game;
     private GameSettings gs;
     private boolean isMyStep;
-    private Player enemy;
+    private EnemyType enemyType;
 
     private Database() {}
 
@@ -32,12 +32,12 @@ public class Database {
         this.game = game;
     }
 
-    public Player getEnemy() {
-        return enemy;
+    public EnemyType getEnemyType() {
+        return enemyType;
     }
 
-    public void setEnemy(Player enemy) {
-        this.enemy = enemy;
+    public void setEnemyType(EnemyType enemyType) {
+        this.enemyType = enemyType;
     }
 
     public GameSettings getGameSettings() {
