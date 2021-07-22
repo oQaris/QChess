@@ -2,7 +2,6 @@ package io.deeplay.qchess.client.view.console;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.model.ViewBoard;
 import io.deeplay.qchess.client.view.model.ViewColor;
