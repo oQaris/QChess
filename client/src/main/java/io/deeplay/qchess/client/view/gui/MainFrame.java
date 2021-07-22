@@ -11,7 +11,7 @@ public class MainFrame {
     private ChoosePlayerFrame choosePlayerFrame;
     private ChooseStyleFrame chooseStyleFrame;
     private Table table;
-    private int enemyNumber;
+    private EnemyNumber enemyNumber;
     private String style;
     private boolean color;
 
@@ -39,7 +39,7 @@ public class MainFrame {
         choosePlayerFrame = new ChoosePlayerFrame(this);
     }
 
-    public void createChooseStyleFrame(int enemyNumber) {
+    public void createChooseStyleFrame(EnemyNumber enemyNumber) {
         this.enemyNumber = enemyNumber;
         chooseStyleFrame = new ChooseStyleFrame(this);
     }
@@ -77,7 +77,7 @@ public class MainFrame {
         return table;
     }
 
-    public int getEnemyNumber() {
+    public EnemyNumber getEnemyNumber() {
         return enemyNumber;
     }
 

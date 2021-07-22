@@ -16,7 +16,6 @@ public class ChooseStyleFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
     private final JPanel panel;
     private final ButtonGroup buttonGroup;
-    private int enemyNumber;
     private final Map<JRadioButton, String> rbs = new HashMap<>();
 
     public ChooseStyleFrame(MainFrame mf) {
@@ -26,7 +25,6 @@ public class ChooseStyleFrame extends Frame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        enemyNumber = 0;
 
         panel = new JPanel();
 
