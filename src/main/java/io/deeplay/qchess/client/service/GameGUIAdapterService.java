@@ -25,7 +25,7 @@ public class GameGUIAdapterService {
     // TODO: убрать отсюда куда-нибудь
     private static Selfplay game;
     private static GameSettings gs;
-    private static boolean isWhiteStep = true;
+    private static boolean isMyStep = true;
 
     // TODO: убрать отсюда куда-нибудь
     public static void init() {
@@ -56,7 +56,8 @@ public class GameGUIAdapterService {
                                 move.getTo().getRow(),
                                 move.getTo().getColumn(),
                                 move.getMoveType() == MoveType.ATTACK
-                                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK);
+                                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK
+                                        || move.getMoveType() == MoveType.EN_PASSANT);
                 set.add(vc);
             }
         } catch (ChessError e) {
@@ -149,7 +150,7 @@ public class GameGUIAdapterService {
                     e.printStackTrace();
                     return null;
                 }
-                isWhiteStep = !isWhiteStep;
+                isMyStep = !isMyStep;
                 System.out.println(gs.board.toString());
                 return move;
             }
@@ -158,15 +159,15 @@ public class GameGUIAdapterService {
         return null;
     }
 
-    public static boolean isWhiteStep() {
-        return isWhiteStep;
+    public static boolean isMyStep() {
+        return isMyStep;
     }
 
     public static void changeIsWhiteStep() {
-        isWhiteStep = !isWhiteStep;
+        isMyStep = !isMyStep;
     }
 
-    public static String getStatus() {
+    public static String getStatus(boolean color) {
         try {
             if (gs.endGameDetector.isDraw()) {
                 if (gs.endGameDetector.isDrawWithPeaceMoves()) {
@@ -180,14 +181,10 @@ public class GameGUIAdapterService {
                 } else if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate()) {
                     return "Ничья: недостаточно фигур, чтобы поставить мат";
                 }
-            } else if (gs.endGameDetector.isCheckmate(Color.WHITE)) {
-                return "Мат белым";
-            } else if (gs.endGameDetector.isCheckmate(Color.BLACK)) {
-                return "Мат черным";
-            } else if (gs.endGameDetector.isStalemate(Color.WHITE)) {
-                return "Пат белым";
-            } else if (gs.endGameDetector.isStalemate(Color.BLACK)) {
-                return "Пат черным";
+            } else if (gs.endGameDetector.isCheckmate(color ? Color.BLACK : Color.WHITE)) {
+                return "Мат " + (color ? "черным" : "белым");
+            } else if (gs.endGameDetector.isStalemate(color ? Color.BLACK : Color.WHITE)) {
+                return "Пат " + (color ? "черным" : "белым");
             }
         } catch (ChessError chessError) {
             chessError.printStackTrace();
@@ -195,7 +192,7 @@ public class GameGUIAdapterService {
         return "";
     }
 
-    public static boolean getEnd() {
-        return !getStatus().isEmpty();
+    public static boolean getEnd(boolean color) {
+        return !getStatus(color).isEmpty();
     }
 }

@@ -1,7 +1,6 @@
 package io.deeplay.qchess.server.dao;
 
 import io.deeplay.qchess.server.database.Database;
-import io.deeplay.qchess.server.database.Room;
 
 public class ConnectionControlDAO {
 

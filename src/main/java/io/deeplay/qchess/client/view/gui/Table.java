@@ -13,8 +13,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +31,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class Table {
+public class Table extends Frame {
     private static final int BOARD_SIZE = 8;
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
@@ -49,84 +47,42 @@ public class Table {
     private static final Color hoverCellColor = Color.CYAN;
     private static final String defaultFigureImagesPath = "/art/figures";
     private static final String[] figures = {"Ферзь", "Ладья", "Конь", "Слон"};
-    private final JFrame gameFrame;
     private final BoardPanel boardPanel;
     private final String figureStyle;
     private final boolean myColor;
     private final Set<Integer> taggedCells = new HashSet<>();
     private int clickedCell;
 
-    public Table(String figureStyle, boolean myColor) {
+    public Table(String figureStyle, boolean myColor, MainFrame mf) {
+        this.mf = mf;
         this.myColor = myColor;
         this.figureStyle = figureStyle;
-        this.gameFrame = new JFrame("SHAKHMATY");
-        this.gameFrame.setLayout(new BorderLayout());
-        this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
-        this.gameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.gameFrame.setResizable(false);
+        this.frame = new JFrame("QChess");
+        this.frame.setLayout(new BorderLayout());
+        this.frame.setSize(OUTER_FRAME_DIMENSION);
+        this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.frame.setResizable(false);
+        this.frame.setLocationRelativeTo(null);
 
         try (InputStream png = getClass().getResourceAsStream("/art/other/icon.png")) {
             assert png != null;
             final BufferedImage image = ImageIO.read(png);
-            this.gameFrame.setIconImage(image);
+            this.frame.setIconImage(image);
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
 
         this.boardPanel = new BoardPanel();
-        this.gameFrame.add(boardPanel, BorderLayout.CENTER);
+        this.frame.add(boardPanel, BorderLayout.CENTER);
 
         final JMenuBar tableMenuBar = createTableMenuBar();
-        this.gameFrame.setJMenuBar(tableMenuBar);
+        this.frame.setJMenuBar(tableMenuBar);
 
-        this.gameFrame.setVisible(true);
+        this.frame.setVisible(true);
 
         clickedCell = -1;
 
-        this.gameFrame.addWindowListener(
-                new WindowListener() {
-                    @Override
-                    public void windowOpened(WindowEvent e) {}
-
-                    @Override
-                    public void windowClosing(WindowEvent event) {
-                        Object[] options = {"Да", "Нет!"};
-                        int n =
-                                JOptionPane.showOptionDialog(
-                                        event.getWindow(),
-                                        "Закрыть окно?",
-                                        "Подтверждение",
-                                        JOptionPane.YES_NO_OPTION,
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null,
-                                        options,
-                                        options[0]);
-                        if (n == 0) {
-                            event.getWindow().setVisible(false);
-                            try {
-                                ClientController.disconnect("Клиент отключен");
-                            } catch (ClientException e) {
-                                System.err.println(e.getMessage());
-                            }
-                            gameFrame.dispose();
-                        }
-                    }
-
-                    @Override
-                    public void windowClosed(WindowEvent e) {}
-
-                    @Override
-                    public void windowIconified(WindowEvent e) {}
-
-                    @Override
-                    public void windowDeiconified(WindowEvent e) {}
-
-                    @Override
-                    public void windowActivated(WindowEvent e) {}
-
-                    @Override
-                    public void windowDeactivated(WindowEvent e) {}
-                });
+        this.frame.addWindowListener(new CloseFrameListener(this));
     }
 
     private JMenuBar createTableMenuBar() {
@@ -143,7 +99,7 @@ public class Table {
         fileMenu.add(loadMenuItem);
 
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(e -> gameFrame.dispose());
+        exitMenuItem.addActionListener(e -> frame.dispose());
         fileMenu.add(exitMenuItem);
 
         return fileMenu;
@@ -159,12 +115,17 @@ public class Table {
     }
 
     public void endGame() {
-        EndGame endGame = ClientController.getEndGame();
+        endGameInverse(false);
+    }
+
+    public void endGameInverse(boolean sign) {
+        System.out.println("END");
+        EndGame endGame = ClientController.getEndGame(myColor ^ sign);
         if (endGame.isEnd()) {
             Object[] options = {"Да", "Нет!"};
             int n =
                     JOptionPane.showOptionDialog(
-                            gameFrame,
+                            frame,
                             endGame.getStatus() + "\nЗакрыть окно?",
                             "Подтверждение",
                             JOptionPane.YES_NO_OPTION,
@@ -173,13 +134,12 @@ public class Table {
                             options,
                             options[0]);
             if (n == 0) {
-                gameFrame.setVisible(false);
+                mf.destroyTable();
                 try {
                     ClientController.disconnect("Игра окончена");
                 } catch (ClientException e) {
                     System.err.println(e.getMessage());
                 }
-                gameFrame.dispose();
             }
         }
     }
@@ -232,8 +192,7 @@ public class Table {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            if (isLeftMouseButton(e) && ClientController.isWhiteStep()) {
-                                // if (isLeftMouseButton(e)) {
+                            if (isLeftMouseButton(e) && ClientController.isMyStep()) {
                                 boolean twoClick = false;
                                 if (ClientController.checkFigure(
                                         cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
@@ -241,7 +200,7 @@ public class Table {
                                         twoClick = clickedCell == cellId;
                                         clearColorOnBoard();
                                     }
-                                    if (clickedCell != cellId & !twoClick) {
+                                    if (clickedCell != cellId && !twoClick) {
                                         setColorOnBoard();
                                     }
                                 } else if (taggedCells.contains(cellId)) {
@@ -253,13 +212,11 @@ public class Table {
                                                     cellId / BOARD_SIZE,
                                                     cellId % BOARD_SIZE);
                                     if (action > 0) {
-                                        System.out.println("Watafak1");
-
                                         Object turnFigure = null;
                                         if (action == 2) {
                                             turnFigure =
                                                     JOptionPane.showInputDialog(
-                                                            gameFrame,
+                                                            frame,
                                                             "Выберите фигуру для замены :",
                                                             "Выбор фигуры",
                                                             JOptionPane.QUESTION_MESSAGE,
@@ -267,7 +224,11 @@ public class Table {
                                                             figures,
                                                             figures[0]);
                                             // Диалоговое окно вывода сообщения
-                                            JOptionPane.showMessageDialog(gameFrame, turnFigure);
+                                            JOptionPane.showMessageDialog(
+                                                    frame,
+                                                    turnFigure,
+                                                    "Оповещение",
+                                                    JOptionPane.INFORMATION_MESSAGE);
                                         }
                                         try {
                                             ClientController.makeMove(
@@ -282,11 +243,23 @@ public class Table {
 
                                         boardPanel.boardCells.get(clickedCell).drawCell();
                                         thisCellPanel.drawCell();
+                                        if (action == 4) {
+                                            boardPanel.drawBoard();
+                                        }
+
+                                        if (action == 3) {
+                                            int coeff = myColor ? BOARD_SIZE : 1;
+                                            for (int i = BOARD_SIZE * (coeff - 1);
+                                                    i < BOARD_SIZE * coeff;
+                                                    i++) {
+                                                boardPanel.boardCells.get(i).drawCell();
+                                            }
+                                        }
                                         clearColorOnBoard();
+                                        ClientController.checkEndGame();
                                     } else if (action == 0) {
                                         clearColorOnBoard();
                                     }
-                                    System.out.println("Watafak");
                                 }
                             }
                         }
@@ -296,7 +269,7 @@ public class Table {
 
                         @Override
                         public void mouseEntered(MouseEvent e) {
-                            if (ClientController.isWhiteStep()) {
+                            if (ClientController.isMyStep()) {
                                 if (thisCellPanel.getBackground() == chooseCellColor) {
                                     thisCellPanel.setBackground(chooseHoverCellColor);
                                 } else if (thisCellPanel.getBackground()
@@ -313,7 +286,7 @@ public class Table {
 
                         @Override
                         public void mouseExited(MouseEvent e) {
-                            if (ClientController.isWhiteStep()) {
+                            if (ClientController.isMyStep()) {
                                 if (thisCellPanel.getBackground() == chooseHoverCellColor) {
                                     thisCellPanel.setBackground(chooseCellColor);
                                 } else if (thisCellPanel.getBackground()

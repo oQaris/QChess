@@ -4,7 +4,6 @@ import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerDTO;
 import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerType;
 import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
-import io.deeplay.qchess.server.controller.ServerController;
 import io.deeplay.qchess.server.service.ChatService;
 import io.deeplay.qchess.server.service.ConnectionControlService;
 import io.deeplay.qchess.server.service.GameService;

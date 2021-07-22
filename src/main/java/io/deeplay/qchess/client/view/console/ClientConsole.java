@@ -58,7 +58,7 @@ public class ClientConsole implements IClientView {
         try {
             if (in.ready()) {
                 String command = in.readLine();
-                ClientController.executeCommand(command);
+                if (command != null) ClientController.executeCommand(command);
                 return "stop".equals(command) ? -1 : 0;
             }
         } catch (IOException | ClientException e) {
@@ -113,6 +113,11 @@ public class ClientConsole implements IClientView {
 
     @Override
     public void endGame() {
+        throw new UnsupportedOperationException("Еще не реализовано");
+    }
+
+    @Override
+    public void endGameInverse() {
         throw new UnsupportedOperationException("Еще не реализовано");
     }
 

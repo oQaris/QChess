@@ -41,10 +41,8 @@ public class ServerConsole implements IServerView {
         try {
             if (in.ready()) {
                 String command = in.readLine();
-                ServerController.executeCommand(command);
-                if (command.equals("stop")) {
-                    return -1;
-                }
+                if (command != null) ServerController.executeCommand(command);
+                return "stop".equals(command) ? -1 : 0;
             }
         } catch (IOException | ServerException e) {
             System.out.println("Ошибка при вводе команды");
