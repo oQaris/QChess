@@ -2,13 +2,14 @@ package io.deeplay.qchess.client.controller;
 
 import io.deeplay.qchess.client.IClient;
 import io.deeplay.qchess.client.LocalClient;
+import io.deeplay.qchess.client.dao.GameDAO;
 import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.EndGame;
-import io.deeplay.qchess.client.view.gui.EnemyNumber;
+import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
@@ -142,11 +143,6 @@ public class ClientController {
     }
 
     // TODO: добавить javadoc
-    public static boolean checkFigure(int row, int column) {
-        return GameGUIAdapterService.checkFigure(row, column);
-    }
-
-    // TODO: добавить javadoc
     public static boolean checkFigure(int row, int column, boolean isWhite) {
         return GameGUIAdapterService.checkFigure(row, column, isWhite);
     }
@@ -191,7 +187,7 @@ public class ClientController {
 
     // TODO: добавить javadoc
     public static boolean isMyStep() {
-        return GameGUIAdapterService.isMyStep();
+        return GameDAO.isMyStep();
     }
 
     // TODO: добавить javadoc
@@ -218,14 +214,20 @@ public class ClientController {
         return null;
     }
 
-    public static void chooseEnemy(EnemyNumber enemyNumber) {}
+    public static void chooseEnemy(EnemyType enemyType) {
+        GameService.chooseEnemy(enemyType);
+    }
 
     public static void endGameInverse() {
         view.endGameInverse();
     }
 
-    public static String closeGame() {
-        view.closeGame();
-        return "";
+    public static void closeGame(String reason) {
+        view.closeGame(reason);
+    }
+
+    /** Инициализирует игру у клиента */
+    public static void initGame(boolean color) {
+        GameService.initGame(color);
     }
 }

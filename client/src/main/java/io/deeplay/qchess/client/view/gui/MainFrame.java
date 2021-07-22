@@ -12,9 +12,8 @@ public class MainFrame {
     private ChoosePlayerFrame choosePlayerFrame;
     private ChooseStyleFrame chooseStyleFrame;
     private Table table;
-    private EnemyNumber enemyNumber;
+    private EnemyType enemyType;
     private String style;
-    private boolean color;
 
     public void createStartFrame() {
         JFrame frame = new JFrame("Начало");
@@ -41,8 +40,8 @@ public class MainFrame {
         choosePlayerFrame = new ChoosePlayerFrame(this);
     }
 
-    public void createChooseStyleFrame(EnemyNumber enemyNumber) {
-        this.enemyNumber = enemyNumber;
+    public void createChooseStyleFrame(EnemyType enemyType) {
+        this.enemyType = enemyType;
         chooseStyleFrame = new ChooseStyleFrame(this);
     }
 
@@ -80,15 +79,11 @@ public class MainFrame {
         return table;
     }
 
-    public EnemyNumber getEnemyNumber() {
-        return enemyNumber;
+    public EnemyType getEnemyNumber() {
+        return enemyType;
     }
 
     public String getStyle() {
         return style;
-    }
-
-    public boolean isColor() {
-        return color;
     }
 }

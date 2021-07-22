@@ -22,6 +22,7 @@ public class ChoosePlayerFrame extends Frame {
     private int enemyNumber;
     private final Map<JRadioButton, EnemyNumber> rbs = new HashMap<>();
     private final GridBagConstraints gbc;
+    private final Map<JRadioButton, EnemyType> rbs = new HashMap<>();
 
     public ChoosePlayerFrame(MainFrame mf) {
         this.mf = mf;
@@ -63,16 +64,16 @@ public class ChoosePlayerFrame extends Frame {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         super.mousePressed(e);
-                        EnemyNumber enemyNumber = null;
+                        EnemyType enemyType = null;
                         for (JRadioButton rb : rbs.keySet()) {
                             if (rb.isSelected()) {
-                                enemyNumber = rbs.get(rb);
+                                enemyType = rbs.get(rb);
                                 break;
                             }
                         }
 
-                        ClientController.chooseEnemy(enemyNumber);
-                        mf.createChooseStyleFrame(enemyNumber);
+                        ClientController.chooseEnemy(enemyType);
+                        mf.createChooseStyleFrame(enemyType);
                         mf.destroyChoosePlayerFrame();
                     }
                 });
@@ -84,7 +85,7 @@ public class ChoosePlayerFrame extends Frame {
         JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
-        panel.add(button, gbc);
+        panel.add(button);
 
         rbs.put(button, enemyNumber);
     }
