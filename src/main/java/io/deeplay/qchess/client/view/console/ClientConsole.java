@@ -30,7 +30,6 @@ public class ClientConsole implements IClientView {
     @Override
     public void startView() {
         ClientController.setView(this);
-        GameGUIAdapterService.init(); // TODO: убрать костыль
         try {
             ClientController.connect(IP, PORT);
         } catch (ClientException e) {

@@ -25,7 +25,7 @@ public class GameGUIAdapterService {
     // TODO: убрать отсюда куда-нибудь
     private static Selfplay game;
     private static GameSettings gs;
-    private static boolean isMyStep = true;
+    private static boolean isMyStep;
 
     // TODO: убрать отсюда куда-нибудь
     public static void init() {
@@ -163,7 +163,7 @@ public class GameGUIAdapterService {
         return isMyStep;
     }
 
-    public static void changeIsWhiteStep() {
+    public static void changeIsMyStep() {
         isMyStep = !isMyStep;
     }
 

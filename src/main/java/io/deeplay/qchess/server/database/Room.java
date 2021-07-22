@@ -51,6 +51,11 @@ public class Room {
         return player1 != null && player2 != null;
     }
 
+    /** @return токен сессии первого (белого) игрока */
+    public synchronized String getFirstPlayerToken() {
+        return player1.getSessionToken();
+    }
+
     /**
      * Изменяет флаг error = true, если при ходе возникла критическая ошибка
      *

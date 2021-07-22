@@ -71,8 +71,7 @@ public class ConnectFrame extends Frame {
                             ClientController.waitForAcceptConnection();
                             boolean color = ClientController.waitForGameSettings();
                             frame.dispose();
-                            GameGUIAdapterService.init();
-                            if (!color) GameGUIAdapterService.changeIsWhiteStep();
+                            GameGUIAdapterService.init(); // TODO: убрать костыль
 
                             mf.createChoosePlayerFrame(color);
                             mf.destroyConnectFrame();

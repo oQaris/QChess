@@ -11,6 +11,11 @@ import io.deeplay.qchess.game.model.Move;
 
 public class GameService {
 
+    public static String startGame(ServerToClientType type, String json) {
+        GameGUIAdapterService.changeIsMyStep();
+        return null;
+    }
+
     public static String action(ServerToClientType type, String json)
             throws SerializationException {
         assert type.getDTO() == ActionDTO.class;

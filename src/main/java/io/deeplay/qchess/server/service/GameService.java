@@ -4,6 +4,7 @@ import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ActionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerType;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.DisconnectedDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.StartGameDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.model.Move;
@@ -19,7 +20,16 @@ public class GameService {
     public static void addOrReplacePlayer(String sessionToken) {
         Room room = GameDAO.getRoom();
         room.addPlayer(sessionToken);
-        if (room.isFull()) room.startGame();
+        if (room.isFull()) {
+            room.startGame();
+            int id = ConnectionControlDAO.getID(room.getFirstPlayerToken());
+            try {
+                ServerController.send(
+                        SerializationService.makeMainDTOJsonToClient(new StartGameDTO()), id);
+            } catch (ServerException ignore) {
+                // Сервис вызывается при открытом сервере
+            }
+        }
         if (room.isError()) {
             // TODO: критическая ошибка в игре
         }

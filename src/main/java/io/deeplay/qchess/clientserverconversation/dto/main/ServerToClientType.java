@@ -7,6 +7,7 @@ import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ChatMessage
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.DisconnectedDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.StartGameDTO;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -18,7 +19,8 @@ public enum ServerToClientType {
     END_GAME(EndGameDTO.class),
     GAME_SETTINGS(GameSettingsDTO.class),
     GAME_ACTION(ActionDTO.class),
-    CHAT_MESSAGE(ChatMessageDTO.class);
+    CHAT_MESSAGE(ChatMessageDTO.class),
+    START_GAME(StartGameDTO.class);
 
     private static final Map<Class<? extends IServerToClientDTO>, ServerToClientType> type =
             new HashMap<>();
