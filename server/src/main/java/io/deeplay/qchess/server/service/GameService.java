@@ -58,7 +58,7 @@ public class GameService {
             Integer opponentID = ConnectionControlDAO.getID(opponentToken);
             room.resetRoom();
 
-            if (opponentID != null) sendEndGame("Оппонент покинул игру, вы победили!", opponentID);
+            if (opponentID != null) sendEndGame(room, "Оппонент покинул игру, вы победили!", opponentID);
         }
     }
 
@@ -110,9 +110,9 @@ public class GameService {
 
         String status = room.getGameStatus();
         if (status != null) {
-            sendEndGame(status, ConnectionControlDAO.getID(fromToken));
+            sendEndGame(room, status, ConnectionControlDAO.getID(fromToken));
             if (player.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                sendEndGame(status, ConnectionControlDAO.getID(toToken));
+                sendEndGame(room, status, ConnectionControlDAO.getID(toToken));
             return;
         }
 
@@ -124,9 +124,9 @@ public class GameService {
 
         status = room.getGameStatus();
         if (status != null) {
-            sendEndGame(status, ConnectionControlDAO.getID(fromToken));
+            sendEndGame(room, status, ConnectionControlDAO.getID(fromToken));
             if (player.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                sendEndGame(status, ConnectionControlDAO.getID(toToken));
+                sendEndGame(room, status, ConnectionControlDAO.getID(toToken));
             return;
         }
 
@@ -139,8 +139,9 @@ public class GameService {
                     clientId);
     }
 
-    private static void sendEndGame(String response, int clientId) {
+    private static void sendEndGame(Room room, String response, int clientId) {
         try {
+            room.resetRoom();
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(new EndGameDTO(response)),
                     clientId);
