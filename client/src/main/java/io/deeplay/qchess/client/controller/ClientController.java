@@ -13,7 +13,7 @@ import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
-import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.GetGameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.FindGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.AcceptConnectionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
 import io.deeplay.qchess.game.model.Color;
@@ -110,7 +110,7 @@ public class ClientController {
     public static boolean waitForGameSettings() throws ClientException {
         GameSettingsDTO dto =
                 client.waitForResponse(
-                        new GetGameSettingsDTO(
+                        new FindGameDTO(
                                 SessionDAO.getSessionToken(),
                                 switch (GameDAO.getEnemyType()) {
                                     case USER -> PlayerType.REMOTE_PLAYER;

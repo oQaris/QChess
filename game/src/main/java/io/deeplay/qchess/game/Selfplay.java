@@ -60,6 +60,14 @@ public class Selfplay {
         return currentPlayerToMove;
     }
 
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
+    }
+
     private boolean isCorrectPlayerColor(Move move) {
         try {
             return roomSettings.board.getFigure(move.getFrom()).getColor()

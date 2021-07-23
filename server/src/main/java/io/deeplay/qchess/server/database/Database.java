@@ -1,53 +1,63 @@
 package io.deeplay.qchess.server.database;
 
-import io.deeplay.qchess.game.model.Board.BoardFilling;
-import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.server.controller.ServerController;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
 
-    private static Database database;
+    private static final transient Database database = new Database();
 
     /** sessionToken -> ID */
     private final Map<String, Integer> clients;
 
-    private final Room room;
+    /** Не поддерживает потокобезопасное заполнение/удаление комнат TODO this (?) */
+    private final TreeSet<Room> rooms;
+
+    @Deprecated(forRemoval = true)
+    private final Room room = new Room();
 
     private Database() {
-        clients = new HashMap<>(ServerController.getMaxClients());
-        room = new Room(BoardFilling.STANDARD);
+        clients = new ConcurrentHashMap<>(ServerController.getMaxClients());
+        rooms = new TreeSet<>(Comparator.comparingInt(r -> r.id));
+
+        for (int i = 0; i < ServerController.getMaxClients(); ++i) rooms.add(new Room());
     }
 
-    public static synchronized Database getInstance() {
-        if (database == null) database = new Database();
+    public static Database getInstance() {
         return database;
     }
 
-    public synchronized Room getRoom() {
-        return room;
-    }
-
-    public synchronized void addPlayer(String sessionToken, int clientID) {
+    public void addPlayer(String sessionToken, int clientID) {
         clients.put(sessionToken, clientID);
     }
 
-    public synchronized boolean contains(String sessionToken) {
-        return clients.get(sessionToken) != null;
+    public boolean contains(String sessionToken) {
+        return clients.containsKey(sessionToken);
     }
 
-    public synchronized void removePlayer(String sessionToken) {
+    public void removePlayer(String sessionToken) {
         clients.remove(sessionToken);
     }
 
     /** @return id клиента или null, если его нет */
-    public synchronized Integer getID(String sessionToken) {
+    public Integer getID(String sessionToken) {
         return clients.get(sessionToken);
     }
 
-    /** @return цвет игрока или null, если игрок не найден */
-    public synchronized Color getColor(String sessionToken) {
-        return room.getColor(sessionToken);
+    /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
+    public Room findSuitableRoom(PlayerType enemyType) {
+        return room.isFull() ? null : room;
+    }
+
+    /**
+     * @return комната с игроком, у которого токен сессии равен sessionToken или null, если комната
+     *     не найдена
+     */
+    public Room getRoom(String sessionToken) {
+        return room.contains(sessionToken) ? room : null;
     }
 }

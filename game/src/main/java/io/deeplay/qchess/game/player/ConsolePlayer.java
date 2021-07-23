@@ -16,7 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConsolePlayer extends Player {
+public class ConsolePlayer extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
     private static final String TURN_INTO_INVITE =
             "Выберите фигуру для превращения:"
@@ -32,7 +32,7 @@ public class ConsolePlayer extends Player {
     private final BufferedReader in;
 
     public ConsolePlayer(GameSettings roomSettings, Color color, BufferedReader in) {
-        super(roomSettings, color);
+        super(roomSettings, color, "console-player");
         this.in = in;
     }
 

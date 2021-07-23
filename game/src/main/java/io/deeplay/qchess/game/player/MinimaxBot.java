@@ -15,10 +15,11 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MinimaxBot extends Player {
+public class MinimaxBot extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(MinimaxBot.class);
     private static final Map<FigureType, Integer[][]> grades;
     private static final Integer[][] pawnEval = {
@@ -96,7 +97,7 @@ public class MinimaxBot extends Player {
     private final int depth;
 
     public MinimaxBot(GameSettings roomSettings, Color color, int searchDepth) {
-        super(roomSettings, color);
+        super(roomSettings, color, "minimax-bot-" + UUID.randomUUID());
         depth = searchDepth;
     }
 

@@ -7,7 +7,7 @@ import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.server.service.ChatService;
 import io.deeplay.qchess.server.service.ConnectionControlService;
 import io.deeplay.qchess.server.service.GameService;
-import io.deeplay.qchess.server.service.GetRequestService;
+import io.deeplay.qchess.server.service.MatchMaking;
 import java.util.EnumMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -24,8 +24,8 @@ public class ClientRequestHandler {
                 Map.of(
                         ClientToServerType.SET_CONNECTION,
                         ConnectionControlService::setConnection,
-                        ClientToServerType.GET_GAME_SETTINGS,
-                        GetRequestService::getGameSettings,
+                        ClientToServerType.FIND_GAME,
+                        MatchMaking::findGame,
                         ClientToServerType.GAME_ACTION,
                         GameService::action,
                         ClientToServerType.CHAT_MESSAGE,
