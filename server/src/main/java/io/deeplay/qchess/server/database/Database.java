@@ -36,16 +36,16 @@ public class Database {
     }
 
     public boolean contains(String sessionToken) {
-        return clients.containsKey(sessionToken);
+        return sessionToken != null && clients.containsKey(sessionToken);
     }
 
     public void removePlayer(String sessionToken) {
-        clients.remove(sessionToken);
+        if (sessionToken != null) clients.remove(sessionToken);
     }
 
     /** @return id клиента или null, если его нет */
     public Integer getID(String sessionToken) {
-        return clients.get(sessionToken);
+        return sessionToken != null ? clients.get(sessionToken) : null;
     }
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */

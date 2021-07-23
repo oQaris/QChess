@@ -43,8 +43,8 @@ public class ConnectionControlService {
     public static void disconnect(String sessionToken, String reason) {
         Integer clientID = ConnectionControlDAO.getID(sessionToken);
         if (clientID == null) return;
-        ConnectionControlDAO.removePlayer(sessionToken);
         GameService.endGameForOpponentOf(sessionToken);
+        ConnectionControlDAO.removePlayer(sessionToken);
         try {
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason)),
