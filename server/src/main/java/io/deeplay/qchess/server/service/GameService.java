@@ -58,20 +58,7 @@ public class GameService {
             Integer opponentID = ConnectionControlDAO.getID(opponentToken);
             room.resetRoom();
 
-            if (opponentID != null) {
-                try {
-                    ServerController.send(
-                            SerializationService.makeMainDTOJsonToClient(
-                                    new EndGameDTO("Оппонент покинул игру, вы победили!")),
-                            opponentID);
-                    ServerController.send(
-                            SerializationService.makeMainDTOJsonToClient(
-                                    new DisconnectedDTO("Игра окончена")),
-                            opponentID);
-                } catch (ServerException ignore) {
-                    // Сервис вызывается при открытом сервере
-                }
-            }
+            if (opponentID != null) sendEndGame("Оппонент покинул игру, вы победили!", opponentID);
         }
     }
 
@@ -121,10 +108,26 @@ public class GameService {
         RemotePlayer player = room.getPlayer(toToken);
         String sendToken = toToken;
 
+        String status = room.getGameStatus();
+        if (status != null) {
+            sendEndGame(status, ConnectionControlDAO.getID(fromToken));
+            if (player.getPlayerType() == PlayerType.REMOTE_PLAYER)
+                sendEndGame(status, ConnectionControlDAO.getID(toToken));
+            return;
+        }
+
         if (player.getPlayerType() != PlayerType.REMOTE_PLAYER) {
             move = player.getNextMove();
             room.move(move);
             sendToken = fromToken;
+        }
+
+        status = room.getGameStatus();
+        if (status != null) {
+            sendEndGame(status, ConnectionControlDAO.getID(fromToken));
+            if (player.getPlayerType() == PlayerType.REMOTE_PLAYER)
+                sendEndGame(status, ConnectionControlDAO.getID(toToken));
+            return;
         }
 
         Integer clientId = ConnectionControlDAO.getID(sendToken);
@@ -134,5 +137,19 @@ public class GameService {
                             new io.deeplay.qchess.clientserverconversation.dto.servertoclient
                                     .ActionDTO(move)),
                     clientId);
+    }
+
+    private static void sendEndGame(String response, int clientId) {
+        try {
+            ServerController.send(
+                    SerializationService.makeMainDTOJsonToClient(new EndGameDTO(response)),
+                    clientId);
+            ServerController.send(
+                    SerializationService.makeMainDTOJsonToClient(
+                            new DisconnectedDTO("Игра окончена")),
+                    clientId);
+        } catch (ServerException ignore) {
+            // Сервис вызывается при открытом сервере
+        }
     }
 }

@@ -136,13 +136,13 @@ public class EndGameDetector {
     }
 
     /** @return true, если установленному цвету поставили мат */
-    public boolean isCheckmate(Color color) throws ChessError {
+    public boolean isCheckmate(Color color) {
         return isStalemate(color) && isCheck(color);
     }
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
-    public boolean isStalemate(Color color) throws ChessError {
-        return roomSettings.moveSystem.getAllCorrectMoves(color).isEmpty();
+    public boolean isStalemate(Color color) {
+        return roomSettings.moveSystem.getAllCorrectMovesForStalemate(color).isEmpty();
     }
 
     /** @return true если игроку с указанным цветом ставят шах */
