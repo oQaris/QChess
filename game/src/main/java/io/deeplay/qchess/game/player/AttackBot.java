@@ -15,15 +15,16 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AttackBot extends Player {
+public class AttackBot extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(AttackBot.class);
     private static final Map<FigureType, Integer> grades = preparedGrades();
 
     public AttackBot(GameSettings roomSettings, Color color) {
-        super(roomSettings, color);
+        super(roomSettings, color, "attack-bot-" + UUID.randomUUID());
     }
 
     private static Map<FigureType, Integer> preparedGrades() {
@@ -58,6 +59,11 @@ public class AttackBot extends Player {
         Move move = topMoves.get(new Random().nextInt(topMoves.size()));
         turnIntoInQueen(move);
         return move;
+    }
+
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.ATTACK_BOT;
     }
 
     protected void turnIntoInQueen(Move move) {

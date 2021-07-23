@@ -27,8 +27,10 @@ public class LocalClient implements IClient {
     private static String ip;
     private static int port;
     private static volatile boolean waitForResponse;
-    // volatile используется, т.к. нужно следить за изменением ссылки, а не объекта
+
+    /** volatile используется, т.к. нужно следить за изменением ссылки, а не объекта */
     private static volatile ServerToClientDTO lastResponse;
+
     private final Object mutex = new Object();
     private final Object mutexWaitForResponse = new Object();
     private final Object mutexLastResponse = new Object();

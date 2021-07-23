@@ -24,26 +24,35 @@ public class ConnectionControlService {
                 SerializationService.clientToServerDTORequest(json, ConnectionDTO.class);
 
         if (dto.connection) {
-            String newSessionToken;
             if (dto.sessionToken != null && ConnectionControlDAO.contains(dto.sessionToken)) {
-                newSessionToken = dto.sessionToken;
+                disconnect(dto.sessionToken, "Уже подключен");
+                return null;
             } else {
-                newSessionToken = UUID.randomUUID().toString();
+                String newSessionToken = UUID.randomUUID().toString();
                 ConnectionControlDAO.addPlayer(newSessionToken, clientID);
+                return SerializationService.makeMainDTOJsonToClient(
+                        new AcceptConnectionDTO(newSessionToken));
             }
-            GameService.addOrReplacePlayer(newSessionToken);
-            return SerializationService.makeMainDTOJsonToClient(
-                    new AcceptConnectionDTO(newSessionToken));
         } else {
-            ConnectionControlDAO.removePlayer(dto.sessionToken);
-            GameService.removePlayer(dto.sessionToken);
-            try {
-                ServerController.closeConnection(clientID);
-            } catch (ServerException ignore) {
-                // Сервис вызывается при открытом сервере
-            }
+            disconnect(dto.sessionToken, "Отключен");
         }
 
         return null;
+    }
+
+    public static void disconnect(String sessionToken, String reason) {
+        Integer clientID = ConnectionControlDAO.getID(sessionToken);
+        if (clientID == null) return;
+        ConnectionControlDAO.removePlayer(sessionToken);
+        GameService.endGameForOpponentOf(sessionToken);
+        try {
+            ServerController.send(
+                    SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason)),
+                    clientID);
+            // TODO: убрать костыль (перенести id клиентов в БД), возвращать Json
+            ServerController.closeConnection(clientID);
+        } catch (ServerException ignore) {
+            // Сервис вызывается при открытом сервере
+        }
     }
 }

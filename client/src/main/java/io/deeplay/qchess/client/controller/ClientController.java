@@ -13,13 +13,14 @@ import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
-import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.GetGameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.FindGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.AcceptConnectionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
+import io.deeplay.qchess.game.player.PlayerType;
 import java.util.Set;
 
 public class ClientController {
@@ -109,7 +110,14 @@ public class ClientController {
     public static boolean waitForGameSettings() throws ClientException {
         GameSettingsDTO dto =
                 client.waitForResponse(
-                        new GetGameSettingsDTO(SessionDAO.getSessionToken()),
+                        new FindGameDTO(
+                                SessionDAO.getSessionToken(),
+                                switch (GameDAO.getEnemyType()) {
+                                    case USER -> PlayerType.REMOTE_PLAYER;
+                                    case EASYBOT -> PlayerType.RANDOM_BOT;
+                                    case MEDIUMBOT -> PlayerType.ATTACK_BOT;
+                                    case HARDBOT -> PlayerType.MINIMAX_BOT;
+                                }),
                         GameSettingsDTO.class);
         return dto.color == Color.WHITE;
     }

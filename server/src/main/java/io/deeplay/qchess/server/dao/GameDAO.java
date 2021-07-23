@@ -1,17 +1,21 @@
 package io.deeplay.qchess.server.dao;
 
-import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.server.database.Database;
 import io.deeplay.qchess.server.database.Room;
 
 public class GameDAO {
 
-    public static Room getRoom() {
-        return Database.getInstance().getRoom();
+    /**
+     * @return комната с игроком, у которого токен сессии равен sessionToken или null, если комната
+     *     не найдена
+     */
+    public static Room getRoom(String sessionToken) {
+        return Database.getInstance().getRoom(sessionToken);
     }
 
-    /** @return цвет игрока или null, если игрок не найден */
-    public static Color getColor(String sessionToken) {
-        return Database.getInstance().getColor(sessionToken);
+    /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
+    public static Room findSuitableRoom(PlayerType enemyType) {
+        return Database.getInstance().findSuitableRoom(enemyType);
     }
 }

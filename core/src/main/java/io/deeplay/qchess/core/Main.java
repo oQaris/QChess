@@ -8,17 +8,16 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        if(args.length != 1)
-            System.out.println("Число параметров должно быть равно единице");
+        if (args.length != 1) System.out.println("Число параметров должно быть равно единице");
 
         switch (args[0].strip().toLowerCase()) {
-            // Сервер
+                // Сервер
             case "s", "-s", "server" -> {
                 IServerView view = new ServerConsole();
                 view.startView();
                 view.close();
             }
-            // Клиент
+                // Клиент
             case "c", "-c", "client" -> {
                 IClientView view = new ClientGUI();
                 view.startView();
