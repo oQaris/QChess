@@ -2,7 +2,6 @@ package io.deeplay.qchess.client.dao;
 
 import io.deeplay.qchess.client.database.Database;
 
-// TODO: добавить интерфейс
 public class SessionDAO {
 
     public static String getSessionToken() {

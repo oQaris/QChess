@@ -84,6 +84,7 @@ public class ClientConsole implements IClientView {
     }
 
     private char figureToIcon(ViewColor color, ViewFigureType figure) {
+        // дублируется код из борды
         return switch (color) {
             case WHITE -> switch (figure) {
                 case BISHOP -> '♝';
@@ -116,6 +117,11 @@ public class ClientConsole implements IClientView {
 
     @Override
     public void endGameInverse() {
+        throw new UnsupportedOperationException("Еще не реализовано");
+    }
+
+    @Override
+    public void closeGame(String reason) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }
 

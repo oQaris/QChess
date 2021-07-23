@@ -8,11 +8,12 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
-public class RandomBot extends Player {
+public class RandomBot extends RemotePlayer {
 
     public RandomBot(GameSettings roomSettings, Color color) {
-        super(roomSettings, color);
+        super(roomSettings, color, "random-bot-" + UUID.randomUUID());
     }
 
     @Override
@@ -21,6 +22,11 @@ public class RandomBot extends Player {
         Move move = allMoves.get(new Random().nextInt(allMoves.size()));
         turnIntoInQueen(move);
         return move;
+    }
+
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.RANDOM_BOT;
     }
 
     protected void turnIntoInQueen(Move move) {

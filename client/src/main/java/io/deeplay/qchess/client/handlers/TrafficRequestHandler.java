@@ -34,7 +34,7 @@ public class TrafficRequestHandler {
                         ServerToClientType.GAME_ACTION,
                         GameService::action,
                         ServerToClientType.END_GAME,
-                        (type, json) -> null, // TODO: убрать заглушку
+                        GameService::endGame,
                         ServerToClientType.CHAT_MESSAGE,
                         ChatService::incomingMessage));
         assert redirector.size() == ServerToClientType.values().length;

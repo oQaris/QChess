@@ -2,22 +2,25 @@ package io.deeplay.qchess.client.controller;
 
 import io.deeplay.qchess.client.IClient;
 import io.deeplay.qchess.client.LocalClient;
+import io.deeplay.qchess.client.dao.GameDAO;
 import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.EndGame;
+import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
-import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.GetGameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.FindGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.AcceptConnectionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
+import io.deeplay.qchess.game.player.PlayerType;
 import java.util.Set;
 
 public class ClientController {
@@ -107,7 +110,14 @@ public class ClientController {
     public static boolean waitForGameSettings() throws ClientException {
         GameSettingsDTO dto =
                 client.waitForResponse(
-                        new GetGameSettingsDTO(SessionDAO.getSessionToken()),
+                        new FindGameDTO(
+                                SessionDAO.getSessionToken(),
+                                switch (GameDAO.getEnemyType()) {
+                                    case USER -> PlayerType.REMOTE_PLAYER;
+                                    case EASYBOT -> PlayerType.RANDOM_BOT;
+                                    case MEDIUMBOT -> PlayerType.ATTACK_BOT;
+                                    case HARDBOT -> PlayerType.MINIMAX_BOT;
+                                }),
                         GameSettingsDTO.class);
         return dto.color == Color.WHITE;
     }
@@ -138,11 +148,6 @@ public class ClientController {
     // TODO: добавить javadoc
     public static Set<ViewCell> getAllMoves(int row, int column) {
         return GameGUIAdapterService.getAllMoves(row, column);
-    }
-
-    // TODO: добавить javadoc
-    public static boolean checkFigure(int row, int column) {
-        return GameGUIAdapterService.checkFigure(row, column);
     }
 
     // TODO: добавить javadoc
@@ -190,7 +195,7 @@ public class ClientController {
 
     // TODO: добавить javadoc
     public static boolean isMyStep() {
-        return GameGUIAdapterService.isMyStep();
+        return GameDAO.isMyStep();
     }
 
     // TODO: добавить javadoc
@@ -217,5 +222,20 @@ public class ClientController {
         return null;
     }
 
-    public static void chooseEnemy(int enemyNumber) {}
+    public static void chooseEnemy(EnemyType enemyType) {
+        GameService.chooseEnemy(enemyType);
+    }
+
+    public static void endGameInverse() {
+        view.endGameInverse();
+    }
+
+    public static void closeGame(String reason) {
+        view.closeGame(reason);
+    }
+
+    /** Инициализирует игру у клиента */
+    public static void initGame(boolean color) {
+        GameService.initGame(color);
+    }
 }

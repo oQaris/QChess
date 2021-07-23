@@ -32,4 +32,6 @@ public abstract class Player {
     public String toString() {
         return color + " PLAYER";
     }
+
+    public abstract PlayerType getPlayerType();
 }

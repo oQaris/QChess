@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,6 +31,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 public class Table extends Frame {
     private static final int BOARD_SIZE = 8;
@@ -60,7 +62,7 @@ public class Table extends Frame {
         this.frame = new JFrame("QChess");
         this.frame.setLayout(new BorderLayout());
         this.frame.setSize(OUTER_FRAME_DIMENSION);
-        this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.frame.setResizable(false);
         this.frame.setLocationRelativeTo(null);
 
@@ -74,9 +76,6 @@ public class Table extends Frame {
 
         this.boardPanel = new BoardPanel();
         this.frame.add(boardPanel, BorderLayout.CENTER);
-
-        final JMenuBar tableMenuBar = createTableMenuBar();
-        this.frame.setJMenuBar(tableMenuBar);
 
         this.frame.setVisible(true);
 
@@ -105,11 +104,6 @@ public class Table extends Frame {
         return fileMenu;
     }
 
-    private int inverseInt(int i, int size) {
-        int inverse = myColor ? 0 : 1;
-        return (1 - 2 * inverse) * (i - (size - 1) * inverse);
-    }
-
     public void repaint() {
         boardPanel.drawBoard();
     }
@@ -122,25 +116,17 @@ public class Table extends Frame {
         System.out.println("END");
         EndGame endGame = ClientController.getEndGame(myColor ^ sign);
         if (endGame.isEnd()) {
-            Object[] options = {"Да", "Нет!"};
-            int n =
-                    JOptionPane.showOptionDialog(
-                            frame,
-                            endGame.getStatus() + "\nЗакрыть окно?",
-                            "Подтверждение",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[0]);
-            if (n == 0) {
-                mf.destroyTable();
-                try {
-                    ClientController.disconnect("Игра окончена");
-                } catch (ClientException e) {
-                    System.err.println(e.getMessage());
-                }
-            }
+            closeGame(endGame.getStatus());
+        }
+    }
+
+    public void closeGame(String message) {
+        new MessageFrame(frame, "Игра окончена", message);
+        mf.destroyTable();
+        try {
+            ClientController.disconnect("Игра окончена");
+        } catch (ClientException e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -153,6 +139,7 @@ public class Table extends Frame {
             int size = BOARD_SIZE * BOARD_SIZE;
             for (int i = 0; i < size; i++) {
                 final CellPanel cellPanel = new CellPanel(this, inverseInt(i, size));
+                cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 this.boardCells.add(cellPanel);
                 this.add(cellPanel);
             }
@@ -163,9 +150,14 @@ public class Table extends Frame {
             this.validate();
         }
 
+        private int inverseInt(int i, int size) {
+            int inverse = myColor ? 0 : 1;
+            return (1 - 2 * inverse) * (i - (size - 1) * inverse);
+        }
+
         private void drawBoard() {
             validate();
-            repaint();
+            super.repaint();
             for (CellPanel cp : boardCells) {
                 cp.drawCell();
             }
@@ -192,6 +184,7 @@ public class Table extends Frame {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
+                            // Refactor this method to reduce its Cognitive Complexity
                             if (isLeftMouseButton(e) && ClientController.isMyStep()) {
                                 boolean twoClick = false;
                                 if (ClientController.checkFigure(
@@ -332,7 +325,7 @@ public class Table extends Frame {
                     e.printStackTrace();
                 }
             }
-            this.repaint();
+            super.repaint();
         }
 
         private void assignCellColor() {
@@ -346,7 +339,7 @@ public class Table extends Frame {
             assignCellColor();
             assignCellFigureIcon();
             validate();
-            repaint();
+            super.repaint();
         }
 
         private void clearColorOnBoard() {

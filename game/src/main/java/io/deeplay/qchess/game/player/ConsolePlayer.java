@@ -16,7 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConsolePlayer extends Player {
+public class ConsolePlayer extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
     private static final String TURN_INTO_INVITE =
             "Выберите фигуру для превращения:"
@@ -32,7 +32,7 @@ public class ConsolePlayer extends Player {
     private final BufferedReader in;
 
     public ConsolePlayer(GameSettings roomSettings, Color color, BufferedReader in) {
-        super(roomSettings, color);
+        super(roomSettings, color, "console-player");
         this.in = in;
     }
 
@@ -49,6 +49,11 @@ public class ConsolePlayer extends Player {
             logger.error("Возникла ошибка в консольном игроке: {}", e.getMessage());
             throw new ChessError(CONSOLE_PLAYER_ERROR, e);
         }
+    }
+
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.CONSOLE_PLAYER;
     }
 
     private void printMoves(List<Move> allMoves) {
