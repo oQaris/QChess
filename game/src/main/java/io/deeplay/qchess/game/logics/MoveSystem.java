@@ -99,7 +99,19 @@ public class MoveSystem {
         List<Move> res = new ArrayList<>(64);
         for (Figure f : board.getFigures(color))
             for (Move m : f.getAllMoves(roomSettings))
-                if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
+                if (isCorrectMoveWithoutCheckAvailableMoves(m, true)) res.add(m);
+        return res;
+    }
+
+    public List<Move> getAllCorrectMovesForStalemate(Color color) {
+        List<Move> res = new ArrayList<>(64);
+        try {
+            for (Figure f : board.getFigures(color))
+                for (Move m : f.getAllMoves(roomSettings)) {
+                    if (isCorrectMoveWithoutCheckAvailableMoves(m, false)) res.add(m);
+                }
+        } catch (ChessError ignore) {
+        }
         return res;
     }
 
@@ -130,11 +142,15 @@ public class MoveSystem {
     }
 
     /** @return true если ход корректный */
-    private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
+    private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move, boolean checkKing)
+            throws ChessError {
         try {
-            return move != null
-                    && checkCorrectnessIfSpecificMove(move)
-                    && isCorrectVirtualMove(move);
+            return move != null && checkCorrectnessIfSpecificMove(move) && checkKing
+                    ? isCorrectVirtualMove(move)
+                    : virtualMove(
+                            move,
+                            (figureToMove, virtualKilled) ->
+                                    !endGameDetector.isCheck(figureToMove.getColor()));
         } catch (ChessException | NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",

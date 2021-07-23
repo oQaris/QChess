@@ -3,6 +3,8 @@ package io.deeplay.qchess.server.database;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.logics.EndGameDetector;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
 
@@ -145,6 +147,31 @@ public class Room {
             }
             return null;
         }
+    }
+
+    public String getGameStatus() {
+        Color color = game.getCurrentPlayerToMove().getColor();
+        if (gs.endGameDetector.isDraw()) {
+            if (gs.endGameDetector.isDrawWithPeaceMoves()) {
+                return String.format(
+                        "Ничья: %d ходов без взятия и хода пешки",
+                        EndGameDetector.END_PEACE_MOVE_COUNT);
+            } else if (gs.endGameDetector.isDrawWithRepetitions()) {
+                return String.format(
+                        "Ничья: %d повторений позиций доски",
+                        EndGameDetector.END_REPETITIONS_COUNT);
+            } else if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate()) {
+                return "Ничья: недостаточно фигур, чтобы поставить мат";
+            }
+        } else {
+            if (gs.endGameDetector.isCheckmate(color == Color.WHITE ? Color.BLACK : Color.WHITE)) {
+                return "Мат " + (color == Color.WHITE ? "черным" : "белым");
+            } else if (gs.endGameDetector.isStalemate(
+                    color == Color.WHITE ? Color.BLACK : Color.WHITE)) {
+                return "Пат " + (color == Color.WHITE ? "черным" : "белым");
+            }
+        }
+        return null;
     }
 
     @Override

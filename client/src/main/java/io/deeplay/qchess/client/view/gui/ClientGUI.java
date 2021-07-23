@@ -48,7 +48,7 @@ public class ClientGUI implements IClientView {
 
     @Override
     public void closeGame(String reason) {
-        mf.getTable().closeGame(reason);
+        if (mf.getTable() != null) mf.getTable().closeGame(reason);
     }
 
     @Override

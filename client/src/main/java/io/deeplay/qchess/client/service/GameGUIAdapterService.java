@@ -122,32 +122,28 @@ public class GameGUIAdapterService {
     }
 
     public static String getStatus(boolean color) {
-        try {
-            if (GameDAO.getGameSettings().endGameDetector.isDraw()) {
-                if (GameDAO.getGameSettings().endGameDetector.isDrawWithPeaceMoves()) {
-                    return String.format(
-                            "Ничья: %d ходов без взятия и хода пешки",
-                            EndGameDetector.END_PEACE_MOVE_COUNT);
-                } else if (GameDAO.getGameSettings().endGameDetector.isDrawWithRepetitions()) {
-                    return String.format(
-                            "Ничья: %d повторений позиций доски",
-                            EndGameDetector.END_REPETITIONS_COUNT);
-                } else if (GameDAO.getGameSettings()
-                        .endGameDetector
-                        .isDrawWithNotEnoughMaterialForCheckmate()) {
-                    return "Ничья: недостаточно фигур, чтобы поставить мат";
-                }
+        if (GameDAO.getGameSettings().endGameDetector.isDraw()) {
+            if (GameDAO.getGameSettings().endGameDetector.isDrawWithPeaceMoves()) {
+                return String.format(
+                        "Ничья: %d ходов без взятия и хода пешки",
+                        EndGameDetector.END_PEACE_MOVE_COUNT);
+            } else if (GameDAO.getGameSettings().endGameDetector.isDrawWithRepetitions()) {
+                return String.format(
+                        "Ничья: %d повторений позиций доски",
+                        EndGameDetector.END_REPETITIONS_COUNT);
             } else if (GameDAO.getGameSettings()
                     .endGameDetector
-                    .isCheckmate(color ? Color.BLACK : Color.WHITE)) {
-                return "Мат " + (color ? "черным" : "белым");
-            } else if (GameDAO.getGameSettings()
-                    .endGameDetector
-                    .isStalemate(color ? Color.BLACK : Color.WHITE)) {
-                return "Пат " + (color ? "черным" : "белым");
+                    .isDrawWithNotEnoughMaterialForCheckmate()) {
+                return "Ничья: недостаточно фигур, чтобы поставить мат";
             }
-        } catch (ChessError chessError) {
-            chessError.printStackTrace();
+        } else if (GameDAO.getGameSettings()
+                .endGameDetector
+                .isCheckmate(color ? Color.BLACK : Color.WHITE)) {
+            return "Мат " + (color ? "черным" : "белым");
+        } else if (GameDAO.getGameSettings()
+                .endGameDetector
+                .isStalemate(color ? Color.BLACK : Color.WHITE)) {
+            return "Пат " + (color ? "черным" : "белым");
         }
         return "";
     }
