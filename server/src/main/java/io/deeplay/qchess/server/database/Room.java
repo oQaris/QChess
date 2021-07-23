@@ -45,6 +45,13 @@ public class Room {
         }
     }
 
+    public boolean isFinished() {
+        synchronized (mutex) {
+            return game == null
+                    || getEndGameStatus(game.getCurrentPlayerToMove().getColor().inverse()) != null;
+        }
+    }
+
     /** Изменяет флаг error = true, если при создании игры возникла критическая ошибка */
     public void startGame() {
         synchronized (mutex) {
@@ -149,8 +156,12 @@ public class Room {
         }
     }
 
-    public String getGameStatus() {
-        Color color = game.getCurrentPlayerToMove().getColor();
+    /** @return строка с причиной окончания игры или null, если игра еще не окончена */
+    public String getEndGameStatus() {
+        return getEndGameStatus(game.getCurrentPlayerToMove().getColor());
+    }
+
+    private String getEndGameStatus(Color color) {
         if (gs.endGameDetector.isDraw()) {
             if (gs.endGameDetector.isDrawWithPeaceMoves()) {
                 return String.format(

@@ -56,9 +56,10 @@ public class GameService {
 
             String opponentToken = room.getOpponentSessionToken(sessionToken);
             Integer opponentID = ConnectionControlDAO.getID(opponentToken);
-            room.resetRoom();
 
-            if (opponentID != null) sendEndGame(room, "Оппонент покинул игру, вы победили!", opponentID);
+            if (opponentID != null && !room.isFinished())
+                sendEndGame(room, "Оппонент покинул игру, вы победили!", opponentID);
+            else room.resetRoom();
         }
     }
 
@@ -108,7 +109,7 @@ public class GameService {
         RemotePlayer player = room.getPlayer(toToken);
         String sendToken = toToken;
 
-        String status = room.getGameStatus();
+        String status = room.getEndGameStatus();
         if (status != null) {
             sendEndGame(room, status, ConnectionControlDAO.getID(fromToken));
             if (player.getPlayerType() == PlayerType.REMOTE_PLAYER)
@@ -122,7 +123,7 @@ public class GameService {
             sendToken = fromToken;
         }
 
-        status = room.getGameStatus();
+        status = room.getEndGameStatus();
         if (status != null) {
             sendEndGame(room, status, ConnectionControlDAO.getID(fromToken));
             if (player.getPlayerType() == PlayerType.REMOTE_PLAYER)
@@ -139,12 +140,11 @@ public class GameService {
                     clientId);
     }
 
-    private static void sendEndGame(Room room, String response, int clientId) {
+    private static void sendEndGame(Room room, String reason, int clientId) {
         try {
             room.resetRoom();
             ServerController.send(
-                    SerializationService.makeMainDTOJsonToClient(new EndGameDTO(response)),
-                    clientId);
+                    SerializationService.makeMainDTOJsonToClient(new EndGameDTO(reason)), clientId);
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(
                             new DisconnectedDTO("Игра окончена")),
