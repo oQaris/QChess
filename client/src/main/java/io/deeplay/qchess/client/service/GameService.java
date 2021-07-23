@@ -43,7 +43,7 @@ public class GameService {
                     case USER -> new RemotePlayer(gs, color ? Color.BLACK : Color.WHITE, "enemy");
                     case EASYBOT -> new RandomBot(gs, color ? Color.BLACK : Color.WHITE);
                     case MEDIUMBOT -> new AttackBot(gs, color ? Color.BLACK : Color.WHITE);
-                    case HARDBOT -> new MinimaxBot(gs, color ? Color.BLACK : Color.WHITE, 3);
+                    case HARDBOT -> new MinimaxBot(gs, color ? Color.BLACK : Color.WHITE, 1);
                 };
         try {
             Player player1;

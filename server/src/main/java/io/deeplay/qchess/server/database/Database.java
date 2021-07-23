@@ -50,7 +50,8 @@ public class Database {
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
     public Room findSuitableRoom(PlayerType enemyType) {
-        return room.isFull() ? null : room;
+        if (enemyType == PlayerType.REMOTE_PLAYER) return room.isFull() ? null : room;
+        return room.isEmpty() ? room : null;
     }
 
     /**
