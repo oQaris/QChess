@@ -37,16 +37,6 @@ public class ClientGUI implements IClientView {
     }
 
     @Override
-    public void endGame() {
-        mf.getTable().endGame();
-    }
-
-    @Override
-    public void endGameInverse() {
-        mf.getTable().endGameInverse(true);
-    }
-
-    @Override
     public void closeGame(String reason) {
         if (mf.getTable() != null) mf.getTable().closeGame(reason);
     }

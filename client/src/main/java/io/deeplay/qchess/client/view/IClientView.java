@@ -18,11 +18,6 @@ public interface IClientView extends Closeable {
     /** @return доска */
     ViewBoard getBoard();
 
-    // TODO: javadoc
-    void endGame();
-
-    void endGameInverse();
-
     void closeGame(String reason);
 
     /**

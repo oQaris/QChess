@@ -8,7 +8,6 @@ import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
-import io.deeplay.qchess.client.view.gui.EndGame;
 import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
@@ -184,24 +183,17 @@ public class ClientController {
             int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure)
             throws ClientException {
         Move move =
-                GameGUIAdapterService.makeMove(
+                GameService.makeMove(
                         rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));
+        view.drawBoard();
         GameService.sendMove(move);
+        GameService.checkEndGame();
     }
 
-    public static void checkEndGame() {
-        view.endGame();
-    }
-
-    // TODO: добавить javadoc
+    /** @return true, если сейчас ход клиента */
     public static boolean isMyStep() {
-        return GameDAO.isMyStep();
-    }
-
-    // TODO: добавить javadoc
-    public static EndGame getEndGame(boolean color) {
-        return new EndGame(
-                GameGUIAdapterService.getStatus(color), GameGUIAdapterService.getEnd(color));
+        return GameDAO.isGameStarted()
+                && GameDAO.getGame().getCurrentPlayerToMove().getColor() == GameDAO.getMyColor();
     }
 
     public static void drawBoard() {
@@ -224,10 +216,6 @@ public class ClientController {
 
     public static void chooseEnemy(EnemyType enemyType) {
         GameService.chooseEnemy(enemyType);
-    }
-
-    public static void endGameInverse() {
-        view.endGameInverse();
     }
 
     public static void closeGame(String reason) {

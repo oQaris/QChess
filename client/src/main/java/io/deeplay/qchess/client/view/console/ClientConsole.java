@@ -111,16 +111,6 @@ public class ClientConsole implements IClientView {
     }
 
     @Override
-    public void endGame() {
-        throw new UnsupportedOperationException("Еще не реализовано");
-    }
-
-    @Override
-    public void endGameInverse() {
-        throw new UnsupportedOperationException("Еще не реализовано");
-    }
-
-    @Override
     public void closeGame(String reason) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }

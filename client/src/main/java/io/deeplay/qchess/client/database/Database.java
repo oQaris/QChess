@@ -3,14 +3,16 @@ package io.deeplay.qchess.client.database;
 import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
+import io.deeplay.qchess.game.model.Color;
 
 public class Database {
     private static Database database;
     private String sessionToken;
     private Selfplay game;
     private GameSettings gs;
-    private boolean isMyStep;
+    private boolean isGameStarted;
     private EnemyType enemyType;
+    private Color myColor;
 
     private Database() {}
 
@@ -27,9 +29,10 @@ public class Database {
         this.sessionToken = sessionToken;
     }
 
-    public void newGame(GameSettings gs, Selfplay game) {
+    public void newGame(GameSettings gs, Selfplay game, Color color) {
         this.gs = gs;
         this.game = game;
+        myColor = color;
     }
 
     public EnemyType getEnemyType() {
@@ -48,11 +51,15 @@ public class Database {
         return game;
     }
 
-    public void changeIsMyStep() {
-        isMyStep = !isMyStep;
+    public void startGame() {
+        isGameStarted = true;
     }
 
-    public boolean isMyStep() {
-        return isMyStep;
+    public boolean isGameStarted() {
+        return isGameStarted;
+    }
+
+    public Color getMyColor() {
+        return myColor;
     }
 }

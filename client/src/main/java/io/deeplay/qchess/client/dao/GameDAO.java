@@ -4,11 +4,16 @@ import io.deeplay.qchess.client.database.Database;
 import io.deeplay.qchess.client.view.gui.EnemyType;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
+import io.deeplay.qchess.game.model.Color;
 
 public class GameDAO {
 
-    public static void newGame(GameSettings gs, Selfplay game) {
-        Database.getInstance().newGame(gs, game);
+    public static void newGame(GameSettings gs, Selfplay game, Color color) {
+        Database.getInstance().newGame(gs, game, color);
+    }
+
+    public static Color getMyColor() {
+        return Database.getInstance().getMyColor();
     }
 
     public static EnemyType getEnemyType() {
@@ -27,11 +32,11 @@ public class GameDAO {
         return Database.getInstance().getGame();
     }
 
-    public static void changeIsMyStep() {
-        Database.getInstance().changeIsMyStep();
+    public static void startGame() {
+        Database.getInstance().startGame();
     }
 
-    public static boolean isMyStep() {
-        return Database.getInstance().isMyStep();
+    public static boolean isGameStarted() {
+        return Database.getInstance().isGameStarted();
     }
 }

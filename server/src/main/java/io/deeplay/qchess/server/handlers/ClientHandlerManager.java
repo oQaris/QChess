@@ -1,5 +1,7 @@
 package io.deeplay.qchess.server.handlers;
 
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.server.controller.ServerController;
 import io.deeplay.qchess.server.exceptions.ServerException;
 import io.deeplay.qchess.server.service.ConnectionControlService;
@@ -84,7 +86,13 @@ public class ClientHandlerManager extends Thread {
         allClientsWasClosed = false;
         synchronized (clients) {
             if (clients.isEmpty()) allClientsWasClosed = true;
-            else for (ClientHandler clientHandler : clients.values()) clientHandler.terminate();
+            else
+                for (ClientHandler clientHandler : clients.values()) {
+                    clientHandler.sendIfNotNull(
+                            SerializationService.makeMainDTOJsonToClient(
+                                    new EndGameDTO("Сервер закрыт.")));
+                    clientHandler.terminate();
+                }
         }
         while (!allClientsWasClosed) Thread.onSpinWait();
     }
