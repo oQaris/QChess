@@ -70,8 +70,9 @@ public class GameService {
                 } catch (ServerException ignore) {
                     // Сервис работает при открытом сервере
                 }
-                sendDisconnect(room, opponentID);
-            } else room.resetRoom();
+                sendDisconnect(opponentID);
+            }
+            room.resetRoom();
         }
     }
 
@@ -141,16 +142,15 @@ public class GameService {
             RemotePlayer player1 = room.getFirstPlayer();
             RemotePlayer player2 = room.getSecondPlayer();
             if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                sendDisconnect(room, ConnectionControlDAO.getID(player1.getSessionToken()));
+                sendDisconnect(ConnectionControlDAO.getID(player1.getSessionToken()));
             if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                sendDisconnect(room, ConnectionControlDAO.getID(player2.getSessionToken()));
+                sendDisconnect(ConnectionControlDAO.getID(player2.getSessionToken()));
+            room.resetRoom();
         }
     }
 
-    // TODO: переделать для выхода оппонента
-    private static void sendDisconnect(Room room, int clientId) {
+    private static void sendDisconnect(int clientId) {
         try {
-            room.resetRoom();
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(
                             new DisconnectedDTO("Игра окончена")),

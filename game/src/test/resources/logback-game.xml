@@ -6,7 +6,7 @@
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>WARN</level>
+      <level>INFO</level>
     </filter>
 
     <target>System.out</target>
@@ -74,15 +74,12 @@
     </filter>
   </appender>
 
-  <logger name="io.deeplay.qchess.game.Selfplay" level="info">
-    <appender-ref ref="GAME-STATISTICS"/>
-  </logger>
-
-  <root level="debug">
+  <root level="info">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
     <appender-ref ref="FILE-LAST-SESSION-INFO"/>
+    <appender-ref ref="GAME-STATISTICS"/>
   </root>
 
 </configuration>

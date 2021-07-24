@@ -184,7 +184,7 @@ public class MoveSystem {
      */
     private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
         // превращение пешки
-        logger.debug("Начата проверка хода {} на превращение", move);
+        logger.trace("Начата проверка хода {} на превращение", move);
         if (move.getMoveType() == MoveType.TURN_INTO
                 || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
             return move.getTurnInto() != null
@@ -197,7 +197,7 @@ public class MoveSystem {
 
     /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move) throws ChessException {
-        logger.debug("Начата проверка хода {} на содержание его в доступных ходах", move);
+        logger.trace("Начата проверка хода {} на содержание его в доступных ходах", move);
         Figure figure = board.getFigure(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(roomSettings);
         return allMoves.contains(move);
@@ -205,7 +205,7 @@ public class MoveSystem {
 
     /** @param move корректный ход */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
-        logger.debug("Начата проверка виртуального хода {}", move);
+        logger.trace("Начата проверка виртуального хода {}", move);
         Figure figureToMove = board.getFigure(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход
@@ -247,7 +247,7 @@ public class MoveSystem {
      */
     public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
         // TODO: переделать с измененной историей
-        logger.debug("Виртуальный ход {}", move);
+        logger.trace("Виртуальный ход {}", move);
         Figure figureToMove = board.getFigureUgly(move.getFrom());
         boolean hasBeenMoved = figureToMove.wasMoved();
         // виртуальный ход

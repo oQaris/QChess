@@ -71,8 +71,6 @@ public class GameGUIAdapterService {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
         List<Move> set;
-        System.out.println(
-                "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
         try {
             set = GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(from);
         } catch (ChessError e) {

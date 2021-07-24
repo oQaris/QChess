@@ -118,8 +118,6 @@ public class GameService {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
         List<Move> set;
-        System.out.println(
-                "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
         try {
             set = GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(from);
         } catch (ChessError e) {
@@ -135,7 +133,8 @@ public class GameService {
                     e.printStackTrace();
                     return null;
                 }
-                System.out.println(GameDAO.getGameSettings().board.toString());
+                // TODO: удалить
+                System.err.println(GameDAO.getGameSettings().board.toString());
                 return move;
             }
         }

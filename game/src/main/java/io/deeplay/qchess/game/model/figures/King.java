@@ -50,7 +50,7 @@ public class King extends Figure {
 
     /** @return true, если рокировка возможна */
     private boolean isCorrectCastling(GameSettings settings, boolean shortCastling) {
-        logger.debug("Запущена проверка на возможность рокировки для {}", this);
+        logger.trace("Запущена проверка на возможность рокировки для {}", this);
         if (wasMoved
                 || !settings.board.isEmptyCell(
                         position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
