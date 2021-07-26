@@ -36,6 +36,15 @@ public class GameService {
         return null;
     }
 
+    public static String resetGame(ServerToClientType type, String json) {
+        try {
+            ClientController.resetGame();
+        } catch (ClientException e) {
+            // Сервис работает при запущенном клиенте
+        }
+        return null;
+    }
+
     public static void chooseEnemy(EnemyType enemyType) {
         GameDAO.setEnemy(enemyType);
     }

@@ -29,13 +29,26 @@ public class MatchMaking {
 
         // Пока не найдется комната или свободных комнат нет
         while (true) {
-            Room room = GameDAO.findSuitableRoom(dto.enemyType, dto.gameCount);
+            Room room = GameDAO.findSuitableRoom(dto.sessionToken, dto.enemyType, dto.gameCount);
             if (room == null) {
                 return SerializationService.makeMainDTOJsonToClient(
                         new DisconnectedDTO("Нет свободных комнат"));
             }
             synchronized (room.mutex) {
+                if (room.contains(dto.sessionToken)) {
+                    try {
+                        ServerController.send(
+                                SerializationService.makeMainDTOJsonToClient(
+                                        new GameSettingsDTO(
+                                                room.getPlayer(dto.sessionToken).getColor())),
+                                clientId);
+                    } catch (ServerException ignore) {
+                        // Сервис вызывается при открытом сервере
+                    }
+                }
+
                 if (room.isFull()) continue;
+
                 GameSettings gs = new GameSettings(BoardFilling.STANDARD);
                 room.setGameSettings(gs, dto.gameCount);
 

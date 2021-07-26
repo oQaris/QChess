@@ -38,8 +38,7 @@ public class TrafficRequestHandler {
                         ServerToClientType.CHAT_MESSAGE,
                         ChatService::incomingMessage,
                         ServerToClientType.RESET_GAME,
-                        null // TODO
-                        ));
+                        GameService::resetGame));
 
         if (redirector.size() != ServerToClientType.values().length) {
             throw new UnsupportedOperationException("В клиенте не рассмотрены все случаи запросов");
