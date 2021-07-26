@@ -8,6 +8,8 @@ import io.deeplay.qchess.server.exceptions.ServerException;
 /** Обрабатывает текстовые команды */
 public class ServerCommandService {
 
+    private ServerCommandService(){}
+
     public static void handleCommand(String command) throws ServerException {
         if (command.startsWith("msg ")) {
             ServerController.sendAll(
