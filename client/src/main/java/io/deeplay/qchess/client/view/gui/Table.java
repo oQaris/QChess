@@ -107,18 +107,6 @@ public class Table extends Frame {
         boardPanel.drawBoard();
     }
 
-    public void endGame() {
-        endGameInverse(false);
-    }
-
-    public void endGameInverse(boolean sign) {
-        System.out.println("END");
-        EndGame endGame = ClientController.getEndGame(myColor ^ sign);
-        if (endGame.isEnd()) {
-            closeGame(endGame.getStatus());
-        }
-    }
-
     public void closeGame(String message) {
         new MessageFrame(frame, "Игра окончена", message);
         mf.destroyTable();
@@ -155,11 +143,11 @@ public class Table extends Frame {
         }
 
         private void drawBoard() {
-            validate();
-            super.repaint();
             for (CellPanel cp : boardCells) {
                 cp.drawCell();
             }
+            validate();
+            super.repaint();
         }
     }
 
@@ -183,7 +171,7 @@ public class Table extends Frame {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            // Refactor this method to reduce its Cognitive Complexity
+                            // TODO: Refactor this method to reduce its Cognitive Complexity
                             if (isLeftMouseButton(e) && ClientController.isMyStep()) {
                                 boolean twoClick = false;
                                 if (ClientController.checkFigure(
@@ -247,8 +235,9 @@ public class Table extends Frame {
                                                 boardPanel.boardCells.get(i).drawCell();
                                             }
                                         }
+                                        boardPanel.validate();
+                                        boardPanel.repaint();
                                         clearColorOnBoard();
-                                        ClientController.checkEndGame();
                                     } else if (action == 0) {
                                         clearColorOnBoard();
                                     }

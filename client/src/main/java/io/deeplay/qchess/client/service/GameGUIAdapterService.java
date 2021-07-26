@@ -6,13 +6,11 @@ import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.client.view.model.ViewFigureType;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
-import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,8 +71,6 @@ public class GameGUIAdapterService {
         Cell from = new Cell(columnFrom, rowFrom);
         Cell to = new Cell(columnTo, rowTo);
         List<Move> set;
-        System.out.println(
-                "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
         try {
             set = GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(from);
         } catch (ChessError e) {
@@ -88,67 +84,5 @@ public class GameGUIAdapterService {
         }
 
         return null;
-    }
-
-    public static Move makeMove(
-            int rowFrom, int columnFrom, int rowTo, int columnTo, FigureType figureType) {
-        Cell from = new Cell(columnFrom, rowFrom);
-        Cell to = new Cell(columnTo, rowTo);
-        List<Move> set;
-        System.out.println(
-                "from: " + rowFrom + " " + columnFrom + "; " + "to: " + rowTo + " " + columnTo);
-        try {
-            set = GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(from);
-        } catch (ChessError e) {
-            e.printStackTrace();
-            return null;
-        }
-        for (Move move : set) {
-            if (to.equals(move.getTo())) {
-                try {
-                    move.setTurnInto(figureType);
-                    GameDAO.getGame().move(move);
-                } catch (ChessError e) {
-                    e.printStackTrace();
-                    return null;
-                }
-                GameDAO.changeIsMyStep();
-                System.out.println(GameDAO.getGameSettings().board.toString());
-                return move;
-            }
-        }
-
-        return null;
-    }
-
-    public static String getStatus(boolean color) {
-        if (GameDAO.getGameSettings().endGameDetector.isDraw()) {
-            if (GameDAO.getGameSettings().endGameDetector.isDrawWithPeaceMoves()) {
-                return String.format(
-                        "Ничья: %d ходов без взятия и хода пешки",
-                        EndGameDetector.END_PEACE_MOVE_COUNT);
-            } else if (GameDAO.getGameSettings().endGameDetector.isDrawWithRepetitions()) {
-                return String.format(
-                        "Ничья: %d повторений позиций доски",
-                        EndGameDetector.END_REPETITIONS_COUNT);
-            } else if (GameDAO.getGameSettings()
-                    .endGameDetector
-                    .isDrawWithNotEnoughMaterialForCheckmate()) {
-                return "Ничья: недостаточно фигур, чтобы поставить мат";
-            }
-        } else if (GameDAO.getGameSettings()
-                .endGameDetector
-                .isCheckmate(color ? Color.BLACK : Color.WHITE)) {
-            return "Мат " + (color ? "черным" : "белым");
-        } else if (GameDAO.getGameSettings()
-                .endGameDetector
-                .isStalemate(color ? Color.BLACK : Color.WHITE)) {
-            return "Пат " + (color ? "черным" : "белым");
-        }
-        return "";
-    }
-
-    public static boolean getEnd(boolean color) {
-        return !getStatus(color).isEmpty();
     }
 }

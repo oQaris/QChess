@@ -15,30 +15,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>io.deeplay.qchess.game.Main</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <id>make-assembly</id>
-            <phase>package</phase>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.3.0</version>
-      </plugin>
       <!-- Test Coverage -->
       <plugin>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -86,6 +62,7 @@
       <artifactId>logback-classic</artifactId>
       <groupId>ch.qos.logback</groupId>
       <version>1.2.3</version>
+      <scope>test</scope>
     </dependency>
     <!-- Gson -->
     <dependency>

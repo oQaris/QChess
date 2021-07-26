@@ -14,17 +14,6 @@
   <version>0.0.1</version>
 
   <dependencies>
-    <!-- Logger -->
-    <dependency>
-      <artifactId>slf4j-api</artifactId>
-      <groupId>org.slf4j</groupId>
-      <version>1.7.31</version>
-    </dependency>
-    <dependency>
-      <artifactId>logback-classic</artifactId>
-      <groupId>ch.qos.logback</groupId>
-      <version>1.2.3</version>
-    </dependency>
     <!-- Gson -->
     <dependency>
       <groupId>com.google.code.gson</groupId>

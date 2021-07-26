@@ -39,7 +39,7 @@ public abstract class Figure {
     protected Figure(Color color, Cell position) {
         this.color = color;
         this.position = position;
-        logger.debug("Фигура {} была создана", this);
+        logger.trace("Фигура {} была создана", this);
     }
 
     public static Figure build(FigureType type, Color color, Cell position) {

@@ -22,7 +22,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
-    <maven.test.skip>true</maven.test.skip>
   </properties>
 
 </project>

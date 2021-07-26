@@ -16,7 +16,7 @@ public class Main {
 
         GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
         Player firstPlayer = new ConsolePlayer(roomSettings, Color.WHITE, in);
-        Player secondPlayer = new MinimaxBot(roomSettings, Color.BLACK, 3);
+        Player secondPlayer = new MinimaxBot(roomSettings, Color.BLACK, 1);
         Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
         game.run();
 

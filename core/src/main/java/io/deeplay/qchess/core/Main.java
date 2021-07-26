@@ -5,12 +5,14 @@ import io.deeplay.qchess.client.view.gui.ClientGUI;
 import io.deeplay.qchess.server.view.IServerView;
 import io.deeplay.qchess.server.view.ServerConsole;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) System.out.println("Число параметров должно быть равно единице");
+        System.out.println(
+                "Введите \"s\", чтобы запустить сервер или \"c\", чтобы запустить клиент");
 
-        switch (args[0].strip().toLowerCase()) {
+        switch (new Scanner(System.in).nextLine()) {
                 // Сервер
             case "s", "-s", "server" -> {
                 IServerView view = new ServerConsole();

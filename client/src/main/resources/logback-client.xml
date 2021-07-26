@@ -6,7 +6,7 @@
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>WARN</level>
+      <level>DEBUG</level>
     </filter>
 
     <target>System.out</target>
@@ -30,20 +30,6 @@
     <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
       <maxFileSize>15MB</maxFileSize>
     </triggeringPolicy>
-  </appender>
-
-  <appender class="ch.qos.logback.core.FileAppender" name="GAME-STATISTICS">
-    <append>false</append>
-
-    <encoder>
-      <Pattern>%msg%n</Pattern>
-    </encoder>
-
-    <file>logs/qchess-statistics.log</file>
-
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
-    </filter>
   </appender>
 
   <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-DEBUG">
@@ -74,13 +60,8 @@
     </filter>
   </appender>
 
-  <logger name="io.deeplay.qchess.game.Selfplay" level="info">
-    <appender-ref ref="GAME-STATISTICS"/>
-  </logger>
-
   <root level="debug">
     <appender-ref ref="STDOUT"/>
-    <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
     <appender-ref ref="FILE-LAST-SESSION-INFO"/>
   </root>

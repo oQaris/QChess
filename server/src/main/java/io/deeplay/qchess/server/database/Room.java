@@ -98,6 +98,27 @@ public class Room {
         }
     }
 
+    /** @return токен сессии второго (черного) игрока */
+    public String getSecondPlayerToken() {
+        synchronized (mutex) {
+            return player2.getSessionToken();
+        }
+    }
+
+    /** @return первый (белый) игрок */
+    public RemotePlayer getFirstPlayer() {
+        synchronized (mutex) {
+            return player1;
+        }
+    }
+
+    /** @return второй (черный) игрок */
+    public RemotePlayer getSecondPlayer() {
+        synchronized (mutex) {
+            return player2;
+        }
+    }
+
     /** @return игрок с заданным токеном или null, если его нет в этой комнате */
     public RemotePlayer getPlayer(String sessionToken) {
         synchronized (mutex) {
@@ -161,6 +182,7 @@ public class Room {
         return getEndGameStatus(game.getCurrentPlayerToMove().getColor());
     }
 
+    /** @return статус конца игры для игрока цвета color или null, если игра еще не окончена */
     private String getEndGameStatus(Color color) {
         if (gs.endGameDetector.isDraw()) {
             if (gs.endGameDetector.isDrawWithPeaceMoves()) {
@@ -175,11 +197,10 @@ public class Room {
                 return "Ничья: недостаточно фигур, чтобы поставить мат";
             }
         } else {
-            if (gs.endGameDetector.isCheckmate(color == Color.WHITE ? Color.BLACK : Color.WHITE)) {
-                return "Мат " + (color == Color.WHITE ? "черным" : "белым");
-            } else if (gs.endGameDetector.isStalemate(
-                    color == Color.WHITE ? Color.BLACK : Color.WHITE)) {
-                return "Пат " + (color == Color.WHITE ? "черным" : "белым");
+            if (gs.endGameDetector.isCheckmate(color)) {
+                return "Мат " + (color == Color.BLACK ? "черным" : "белым");
+            } else if (gs.endGameDetector.isStalemate(color)) {
+                return "Пат " + (color == Color.BLACK ? "черным" : "белым");
             }
         }
         return null;
