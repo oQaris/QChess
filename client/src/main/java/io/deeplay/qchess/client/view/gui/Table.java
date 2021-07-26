@@ -65,7 +65,6 @@ public class Table extends Frame {
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.frame.setResizable(false);
         this.frame.setLocationRelativeTo(null);
-
         try (InputStream png = getClass().getResourceAsStream("/art/other/icon.png")) {
             assert png != null;
             final BufferedImage image = ImageIO.read(png);
