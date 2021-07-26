@@ -8,11 +8,13 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class MainFrame {
-    private ConnectFrame connectFrame;
-    private ChoosePlayerFrame choosePlayerFrame;
+    private ChooseMyPlayerFrame chooseMyPlayerFrame;
+    private ChooseEnemyPlayerFrame chooseEnemyPlayerFrame;
     private ChooseStyleFrame chooseStyleFrame;
+    private ConnectFrame connectFrame;
     private Table table;
-    private EnemyType enemyType;
+    private PlayerType myPlayerType;
+    private PlayerType enemyPlayerType;
     private String style;
 
     public void createStartFrame() {
@@ -29,7 +31,7 @@ public class MainFrame {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         super.mousePressed(e);
-                        createChoosePlayerFrame();
+                        createChooseMyPlayerFrame();
                         frame.setVisible(false);
                         frame.dispose();
                     }
@@ -38,12 +40,17 @@ public class MainFrame {
         frame.setVisible(true);
     }
 
-    public void createChoosePlayerFrame() {
-        choosePlayerFrame = new ChoosePlayerFrame(this);
+    public void createChooseMyPlayerFrame() {
+        chooseMyPlayerFrame = new ChooseMyPlayerFrame(this);
     }
 
-    public void createChooseStyleFrame(EnemyType enemyType) {
-        this.enemyType = enemyType;
+    public void createChoosePlayerFrame(PlayerType playerType) {
+        this.myPlayerType = playerType;
+        chooseEnemyPlayerFrame = new ChooseEnemyPlayerFrame(this);
+    }
+
+    public void createChooseStyleFrame(PlayerType playerType) {
+        this.enemyPlayerType = playerType;
         chooseStyleFrame = new ChooseStyleFrame(this);
     }
 
@@ -56,9 +63,14 @@ public class MainFrame {
         table = new Table(style, color, this);
     }
 
+    public void destroyChooseMyPlayerFrame() {
+        chooseMyPlayerFrame.destroy();
+        chooseMyPlayerFrame = null;
+    }
+
     public void destroyChoosePlayerFrame() {
-        choosePlayerFrame.destroy();
-        choosePlayerFrame = null;
+        chooseEnemyPlayerFrame.destroy();
+        chooseEnemyPlayerFrame = null;
     }
 
     public void destroyChooseStyleFrame() {
@@ -80,8 +92,12 @@ public class MainFrame {
         return table;
     }
 
-    public EnemyType getEnemyNumber() {
-        return enemyType;
+    public PlayerType getMyPlayerType() {
+        return myPlayerType;
+    }
+
+    public PlayerType getEnemyPlayerType() {
+        return enemyPlayerType;
     }
 
     public String getStyle() {

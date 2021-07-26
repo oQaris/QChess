@@ -1,6 +1,6 @@
 package io.deeplay.qchess.client.view.gui;
 
-public enum EnemyType {
+public enum PlayerType {
     USER,
     EASYBOT,
     MEDIUMBOT,

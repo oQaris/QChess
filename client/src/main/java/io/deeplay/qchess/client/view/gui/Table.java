@@ -11,6 +11,9 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -81,6 +84,18 @@ public class Table extends Frame {
         clickedCell = -1;
 
         this.frame.addWindowListener(new CloseFrameListener(this));
+
+        if (mf.getMyPlayerType() != PlayerType.USER) {
+            this.frame.addKeyListener(
+                    new KeyAdapter() {
+                        @Override
+                        public void keyPressed(KeyEvent e) {
+                            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                                //бот ходить
+                            }
+                        }
+                    });
+        }
     }
 
     public void setMyColor(boolean myColor) {
@@ -154,125 +169,121 @@ public class Table extends Frame {
             this.assignCellFigureIcon();
             CellPanel thisCellPanel = this;
 
-            this.addMouseListener(
-                    new MouseListener() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {}
-
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                            // TODO: Refactor this method to reduce its Cognitive Complexity
-                            if (isLeftMouseButton(e) && ClientController.isMyStep()) {
-                                boolean twoClick = false;
-                                if (ClientController.checkFigure(
-                                        cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
-                                    if (clickedCell != -1) {
-                                        twoClick = clickedCell == cellId;
-                                        clearColorOnBoard();
-                                    }
-                                    if (clickedCell != cellId && !twoClick) {
-                                        setColorOnBoard();
-                                    }
-                                } else if (taggedCells.contains(cellId)) {
-                                    // move
-                                    int action =
-                                            ClientController.tryMakeMove(
-                                                    clickedCell / BOARD_SIZE,
-                                                    clickedCell % BOARD_SIZE,
-                                                    cellId / BOARD_SIZE,
-                                                    cellId % BOARD_SIZE);
-                                    if (action > 0) {
-                                        Object turnFigure = null;
-                                        if (action == 2) {
-                                            turnFigure =
-                                                    JOptionPane.showInputDialog(
-                                                            frame,
-                                                            "Выберите фигуру для замены :",
-                                                            "Выбор фигуры",
-                                                            JOptionPane.QUESTION_MESSAGE,
-                                                            null,
-                                                            figures,
-                                                            figures[0]);
-                                            // Диалоговое окно вывода сообщения
-                                            JOptionPane.showMessageDialog(
-                                                    frame,
-                                                    turnFigure,
-                                                    "Оповещение",
-                                                    JOptionPane.INFORMATION_MESSAGE);
+            if (mf.getMyPlayerType() == PlayerType.USER) {
+                this.addMouseListener(
+                        new MouseAdapter() {
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                // TODO: Refactor this method to reduce its Cognitive Complexity
+                                if (isLeftMouseButton(e) && ClientController.isMyStep()) {
+                                    boolean twoClick = false;
+                                    if (ClientController.checkFigure(
+                                            cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
+                                        if (clickedCell != -1) {
+                                            twoClick = clickedCell == cellId;
+                                            clearColorOnBoard();
                                         }
-                                        try {
-                                            ClientController.makeMove(
-                                                    clickedCell / BOARD_SIZE,
-                                                    clickedCell % BOARD_SIZE,
-                                                    cellId / BOARD_SIZE,
-                                                    cellId % BOARD_SIZE,
-                                                    turnFigure);
-                                        } catch (ClientException clientException) {
-                                            clientException.printStackTrace();
+                                        if (clickedCell != cellId && !twoClick) {
+                                            setColorOnBoard();
                                         }
-
-                                        boardPanel.boardCells.get(clickedCell).drawCell();
-                                        thisCellPanel.drawCell();
-                                        if (action == 4) {
-                                            boardPanel.drawBoard();
-                                        }
-
-                                        if (action == 3) {
-                                            int coeff = myColor ? BOARD_SIZE : 1;
-                                            for (int i = BOARD_SIZE * (coeff - 1);
-                                                    i < BOARD_SIZE * coeff;
-                                                    i++) {
-                                                boardPanel.boardCells.get(i).drawCell();
+                                    } else if (taggedCells.contains(cellId)) {
+                                        // move
+                                        int action =
+                                                ClientController.tryMakeMove(
+                                                        clickedCell / BOARD_SIZE,
+                                                        clickedCell % BOARD_SIZE,
+                                                        cellId / BOARD_SIZE,
+                                                        cellId % BOARD_SIZE);
+                                        if (action > 0) {
+                                            Object turnFigure = null;
+                                            if (action == 2) {
+                                                turnFigure =
+                                                        JOptionPane.showInputDialog(
+                                                                frame,
+                                                                "Выберите фигуру для замены :",
+                                                                "Выбор фигуры",
+                                                                JOptionPane.QUESTION_MESSAGE,
+                                                                null,
+                                                                figures,
+                                                                figures[0]);
+                                                // Диалоговое окно вывода сообщения
+                                                JOptionPane.showMessageDialog(
+                                                        frame,
+                                                        turnFigure,
+                                                        "Оповещение",
+                                                        JOptionPane.INFORMATION_MESSAGE);
                                             }
+                                            try {
+                                                ClientController.makeMove(
+                                                        clickedCell / BOARD_SIZE,
+                                                        clickedCell % BOARD_SIZE,
+                                                        cellId / BOARD_SIZE,
+                                                        cellId % BOARD_SIZE,
+                                                        turnFigure);
+                                            } catch (ClientException clientException) {
+                                                clientException.printStackTrace();
+                                            }
+
+                                            boardPanel.boardCells.get(clickedCell).drawCell();
+                                            thisCellPanel.drawCell();
+                                            if (action == 4) {
+                                                boardPanel.drawBoard();
+                                            }
+
+                                            if (action == 3) {
+                                                int coeff = myColor ? BOARD_SIZE : 1;
+                                                for (int i = BOARD_SIZE * (coeff - 1);
+                                                        i < BOARD_SIZE * coeff;
+                                                        i++) {
+                                                    boardPanel.boardCells.get(i).drawCell();
+                                                }
+                                            }
+                                            boardPanel.validate();
+                                            boardPanel.repaint();
+                                            clearColorOnBoard();
+                                        } else if (action == 0) {
+                                            clearColorOnBoard();
                                         }
-                                        boardPanel.validate();
-                                        boardPanel.repaint();
-                                        clearColorOnBoard();
-                                    } else if (action == 0) {
-                                        clearColorOnBoard();
                                     }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void mouseReleased(MouseEvent e) {}
-
-                        @Override
-                        public void mouseEntered(MouseEvent e) {
-                            if (ClientController.isMyStep()) {
-                                if (thisCellPanel.getBackground() == chooseCellColor) {
-                                    thisCellPanel.setBackground(chooseHoverCellColor);
-                                } else if (thisCellPanel.getBackground()
-                                        == quietPossibleCellColor) {
-                                    thisCellPanel.setBackground(quietPossibleHoverCellColor);
-                                } else if (thisCellPanel.getBackground() == attackCellColor) {
-                                    thisCellPanel.setBackground(attackHoverCellColor);
-                                } else if (ClientController.checkFigure(
-                                        cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
-                                    thisCellPanel.setBackground(hoverCellColor);
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                if (ClientController.isMyStep()) {
+                                    if (thisCellPanel.getBackground() == chooseCellColor) {
+                                        thisCellPanel.setBackground(chooseHoverCellColor);
+                                    } else if (thisCellPanel.getBackground()
+                                            == quietPossibleCellColor) {
+                                        thisCellPanel.setBackground(quietPossibleHoverCellColor);
+                                    } else if (thisCellPanel.getBackground() == attackCellColor) {
+                                        thisCellPanel.setBackground(attackHoverCellColor);
+                                    } else if (ClientController.checkFigure(
+                                            cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
+                                        thisCellPanel.setBackground(hoverCellColor);
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void mouseExited(MouseEvent e) {
-                            if (ClientController.isMyStep()) {
-                                if (thisCellPanel.getBackground() == chooseHoverCellColor) {
-                                    thisCellPanel.setBackground(chooseCellColor);
-                                } else if (thisCellPanel.getBackground()
-                                        == quietPossibleHoverCellColor) {
-                                    thisCellPanel.setBackground(quietPossibleCellColor);
-                                } else if (thisCellPanel.getBackground() == attackHoverCellColor) {
-                                    thisCellPanel.setBackground(attackCellColor);
-                                } else if (ClientController.checkFigure(
-                                        cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
-                                    assignCellColor();
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                if (ClientController.isMyStep()) {
+                                    if (thisCellPanel.getBackground() == chooseHoverCellColor) {
+                                        thisCellPanel.setBackground(chooseCellColor);
+                                    } else if (thisCellPanel.getBackground()
+                                            == quietPossibleHoverCellColor) {
+                                        thisCellPanel.setBackground(quietPossibleCellColor);
+                                    } else if (thisCellPanel.getBackground()
+                                            == attackHoverCellColor) {
+                                        thisCellPanel.setBackground(attackCellColor);
+                                    } else if (ClientController.checkFigure(
+                                            cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
+                                        assignCellColor();
+                                    }
                                 }
                             }
-                        }
-                    });
-
+                        });
+            }
             this.validate();
         }
 

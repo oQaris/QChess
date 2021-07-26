@@ -1,7 +1,7 @@
 package io.deeplay.qchess.client.dao;
 
 import io.deeplay.qchess.client.database.Database;
-import io.deeplay.qchess.client.view.gui.EnemyType;
+import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.model.Color;
@@ -16,12 +16,12 @@ public class GameDAO {
         return Database.getInstance().getMyColor();
     }
 
-    public static EnemyType getEnemyType() {
+    public static PlayerType getEnemyType() {
         return Database.getInstance().getEnemyType();
     }
 
-    public static void setEnemy(EnemyType enemyType) {
-        Database.getInstance().setEnemyType(enemyType);
+    public static void setEnemy(PlayerType playerType) {
+        Database.getInstance().setEnemyType(playerType);
     }
 
     public static GameSettings getGameSettings() {

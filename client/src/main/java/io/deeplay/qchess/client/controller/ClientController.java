@@ -8,7 +8,7 @@ import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameGUIAdapterService;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
-import io.deeplay.qchess.client.view.gui.EnemyType;
+import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
@@ -19,7 +19,6 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import io.deeplay.qchess.game.player.PlayerType;
 import java.util.Set;
 
 public class ClientController {
@@ -112,10 +111,10 @@ public class ClientController {
                         new FindGameDTO(
                                 SessionDAO.getSessionToken(),
                                 switch (GameDAO.getEnemyType()) {
-                                    case USER -> PlayerType.REMOTE_PLAYER;
-                                    case EASYBOT -> PlayerType.RANDOM_BOT;
-                                    case MEDIUMBOT -> PlayerType.ATTACK_BOT;
-                                    case HARDBOT -> PlayerType.MINIMAX_BOT;
+                                    case USER -> io.deeplay.qchess.game.player.PlayerType.REMOTE_PLAYER;
+                                    case EASYBOT -> io.deeplay.qchess.game.player.PlayerType.RANDOM_BOT;
+                                    case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
+                                    case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.MINIMAX_BOT;
                                 }),
                         GameSettingsDTO.class);
         return dto.color == Color.WHITE;
@@ -214,8 +213,12 @@ public class ClientController {
         return null;
     }
 
-    public static void chooseEnemy(EnemyType enemyType) {
-        GameService.chooseEnemy(enemyType);
+    public static void chooseEnemy(PlayerType playerType) {
+        GameService.chooseEnemy(playerType);
+    }
+
+    public static void chooseMyType(PlayerType playerType) {
+
     }
 
     public static void closeGame(String reason) {

@@ -12,18 +12,19 @@ import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.WindowConstants;
 
-public class ChoosePlayerFrame extends Frame {
+public class ChooseEnemyPlayerFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
     private final JPanel panel;
     private final ButtonGroup buttonGroup;
     private final GridBagConstraints gbc;
-    private final Map<JRadioButton, EnemyType> rbs = new HashMap<>();
+    private final Map<JRadioButton, PlayerType> rbs = new HashMap<>();
 
-    public ChoosePlayerFrame(MainFrame mf) {
+    public ChooseEnemyPlayerFrame(MainFrame mf) {
         this.mf = mf;
         frame = new JFrame("Choose Enemy");
         frame.setSize(OUTER_FRAME_DIMENSION);
@@ -41,10 +42,12 @@ public class ChoosePlayerFrame extends Frame {
         gbc.gridy = GridBagConstraints.RELATIVE;
         gbc.anchor = GridBagConstraints.WEST;
 
-        addRadioButton("Человек", true, EnemyType.USER);
-        addRadioButton("Слабый бот", false, EnemyType.EASYBOT);
-        addRadioButton("Нормальный бот", false, EnemyType.MEDIUMBOT);
-        addRadioButton("Сильный бот", false, EnemyType.HARDBOT);
+        panel.add(new JLabel("Противником будет: "), gbc);
+
+        addRadioButton("Человек", true, PlayerType.USER);
+        addRadioButton("Слабый бот", false, PlayerType.EASYBOT);
+        addRadioButton("Нормальный бот", false, PlayerType.MEDIUMBOT);
+        addRadioButton("Сильный бот", false, PlayerType.HARDBOT);
 
         panel.add(addButtonConnect(), gbc);
         frame.add(panel, BorderLayout.CENTER);
@@ -59,16 +62,16 @@ public class ChoosePlayerFrame extends Frame {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         super.mousePressed(e);
-                        EnemyType enemyType = null;
+                        PlayerType playerType = null;
                         for (JRadioButton rb : rbs.keySet()) {
                             if (rb.isSelected()) {
-                                enemyType = rbs.get(rb);
+                                playerType = rbs.get(rb);
                                 break;
                             }
                         }
 
-                        ClientController.chooseEnemy(enemyType);
-                        mf.createChooseStyleFrame(enemyType);
+                        ClientController.chooseEnemy(playerType);
+                        mf.createChooseStyleFrame(playerType);
                         mf.destroyChoosePlayerFrame();
                     }
                 });
@@ -76,12 +79,12 @@ public class ChoosePlayerFrame extends Frame {
         return continueButton;
     }
 
-    public void addRadioButton(String name, boolean pressed, EnemyType enemyType) {
+    public void addRadioButton(String name, boolean pressed, PlayerType playerType) {
         JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
         panel.add(button, gbc);
 
-        rbs.put(button, enemyType);
+        rbs.put(button, playerType);
     }
 }
