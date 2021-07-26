@@ -59,18 +59,18 @@ public class LocalHost implements IServer {
     }
 
     @Override
-    public void send(String json, int clientID) throws ServerException {
+    public void send(String json, int clientId) throws ServerException {
         synchronized (mutex) {
             checkIsNotOpen();
-            clientHandlerManager.send(json, clientID);
+            clientHandlerManager.send(json, clientId);
         }
     }
 
     @Override
-    public void closeConnection(int clientID) throws ServerException {
+    public void closeConnection(int clientId) throws ServerException {
         synchronized (mutex) {
             checkIsNotOpen();
-            clientHandlerManager.closeConnection(clientID);
+            clientHandlerManager.closeConnection(clientId);
         }
     }
 

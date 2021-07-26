@@ -17,7 +17,7 @@ public class ConnectionControlService {
         return SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason));
     }
 
-    public static String setConnection(ClientToServerType type, String json, int clientID)
+    public static String setConnection(ClientToServerType type, String json, int clientId)
             throws SerializationException {
         assert type.getDTO() == ConnectionDTO.class;
         ConnectionDTO dto =
@@ -29,7 +29,7 @@ public class ConnectionControlService {
                 return null;
             } else {
                 String newSessionToken = UUID.randomUUID().toString();
-                ConnectionControlDAO.addPlayer(newSessionToken, clientID);
+                ConnectionControlDAO.addPlayer(newSessionToken, clientId);
                 return SerializationService.makeMainDTOJsonToClient(
                         new AcceptConnectionDTO(newSessionToken));
             }
@@ -41,16 +41,16 @@ public class ConnectionControlService {
     }
 
     public static void disconnect(String sessionToken, String reason) {
-        Integer clientID = ConnectionControlDAO.getID(sessionToken);
-        if (clientID == null) return;
+        Integer clientId = ConnectionControlDAO.getId(sessionToken);
+        if (clientId == null) return;
         GameService.endGameForOpponentOf(sessionToken);
         ConnectionControlDAO.removePlayer(sessionToken);
         try {
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason)),
-                    clientID);
+                    clientId);
             // TODO: убрать костыль (перенести id клиентов в БД), возвращать Json
-            ServerController.closeConnection(clientID);
+            ServerController.closeConnection(clientId);
         } catch (ServerException ignore) {
             // Сервис вызывается при открытом сервере
         }

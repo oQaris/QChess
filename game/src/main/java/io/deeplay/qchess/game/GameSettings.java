@@ -11,8 +11,14 @@ public class GameSettings {
     public final MoveSystem moveSystem;
     public final EndGameDetector endGameDetector;
     public final History history;
+    public final int boardSize;
+    public final Board.BoardFilling boardType;
+    public final String boardFillingForsythEdwards;
 
     public GameSettings(int boardSize, Board.BoardFilling boardType) {
+        this.boardSize = boardSize;
+        this.boardType = boardType;
+        this.boardFillingForsythEdwards = null;
         board = new Board(boardSize, boardType);
         history = new History(this);
         endGameDetector = new EndGameDetector(this);
@@ -20,6 +26,9 @@ public class GameSettings {
     }
 
     public GameSettings(Board.BoardFilling boardType) {
+        this.boardSize = Board.STD_BOARD_SIZE;
+        this.boardType = boardType;
+        this.boardFillingForsythEdwards = null;
         board = new Board(boardType);
         history = new History(this);
         endGameDetector = new EndGameDetector(this);
@@ -27,9 +36,18 @@ public class GameSettings {
     }
 
     public GameSettings(String boardFillingForsythEdwards) throws ChessError {
+        this.boardSize = 0;
+        this.boardType = null;
+        this.boardFillingForsythEdwards = boardFillingForsythEdwards;
         board = new Board(boardFillingForsythEdwards);
         history = new History(this);
         endGameDetector = new EndGameDetector(this);
         moveSystem = new MoveSystem(this);
+    }
+
+    public GameSettings newWithTheSameSettings() throws ChessError {
+        return boardType != null
+                ? new GameSettings(boardSize, boardType)
+                : new GameSettings(boardFillingForsythEdwards);
     }
 }

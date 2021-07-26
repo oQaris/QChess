@@ -88,9 +88,8 @@ public class ConnectFrame extends Frame {
                         while (!ClientController.isConnected()) Thread.onSpinWait();
                         try {
                             ClientController.waitForAcceptConnection();
-                            boolean color = ClientController.waitForGameSettings();
+                            boolean color = ClientController.resetGame();
                             frame.dispose();
-                            ClientController.initGame(color);
 
                             mf.createTable(color);
                             mf.destroyConnectFrame();

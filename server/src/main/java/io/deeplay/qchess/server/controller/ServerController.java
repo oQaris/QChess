@@ -101,8 +101,8 @@ public class ServerController {
      *
      * @throws ServerException если сервер закрыт
      */
-    public static void send(String json, int clientID) throws ServerException {
-        server.send(json, clientID);
+    public static void send(String json, int clientId) throws ServerException {
+        server.send(json, clientId);
     }
 
     /**
@@ -110,7 +110,7 @@ public class ServerController {
      *
      * @throws ServerException если сервер закрыт
      */
-    public static void closeConnection(int clientID) throws ServerException {
-        server.closeConnection(clientID);
+    public static void closeConnection(int clientId) throws ServerException {
+        server.closeConnection(clientId);
     }
 }

@@ -20,6 +20,7 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.player.PlayerType;
+
 import java.util.Set;
 
 public class ClientController {
@@ -99,28 +100,6 @@ public class ClientController {
         client.setIp(ip);
     }
 
-    /**
-     * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
-     *
-     * @return true, если цвет игрока белый
-     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
-     *     было разорвано
-     */
-    public static boolean waitForGameSettings() throws ClientException {
-        GameSettingsDTO dto =
-                client.waitForResponse(
-                        new FindGameDTO(
-                                SessionDAO.getSessionToken(),
-                                switch (GameDAO.getEnemyType()) {
-                                    case USER -> PlayerType.REMOTE_PLAYER;
-                                    case EASYBOT -> PlayerType.RANDOM_BOT;
-                                    case MEDIUMBOT -> PlayerType.ATTACK_BOT;
-                                    case HARDBOT -> PlayerType.MINIMAX_BOT;
-                                }),
-                        GameSettingsDTO.class);
-        return dto.color == Color.WHITE;
-    }
-
     // TODO: javadoc
     public static void waitForAcceptConnection() throws ClientException {
         client.waitForResponse(new ConnectionDTO(null, true), AcceptConnectionDTO.class);
@@ -177,7 +156,6 @@ public class ClientController {
         return 0;
     }
 
-    // TODO: добавить javadoc
     /** @throws ClientException если клиент не подключен к серверу */
     public static void makeMove(
             int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure)
@@ -190,15 +168,7 @@ public class ClientController {
         GameService.checkEndGame();
     }
 
-    /** @return true, если сейчас ход клиента */
-    public static boolean isMyStep() {
-        return GameDAO.isGameStarted()
-                && GameDAO.getGame().getCurrentPlayerToMove().getColor() == GameDAO.getMyColor();
-    }
-
-    public static void drawBoard() {
-        view.drawBoard();
-    }
+    // TODO: добавить javadoc
 
     private static FigureType getFigureType(Object figure) {
         String strFigure = (String) figure;
@@ -214,6 +184,16 @@ public class ClientController {
         return null;
     }
 
+    /** @return true, если сейчас ход клиента */
+    public static boolean isMyStep() {
+        return GameDAO.isGameStarted()
+                && GameDAO.getGame().getCurrentPlayerToMove().getColor() == GameDAO.getMyColor();
+    }
+
+    public static void drawBoard() {
+        view.drawBoard();
+    }
+
     public static void chooseEnemy(EnemyType enemyType) {
         GameService.chooseEnemy(enemyType);
     }
@@ -222,8 +202,39 @@ public class ClientController {
         view.closeGame(reason);
     }
 
-    /** Инициализирует игру у клиента */
-    public static void initGame(boolean color) {
+    /**
+     * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
+     *
+     * @return true, если цвет игрока белый
+     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
+     *     было разорвано
+     */
+    public static boolean resetGame() throws ClientException {
+        boolean color = waitForGameSettings();
         GameService.initGame(color);
+        // TODO: менять цвет у View и перерисовывать доску
+        return color;
+    }
+
+    /**
+     * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
+     *
+     * @return true, если цвет игрока белый
+     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
+     *     было разорвано
+     */
+    private static boolean waitForGameSettings() throws ClientException {
+        GameSettingsDTO dto =
+                client.waitForResponse(
+                        new FindGameDTO(
+                                SessionDAO.getSessionToken(),
+                                switch (GameDAO.getEnemyType()) {
+                                    case USER -> PlayerType.REMOTE_PLAYER;
+                                    case EASYBOT -> PlayerType.RANDOM_BOT;
+                                    case MEDIUMBOT -> PlayerType.ATTACK_BOT;
+                                    case HARDBOT -> PlayerType.MINIMAX_BOT;
+                                }, 2),
+                        GameSettingsDTO.class);
+        return dto.color == Color.WHITE;
     }
 }

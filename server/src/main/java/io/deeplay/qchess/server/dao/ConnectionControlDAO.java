@@ -8,8 +8,8 @@ public class ConnectionControlDAO {
         return Database.getInstance().contains(sessionToken);
     }
 
-    public static void addPlayer(String sessionToken, int clientID) {
-        Database.getInstance().addPlayer(sessionToken, clientID);
+    public static void addPlayer(String sessionToken, int clientId) {
+        Database.getInstance().addPlayer(sessionToken, clientId);
     }
 
     public static void removePlayer(String sessionToken) {
@@ -17,7 +17,7 @@ public class ConnectionControlDAO {
     }
 
     /** @return id клиента или null, если его нет */
-    public static Integer getID(String sessionToken) {
-        return Database.getInstance().getID(sessionToken);
+    public static Integer getId(String sessionToken) {
+        return Database.getInstance().getId(sessionToken);
     }
 }
