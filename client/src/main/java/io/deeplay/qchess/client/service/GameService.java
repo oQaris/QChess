@@ -4,7 +4,7 @@ import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.dao.GameDAO;
 import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.client.view.gui.EnemyType;
+import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ActionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
@@ -45,8 +45,8 @@ public class GameService {
         return null;
     }
 
-    public static void chooseEnemy(EnemyType enemyType) {
-        GameDAO.setEnemy(enemyType);
+    public static void chooseEnemy(PlayerType playerType) {
+        GameDAO.setEnemy(playerType);
     }
 
     public static void initGame(boolean color) {

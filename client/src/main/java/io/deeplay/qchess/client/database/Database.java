@@ -1,6 +1,6 @@
 package io.deeplay.qchess.client.database;
 
-import io.deeplay.qchess.client.view.gui.EnemyType;
+import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.model.Color;
@@ -11,7 +11,7 @@ public class Database {
     private Selfplay game;
     private GameSettings gs;
     private boolean isGameStarted;
-    private EnemyType enemyType;
+    private PlayerType playerType;
     private Color myColor;
 
     private Database() {}
@@ -35,12 +35,12 @@ public class Database {
         myColor = color;
     }
 
-    public EnemyType getEnemyType() {
-        return enemyType;
+    public PlayerType getEnemyType() {
+        return playerType;
     }
 
-    public void setEnemyType(EnemyType enemyType) {
-        this.enemyType = enemyType;
+    public void setEnemyType(PlayerType playerType) {
+        this.playerType = playerType;
     }
 
     public GameSettings getGameSettings() {
