@@ -21,6 +21,13 @@ public abstract class Player {
         this.color = color;
     }
 
+    public void setGameSettings(GameSettings gs, Color color) {
+        ms = gs.moveSystem;
+        board = gs.board;
+        egd = gs.endGameDetector;
+        this.color = color;
+    }
+
     public Color getColor() {
         return color;
     }

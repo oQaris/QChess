@@ -22,14 +22,14 @@ import io.deeplay.qchess.server.exceptions.ServerException;
 /** Управляет подбором игр по предпочитаемым настройкам */
 public class MatchMaking {
 
-    public static String findGame(ClientToServerType type, String json, int clientID)
+    public static String findGame(ClientToServerType type, String json, int clientId)
             throws SerializationException {
         assert type.getDTO() == FindGameDTO.class;
         FindGameDTO dto = SerializationService.clientToServerDTORequest(json, FindGameDTO.class);
 
         // Пока не найдется комната или свободных комнат нет
         while (true) {
-            Room room = GameDAO.findSuitableRoom(dto.enemyType);
+            Room room = GameDAO.findSuitableRoom(dto.enemyType, dto.gameCount);
             if (room == null) {
                 return SerializationService.makeMainDTOJsonToClient(
                         new DisconnectedDTO("Нет свободных комнат"));
@@ -37,7 +37,7 @@ public class MatchMaking {
             synchronized (room.mutex) {
                 if (room.isFull()) continue;
                 GameSettings gs = new GameSettings(BoardFilling.STANDARD);
-                room.setGameSettings(gs);
+                room.setGameSettings(gs, dto.gameCount);
 
                 RemotePlayer enemyBot =
                         switch (dto.enemyType) {
@@ -58,7 +58,7 @@ public class MatchMaking {
                     ServerController.send(
                             SerializationService.makeMainDTOJsonToClient(
                                     new GameSettingsDTO(clientColor)),
-                            clientID);
+                            clientId);
                 } catch (ServerException ignore) {
                     // Сервис вызывается при открытом сервере
                 }

@@ -30,12 +30,27 @@ public class Room {
     private RemotePlayer player1;
     private RemotePlayer player2;
     private Selfplay game;
+    private int gameCount;
+    private int maxGames;
     private GameSettings gs;
     private boolean error;
 
-    public void setGameSettings(GameSettings gs) {
+    public void addGameCount(int count) {
+        gameCount += count;
+    }
+
+    public int getGameCount() {
+        return gameCount;
+    }
+
+    public int getMaxGames() {
+        return maxGames;
+    }
+
+    public void setGameSettings(GameSettings gs, int maxGames) {
         synchronized (mutex) {
             this.gs = gs;
+            this.maxGames = maxGames;
         }
     }
 
@@ -158,6 +173,27 @@ public class Room {
             player2 = null;
             gs = null;
             game = null;
+            error = false;
+        }
+    }
+
+    /** Меняет цвет игрокам и сбрасывает игру */
+    public void resetGame() {
+        synchronized (mutex) {
+            RemotePlayer temp = player1;
+            player1 = player2;
+            player2 = temp;
+
+            try {
+                gs = gs.newWithTheSameSettings();
+                player1.setGameSettings(gs, Color.WHITE);
+                player2.setGameSettings(gs, Color.BLACK);
+                game = new Selfplay(gs, player1, player2);
+            } catch (ChessError chessError) {
+                // Клонирование настроек безопасно, если было до этого создано успешно
+            }
+
+            error = false;
         }
     }
 

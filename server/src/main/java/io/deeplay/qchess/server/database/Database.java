@@ -11,7 +11,7 @@ public class Database {
 
     private static final transient Database database = new Database();
 
-    /** sessionToken -> ID */
+    /** sessionToken -> Id */
     private final Map<String, Integer> clients;
 
     /** Не поддерживает потокобезопасное заполнение/удаление комнат TODO this (?) */
@@ -31,8 +31,8 @@ public class Database {
         return database;
     }
 
-    public void addPlayer(String sessionToken, int clientID) {
-        clients.put(sessionToken, clientID);
+    public void addPlayer(String sessionToken, int clientId) {
+        clients.put(sessionToken, clientId);
     }
 
     public boolean contains(String sessionToken) {
@@ -44,12 +44,12 @@ public class Database {
     }
 
     /** @return id клиента или null, если его нет */
-    public Integer getID(String sessionToken) {
+    public Integer getId(String sessionToken) {
         return sessionToken != null ? clients.get(sessionToken) : null;
     }
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
-    public Room findSuitableRoom(PlayerType enemyType) {
+    public Room findSuitableRoom(PlayerType enemyType, int gameCount) {
         if (enemyType == PlayerType.REMOTE_PLAYER) return room.isFull() ? null : room;
         return room.isEmpty() ? room : null;
     }

@@ -15,7 +15,7 @@ public class GameDAO {
     }
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
-    public static Room findSuitableRoom(PlayerType enemyType) {
-        return Database.getInstance().findSuitableRoom(enemyType);
+    public static Room findSuitableRoom(PlayerType enemyType, int gameCount) {
+        return Database.getInstance().findSuitableRoom(enemyType, gameCount);
     }
 }

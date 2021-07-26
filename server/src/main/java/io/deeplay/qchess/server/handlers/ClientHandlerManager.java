@@ -20,8 +20,8 @@ public class ClientHandlerManager extends Thread {
     private static final Map<Integer, ClientHandler> clients =
             Collections.synchronizedMap(new HashMap<>(ServerController.getMaxClients()));
 
-    private static final Object mutexLastID = new Object();
-    private static int lastID;
+    private static final Object mutexLastId = new Object();
+    private static int lastId;
 
     private final ServerSocket server;
 
@@ -46,8 +46,8 @@ public class ClientHandlerManager extends Thread {
 
                 if (socket != null) {
                     int id;
-                    synchronized (mutexLastID) {
-                        id = lastID++;
+                    synchronized (mutexLastId) {
+                        id = lastId++;
                     }
 
                     ClientHandler client =
@@ -105,12 +105,12 @@ public class ClientHandlerManager extends Thread {
     }
 
     /** Отправляет клиенту строку, если он подключен */
-    public void send(String json, int toClientID) {
-        clients.get(toClientID).sendIfNotNull(json);
+    public void send(String json, int toClientId) {
+        clients.get(toClientId).sendIfNotNull(json);
     }
 
     /** Закрывает соединение с клиентом */
-    public void closeConnection(int clientID) {
-        clients.get(clientID).terminate();
+    public void closeConnection(int clientId) {
+        clients.get(clientId).terminate();
     }
 }

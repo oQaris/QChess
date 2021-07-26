@@ -9,8 +9,12 @@ public class FindGameDTO extends IClientToServerDTO {
     @SerializedName("gameEnemyType")
     public final PlayerType enemyType;
 
-    public FindGameDTO(final String sessionToken, final PlayerType enemyType) {
+    @SerializedName("gameCount")
+    public final int gameCount;
+
+    public FindGameDTO(final String sessionToken, final PlayerType enemyType, final int gameCount) {
         super(sessionToken);
         this.enemyType = enemyType;
+        this.gameCount = gameCount;
     }
 }

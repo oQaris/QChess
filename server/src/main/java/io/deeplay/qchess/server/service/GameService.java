@@ -4,6 +4,7 @@ import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ActionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.main.ClientToServerType;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.DisconnectedDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ResetGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.StartGameDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
@@ -27,8 +28,8 @@ public class GameService {
         room.addPlayer(player);
         if (room.isFull()) {
             room.startGame();
-            Integer id1 = ConnectionControlDAO.getID(room.getFirstPlayerToken());
-            Integer id2 = ConnectionControlDAO.getID(room.getSecondPlayerToken());
+            Integer id1 = ConnectionControlDAO.getId(room.getFirstPlayerToken());
+            Integer id2 = ConnectionControlDAO.getId(room.getSecondPlayerToken());
             try {
                 if (id1 != null)
                     ServerController.send(
@@ -59,7 +60,7 @@ public class GameService {
             if (room.isEmpty()) return;
 
             String opponentToken = room.getOpponentSessionToken(sessionToken);
-            Integer opponentID = ConnectionControlDAO.getID(opponentToken);
+            Integer opponentID = ConnectionControlDAO.getId(opponentToken);
 
             if (opponentID != null && !room.isFinished()) {
                 try {
@@ -77,7 +78,7 @@ public class GameService {
     }
 
     /** Выполняет игровое действие */
-    public static String action(ClientToServerType type, String json, int clientID)
+    public static String action(ClientToServerType type, String json, int clientId)
             throws SerializationException {
         assert type.getDTO() == ActionDTO.class;
         ActionDTO dto = SerializationService.clientToServerDTORequest(json, ActionDTO.class);
@@ -130,7 +131,7 @@ public class GameService {
         }
         status = room.getEndGameStatus();
 
-        Integer clientId = ConnectionControlDAO.getID(sendToken);
+        Integer clientId = ConnectionControlDAO.getId(sendToken);
         if (clientId != null)
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(
@@ -141,15 +142,38 @@ public class GameService {
         if (status != null) {
             RemotePlayer player1 = room.getFirstPlayer();
             RemotePlayer player2 = room.getSecondPlayer();
-            if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                sendDisconnect(ConnectionControlDAO.getID(player1.getSessionToken()));
-            if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                sendDisconnect(ConnectionControlDAO.getID(player2.getSessionToken()));
-            room.resetRoom();
+            room.addGameCount(1);
+            // TODO: сохранение статистики
+            if (room.getGameCount() >= room.getMaxGames()) {
+                if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
+                    sendDisconnect(ConnectionControlDAO.getId(player1.getSessionToken()));
+                if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
+                    sendDisconnect(ConnectionControlDAO.getId(player2.getSessionToken()));
+
+                room.resetRoom();
+            } else {
+                if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
+                    sendResetRoom(ConnectionControlDAO.getId(player1.getSessionToken()));
+                if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
+                    sendResetRoom(ConnectionControlDAO.getId(player2.getSessionToken()));
+
+                room.resetGame();
+            }
         }
     }
 
-    private static void sendDisconnect(int clientId) {
+    private static void sendResetRoom(Integer clientId) {
+        if (clientId == null) return;
+        try {
+            ServerController.send(
+                    SerializationService.makeMainDTOJsonToClient(new ResetGameDTO()), clientId);
+        } catch (ServerException ignore) {
+            // Сервис вызывается при открытом сервере
+        }
+    }
+
+    private static void sendDisconnect(Integer clientId) {
+        if (clientId == null) return;
         try {
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(

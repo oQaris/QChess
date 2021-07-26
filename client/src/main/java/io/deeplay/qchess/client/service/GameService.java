@@ -145,7 +145,7 @@ public class GameService {
     /** Проверяет и заканчивает игру, если игрок, чей ход текущий, проиграл */
     public static void checkEndGame() {
         if (GameService.getEndGameStatus() != null) {
-            ClientController.closeGame(GameService.getEndGameStatus());
+            // ClientController.closeGame(GameService.getEndGameStatus());
         }
     }
 
