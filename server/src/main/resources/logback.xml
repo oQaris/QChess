@@ -82,6 +82,10 @@
     </filter>
   </appender>
 
+  <logger level="info" name="io.deeplay.qchess.server.service.StatisticService">
+    <appender-ref ref="SIFTER"/>
+  </logger>
+
   <logger level="info" name="game.src.test.java.io.deeplay.qchess.game">
     <appender-ref ref="GAME-STATISTICS"/>
     <appender-ref ref="STDOUT"/>
