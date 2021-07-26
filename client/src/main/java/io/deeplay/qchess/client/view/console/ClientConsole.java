@@ -72,6 +72,11 @@ public class ClientConsole implements IClientView {
     }
 
     @Override
+    public void showMessage(String message) {
+        throw new UnsupportedOperationException("Еще не реализовано");
+    }
+
+    @Override
     public void drawBoard() {
         for (int row = 0; row < 8; ++row) {
             for (int column = 0; column < 8; ++column) {

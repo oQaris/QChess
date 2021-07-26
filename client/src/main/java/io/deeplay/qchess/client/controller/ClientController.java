@@ -203,6 +203,10 @@ public class ClientController {
         view.closeGame(reason);
     }
 
+    public static void showMessage(String message) {
+        view.showMessage(message);
+    }
+
     public static void resetMyColorOnBoard(Color color) {
         view.changeMyColorOnBoard(color == Color.WHITE);
     }

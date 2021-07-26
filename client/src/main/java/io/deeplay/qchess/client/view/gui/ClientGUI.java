@@ -24,6 +24,11 @@ public class ClientGUI implements IClientView {
     }
 
     @Override
+    public void showMessage(String message) {
+        mf.getTable().showMessage(message);
+    }
+
+    @Override
     public void drawBoard() {
         mf.getTable().repaint();
     }

@@ -12,6 +12,9 @@ public interface IClientView extends Closeable {
     /** Выводит сообщение */
     void print(String message);
 
+    /** Выводит окно с сообщением */
+    void showMessage(String message);
+
     /** Перерисовывает доску */
     void drawBoard();
 

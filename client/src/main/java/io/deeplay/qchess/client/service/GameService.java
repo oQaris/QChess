@@ -163,11 +163,13 @@ public class GameService {
         return null;
     }
 
-    /** Проверяет и заканчивает игру, если игрок, чей ход текущий, проиграл */
+    /**
+     * Проверяет и заканчивает игру (но не выходит из комнаты), если игрок, чей ход текущий,
+     * проиграл
+     */
     public static void checkEndGame() {
         if (GameService.getEndGameStatus() != null) {
-            // TODO: показать сообщение в Table
-            ClientController.closeGame(GameService.getEndGameStatus());
+            ClientController.showMessage(GameService.getEndGameStatus());
         }
     }
 
