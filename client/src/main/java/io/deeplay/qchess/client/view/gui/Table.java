@@ -207,8 +207,6 @@ public class Table extends Frame {
                                                     cellId / BOARD_SIZE,
                                                     cellId % BOARD_SIZE,
                                                     turnFigure);
-                                            myColor = false;
-                                            remakeBoardPanel();
                                         } catch (ClientException clientException) {
                                             clientException.printStackTrace();
                                         }
