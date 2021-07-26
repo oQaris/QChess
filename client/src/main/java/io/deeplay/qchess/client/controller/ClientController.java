@@ -212,7 +212,7 @@ public class ClientController {
     public static boolean resetGame() throws ClientException {
         boolean color = waitForGameSettings();
         GameService.initGame(color);
-        // TODO: менять цвет у View и перерисовывать доску
+        view.changeMyColorOnBoard(color);
         return color;
     }
 

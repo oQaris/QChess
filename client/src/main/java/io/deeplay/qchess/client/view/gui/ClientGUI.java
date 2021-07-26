@@ -44,7 +44,7 @@ public class ClientGUI implements IClientView {
     }
 
     @Override
-    public void repaintBoard(boolean color) {
+    public void changeMyColorOnBoard(boolean color) {
         mf.getTable().setMyColor(color);
         mf.getTable().remakeBoardPanel();
     }

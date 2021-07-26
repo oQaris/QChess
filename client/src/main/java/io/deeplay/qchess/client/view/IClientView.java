@@ -27,5 +27,6 @@ public interface IClientView extends Closeable {
      */
     void disconnect(String reason);
 
-    void repaintBoard(boolean color);
+    /** Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет) */
+    void changeMyColorOnBoard(boolean color);
 }

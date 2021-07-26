@@ -121,7 +121,7 @@ public class ClientConsole implements IClientView {
     }
 
     @Override
-    public void repaintBoard(boolean color) {
+    public void changeMyColorOnBoard(boolean color) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }
 }
