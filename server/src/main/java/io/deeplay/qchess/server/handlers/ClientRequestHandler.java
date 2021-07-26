@@ -48,7 +48,7 @@ public class ClientRequestHandler {
                     redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json, clientId);
 
             if (response != null)
-                logger.debug("Отправлен json клиенту <{}>: {}", clientId, jsonClientRequest);
+                logger.debug("Отправлен json клиенту <{}>: {}", clientId, response);
 
             return response;
         } catch (SerializationException e) {

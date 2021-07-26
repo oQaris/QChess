@@ -36,15 +36,8 @@ public class MatchMaking {
             }
             synchronized (room.mutex) {
                 if (room.contains(dto.sessionToken)) {
-                    try {
-                        ServerController.send(
-                                SerializationService.makeMainDTOJsonToClient(
-                                        new GameSettingsDTO(
-                                                room.getPlayer(dto.sessionToken).getColor())),
-                                clientId);
-                    } catch (ServerException ignore) {
-                        // Сервис вызывается при открытом сервере
-                    }
+                    return SerializationService.makeMainDTOJsonToClient(
+                            new GameSettingsDTO(room.getPlayer(dto.sessionToken).getColor()));
                 }
 
                 if (room.isFull()) continue;

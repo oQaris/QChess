@@ -99,12 +99,13 @@ public class Table extends Frame {
 
     public void closeGame(String message) {
         new MessageFrame(frame, "Игра окончена", message);
-        mf.destroyTable();
-        try {
-            ClientController.disconnect("Игра окончена");
-        } catch (ClientException e) {
-            System.err.println(e.getMessage());
-        }
+        // TODO: показать сообщение в GameService <- ClientController
+//        mf.destroyTable();
+//        try {
+//            ClientController.disconnect("Игра окончена");
+//        } catch (ClientException e) {
+//            System.err.println(e.getMessage());
+//        }
     }
 
     private class BoardPanel extends JPanel {

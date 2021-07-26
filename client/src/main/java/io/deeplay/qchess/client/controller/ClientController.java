@@ -169,7 +169,6 @@ public class ClientController {
     }
 
     // TODO: добавить javadoc
-
     private static FigureType getFigureType(Object figure) {
         String strFigure = (String) figure;
         if ("Ферзь".equals(strFigure)) {
@@ -205,15 +204,13 @@ public class ClientController {
     /**
      * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
      *
-     * @return true, если цвет игрока белый
      * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
      *     было разорвано
      */
-    public static boolean resetGame() throws ClientException {
+    public static void resetGame() throws ClientException {
         boolean color = waitForGameSettings();
         GameService.initGame(color);
         view.changeMyColorOnBoard(color);
-        return color;
     }
 
     /**
@@ -223,7 +220,7 @@ public class ClientController {
      * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
      *     было разорвано
      */
-    private static boolean waitForGameSettings() throws ClientException {
+    public static boolean waitForGameSettings() throws ClientException {
         GameSettingsDTO dto =
                 client.waitForResponse(
                         new FindGameDTO(

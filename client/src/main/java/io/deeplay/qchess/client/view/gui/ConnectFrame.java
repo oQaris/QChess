@@ -2,6 +2,7 @@ package io.deeplay.qchess.client.view.gui;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
+import io.deeplay.qchess.client.service.GameService;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -88,7 +89,8 @@ public class ConnectFrame extends Frame {
                         while (!ClientController.isConnected()) Thread.onSpinWait();
                         try {
                             ClientController.waitForAcceptConnection();
-                            boolean color = ClientController.resetGame();
+                            boolean color = ClientController.waitForGameSettings();
+                            GameService.initGame(color);
                             frame.dispose();
 
                             mf.createTable(color);
