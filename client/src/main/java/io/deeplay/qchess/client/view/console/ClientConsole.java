@@ -119,4 +119,9 @@ public class ClientConsole implements IClientView {
     public void disconnect(String reason) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }
+
+    @Override
+    public void repaintBoard(boolean color) {
+        throw new UnsupportedOperationException("Еще не реализовано");
+    }
 }

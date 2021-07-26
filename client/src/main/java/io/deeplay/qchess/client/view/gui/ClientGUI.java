@@ -16,9 +16,6 @@ public class ClientGUI implements IClientView {
     public void startView() {
         ClientController.setView(this);
         mf.createStartFrame();
-        // connectFrame = new ConnectFrame();
-        // Table tableWhite = new Table("onestyle", true);
-        // Table tableBlack = new Table("onestyle", false);
     }
 
     @Override
@@ -44,6 +41,12 @@ public class ClientGUI implements IClientView {
     @Override
     public void disconnect(String reason) {
         print(reason);
+    }
+
+    @Override
+    public void repaintBoard(boolean color) {
+        mf.getTable().setMyColor(color);
+        mf.getTable().remakeBoardPanel();
     }
 
     @Override

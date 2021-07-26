@@ -49,9 +49,9 @@ public class Table extends Frame {
     private static final Color hoverCellColor = Color.CYAN;
     private static final String defaultFigureImagesPath = "/art/figures";
     private static final String[] figures = {"Ферзь", "Ладья", "Конь", "Слон"};
-    private final BoardPanel boardPanel;
+    private BoardPanel boardPanel;
     private final String figureStyle;
-    private final boolean myColor;
+    private boolean myColor;
     private final Set<Integer> taggedCells = new HashSet<>();
     private int clickedCell;
 
@@ -83,24 +83,14 @@ public class Table extends Frame {
         this.frame.addWindowListener(new CloseFrameListener(this));
     }
 
-    private JMenuBar createTableMenuBar() {
-        final JMenuBar tableMenuBar = new JMenuBar();
-        tableMenuBar.add(createFileMenu());
-        return tableMenuBar;
+    public void setMyColor(boolean myColor) {
+        this.myColor = myColor;
     }
 
-    private JMenu createFileMenu() {
-        final JMenu fileMenu = new JMenu("File");
-
-        final JMenuItem loadMenuItem = new JMenuItem("Load");
-        loadMenuItem.addActionListener(e -> System.out.println("loading..."));
-        fileMenu.add(loadMenuItem);
-
-        final JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(e -> frame.dispose());
-        fileMenu.add(exitMenuItem);
-
-        return fileMenu;
+    public void remakeBoardPanel() {
+        this.frame.remove(boardPanel);
+        this.boardPanel = new BoardPanel();
+        this.frame.add(boardPanel, BorderLayout.CENTER);
     }
 
     public void repaint() {
@@ -217,6 +207,8 @@ public class Table extends Frame {
                                                     cellId / BOARD_SIZE,
                                                     cellId % BOARD_SIZE,
                                                     turnFigure);
+                                            myColor = false;
+                                            remakeBoardPanel();
                                         } catch (ClientException clientException) {
                                             clientException.printStackTrace();
                                         }

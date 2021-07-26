@@ -26,4 +26,6 @@ public interface IClientView extends Closeable {
      * @param reason причина отключения
      */
     void disconnect(String reason);
+
+    void repaintBoard(boolean color);
 }
