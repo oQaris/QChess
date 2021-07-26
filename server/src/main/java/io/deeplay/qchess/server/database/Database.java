@@ -51,7 +51,7 @@ public class Database {
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
     public Room findSuitableRoom(String sessionToken, PlayerType enemyType, int gameCount) {
         if (room.contains(sessionToken)) return room;
-        if (enemyType == PlayerType.REMOTE_PLAYER) return room.isFull() ? null : room;
+        if (enemyType == PlayerType.GUI_PLAYER) return room.isFull() ? null : room;
         return room.isEmpty() ? room : null;
     }
 

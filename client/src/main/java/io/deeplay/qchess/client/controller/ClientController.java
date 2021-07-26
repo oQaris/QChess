@@ -222,7 +222,7 @@ public class ClientController {
                                 SessionDAO.getSessionToken(),
                                 switch (GameDAO.getEnemyType()) {
                                     case USER -> io.deeplay.qchess.game.player.PlayerType
-                                            .REMOTE_PLAYER;
+                                            .GUI_PLAYER;
                                     case EASYBOT -> io.deeplay.qchess.game.player.PlayerType
                                             .RANDOM_BOT;
                                     case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType

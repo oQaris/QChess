@@ -49,13 +49,13 @@ public class MatchMaking {
 
                 RemotePlayer enemyBot =
                         switch (dto.enemyType) {
-                            case CONSOLE_PLAYER, REMOTE_PLAYER -> null;
+                            case CONSOLE_PLAYER, GUI_PLAYER -> null;
                             case RANDOM_BOT -> new RandomBot(gs, Color.BLACK);
                             case ATTACK_BOT -> new AttackBot(gs, Color.BLACK);
                             case MINIMAX_BOT -> new MinimaxBot(gs, Color.BLACK, 3);
                         };
 
-                if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {
+                if (enemyBot == null && dto.enemyType != PlayerType.GUI_PLAYER) {
                     return SerializationService.makeMainDTOJsonToClient(
                             new DisconnectedDTO("Неверный тип противника"));
                 }

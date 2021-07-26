@@ -21,7 +21,7 @@ public class RemotePlayer extends Player {
 
     @Override
     public PlayerType getPlayerType() {
-        return PlayerType.REMOTE_PLAYER;
+        return PlayerType.GUI_PLAYER;
     }
 
     public String getSessionToken() {

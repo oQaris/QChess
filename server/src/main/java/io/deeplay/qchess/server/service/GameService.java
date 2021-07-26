@@ -17,6 +17,7 @@ import io.deeplay.qchess.server.dao.ConnectionControlDAO;
 import io.deeplay.qchess.server.dao.GameDAO;
 import io.deeplay.qchess.server.database.Room;
 import io.deeplay.qchess.server.exceptions.ServerException;
+import java.util.function.IntConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,7 +128,7 @@ public class GameService {
         String sendToken = toToken;
 
         String status = room.getEndGameStatus();
-        if (status == null && player.getPlayerType() != PlayerType.REMOTE_PLAYER) {
+        if (status == null && player.getPlayerType() != PlayerType.GUI_PLAYER) {
             move = player.getNextMove();
             room.move(move);
             sendToken = fromToken;
@@ -151,21 +152,20 @@ public class GameService {
                     room.id, room.getGameCount(), room.getEndGameStatus());
 
             if (room.getGameCount() >= room.getMaxGames()) {
-                if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                    sendDisconnect(ConnectionControlDAO.getId(player1.getSessionToken()));
-                if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                    sendDisconnect(ConnectionControlDAO.getId(player2.getSessionToken()));
-
+                sendRemotePlayer(player1, GameService::sendDisconnect);
+                sendRemotePlayer(player2, GameService::sendDisconnect);
                 room.resetRoom();
             } else {
-                if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                    sendResetRoom(ConnectionControlDAO.getId(player1.getSessionToken()));
-                if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                    sendResetRoom(ConnectionControlDAO.getId(player2.getSessionToken()));
-
+                sendRemotePlayer(player1, GameService::sendResetRoom);
+                sendRemotePlayer(player2, GameService::sendResetRoom);
                 room.resetGame();
             }
         }
+    }
+
+    private static void sendRemotePlayer(RemotePlayer player, IntConsumer sendFunc) {
+        if (player.getPlayerType() == PlayerType.GUI_PLAYER)
+            sendFunc.accept(ConnectionControlDAO.getId(player.getSessionToken()));
     }
 
     private static void sendResetRoom(Integer clientId) {
