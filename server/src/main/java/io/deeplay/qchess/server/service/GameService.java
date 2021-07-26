@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class GameService {
     private static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
-    private GameService(){}
+    private GameService() {}
 
     public static void putPlayerToRoom(Room room, RemotePlayer player) {
         room.addPlayer(player);
@@ -131,6 +131,7 @@ public class GameService {
             move = player.getNextMove();
             room.move(move);
             sendToken = fromToken;
+            StatisticService.writeMoveStats(room.id, room.getGameCount(), move);
         }
         status = room.getEndGameStatus();
 
@@ -146,7 +147,8 @@ public class GameService {
             RemotePlayer player1 = room.getFirstPlayer();
             RemotePlayer player2 = room.getSecondPlayer();
             room.addGameCount(1);
-            StatisticService.writeEndGameStats(room.id, room.getGameCount(), room.getEndGameStatus());
+            StatisticService.writeEndGameStats(
+                    room.id, room.getGameCount(), room.getEndGameStatus());
 
             if (room.getGameCount() >= room.getMaxGames()) {
                 if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)

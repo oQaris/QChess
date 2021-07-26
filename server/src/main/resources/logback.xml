@@ -58,7 +58,7 @@
 
     <sift>
       <appender name="FILE-${path}" class="ch.qos.logback.core.FileAppender">
-        <file>target/logs/rooms/${path}.log</file>
+        <file>logs/rooms/${path}.log</file>
 
         <encoder>
           <pattern>%msg%n</pattern>
