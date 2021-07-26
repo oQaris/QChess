@@ -159,18 +159,32 @@ public class Table extends Frame {
             }
             validate();
             super.repaint();
+
+
+            ViewCell cell = null;
+            if(ClientController.isCheck(myColor)) {
+                cell = ClientController.getKingCell(myColor);
+                boardCells.get(cell.getRow() * BOARD_SIZE + cell.getColumn()).cellColor = attackCellColor;
+                boardCells.get(cell.getRow() * BOARD_SIZE + cell.getColumn()).assignCellColor();
+            }
         }
     }
 
     private class CellPanel extends JPanel {
         private final int cellId;
         private final BoardPanel boardPanel;
+        private Color cellColor;
 
         CellPanel(final BoardPanel boardPanel, final int cellId) {
             super(new GridBagLayout());
             this.cellId = cellId;
             this.boardPanel = boardPanel;
             this.setPreferredSize(Table.CELL_PANEL_DIMENSION);
+
+            cellColor = (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
+                ? Table.lightCellColor
+                : Table.darkCellColor;
+
             this.assignCellColor();
             this.assignCellFigureIcon();
             CellPanel thisCellPanel = this;
@@ -325,13 +339,13 @@ public class Table extends Frame {
         }
 
         private void assignCellColor() {
-            this.setBackground(
-                    (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
-                            ? Table.lightCellColor
-                            : Table.darkCellColor);
+            this.setBackground(cellColor);
         }
 
         private void drawCell() {
+            cellColor = (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
+                ? Table.lightCellColor
+                : Table.darkCellColor;
             assignCellColor();
             assignCellFigureIcon();
             validate();

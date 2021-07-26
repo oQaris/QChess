@@ -232,4 +232,12 @@ public class ClientController {
                                 },
                                 2)));
     }
+
+    public static boolean isCheck(boolean color) {
+        return GameGUIAdapterService.isCheck(color);
+    }
+
+    public static ViewCell getKingCell(boolean color) {
+        return GameGUIAdapterService.getKingCell(color);
+    }
 }
