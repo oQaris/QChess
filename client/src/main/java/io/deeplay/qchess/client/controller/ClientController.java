@@ -14,7 +14,7 @@ import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.FindGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.AcceptConnectionDTO;
-import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
@@ -203,28 +203,17 @@ public class ClientController {
         view.closeGame(reason);
     }
 
-    /**
-     * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
-     *
-     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
-     *     было разорвано
-     */
-    public static void resetGame() throws ClientException {
-        boolean color = waitForGameSettings();
-        GameService.initGame(color);
-        view.changeMyColorOnBoard(color);
+    public static void resetMyColorOnBoard(Color color) {
+        view.changeMyColorOnBoard(color == Color.WHITE);
     }
 
     /**
-     * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
-     *
-     * @return true, если цвет игрока белый
      * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
      *     было разорвано
      */
-    public static boolean waitForGameSettings() throws ClientException {
-        GameSettingsDTO dto =
-                client.waitForResponse(
+    public static void sendFindGameRequest() throws ClientException {
+        client.sendIfNotNull(
+                SerializationService.makeMainDTOJsonToServer(
                         new FindGameDTO(
                                 SessionDAO.getSessionToken(),
                                 switch (GameDAO.getEnemyType()) {
@@ -237,8 +226,6 @@ public class ClientController {
                                     case HARDBOT -> io.deeplay.qchess.game.player.PlayerType
                                             .MINIMAX_BOT;
                                 },
-                                2),
-                        GameSettingsDTO.class);
-        return dto.color == Color.WHITE;
+                                2)));
     }
 }

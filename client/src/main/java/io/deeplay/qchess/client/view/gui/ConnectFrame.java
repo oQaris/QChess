@@ -88,9 +88,11 @@ public class ConnectFrame extends Frame {
                         }
                         while (!ClientController.isConnected()) Thread.onSpinWait();
                         try {
+                            // TODO: переписать на автомат
                             ClientController.waitForAcceptConnection();
-                            boolean color = ClientController.waitForGameSettings();
+                            boolean color = true;
                             GameService.initGame(color);
+                            ClientController.sendFindGameRequest();
                             frame.dispose();
 
                             mf.createTable(color);

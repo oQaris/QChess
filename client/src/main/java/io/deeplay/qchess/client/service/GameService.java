@@ -8,6 +8,7 @@ import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ActionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.GameSettings;
@@ -28,6 +29,17 @@ import java.util.List;
 
 public class GameService {
 
+    public static String setGameSettings(ServerToClientType type, String json)
+            throws SerializationException {
+        assert type.getDTO() == GameSettingsDTO.class;
+        GameSettingsDTO dto =
+                SerializationService.serverToClientDTORequest(json, GameSettingsDTO.class);
+
+        initGame(dto.color == Color.WHITE);
+        ClientController.resetMyColorOnBoard(dto.color);
+        return null;
+    }
+
     public static String endGame(ServerToClientType type, String json)
             throws SerializationException {
         assert type.getDTO() == EndGameDTO.class;
@@ -38,7 +50,7 @@ public class GameService {
 
     public static String resetGame(ServerToClientType type, String json) {
         try {
-            ClientController.resetGame();
+            ClientController.sendFindGameRequest();
         } catch (ClientException e) {
             // Сервис работает при запущенном клиенте
         }

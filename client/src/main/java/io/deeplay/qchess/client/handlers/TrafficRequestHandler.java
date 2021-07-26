@@ -28,7 +28,7 @@ public class TrafficRequestHandler {
                         ServerToClientType.ACCEPT_CONNECTION,
                         SessionService::acceptConnection,
                         ServerToClientType.GAME_SETTINGS,
-                        (type, json) -> null, // без запроса игнорируется
+                        GameService::setGameSettings,
                         ServerToClientType.START_GAME,
                         GameService::startGame,
                         ServerToClientType.GAME_ACTION,
