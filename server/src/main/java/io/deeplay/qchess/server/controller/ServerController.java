@@ -9,6 +9,8 @@ public class ServerController {
     private static final IServer server = LocalHost.getInstance();
     private static IServerView view;
 
+    private ServerController(){}
+
     /** Отправляет сообщение View, если view и message не null */
     public static void print(String message) {
         if (view != null && message != null) view.print(message);

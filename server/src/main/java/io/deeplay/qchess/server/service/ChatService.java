@@ -9,6 +9,8 @@ import io.deeplay.qchess.server.exceptions.ServerException;
 
 public class ChatService {
 
+    private ChatService(){}
+
     public static String incomingMessage(ClientToServerType type, String json, int clientId)
             throws SerializationException {
         assert type.getDTO() == ChatMessageDTO.class;

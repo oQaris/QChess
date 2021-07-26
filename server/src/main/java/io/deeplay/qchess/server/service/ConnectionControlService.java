@@ -13,6 +13,8 @@ import java.util.UUID;
 
 public class ConnectionControlService {
 
+    private ConnectionControlService(){}
+
     public static String getJsonToDisconnect(String reason) {
         return SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason));
     }
