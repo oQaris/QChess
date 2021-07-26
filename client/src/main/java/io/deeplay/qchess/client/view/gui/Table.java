@@ -106,6 +106,8 @@ public class Table extends Frame {
         this.frame.remove(boardPanel);
         this.boardPanel = new BoardPanel();
         this.frame.add(boardPanel, BorderLayout.CENTER);
+        this.frame.validate();
+        this.frame.repaint();
     }
 
     public void repaint() {
@@ -311,6 +313,7 @@ public class Table extends Frame {
                     ImageIcon icon =
                             new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
                     JLabel label = new JLabel(icon);
+                    this.removeAll();
                     this.add(label);
 
                 } catch (IOException | NullPointerException e) {

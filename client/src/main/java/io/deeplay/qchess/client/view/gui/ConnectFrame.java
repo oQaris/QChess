@@ -92,11 +92,13 @@ public class ConnectFrame extends Frame {
                             ClientController.waitForAcceptConnection();
                             boolean color = true;
                             GameService.initGame(color);
-                            ClientController.sendFindGameRequest();
+
                             frame.dispose();
 
                             mf.createTable(color);
+                            ClientController.sendFindGameRequest();
                             mf.destroyConnectFrame();
+
                         } catch (ClientException clientException) {
                             System.err.println(clientException.getMessage());
                         }
