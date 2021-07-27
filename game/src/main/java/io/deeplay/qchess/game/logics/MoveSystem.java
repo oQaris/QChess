@@ -36,16 +36,12 @@ public class MoveSystem {
         history = roomSettings.history;
     }
 
-    public Figure move(Move move) throws ChessError {
-        return move(move, board, history);
-    }
-
     /**
      * Делает ход без проверок
      *
      * @return удаленная фигура или null, если ни одну фигуру не взяли
      */
-    public Figure move(Move move, Board board, History history) throws ChessError {
+    public static Figure move(Move move, Board board, History history) throws ChessError {
         try {
             logger.debug("Начато выполнение хода: {}", move);
 
@@ -99,7 +95,7 @@ public class MoveSystem {
     }
 
     /** Отменяет последний ход без проверок */
-    public void undoMove(Board board, History history) throws ChessError {
+    public static void undoMove(Board board, History history) throws ChessError {
         Move move = history.getLastMove();
         boolean hasMoved = history.isHasMovedBeforeLastMove();
         Figure removedFigure = history.getRemovedFigure();
@@ -155,16 +151,102 @@ public class MoveSystem {
         }
     }
 
+    public static List<Move> getAllCorrectMoves(Color color, GameSettings gs) throws ChessError {
+        List<Move> res = new ArrayList<>(64);
+        for (Figure f : gs.board.getFigures(color))
+            for (Move m : f.getAllMoves(gs))
+                if (isCorrectMoveWithoutCheckAvailableMoves(
+                        m, true, gs.endGameDetector, gs.board, gs.history)) res.add(m);
+        return res;
+    }
+
+    /** @return true если ход корректный */
+    private static boolean isCorrectMoveWithoutCheckAvailableMoves(
+            Move move, boolean checkKing, EndGameDetector egd, Board board, History history)
+            throws ChessError {
+        try {
+            return move != null && checkCorrectnessIfSpecificMove(move) && checkKing
+                    ? isCorrectVirtualMove(move, egd, board, history)
+                    : virtualMove(
+                            move,
+                            (figureToMove, virtualKilled) -> !egd.isCheck(figureToMove),
+                            board,
+                            history);
+        } catch (ChessException | NullPointerException e) {
+            logger.warn(
+                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
+                    move,
+                    e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Проверяет специфичные ситуации
+     *
+     * @param move ход для этой фигуры
+     * @return true если move специфичный и корректный либо move не специфичный, иначе false
+     */
+    private static boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
+        // превращение пешки
+        logger.trace("Начата проверка хода {} на превращение", move);
+        if (move.getMoveType() == MoveType.TURN_INTO
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
+            return move.getTurnInto() != null
+                    && (move.getTurnInto() == FigureType.BISHOP
+                            || move.getTurnInto() == FigureType.KNIGHT
+                            || move.getTurnInto() == FigureType.QUEEN
+                            || move.getTurnInto() == FigureType.ROOK);
+        return true;
+    }
+
+    /** @param move корректный ход */
+    private static boolean isCorrectVirtualMove(
+            Move move, EndGameDetector egd, Board board, History history)
+            throws ChessError, ChessException {
+        logger.trace("Начата проверка виртуального хода {}", move);
+        return virtualMove(
+                move,
+                (figureToMove, virtualKilled) -> {
+                    if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
+                        logger.error("Срубили короля при проверке виртуального хода {}", move);
+                        throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
+                    }
+                    return !egd.isCheck(figureToMove);
+                },
+                board,
+                history);
+    }
+
+    /**
+     * Опасно! Выполняет ходы без проверки
+     *
+     * @param move Виртуальный ход.
+     * @param func Функция, выполняемая после виртуального хода.
+     * @return Результат функции func.
+     * @throws ChessException Если выбрасывается в функции func.
+     * @throws ChessError Если выбрасывается в функции func.
+     */
+    public static <T> T virtualMove(Move move, ChessMoveFunc<T> func, Board board, History history)
+            throws ChessException, ChessError {
+        logger.trace("Виртуальный ход {}", move);
+        Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
+        Figure virtualKilled = move(move, board, history);
+        T res = func.apply(figureToMove, virtualKilled);
+        undoMove(board, history);
+        return res;
+    }
+
+    public Figure move(Move move) throws ChessError {
+        return move(move, board, history);
+    }
+
     /**
      * @param color цвет фигур
      * @return все возможные ходы
      */
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
-        List<Move> res = new ArrayList<>(64);
-        for (Figure f : board.getFigures(color))
-            for (Move m : f.getAllMoves(roomSettings))
-                if (isCorrectMoveWithoutCheckAvailableMoves(m, true)) res.add(m);
-        return res;
+        return getAllCorrectMoves(color, roomSettings);
     }
 
     public List<Move> getAllCorrectMovesForStalemate(Color color) {
@@ -172,7 +254,8 @@ public class MoveSystem {
         try {
             for (Figure f : board.getFigures(color))
                 for (Move m : f.getAllMoves(roomSettings)) {
-                    if (isCorrectMoveWithoutCheckAvailableMoves(m, false)) res.add(m);
+                    if (isCorrectMoveWithoutCheckAvailableMoves(
+                            m, false, endGameDetector, board, history)) res.add(m);
                 }
         } catch (ChessError ignore) {
         }
@@ -195,26 +278,7 @@ public class MoveSystem {
 
     private boolean isCorrectVirtualMoveForCell(Move move) throws ChessError {
         try {
-            return move != null && isCorrectVirtualMove(move);
-        } catch (ChessException | NullPointerException e) {
-            logger.warn(
-                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
-                    move,
-                    e.getMessage());
-            return false;
-        }
-    }
-
-    /** @return true если ход корректный */
-    private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move, boolean checkKing)
-            throws ChessError {
-        try {
-            return move != null && checkCorrectnessIfSpecificMove(move) && checkKing
-                    ? isCorrectVirtualMove(move)
-                    : virtualMove(
-                            move,
-                            (figureToMove, virtualKilled) ->
-                                    !endGameDetector.isCheck(figureToMove));
+            return move != null && isCorrectVirtualMove(move, endGameDetector, board, history);
         } catch (ChessException | NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
@@ -230,7 +294,7 @@ public class MoveSystem {
             return move != null
                     && checkCorrectnessIfSpecificMove(move)
                     && inAvailableMoves(move)
-                    && isCorrectVirtualMove(move);
+                    && isCorrectVirtualMove(move, endGameDetector, board, history);
         } catch (ChessException | NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
@@ -240,63 +304,12 @@ public class MoveSystem {
         }
     }
 
-    /**
-     * Проверяет специфичные ситуации
-     *
-     * @param move ход для этой фигуры
-     * @return true если move специфичный и корректный либо move не специфичный, иначе false
-     */
-    private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
-        // превращение пешки
-        logger.trace("Начата проверка хода {} на превращение", move);
-        if (move.getMoveType() == MoveType.TURN_INTO
-                || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
-            return move.getTurnInto() != null
-                    && (move.getTurnInto() == FigureType.BISHOP
-                            || move.getTurnInto() == FigureType.KNIGHT
-                            || move.getTurnInto() == FigureType.QUEEN
-                            || move.getTurnInto() == FigureType.ROOK);
-        return true;
-    }
-
     /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move) throws ChessException {
         logger.trace("Начата проверка хода {} на содержание его в доступных ходах", move);
         Figure figure = board.getFigure(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(roomSettings);
         return allMoves.contains(move);
-    }
-
-    /** @param move корректный ход */
-    private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
-        logger.trace("Начата проверка виртуального хода {}", move);
-        return virtualMove(
-                move,
-                (figureToMove, virtualKilled) -> {
-                    if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
-                        logger.error("Срубили короля при проверке виртуального хода {}", move);
-                        throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
-                    }
-                    return !endGameDetector.isCheck(figureToMove);
-                });
-    }
-
-    /**
-     * Опасно! Выполняет ходы без проверки
-     *
-     * @param move Виртуальный ход.
-     * @param func Функция, выполняемая после виртуального хода.
-     * @return Результат функции func.
-     * @throws ChessException Если выбрасывается в функции func.
-     * @throws ChessError Если выбрасывается в функции func.
-     */
-    public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
-        logger.trace("Виртуальный ход {}", move);
-        Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
-        Figure virtualKilled = move(move);
-        T res = func.apply(figureToMove, virtualKilled);
-        undoMove(board, history);
-        return res;
     }
 
     @FunctionalInterface
