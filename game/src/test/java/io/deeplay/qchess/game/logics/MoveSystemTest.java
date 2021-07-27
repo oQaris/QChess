@@ -231,6 +231,7 @@ public class MoveSystemTest {
     @Test
     public void testIsCorrectMove_1() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("e1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("a1")));
         board.setFigure(new Rook(Color.WHITE, Cell.parse("e4")));
 
         Move move1 = new Move(MoveType.QUIET_MOVE, Cell.parse("e4"), Cell.parse("e7"));
@@ -277,6 +278,7 @@ public class MoveSystemTest {
     @Test
     public void testIsCorrectPawnTurnInto_1() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("h1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("a1")));
         board.setFigure(new Pawn(Color.WHITE, Cell.parse("c7")));
 
         Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
@@ -316,6 +318,7 @@ public class MoveSystemTest {
     @Test
     public void testIsCorrectPawnTurnInto_5() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("h1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("a1")));
         board.setFigure(new Pawn(Color.WHITE, Cell.parse("c7")));
 
         // атакующим перемещением
