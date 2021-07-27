@@ -258,4 +258,12 @@ public class ClientController {
             case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.MINIMAX_BOT;
         };
     }
+
+    public static boolean isCheck(boolean color) {
+        return GameGUIAdapterService.isCheck(color);
+    }
+
+    public static ViewCell getKingCell(boolean color) {
+        return GameGUIAdapterService.getKingCell(color);
+    }
 }

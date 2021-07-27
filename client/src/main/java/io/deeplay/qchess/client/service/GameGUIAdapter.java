@@ -85,4 +85,13 @@ public class GameGUIAdapter {
 
         return null;
     }
+
+    public static boolean isCheck(boolean color) {
+        return GameDAO.getGameSettings().endGameDetector.isCheck(color? Color.WHITE : Color.BLACK);
+    }
+
+    public static ViewCell getKingCell(boolean color) {
+        Cell cell = GameDAO.getGameSettings().board.findKing(color? Color.WHITE : Color.BLACK).getCurrentPosition();
+        return new ViewCell(cell.getRow(), cell.getColumn(), false);
+    }
 }
