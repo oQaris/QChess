@@ -45,7 +45,9 @@ public class MoveSystem {
         try {
             logger.debug("Начато выполнение хода: {}", move);
 
-            history.setHasMovedBeforeLastMove(board.getFigure(move.getFrom()).wasMoved());
+            Figure moveFigure = board.getFigureUgly(move.getFrom());
+
+            history.setHasMovedBeforeLastMove(moveFigure.wasMoved());
 
             Figure removedFigure =
                     switch (move.getMoveType()) {
@@ -59,12 +61,9 @@ public class MoveSystem {
                             FigureType turnIntoType = move.getTurnInto();
                             if (turnIntoType == null) turnIntoType = FigureType.QUEEN;
                             Figure turnIntoFigure =
-                                    Figure.build(
-                                            turnIntoType,
-                                            board.getFigure(move.getFrom()).getColor(),
-                                            move.getTo());
+                                    Figure.build(turnIntoType, moveFigure.getColor(), move.getTo());
                             Figure removed = board.moveFigure(move);
-                            board.setFigure(turnIntoFigure);
+                            board.setFigureUgly(turnIntoFigure);
                             yield removed;
                         }
                             // рокировка
@@ -106,7 +105,7 @@ public class MoveSystem {
             Move revertMove = new Move(MoveType.QUIET_MOVE, move.getTo(), move.getFrom());
             history.undo();
 
-            board.moveFigure(revertMove);
+            board.moveFigureUgly(revertMove);
             Figure figureThatMoved = board.getFigureUgly(move.getFrom());
             figureThatMoved.setWasMoved(hasMoved);
 
@@ -118,35 +117,35 @@ public class MoveSystem {
                                     figureThatMoved.getColor().inverse(),
                                     history.getLastMove().getTo());
                     pawn.setWasMoved(true);
-                    board.setFigure(pawn);
+                    board.setFigureUgly(pawn);
                 }
                     // превращение пешки
                 case TURN_INTO, TURN_INTO_ATTACK -> {
                     Pawn pawn = new Pawn(figureThatMoved.getColor(), move.getFrom());
                     pawn.setWasMoved(hasMoved);
-                    board.setFigure(pawn);
-                    if (removedFigure != null) board.setFigure(removedFigure);
+                    board.setFigureUgly(pawn);
+                    if (removedFigure != null) board.setFigureUgly(removedFigure);
                 }
                     // рокировка
                 case SHORT_CASTLING -> {
                     Cell to = move.getFrom().createAdd(new Cell(3, 0));
                     Cell from = move.getFrom().createAdd(new Cell(1, 0));
-                    board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
+                    board.moveFigureUgly(new Move(MoveType.QUIET_MOVE, from, to));
                     board.getFigureUgly(to).setWasMoved(false);
                 }
                 case LONG_CASTLING -> {
                     Cell to = move.getFrom().createAdd(new Cell(-4, 0));
                     Cell from = move.getFrom().createAdd(new Cell(-1, 0));
-                    board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
+                    board.moveFigureUgly(new Move(MoveType.QUIET_MOVE, from, to));
                     board.getFigureUgly(to).setWasMoved(false);
                 }
                 default -> {
-                    if (removedFigure != null) board.setFigure(removedFigure);
+                    if (removedFigure != null) board.setFigureUgly(removedFigure);
                 }
             }
 
             logger.debug("Ход <{}> успешно отменен", move);
-        } catch (ChessException | NullPointerException e) {
+        } catch (NullPointerException e) {
             logger.error("Ошибка при отмене хода: {}", move);
             throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
         }
@@ -288,7 +287,6 @@ public class MoveSystem {
      * @throws ChessError Если выбрасывается в функции func.
      */
     public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
-        // TODO: переделать с измененной историей
         logger.trace("Виртуальный ход {}", move);
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
         Figure virtualKilled = move(move);
