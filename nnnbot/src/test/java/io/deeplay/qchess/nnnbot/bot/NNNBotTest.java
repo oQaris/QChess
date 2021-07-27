@@ -17,28 +17,35 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 5;
+    private static final int COUNT = 50;
+    private static final Object mutexDoneTasks = new Object();
+    private static volatile int doneTasks;
 
     @Test
     public void testGame() {
         ExecutorService executor = Executors.newCachedThreadPool();
         long startTime = System.currentTimeMillis();
         for (int i = 1; i <= COUNT; i++) {
-            // executor.execute(
-            //        () -> {
-            GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new RandomBot(roomSettings, Color.WHITE);
-            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
-            try {
-                Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
-                game.run();
-            } catch (ChessError e) {
-                e.printStackTrace();
-            }
-            //        });
-            logger.info("Game {} complete", i);
+            executor.execute(
+                    () -> {
+                        GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+                        Player firstPlayer = new RandomBot(roomSettings, Color.WHITE);
+                        Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+                        try {
+                            Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
+                            game.run();
+                        } catch (ChessError e) {
+                            e.printStackTrace();
+                        }
+                        synchronized (mutexDoneTasks) {
+                            ++doneTasks;
+                            logger.info("Games completed: {}/{}", doneTasks, COUNT);
+                        }
+                    });
         }
-        logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
+        while (doneTasks != COUNT) Thread.onSpinWait();
+        long timeInSec = (System.currentTimeMillis() - startTime) / 1000;
+        logger.info("Time: {} min {} sec", timeInSec / 60, timeInSec % 60);
         executor.shutdown();
     }
 }
