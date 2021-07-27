@@ -17,13 +17,15 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 50;
+    private static final int COUNT = 2;
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
+
     private static volatile int drawCount;
     private static volatile int drawWithPeaceMoveCount;
     private static volatile int drawWithRepetitions;
     private static volatile int drawWithNotEnoughMaterialForCheckmate;
+
     private static volatile int checkmateToNNNBot;
     private static volatile int checkmateToOpponent;
     private static volatile int stalemateToNNNBot;

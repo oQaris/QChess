@@ -19,14 +19,13 @@ public class NNNBot extends RemotePlayer {
 
     @Override
     public Move getNextMove() throws ChessError {
-        // TODO: реализовать. Реализация из рандомного бота:
-        List<Move> allMoves = ms.getAllCorrectMoves(color);
-        Move move = allMoves.get(new Random().nextInt(allMoves.size()));
-        turnIntoInQueen(move);
-        return move;
+        return getTheBestMove(/* передать что-то */ );
     }
 
-    private void turnIntoInQueen(Move move) {
+    private Move getTheBestMove() throws ChessError {
+        List<Move> allMoves = ms.getAllCorrectMoves(color);
+        Move move = allMoves.get(new Random().nextInt(allMoves.size()));
         if (move.getMoveType() == MoveType.TURN_INTO) move.setTurnInto(FigureType.QUEEN);
+        return move;
     }
 }
