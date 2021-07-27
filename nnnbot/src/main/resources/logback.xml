@@ -3,7 +3,7 @@
   <!-- Вывод на консоль -->
   <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
     <encoder>
-      <pattern>[%d{HH:mm:ss.SSS}] %level [%thread] "%logger{30}" - %msg%n</pattern>
+      <pattern>%msg%n</pattern>
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -58,14 +58,11 @@
     </filter>
   </appender>
 
-  <logger level="info" name="io.deeplay.qchess.game.Selfplay">
+  <logger level="info" name="io.deeplay.qchess.nnnbot.bot.NNNBotTest">
+    <appender-ref ref="STDOUT"/>
     <appender-ref ref="GAME-STATISTICS"/>
   </logger>
 
-  <root level="debug">
-    <appender-ref ref="STDOUT"/>
-    <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
-    <appender-ref ref="FILE-LAST-SESSION-INFO"/>
-  </root>
+  <root level="off"/>
 
 </configuration>

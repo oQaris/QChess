@@ -18,34 +18,107 @@ public class NNNBotTest {
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
     private static final int COUNT = 50;
-    private static final Object mutexDoneTasks = new Object();
+    private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
+    private static volatile int drawCount;
+    private static volatile int drawWithPeaceMoveCount;
+    private static volatile int drawWithRepetitions;
+    private static volatile int drawWithNotEnoughMaterialForCheckmate;
+    private static volatile int checkmateToNNNBot;
+    private static volatile int checkmateToOpponent;
+    private static volatile int stalemateToNNNBot;
+    private static volatile int stalemateToOpponent;
 
     @Test
     public void testGame() {
         ExecutorService executor = Executors.newCachedThreadPool();
         long startTime = System.currentTimeMillis();
+
         for (int i = 1; i <= COUNT; i++) {
-            executor.execute(
-                    () -> {
-                        GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-                        Player firstPlayer = new RandomBot(roomSettings, Color.WHITE);
-                        Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
-                        try {
-                            Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
-                            game.run();
-                        } catch (ChessError e) {
-                            e.printStackTrace();
-                        }
-                        synchronized (mutexDoneTasks) {
-                            ++doneTasks;
-                            logger.info("Games completed: {}/{}", doneTasks, COUNT);
-                        }
-                    });
+            executor.execute(i % 2 == 0 ? new Game(Color.WHITE) : new Game(Color.BLACK));
         }
         while (doneTasks != COUNT) Thread.onSpinWait();
+
         long timeInSec = (System.currentTimeMillis() - startTime) / 1000;
-        logger.info("Time: {} min {} sec", timeInSec / 60, timeInSec % 60);
         executor.shutdown();
+
+        logger.info("<------------------------------------------------------>");
+        logger.info("Time: {} min {} sec", timeInSec / 60, timeInSec % 60);
+        logger.info(
+                "Draw count: {}\n"
+                        + "Draw with peace move count: {}\n"
+                        + "Draw with repetitions: {}\n"
+                        + "Draw with not enough material for checkmate: {}\n"
+                        + "Checkmate to NNNBot: {}\n"
+                        + "Checkmate to opponent: {}\n"
+                        + "Stalemate to NNNBot: {}\n"
+                        + "Stalemate to opponent: {}",
+                drawCount,
+                drawWithPeaceMoveCount,
+                drawWithRepetitions,
+                drawWithNotEnoughMaterialForCheckmate,
+                checkmateToNNNBot,
+                checkmateToOpponent,
+                stalemateToNNNBot,
+                stalemateToOpponent);
+    }
+
+    private static class Game implements Runnable {
+
+        private final Color NNNBotColor;
+        private GameSettings gs;
+        private Selfplay game;
+
+        public Game(Color NNNBotColor) {
+            this.NNNBotColor = NNNBotColor;
+        }
+
+        @Override
+        public void run() {
+            gs = new GameSettings(Board.BoardFilling.STANDARD);
+            Player firstPlayer;
+            Player secondPlayer;
+            if (NNNBotColor == Color.WHITE) {
+                firstPlayer = new NNNBot(gs, Color.WHITE);
+                secondPlayer = new RandomBot(gs, Color.BLACK);
+            } else {
+                firstPlayer = new RandomBot(gs, Color.WHITE);
+                secondPlayer = new NNNBot(gs, Color.BLACK);
+            }
+
+            try {
+                game = new Selfplay(gs, firstPlayer, secondPlayer);
+                game.run();
+            } catch (ChessError e) {
+                e.printStackTrace();
+            }
+
+            synchronized (mutexDoneTask) {
+                ++doneTasks;
+                updateEndGameStatistics();
+                logger.info("Games completed: {}/{}", doneTasks, COUNT);
+            }
+        }
+
+        private void updateEndGameStatistics() {
+            synchronized (mutexDoneTask) {
+                if (gs.endGameDetector.isDraw()) {
+                    ++drawCount;
+                    if (gs.endGameDetector.isDrawWithPeaceMoves()) ++drawWithPeaceMoveCount;
+                    if (gs.endGameDetector.isDrawWithRepetitions()) ++drawWithRepetitions;
+                    if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
+                        ++drawWithNotEnoughMaterialForCheckmate;
+                } else if (gs.endGameDetector.isCheckmate(
+                        game.getCurrentPlayerToMove().getColor())) {
+                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor)
+                        ++checkmateToNNNBot;
+                    else ++checkmateToOpponent;
+                } else {
+                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor)
+                        ++stalemateToNNNBot;
+                    else ++stalemateToOpponent;
+                }
+            }
+        }
     }
 }
