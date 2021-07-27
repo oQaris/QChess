@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -10,7 +10,7 @@
     <version>0.0.1</version>
   </parent>
 
-  <artifactId>QChess-client</artifactId>
+  <artifactId>n-nn-bot</artifactId>
   <version>0.0.1</version>
 
   <build>
@@ -20,7 +20,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>io.deeplay.qchess.client.Main</mainClass>
+              <mainClass>io.deeplay.qchess.nnnbot.Main</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
@@ -43,6 +43,13 @@
   </build>
 
   <dependencies>
+    <!-- Tests -->
+    <dependency>
+      <artifactId>junit</artifactId>
+      <groupId>junit</groupId>
+      <scope>test</scope>
+      <version>4.13.2</version>
+    </dependency>
     <!-- Logger -->
     <dependency>
       <artifactId>slf4j-api</artifactId>
@@ -56,18 +63,7 @@
     </dependency>
     <!-- QChess modules -->
     <dependency>
-      <artifactId>QChess-client-server-conversation</artifactId>
-      <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
-    </dependency>
-    <dependency>
       <artifactId>QChess-game</artifactId>
-      <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
-    </dependency>
-    <!-- NNNBot -->
-    <dependency>
-      <artifactId>n-nn-bot</artifactId>
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>

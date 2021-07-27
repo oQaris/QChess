@@ -16,6 +16,7 @@
     <module>clientserverconversation</module>
     <module>game</module>
     <module>core</module>
+    <module>nnnbot</module>
   </modules>
 
   <properties>
