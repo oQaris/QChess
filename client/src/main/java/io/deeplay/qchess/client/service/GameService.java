@@ -91,7 +91,8 @@ public class GameService {
             case USER -> new RemotePlayer(gs, color, "user");
             case EASYBOT -> new RandomBot(gs, color);
             case MEDIUMBOT -> new AttackBot(gs, color);
-            case HARDBOT -> /*new MinimaxBot(gs, color, 1);*/ new AttackBot(gs, color);
+                // TODO: изменить на создание своего бота
+            case HARDBOT -> new AttackBot(gs, color);
         };
     }
 

@@ -4,6 +4,5 @@ public enum PlayerType {
     CONSOLE_PLAYER,
     GUI_PLAYER,
     RANDOM_BOT,
-    ATTACK_BOT,
-    MINIMAX_BOT
+    ATTACK_BOT
 }

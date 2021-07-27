@@ -54,7 +54,6 @@ public class MatchMaking {
                             case CONSOLE_PLAYER, GUI_PLAYER -> null;
                             case RANDOM_BOT -> new RandomBot(gs, Color.BLACK);
                             case ATTACK_BOT -> new AttackBot(gs, Color.BLACK);
-                            case MINIMAX_BOT -> /*new MinimaxBot(gs, Color.BLACK, 3);*/ new AttackBot(gs, Color.BLACK);
                         };
 
                 if (enemyBot == null && dto.enemyType != PlayerType.GUI_PLAYER) {
