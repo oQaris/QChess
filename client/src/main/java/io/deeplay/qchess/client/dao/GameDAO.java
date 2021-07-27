@@ -24,6 +24,14 @@ public class GameDAO {
         Database.getInstance().setEnemyType(playerType);
     }
 
+    public static void setMyType(PlayerType playerType) {
+        Database.getInstance().setMyType(playerType);
+    }
+
+    public static PlayerType getMyType() {
+        return Database.getInstance().getMyType();
+    }
+
     public static GameSettings getGameSettings() {
         return Database.getInstance().getGameSettings();
     }

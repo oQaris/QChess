@@ -12,6 +12,7 @@ public class Database {
     private GameSettings gs;
     private boolean isGameStarted;
     private PlayerType playerType;
+    private PlayerType myType;
     private Color myColor;
 
     private Database() {}
@@ -41,6 +42,14 @@ public class Database {
 
     public void setEnemyType(PlayerType playerType) {
         this.playerType = playerType;
+    }
+
+    public void setMyType(PlayerType playerType) {
+        this.myType = playerType;
+    }
+
+    public PlayerType getMyType() {
+        return myType;
     }
 
     public GameSettings getGameSettings() {

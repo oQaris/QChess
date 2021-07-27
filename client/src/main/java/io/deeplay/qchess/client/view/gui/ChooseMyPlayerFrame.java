@@ -58,23 +58,23 @@ public class ChooseMyPlayerFrame extends Frame {
         JButton continueButton = new JButton("Продолжить");
 
         continueButton.addMouseListener(
-            new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    super.mousePressed(e);
-                    PlayerType myType = null;
-                    for (JRadioButton rb : rbs.keySet()) {
-                        if (rb.isSelected()) {
-                            myType = rbs.get(rb);
-                            break;
+                new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        super.mousePressed(e);
+                        PlayerType myType = null;
+                        for (JRadioButton rb : rbs.keySet()) {
+                            if (rb.isSelected()) {
+                                myType = rbs.get(rb);
+                                break;
+                            }
                         }
-                    }
 
-                    ClientController.chooseMyType(myType);
-                    mf.createChoosePlayerFrame(myType);
-                    mf.destroyChooseMyPlayerFrame();
-                }
-            });
+                        ClientController.chooseMyType(myType);
+                        mf.createChoosePlayerFrame(myType);
+                        mf.destroyChooseMyPlayerFrame();
+                    }
+                });
 
         return continueButton;
     }

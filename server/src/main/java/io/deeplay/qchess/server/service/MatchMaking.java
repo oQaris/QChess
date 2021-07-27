@@ -22,7 +22,7 @@ import io.deeplay.qchess.server.exceptions.ServerException;
 /** Управляет подбором игр по предпочитаемым настройкам */
 public class MatchMaking {
 
-    private MatchMaking(){}
+    private MatchMaking() {}
 
     public static String findGame(ClientToServerType type, String json, int clientId)
             throws SerializationException {

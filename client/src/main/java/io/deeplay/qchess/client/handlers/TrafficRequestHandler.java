@@ -64,7 +64,7 @@ public class TrafficRequestHandler {
         } catch (NullPointerException e) {
             logger.warn("Получен неизвестный запрос от сервера: {}", jsonServerRequest);
             throw e;
-            //return null;
+            // return null;
         }
     }
 

@@ -13,7 +13,7 @@ public class StatisticService {
     /** Записывает результат игры в файл */
     public static synchronized void writeEndGameStats(int roomId, int gameId, String result) {
         MDC.put("path", roomId + "/" + "games_result");
-        //logger.info("{} - {}", gameId, result);
+        // logger.info("{} - {}", gameId, result);
         logger.info(result);
     }
 

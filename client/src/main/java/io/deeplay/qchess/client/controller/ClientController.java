@@ -163,7 +163,6 @@ public class ClientController {
                         rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));
         view.drawBoard();
         GameService.sendMove(move);
-        GameService.checkEndGame();
     }
 
     // TODO: добавить javadoc
@@ -196,7 +195,11 @@ public class ClientController {
     }
 
     public static void chooseMyType(PlayerType playerType) {
-        // TODO: выбор КЕМ играть
+        GameDAO.setMyType(playerType);
+    }
+
+    public static void botMove() {
+        GameService.botMove();
     }
 
     public static void closeGame(String reason) {
@@ -219,17 +222,15 @@ public class ClientController {
         client.sendIfNotNull(
                 SerializationService.makeMainDTOJsonToServer(
                         new FindGameDTO(
-                                SessionDAO.getSessionToken(),
-                                switch (GameDAO.getEnemyType()) {
-                                    case USER -> io.deeplay.qchess.game.player.PlayerType
-                                            .REMOTE_PLAYER;
-                                    case EASYBOT -> io.deeplay.qchess.game.player.PlayerType
-                                            .RANDOM_BOT;
-                                    case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType
-                                            .ATTACK_BOT;
-                                    case HARDBOT -> io.deeplay.qchess.game.player.PlayerType
-                                            .MINIMAX_BOT;
-                                },
-                                2)));
+                                SessionDAO.getSessionToken(), getType(GameDAO.getEnemyType()), 2)));
+    }
+
+    private static io.deeplay.qchess.game.player.PlayerType getType(PlayerType pt) {
+        return switch (pt) {
+            case USER -> io.deeplay.qchess.game.player.PlayerType.REMOTE_PLAYER;
+            case EASYBOT -> io.deeplay.qchess.game.player.PlayerType.RANDOM_BOT;
+            case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
+            case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.MINIMAX_BOT;
+        };
     }
 }

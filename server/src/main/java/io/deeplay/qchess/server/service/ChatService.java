@@ -9,7 +9,7 @@ import io.deeplay.qchess.server.exceptions.ServerException;
 
 public class ChatService {
 
-    private ChatService(){}
+    private ChatService() {}
 
     public static String incomingMessage(ClientToServerType type, String json, int clientId)
             throws SerializationException {

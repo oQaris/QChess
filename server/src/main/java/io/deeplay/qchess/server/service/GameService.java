@@ -65,15 +65,7 @@ public class GameService {
             Integer opponentID = ConnectionControlDAO.getId(opponentToken);
 
             if (opponentID != null && !room.isFinished()) {
-                try {
-                    ServerController.send(
-                            SerializationService.makeMainDTOJsonToClient(
-                                    new EndGameDTO("Оппонент покинул игру, вы победили!")),
-                            opponentID);
-                } catch (ServerException ignore) {
-                    // Сервис работает при открытом сервере
-                }
-                sendDisconnect(opponentID);
+                sendEndGameAndDisconnect("Оппонент покинул игру, вы победили!", opponentID);
             }
             room.resetRoom();
         }
@@ -152,25 +144,35 @@ public class GameService {
 
             if (room.getGameCount() >= room.getMaxGames()) {
                 if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                    sendDisconnect(ConnectionControlDAO.getId(player1.getSessionToken()));
+                    sendEndGameAndDisconnect(
+                            room.getEndGameStatus(),
+                            ConnectionControlDAO.getId(player1.getSessionToken()));
                 if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                    sendDisconnect(ConnectionControlDAO.getId(player2.getSessionToken()));
+                    sendEndGameAndDisconnect(
+                            room.getEndGameStatus(),
+                            ConnectionControlDAO.getId(player2.getSessionToken()));
 
                 room.resetRoom();
             } else {
                 if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                    sendResetRoom(ConnectionControlDAO.getId(player1.getSessionToken()));
+                    sendResetRoom(
+                            room.getEndGameStatus(),
+                            ConnectionControlDAO.getId(player1.getSessionToken()));
                 if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
-                    sendResetRoom(ConnectionControlDAO.getId(player2.getSessionToken()));
+                    sendResetRoom(
+                            room.getEndGameStatus(),
+                            ConnectionControlDAO.getId(player2.getSessionToken()));
 
                 room.resetGame();
             }
         }
     }
 
-    private static void sendResetRoom(Integer clientId) {
+    private static void sendResetRoom(String reason, Integer clientId) {
         if (clientId == null) return;
         try {
+            ServerController.send(
+                    SerializationService.makeMainDTOJsonToClient(new EndGameDTO(reason)), clientId);
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(new ResetGameDTO()), clientId);
         } catch (ServerException ignore) {
@@ -178,9 +180,11 @@ public class GameService {
         }
     }
 
-    private static void sendDisconnect(Integer clientId) {
+    private static void sendEndGameAndDisconnect(String reason, Integer clientId) {
         if (clientId == null) return;
         try {
+            ServerController.send(
+                    SerializationService.makeMainDTOJsonToClient(new EndGameDTO(reason)), clientId);
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(
                             new DisconnectedDTO("Игра окончена")),

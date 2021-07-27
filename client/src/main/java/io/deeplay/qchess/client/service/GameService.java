@@ -44,7 +44,8 @@ public class GameService {
             throws SerializationException {
         assert type.getDTO() == EndGameDTO.class;
         EndGameDTO dto = SerializationService.serverToClientDTORequest(json, EndGameDTO.class);
-        ClientController.closeGame(dto.reason);
+
+        ClientController.showMessage(dto.reason);
         return null;
     }
 
@@ -63,22 +64,15 @@ public class GameService {
 
     public static void initGame(boolean color) {
         GameSettings gs = new GameSettings(BoardFilling.STANDARD);
-        Player enemy =
-                switch (GameDAO.getEnemyType()) {
-                    case USER -> new RemotePlayer(gs, color ? Color.BLACK : Color.WHITE, "enemy");
-                    case EASYBOT -> new RandomBot(gs, color ? Color.BLACK : Color.WHITE);
-                    case MEDIUMBOT -> new AttackBot(gs, color ? Color.BLACK : Color.WHITE);
-                    case HARDBOT -> new MinimaxBot(gs, color ? Color.BLACK : Color.WHITE, 1);
-                };
         try {
             Player player1;
             Player player2;
             if (color) {
-                player1 = new RemotePlayer(gs, Color.WHITE, "me");
-                player2 = enemy;
+                player1 = getRemotePlayer(GameDAO.getMyType(), gs, Color.WHITE);
+                player2 = getRemotePlayer(GameDAO.getEnemyType(), gs, Color.BLACK);
             } else {
-                player1 = enemy;
-                player2 = new RemotePlayer(gs, Color.BLACK, "me");
+                player1 = getRemotePlayer(GameDAO.getEnemyType(), gs, Color.WHITE);
+                player2 = getRemotePlayer(GameDAO.getMyType(), gs, Color.BLACK);
             }
             Selfplay game = new Selfplay(gs, player1, player2);
             GameDAO.newGame(gs, game, color ? Color.WHITE : Color.BLACK);
@@ -87,29 +81,13 @@ public class GameService {
         }
     }
 
-    /** Возвращает статус конца игры для следующего игрока или null, если игра еще не окончена */
-    public static String getEndGameStatus() {
-        Color color = GameDAO.getGame().getCurrentPlayerToMove().getColor();
-        if (GameDAO.getGameSettings().endGameDetector.isDraw()) {
-            if (GameDAO.getGameSettings().endGameDetector.isDrawWithPeaceMoves()) {
-                return String.format(
-                        "Ничья: %d ходов без взятия и хода пешки",
-                        EndGameDetector.END_PEACE_MOVE_COUNT);
-            } else if (GameDAO.getGameSettings().endGameDetector.isDrawWithRepetitions()) {
-                return String.format(
-                        "Ничья: %d повторений позиций доски",
-                        EndGameDetector.END_REPETITIONS_COUNT);
-            } else if (GameDAO.getGameSettings()
-                    .endGameDetector
-                    .isDrawWithNotEnoughMaterialForCheckmate()) {
-                return "Ничья: недостаточно фигур, чтобы поставить мат";
-            }
-        } else if (GameDAO.getGameSettings().endGameDetector.isCheckmate(color)) {
-            return "Мат " + (color == Color.BLACK ? "черным" : "белым");
-        } else if (GameDAO.getGameSettings().endGameDetector.isStalemate(color)) {
-            return "Пат " + (color == Color.BLACK ? "черным" : "белым");
-        }
-        return null;
+    private static RemotePlayer getRemotePlayer(PlayerType pt, GameSettings gs, Color color) {
+        return switch (pt) {
+            case USER -> new RemotePlayer(gs, color, "user");
+            case EASYBOT -> new RandomBot(gs, color);
+            case MEDIUMBOT -> new AttackBot(gs, color);
+            case HARDBOT -> new MinimaxBot(gs, color, 1);
+        };
     }
 
     public static String startGame(ServerToClientType type, String json) {
@@ -130,7 +108,6 @@ public class GameService {
                 dto.move.getTurnInto());
 
         ClientController.drawBoard();
-        checkEndGame();
         return null;
     }
 
@@ -163,13 +140,14 @@ public class GameService {
         return null;
     }
 
-    /**
-     * Проверяет и заканчивает игру (но не выходит из комнаты), если игрок, чей ход текущий,
-     * проиграл
-     */
-    public static void checkEndGame() {
-        if (GameService.getEndGameStatus() != null) {
-            ClientController.showMessage(GameService.getEndGameStatus());
+    public static void botMove() {
+        try {
+            Move move = GameDAO.getGame().getCurrentPlayerToMove().getNextMove();
+            GameDAO.getGame().move(move);
+            ClientController.drawBoard();
+            sendMove(move);
+        } catch (ChessError | ClientException ignore) {
+            // В боте нет ошибок (?)
         }
     }
 

@@ -25,7 +25,9 @@ public class SessionService {
         assert type.getDTO() == DisconnectedDTO.class;
         DisconnectedDTO dto =
                 SerializationService.serverToClientDTORequest(json, DisconnectedDTO.class);
+
         try {
+            ClientController.closeGame(dto.reason);
             ClientController.disconnect("Сервер разорвал соединение: " + dto.reason);
         } catch (ClientException ignore) {
             // Сервис вызывается только после подключения

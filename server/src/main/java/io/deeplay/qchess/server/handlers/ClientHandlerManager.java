@@ -1,5 +1,6 @@
 package io.deeplay.qchess.server.handlers;
 
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.DisconnectedDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.server.controller.ServerController;
@@ -91,6 +92,9 @@ public class ClientHandlerManager extends Thread {
                     clientHandler.sendIfNotNull(
                             SerializationService.makeMainDTOJsonToClient(
                                     new EndGameDTO("Сервер закрыт.")));
+                    clientHandler.sendIfNotNull(
+                            SerializationService.makeMainDTOJsonToClient(
+                                    new DisconnectedDTO("Сервер закрыт.")));
                     clientHandler.terminate();
                 }
         }

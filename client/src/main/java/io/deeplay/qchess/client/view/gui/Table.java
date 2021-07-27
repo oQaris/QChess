@@ -15,7 +15,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,9 +28,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
@@ -90,8 +86,9 @@ public class Table extends Frame {
                     new KeyAdapter() {
                         @Override
                         public void keyPressed(KeyEvent e) {
-                            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                //бот ходить
+                            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                                // бот ходить
+                                ClientController.botMove();
                             }
                         }
                     });
