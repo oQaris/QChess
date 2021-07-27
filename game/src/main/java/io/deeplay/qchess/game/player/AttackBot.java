@@ -67,6 +67,8 @@ public class AttackBot extends RemotePlayer {
     }
 
     protected void turnIntoInQueen(Move move) {
-        if (move.getMoveType() == MoveType.TURN_INTO) move.setTurnInto(FigureType.QUEEN);
+        if (move.getMoveType() == MoveType.TURN_INTO
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
+            move.setTurnInto(FigureType.QUEEN);
     }
 }
