@@ -26,6 +26,10 @@ public class History {
     private final Deque<BoardState> recordsList = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
 
     private Move lastMove;
+    private boolean hasMovedBeforeLastMove;
+    /** Исключая пешку при взятии на проходе */
+    private Figure removedFigure;
+
     private int peaceMoveCount = 0;
 
     private boolean isWhiteCastlingPossibility = true;
@@ -55,13 +59,31 @@ public class History {
         this.lastMove = lastMove;
 
         String rec = convertBoardToStringForsythEdwards();
-        BoardState boardState = new BoardState(rec, lastMove, peaceMoveCount);
+        BoardState boardState =
+                new BoardState(
+                        rec, lastMove, peaceMoveCount, hasMovedBeforeLastMove, removedFigure);
         recordsList.push(boardState);
 
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
         logger.debug("Запись <{}> добавлена в историю", rec);
 
         return rec;
+    }
+
+    public boolean isHasMovedBeforeLastMove() {
+        return hasMovedBeforeLastMove;
+    }
+
+    public void setHasMovedBeforeLastMove(boolean hasMoved) {
+        hasMovedBeforeLastMove = hasMoved;
+    }
+
+    public Figure getRemovedFigure() {
+        return removedFigure;
+    }
+
+    public void setRemovedFigure(Figure removedFigure) {
+        this.removedFigure = removedFigure;
     }
 
     public void checkAndAddPeaceMoveCount(Move move) throws ChessException {
@@ -186,7 +208,9 @@ public class History {
      */
     public BoardState undo() {
         BoardState lastBoardState = recordsList.pop();
-        assert recordsList.peek() != null;
+        if (recordsList.peek() == null) return lastBoardState;
+        hasMovedBeforeLastMove = recordsList.peek().hasMovedBeforeLastMove;
+        removedFigure = recordsList.peek().removedFigure;
         lastMove = recordsList.peek().lastMove;
         peaceMoveCount = recordsList.peek().peaceMoveCount;
         repetitionsMap.put(lastBoardState, repetitionsMap.getOrDefault(lastBoardState, 1) - 1);
@@ -199,6 +223,8 @@ public class History {
      * @param boardState ход, который станет последним
      */
     public void redo(BoardState boardState) {
+        hasMovedBeforeLastMove = boardState.hasMovedBeforeLastMove;
+        removedFigure = boardState.removedFigure;
         lastMove = boardState.lastMove;
         peaceMoveCount = boardState.peaceMoveCount;
         recordsList.push(boardState);

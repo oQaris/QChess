@@ -16,6 +16,7 @@ import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
 import java.lang.reflect.Field;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -230,6 +231,7 @@ public class MoveSystemTest {
     @Test
     public void testIsCorrectMove_1() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("e1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("a1")));
         board.setFigure(new Rook(Color.WHITE, Cell.parse("e4")));
 
         Move move1 = new Move(MoveType.QUIET_MOVE, Cell.parse("e4"), Cell.parse("e7"));
@@ -276,6 +278,7 @@ public class MoveSystemTest {
     @Test
     public void testIsCorrectPawnTurnInto_1() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("h1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("a1")));
         board.setFigure(new Pawn(Color.WHITE, Cell.parse("c7")));
 
         Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
@@ -315,6 +318,7 @@ public class MoveSystemTest {
     @Test
     public void testIsCorrectPawnTurnInto_5() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("h1")));
+        board.setFigure(new King(Color.BLACK, Cell.parse("a1")));
         board.setFigure(new Pawn(Color.WHITE, Cell.parse("c7")));
 
         // атакующим перемещением
@@ -453,5 +457,29 @@ public class MoveSystemTest {
         Assert.assertNull(board.getFigure(Cell.parse("a1")));
         Assert.assertEquals(king, board.getFigure(Cell.parse("c1")));
         Assert.assertEquals(rook, board.getFigure(Cell.parse("d1")));
+    }
+
+    @Test
+    public void testMove_EN_PASSANT_illegal() throws ChessException, ChessError {
+        Figure king = new King(Color.BLACK, Cell.parse("a4"));
+        Figure pawn = new Pawn(Color.BLACK, Cell.parse("d4"));
+        pawn.setWasMoved(true);
+        Figure king2 = new King(Color.WHITE, Cell.parse("h8"));
+        Figure pawn2 = new Pawn(Color.WHITE, Cell.parse("e4"));
+        Figure rook = new Rook(Color.WHITE, Cell.parse("h4"));
+        board.setFigure(king);
+        board.setFigure(pawn);
+        board.setFigure(king2);
+        board.setFigure(pawn2);
+        board.setFigure(rook);
+
+        Move move = new Move(MoveType.LONG_MOVE, Cell.parse("e2"), Cell.parse("e4"));
+        gameSettings.history.addRecord(move);
+
+        List<Move> list = ms.getAllCorrectMoves(Cell.parse("d4"));
+        List<Move> expected =
+                List.of(new Move(MoveType.QUIET_MOVE, Cell.parse("d4"), Cell.parse("d3")));
+
+        Assert.assertEquals(expected, list);
     }
 }

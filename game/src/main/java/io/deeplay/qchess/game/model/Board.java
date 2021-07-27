@@ -148,6 +148,12 @@ public class Board {
         logger.trace("Фигура {} установлена на доску", figure);
     }
 
+    /** Устанавливает фигуру на доску БЕЗ ПРОВЕРОК */
+    public void setFigureUgly(Figure figure) {
+        cells[figure.getCurrentPosition().getRow()][figure.getCurrentPosition().getColumn()] =
+                figure;
+    }
+
     /**
      * @param color цвет игрока
      * @return фигуры определенного цвета
@@ -215,6 +221,14 @@ public class Board {
         return figureTo;
     }
 
+    /** Перемещает фигуру без проверок и установки флагов перемещения */
+    public void moveFigureUgly(Move move) {
+        Figure figureFrom = getFigureUgly(move.getFrom());
+        figureFrom.setCurrentPosition(move.getTo());
+        setFigureUgly(figureFrom);
+        removeFigureUgly(move.getFrom());
+    }
+
     /**
      * @return фигура или null, если клетка пуста
      * @throws ChessException если клетка не лежит в пределах доски
@@ -253,6 +267,11 @@ public class Board {
         Figure old = cells[y][x];
         cells[y][x] = null;
         return old;
+    }
+
+    /** Убирает фигуру с доски БЕЗ ПРОВЕРОК */
+    public void removeFigureUgly(Cell cell) {
+        cells[cell.getRow()][cell.getColumn()] = null;
     }
 
     /** @return true, если клетка лежит на доске и она пустая, иначе false */
