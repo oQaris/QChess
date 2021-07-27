@@ -86,12 +86,18 @@ public class GameGUIAdapter {
         return null;
     }
 
+    /** @return true, если королю цвета color поставили шах */
     public static boolean isCheck(boolean color) {
-        return GameDAO.getGameSettings().endGameDetector.isCheck(color? Color.WHITE : Color.BLACK);
+        return GameDAO.getGameSettings().endGameDetector.isCheck(color ? Color.WHITE : Color.BLACK);
     }
 
+    /** @return клетка короля цвета color */
     public static ViewCell getKingCell(boolean color) {
-        Cell cell = GameDAO.getGameSettings().board.findKing(color? Color.WHITE : Color.BLACK).getCurrentPosition();
+        Cell cell =
+                GameDAO.getGameSettings()
+                        .board
+                        .findKing(color ? Color.WHITE : Color.BLACK)
+                        .getCurrentPosition();
         return new ViewCell(cell.getRow(), cell.getColumn(), false);
     }
 }

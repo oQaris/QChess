@@ -48,10 +48,10 @@ public class Table extends Frame {
     private static final Color hoverCellColor = Color.CYAN;
     private static final String defaultFigureImagesPath = "/art/figures";
     private static final String[] figures = {"Ферзь", "Ладья", "Конь", "Слон"};
-    private BoardPanel boardPanel;
     private final String figureStyle;
-    private boolean myColor;
     private final Set<Integer> taggedCells = new HashSet<>();
+    private BoardPanel boardPanel;
+    private boolean myColor;
     private int clickedCell;
 
     public Table(String figureStyle, boolean myColor, MainFrame mf) {
@@ -157,11 +157,11 @@ public class Table extends Frame {
             validate();
             super.repaint();
 
-
             ViewCell cell = null;
-            if(ClientController.isCheck(myColor)) {
+            if (ClientController.isCheck(myColor)) {
                 cell = ClientController.getKingCell(myColor);
-                boardCells.get(cell.getRow() * BOARD_SIZE + cell.getColumn()).cellColor = attackCellColor;
+                boardCells.get(cell.getRow() * BOARD_SIZE + cell.getColumn()).cellColor =
+                        attackCellColor;
                 boardCells.get(cell.getRow() * BOARD_SIZE + cell.getColumn()).assignCellColor();
             }
         }
@@ -178,9 +178,10 @@ public class Table extends Frame {
             this.boardPanel = boardPanel;
             this.setPreferredSize(Table.CELL_PANEL_DIMENSION);
 
-            cellColor = (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
-                ? Table.lightCellColor
-                : Table.darkCellColor;
+            cellColor =
+                    (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
+                            ? Table.lightCellColor
+                            : Table.darkCellColor;
 
             this.assignCellColor();
             this.assignCellFigureIcon();
@@ -340,9 +341,10 @@ public class Table extends Frame {
         }
 
         private void drawCell() {
-            cellColor = (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
-                ? Table.lightCellColor
-                : Table.darkCellColor;
+            cellColor =
+                    (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
+                            ? Table.lightCellColor
+                            : Table.darkCellColor;
             assignCellColor();
             assignCellFigureIcon();
             validate();

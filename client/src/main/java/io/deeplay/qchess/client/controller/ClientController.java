@@ -259,11 +259,13 @@ public class ClientController {
         };
     }
 
+    /** @return true, если королю цвета color поставили шах */
     public static boolean isCheck(boolean color) {
-        return GameGUIAdapterService.isCheck(color);
+        return GameGUIAdapter.isCheck(color);
     }
 
+    /** @return клетка короля цвета color */
     public static ViewCell getKingCell(boolean color) {
-        return GameGUIAdapterService.getKingCell(color);
+        return GameGUIAdapter.getKingCell(color);
     }
 }
