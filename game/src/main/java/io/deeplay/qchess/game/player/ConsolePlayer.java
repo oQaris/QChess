@@ -83,7 +83,8 @@ public class ConsolePlayer extends RemotePlayer {
     }
 
     private void specificMoveModification(Move chosenMove) throws ChessError {
-        if (chosenMove.getMoveType() == MoveType.TURN_INTO) {
+        if (chosenMove.getMoveType() == MoveType.TURN_INTO
+                || chosenMove.getMoveType() == MoveType.TURN_INTO_ATTACK) {
             System.out.println(TURN_INTO_INVITE);
             chosenMove.setTurnInto(readTurnInto());
         }

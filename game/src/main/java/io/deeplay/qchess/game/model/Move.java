@@ -28,6 +28,13 @@ public class Move {
         this.to = to;
     }
 
+    public Move(Move move, FigureType type) {
+        this.moveType = move.moveType;
+        this.from = move.from;
+        this.to = move.to;
+        this.turnInto = type;
+    }
+
     public FigureType getTurnInto() {
         return turnInto;
     }
@@ -83,7 +90,8 @@ public class Move {
                         .append(" (")
                         .append(moveType)
                         .append(")");
-        if (moveType == MoveType.TURN_INTO) sb.append(" turn into ").append(turnInto);
+        if (moveType == MoveType.TURN_INTO || moveType == MoveType.TURN_INTO_ATTACK)
+            sb.append(" turn into ").append(turnInto);
         return sb.toString();
     }
 }
