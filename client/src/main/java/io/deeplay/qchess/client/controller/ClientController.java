@@ -227,7 +227,7 @@ public class ClientController {
 
     private static io.deeplay.qchess.game.player.PlayerType getType(PlayerType pt) {
         return switch (pt) {
-            case USER -> io.deeplay.qchess.game.player.PlayerType.REMOTE_PLAYER;
+            case USER -> io.deeplay.qchess.game.player.PlayerType.GUI_PLAYER;
             case EASYBOT -> io.deeplay.qchess.game.player.PlayerType.RANDOM_BOT;
             case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
             case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.MINIMAX_BOT;

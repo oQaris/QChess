@@ -14,7 +14,6 @@ import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
