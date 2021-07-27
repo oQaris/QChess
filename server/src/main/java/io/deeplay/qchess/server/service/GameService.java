@@ -154,16 +154,20 @@ public class GameService {
 
                 room.resetRoom();
             } else {
-                if (player1.getPlayerType() == PlayerType.GUI_PLAYER)
-                    sendResetRoom(
-                            room.getEndGameStatus(),
-                            ConnectionControlDAO.getId(player1.getSessionToken()));
-                if (player2.getPlayerType() == PlayerType.GUI_PLAYER)
-                    sendResetRoom(
-                            room.getEndGameStatus(),
-                            ConnectionControlDAO.getId(player2.getSessionToken()));
+                status = room.getEndGameStatus();
 
                 room.resetGame();
+
+                if (player2.getPlayerType() != PlayerType.GUI_PLAYER) {
+                    move = player2.getNextMove();
+                    room.move(move);
+                    StatisticService.writeMoveStats(room.id, room.getGameCount(), move);
+                }
+
+                if (player1.getPlayerType() == PlayerType.GUI_PLAYER)
+                    sendResetRoom(status, ConnectionControlDAO.getId(player1.getSessionToken()));
+                if (player2.getPlayerType() == PlayerType.GUI_PLAYER)
+                    sendResetRoom(status, ConnectionControlDAO.getId(player2.getSessionToken()));
             }
         }
     }

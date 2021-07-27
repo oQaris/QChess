@@ -35,6 +35,13 @@ public class GameService {
                 SerializationService.serverToClientDTORequest(json, GameSettingsDTO.class);
 
         initGame(dto.color == Color.WHITE);
+        if (dto.botMove != null) {
+            try {
+                GameDAO.getGame().move(dto.botMove);
+            } catch (ChessError chessError) {
+                // TODO: Ошибка в игре
+            }
+        }
         ClientController.resetMyColorOnBoard(dto.color);
         return null;
     }

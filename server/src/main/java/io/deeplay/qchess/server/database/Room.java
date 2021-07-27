@@ -54,6 +54,12 @@ public class Room {
         }
     }
 
+    public GameSettings getGameSettings() {
+        synchronized (mutex) {
+            return gs;
+        }
+    }
+
     public boolean isStarted() {
         synchronized (mutex) {
             return game != null;
