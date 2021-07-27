@@ -14,6 +14,7 @@ public class Database {
     /** sessionToken -> id */
     private final Map<String, Integer> clients;
 
+    /** Не поддерживает потокобезопасное заполнение/удаление комнат TODO this (?) */
     private final List<Room> rooms;
 
     private Database() {
@@ -26,14 +27,21 @@ public class Database {
         return database;
     }
 
+    /** Добавляет sessionToken к подключенным id клиентов */
     public void addPlayer(String sessionToken, int clientId) {
         clients.put(sessionToken, clientId);
     }
 
+    /** @return true, если токен есть в списке подключенных клиентов */
     public boolean contains(String sessionToken) {
         return sessionToken != null && clients.containsKey(sessionToken);
     }
 
+    /**
+     * Удаляет sessionToken из подключенных id клиентов
+     *
+     * <p>TODO: не удаляет из id в менеджере обработчиков
+     */
     public void removePlayer(String sessionToken) {
         if (sessionToken != null) clients.remove(sessionToken);
     }

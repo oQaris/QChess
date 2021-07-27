@@ -21,6 +21,7 @@ public interface IClientView extends Closeable {
     /** @return доска */
     ViewBoard getBoard();
 
+    /** Закрывает View клиента и отключается от сервера */
     void closeGame(String reason);
 
     /**

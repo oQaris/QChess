@@ -117,6 +117,11 @@ public class GameService {
         return null;
     }
 
+    /**
+     * Делает ход
+     *
+     * @return сделанный ход или null TODO: null ? why ????????????
+     */
     public static Move makeMove(
             int rowFrom, int columnFrom, int rowTo, int columnTo, FigureType figureType) {
         Cell from = new Cell(columnFrom, rowFrom);
@@ -146,6 +151,7 @@ public class GameService {
         return null;
     }
 
+    /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
     public static void botMove() {
         try {
             Move move = GameDAO.getGame().getCurrentPlayerToMove().getNextMove();

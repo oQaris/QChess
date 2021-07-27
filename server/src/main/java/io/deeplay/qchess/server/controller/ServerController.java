@@ -5,6 +5,7 @@ import io.deeplay.qchess.server.LocalHost;
 import io.deeplay.qchess.server.exceptions.ServerException;
 import io.deeplay.qchess.server.view.IServerView;
 
+/** Нужен для связи: View <-> Controller <-> Model */
 public class ServerController {
     private static final IServer server = LocalHost.getInstance();
     private static IServerView view;

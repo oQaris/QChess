@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** Обрабатывает входящий трафик от сервера */
 public class InputTrafficHandler extends Thread {
     private static final Logger logger = LoggerFactory.getLogger(InputTrafficHandler.class);
     private final Socket socket;

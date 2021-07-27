@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GameGUIAdapterService {
+public class GameGUIAdapter {
 
     public static Set<ViewCell> getAllMoves(int row, int column) {
         Cell cell = new Cell(column, row);

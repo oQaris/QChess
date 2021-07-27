@@ -5,7 +5,7 @@ import io.deeplay.qchess.client.LocalClient;
 import io.deeplay.qchess.client.dao.GameDAO;
 import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.client.service.GameGUIAdapterService;
+import io.deeplay.qchess.client.service.GameGUIAdapter;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.PlayerType;
@@ -21,6 +21,7 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.Set;
 
+/** Нужен для связи: View <-> Controller <-> Model */
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
     private static IClientView view;
@@ -98,7 +99,12 @@ public class ClientController {
         client.setIp(ip);
     }
 
-    // TODO: javadoc
+    /**
+     * Блокирует поток и ожидает ответа от сервера на успешное подключение
+     *
+     * @deprecated Блокирует поток. TODO: переписать на автомат с использованием сервисов клиента
+     */
+    @Deprecated
     public static void waitForAcceptConnection() throws ClientException {
         client.waitForResponse(new ConnectionDTO(null, true), AcceptConnectionDTO.class);
     }
@@ -121,24 +127,27 @@ public class ClientController {
         client.sendIfNotNull(json);
     }
 
-    // TODO: добавить javadoc
+    /** @return все возможные ходы в удобной форме для View */
     public static Set<ViewCell> getAllMoves(int row, int column) {
-        return GameGUIAdapterService.getAllMoves(row, column);
+        return GameGUIAdapter.getAllMoves(row, column);
     }
 
-    // TODO: добавить javadoc
+    /** @return true, если фигура на указанной клетке isWhite */
     public static boolean checkFigure(int row, int column, boolean isWhite) {
-        return GameGUIAdapterService.checkFigure(row, column, isWhite);
+        return GameGUIAdapter.checkFigure(row, column, isWhite);
     }
 
-    // TODO: добавить javadoc
+    /**
+     * @return фигура на указанной клетке в удобной форме для View или null, если фигуры на
+     *     указанной клетке нет
+     */
     public static ViewFigure getFigure(int row, int column) {
-        return GameGUIAdapterService.getFigure(row, column);
+        return GameGUIAdapter.getFigure(row, column);
     }
 
     // TODO: добавить javadoc
     public static int tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
-        Move move = GameGUIAdapterService.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
+        Move move = GameGUIAdapter.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
         if (move != null) {
             if (move.getMoveType() == MoveType.TURN_INTO
                     || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
@@ -154,7 +163,11 @@ public class ClientController {
         return 0;
     }
 
-    /** @throws ClientException если клиент не подключен к серверу */
+    /**
+     * Делает ход и отправляет его серверу
+     *
+     * @throws ClientException если клиент не подключен к серверу
+     */
     public static void makeMove(
             int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure)
             throws ClientException {
@@ -165,7 +178,7 @@ public class ClientController {
         GameService.sendMove(move);
     }
 
-    // TODO: добавить javadoc
+    // TODO: добавить javadoc и переделать номально без кастов
     private static FigureType getFigureType(Object figure) {
         String strFigure = (String) figure;
         if ("Ферзь".equals(strFigure)) {
@@ -186,30 +199,37 @@ public class ClientController {
                 && GameDAO.getGame().getCurrentPlayerToMove().getColor() == GameDAO.getMyColor();
     }
 
+    /** Перерисовывает доску */
     public static void drawBoard() {
         view.drawBoard();
     }
 
+    /** Выбирает тип соперника */
     public static void chooseEnemy(PlayerType playerType) {
         GameService.chooseEnemy(playerType);
     }
 
+    /** Выбирает КЕМ играть */
     public static void chooseMyType(PlayerType playerType) {
         GameDAO.setMyType(playerType);
     }
 
+    /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
     public static void botMove() {
         GameService.botMove();
     }
 
+    /** Закрывает View клиента и отключается от сервера */
     public static void closeGame(String reason) {
         view.closeGame(reason);
     }
 
+    /** Выводит окно с сообщением */
     public static void showMessage(String message) {
         view.showMessage(message);
     }
 
+    /** Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет) */
     public static void resetMyColorOnBoard(Color color) {
         view.changeMyColorOnBoard(color == Color.WHITE);
     }
@@ -225,6 +245,11 @@ public class ClientController {
                                 SessionDAO.getSessionToken(), getType(GameDAO.getEnemyType()), 2)));
     }
 
+    /**
+     * Переводит тип игрока View в тип игрока из движка игры
+     *
+     * @return тип игрока из движка
+     */
     private static io.deeplay.qchess.game.player.PlayerType getType(PlayerType pt) {
         return switch (pt) {
             case USER -> io.deeplay.qchess.game.player.PlayerType.GUI_PLAYER;
