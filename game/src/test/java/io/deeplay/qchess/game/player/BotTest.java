@@ -17,10 +17,12 @@ import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Rook;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Ignore
 public class BotTest extends TestCase {
     private static final Logger log = LoggerFactory.getLogger(BotTest.class);
     final int COUNT = 1;
