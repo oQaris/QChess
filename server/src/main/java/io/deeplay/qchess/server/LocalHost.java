@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class LocalHost implements IServer {
     private static final Logger logger = LoggerFactory.getLogger(LocalHost.class);
-    private static int maxClients = 2;
+    private static int maxClients = 20;
     private static int port = 8080;
     private static LocalHost localHost;
     private final Object mutex = new Object();

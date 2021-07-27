@@ -2,28 +2,23 @@ package io.deeplay.qchess.server.database;
 
 import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.server.controller.ServerController;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
 
     private static final transient Database database = new Database();
 
-    /** sessionToken -> Id */
+    /** sessionToken -> id */
     private final Map<String, Integer> clients;
 
-    /** Не поддерживает потокобезопасное заполнение/удаление комнат TODO this (?) */
-    private final TreeSet<Room> rooms;
-
-    @Deprecated(forRemoval = true)
-    private final Room room = new Room();
+    private final List<Room> rooms;
 
     private Database() {
         clients = new ConcurrentHashMap<>(ServerController.getMaxClients());
-        rooms = new TreeSet<>(Comparator.comparingInt(r -> r.id));
-
+        rooms = new ArrayList<>(ServerController.getMaxClients());
         for (int i = 0; i < ServerController.getMaxClients(); ++i) rooms.add(new Room());
     }
 
@@ -50,9 +45,18 @@ public class Database {
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
     public Room findSuitableRoom(String sessionToken, PlayerType enemyType, int gameCount) {
-        if (room.contains(sessionToken)) return room;
-        if (enemyType == PlayerType.GUI_PLAYER) return room.isFull() ? null : room;
-        return room.isEmpty() ? room : null;
+        for (Room room : rooms) {
+            synchronized (room.mutex) {
+                if (room.contains(sessionToken)) return room;
+
+                if (enemyType == PlayerType.GUI_PLAYER
+                        && room.getMaxGames() == gameCount
+                        && !room.isFull()) return room;
+
+                if (room.isEmpty()) return room;
+            }
+        }
+        return null;
     }
 
     /**
@@ -60,6 +64,11 @@ public class Database {
      *     не найдена
      */
     public Room getRoom(String sessionToken) {
-        return room.contains(sessionToken) ? room : null;
+        for (Room room : rooms) {
+            synchronized (room.mutex) {
+                if (room.contains(sessionToken)) return room;
+            }
+        }
+        return null;
     }
 }

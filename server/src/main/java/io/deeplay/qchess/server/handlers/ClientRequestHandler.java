@@ -40,7 +40,7 @@ public class ClientRequestHandler {
      * @return json ответ сервера в виде ServerToClientDTO или null, если не нужно ничего отправлять
      */
     public static String process(String jsonClientRequest, int clientId) {
-        logger.debug("От клиента <{}> пришел json: {}", clientId, jsonClientRequest);
+        logger.info("От клиента <{}> пришел json: {}", clientId, jsonClientRequest);
         try {
             ClientToServerDTO mainDTO =
                     SerializationService.clientToServerDTOMain(jsonClientRequest);
@@ -48,7 +48,7 @@ public class ClientRequestHandler {
                     redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json, clientId);
 
             if (response != null)
-                logger.debug("Отправлен json клиенту <{}>: {}", clientId, response);
+                logger.info("Отправлен json клиенту <{}>: {}", clientId, response);
 
             return response;
         } catch (SerializationException e) {
