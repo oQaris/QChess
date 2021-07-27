@@ -36,12 +36,16 @@ public class MoveSystem {
         history = roomSettings.history;
     }
 
+    public Figure move(Move move) throws ChessError {
+        return move(move, board, history);
+    }
+
     /**
      * Делает ход без проверок
      *
      * @return удаленная фигура или null, если ни одну фигуру не взяли
      */
-    public Figure move(Move move) throws ChessError {
+    public Figure move(Move move, Board board, History history) throws ChessError {
         try {
             logger.debug("Начато выполнение хода: {}", move);
 
@@ -95,7 +99,7 @@ public class MoveSystem {
     }
 
     /** Отменяет последний ход без проверок */
-    public void undoMove() throws ChessError {
+    public void undoMove(Board board, History history) throws ChessError {
         Move move = history.getLastMove();
         boolean hasMoved = history.isHasMovedBeforeLastMove();
         Figure removedFigure = history.getRemovedFigure();
@@ -291,7 +295,7 @@ public class MoveSystem {
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
         Figure virtualKilled = move(move);
         T res = func.apply(figureToMove, virtualKilled);
-        undoMove();
+        undoMove(board, history);
         return res;
     }
 

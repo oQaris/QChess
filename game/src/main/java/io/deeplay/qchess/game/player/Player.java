@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.logics.MoveSystem;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.History;
 import io.deeplay.qchess.game.model.Move;
 
 public abstract class Player {
@@ -13,11 +14,13 @@ public abstract class Player {
     protected Color color;
     protected MoveSystem ms;
     protected EndGameDetector egd;
+    protected History history;
 
     protected Player(GameSettings roomSettings, Color color) {
         ms = roomSettings.moveSystem;
         board = roomSettings.board;
         egd = roomSettings.endGameDetector;
+        history = roomSettings.history;
         this.color = color;
     }
 
@@ -25,6 +28,7 @@ public abstract class Player {
         ms = gs.moveSystem;
         board = gs.board;
         egd = gs.endGameDetector;
+        history = gs.history;
         this.color = color;
     }
 
