@@ -96,7 +96,6 @@ public class Selfplay {
             }
         }
         if (isDraw) {
-            logger.info("Игра окончена: ничья");
             if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
                 logger.info(
                         "Ничья: {} ходов без взятия и хода пешки",

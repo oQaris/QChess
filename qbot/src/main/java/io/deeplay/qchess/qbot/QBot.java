@@ -139,6 +139,8 @@ public class QBot extends RemotePlayer {
 
         setTurnIntoAll(allMoves);
         for (Move move : allMoves) {
+            var f = roomSettings.board.getFigureUgly(move.getTo());
+            if (f != null && f.getType() == FigureType.KING) throw new IllegalArgumentException();
             int finalAlpha = alpha;
             int finalBeta = beta;
             int curGrade =
@@ -160,7 +162,7 @@ public class QBot extends RemotePlayer {
             else beta = Math.min(beta, bestGrade);
             if (beta <= alpha) return bestGrade;
         }
-        logger.trace("Текущая оценка хода: {}", depth);
+        logger.trace("Текущая оценка доски: {}", depth);
         return bestGrade;
     }
 
