@@ -110,20 +110,38 @@ public class QBot extends RemotePlayer {
 
     @Override
     public Move getNextMove() throws ChessError {
-        logger.debug("Минимакс стартовал с глубиной поиска: {}", depth);
         List<Move> topMoves = new ArrayList<>();
-        int res = 0;
-        try {
-            res = minimax(topMoves, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
-        } catch (ChessException e) {
-            logger.error(String.valueOf(e));
+        // Move bestMove = null;
+        int maxGrade = Integer.MIN_VALUE;
+        for (Move move : ms.getAllCorrectMoves(color)) {
+            int curGrade = 0;
+            try {
+                curGrade = ms.virtualMove(move, (from, to) -> minimaxRoot(depth, false));
+            } catch (ChessException e) {
+                e.printStackTrace();
+            }
+            if (curGrade > maxGrade) {
+                maxGrade = curGrade;
+                topMoves.clear();
+            }
+            if (curGrade >= maxGrade) topMoves.add(move);
+            /*if (curGrade > maxGrade) {
+                maxGrade = curGrade;
+                bestMove = move;
+            }*/
         }
-        logger.debug("Оценка хода: {}", res);
+        // todo turnIntoInQueen(bestMove);
         return topMoves.get(new Random().nextInt(topMoves.size()));
     }
 
-    private int minimax(
-            List<Move> topMoves, int depth, int alpha, int beta, boolean isMaximisingPlayer)
+    public int minimaxRoot(int depth, boolean isMyMoveNext) throws ChessError, ChessException {
+        logger.debug("Минимакс стартовал с глубиной поиска: {}", depth);
+        int res = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isMyMoveNext);
+        logger.debug("Оценка хода: {}", res);
+        return res;
+    }
+
+    private int minimax(int depth, int alpha, int beta, boolean isMaximisingPlayer)
             throws ChessError, ChessException {
         logger.trace("Глубина поиска: {}", depth);
         if (depth == 0) return evaluateBoard();
@@ -139,23 +157,16 @@ public class QBot extends RemotePlayer {
 
         setTurnIntoAll(allMoves);
         for (Move move : allMoves) {
-            var f = roomSettings.board.getFigureUgly(move.getTo());
-            if (f != null && f.getType() == FigureType.KING) throw new IllegalArgumentException();
             int finalAlpha = alpha;
             int finalBeta = beta;
             int curGrade =
                     ms.virtualMove(
                             move,
                             (from, to) ->
-                                    minimax(
-                                            topMoves,
-                                            depth - 1,
-                                            finalAlpha,
-                                            finalBeta,
-                                            !isMaximisingPlayer));
-            bestGrade =
-                    updateTopMovesAndGetBestGrade(
-                            topMoves, move, curGrade, bestGrade, isMaximisingPlayer);
+                                    minimax(depth - 1, finalAlpha, finalBeta, !isMaximisingPlayer));
+
+            if (isMaximisingPlayer) bestGrade = Math.max(bestGrade, curGrade);
+            else bestGrade = Math.min(bestGrade, curGrade);
 
             // Альфа-бетта отсечение
             if (isMaximisingPlayer) alpha = Math.max(alpha, bestGrade);
@@ -163,28 +174,6 @@ public class QBot extends RemotePlayer {
             if (beta <= alpha) return bestGrade;
         }
         logger.trace("Текущая оценка доски: {}", depth);
-        return bestGrade;
-    }
-
-    private int updateTopMovesAndGetBestGrade(
-            List<Move> topMoves,
-            Move move,
-            int curGrade,
-            int bestGrade,
-            boolean isMaximisingPlayer) {
-        if (isMaximisingPlayer) {
-            if (curGrade > bestGrade) {
-                bestGrade = curGrade;
-                topMoves.clear();
-            }
-            if (curGrade >= bestGrade) topMoves.add(move);
-        } else {
-            if (curGrade < bestGrade) {
-                bestGrade = curGrade;
-                topMoves.clear();
-            }
-            if (curGrade <= bestGrade) topMoves.add(move);
-        }
         return bestGrade;
     }
 

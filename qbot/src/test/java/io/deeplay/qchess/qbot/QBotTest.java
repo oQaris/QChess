@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 class QBotTest {
     private static final Logger log = LoggerFactory.getLogger(QBotTest.class);
-    final int COUNT = 10000;
+    private static final int COUNT = 10000;
 
     @Test
     void evaluateBoard() {
@@ -31,7 +31,7 @@ class QBotTest {
             executor.execute(
                     () -> {
                         GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-                        Player firstPlayer = new QBot(roomSettings, Color.WHITE, 4);
+                        Player firstPlayer = new QBot(roomSettings, Color.WHITE, 3);
                         Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
                         try {
                             Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);

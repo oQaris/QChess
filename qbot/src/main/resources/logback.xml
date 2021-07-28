@@ -7,7 +7,7 @@
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
+      <level>WARN</level>
     </filter>
 
     <target>System.out</target>

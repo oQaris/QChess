@@ -37,8 +37,8 @@ class BotsTest {
             executor.execute(i % 2 == 0 ? new Game(Color.WHITE) : new Game(Color.BLACK));
         }
 
-        executor.awaitTermination(9999, TimeUnit.DAYS);
         executor.shutdown();
+        executor.awaitTermination(9999, TimeUnit.DAYS);
         long timeInSec = (System.currentTimeMillis() - startTime) / 1000;
 
         logger.info("<------------------------------------------------------>");
@@ -102,16 +102,14 @@ class BotsTest {
                     if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
                         ++drawWithNotEnoughMaterial;
                 } else if (gs.endGameDetector.isCheckmate(
-                    game.getCurrentPlayerToMove().getColor())) {
-                    if (game.getCurrentPlayerToMove().getColor() == QBotColor)
-                        ++checkmateToNNNBot;
+                        game.getCurrentPlayerToMove().getColor())) {
+                    if (game.getCurrentPlayerToMove().getColor() == QBotColor) ++checkmateToNNNBot;
                     else ++checkmateToOpponent;
                 } else {
-                    if (game.getCurrentPlayerToMove().getColor() == QBotColor)
-                        ++stalemateToNNNBot;
+                    if (game.getCurrentPlayerToMove().getColor() == QBotColor) ++stalemateToNNNBot;
                     else ++stalemateToOpponent;
                 }
-                System.out.println("Games completed: "+(++doneTasks)+"/"+COUNT);
+                System.out.println("Games completed: " + (++doneTasks) + "/" + COUNT);
             }
         }
     }
