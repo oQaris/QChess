@@ -10,6 +10,7 @@ import io.deeplay.qchess.game.model.History;
 import io.deeplay.qchess.game.model.Move;
 
 public abstract class Player {
+    protected GameSettings roomSettings;
     protected Board board;
     protected Color color;
     protected MoveSystem ms;
@@ -17,6 +18,7 @@ public abstract class Player {
     protected History history;
 
     protected Player(GameSettings roomSettings, Color color) {
+        this.roomSettings = roomSettings;
         ms = roomSettings.moveSystem;
         board = roomSettings.board;
         egd = roomSettings.endGameDetector;
@@ -25,6 +27,7 @@ public abstract class Player {
     }
 
     public void setGameSettings(GameSettings gs, Color color) {
+        this.roomSettings = gs;
         ms = gs.moveSystem;
         board = gs.board;
         egd = gs.endGameDetector;
