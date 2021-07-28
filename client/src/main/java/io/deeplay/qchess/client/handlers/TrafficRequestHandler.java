@@ -41,7 +41,7 @@ public class TrafficRequestHandler {
                         GameService::resetGame));
 
         if (redirector.size() != ServerToClientType.values().length) {
-            throw new UnsupportedOperationException("В клиенте не рассмотрены все случаи запросов");
+            throw new ExceptionInInitializerError("В клиенте не рассмотрены все случаи запросов");
         }
     }
 

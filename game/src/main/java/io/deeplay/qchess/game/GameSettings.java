@@ -45,6 +45,17 @@ public class GameSettings {
         moveSystem = new MoveSystem(this);
     }
 
+    /** Копирует gs */
+    public GameSettings(GameSettings gs) {
+        this.board = new Board(gs.board);
+        this.moveSystem = new MoveSystem(this);
+        this.endGameDetector = new EndGameDetector(this);
+        this.history = new History(gs.history, this);
+        this.boardSize = gs.boardSize;
+        this.boardType = gs.boardType;
+        this.boardFillingForsythEdwards = gs.boardFillingForsythEdwards;
+    }
+
     public GameSettings newWithTheSameSettings() throws ChessError {
         return boardType != null
                 ? new GameSettings(boardSize, boardType)

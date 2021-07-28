@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 public class Board {
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
+
     /** @deprecated Плохо для гибкости */
     @Deprecated public static int STD_BOARD_SIZE = 8;
 
@@ -63,6 +64,18 @@ public class Board {
             logger.error("Ошибка при установке фигуры на доску в конструкторе доски по строке");
             throw new ChessError(INCORRECT_COORDINATES);
         }
+    }
+
+    /** Создает копию доски, включая копии фигур на ней */
+    public Board(Board board) {
+        this(board.boardSize, BoardFilling.EMPTY);
+        for (int y = 0; y < boardSize; ++y)
+            for (int x = 0; x < boardSize; ++x)
+                cells[y][x] =
+                        Figure.build(
+                                board.cells[y][x].getType(),
+                                board.cells[y][x].getColor(),
+                                new Cell(x, y));
     }
 
     /** @return true, если клетка cell атакуется цветом color */

@@ -17,8 +17,7 @@ public class EndGameDetector {
     public static final int END_PEACE_MOVE_COUNT = 75;
     public static final int END_REPETITIONS_COUNT = 5;
     private static final Logger logger = LoggerFactory.getLogger(EndGameDetector.class);
-    private final GameSettings roomSettings;
-    private final List<List<FigureType>> material =
+    private static final List<List<FigureType>> MATERIAL =
             Arrays.asList(
                     // todo Добавить Король против короля с 2 одноцветными слонами
                     Collections.singletonList(FigureType.KING),
@@ -26,8 +25,10 @@ public class EndGameDetector {
                     Arrays.asList(FigureType.KING, FigureType.BISHOP),
                     Arrays.asList(FigureType.KING, FigureType.KNIGHT, FigureType.KNIGHT));
 
-    public EndGameDetector(GameSettings roomSettings) {
-        this.roomSettings = roomSettings;
+    private final GameSettings gs;
+
+    public EndGameDetector(GameSettings gs) {
+        this.gs = gs;
     }
 
     /** @return true, если это не ничья */
@@ -46,7 +47,7 @@ public class EndGameDetector {
         logger.debug(
                 "Начата проверка на ничью при {} ходов без взятия и хода пешки",
                 END_PEACE_MOVE_COUNT);
-        return roomSettings.history.getPeaceMoveCount() >= END_PEACE_MOVE_COUNT;
+        return gs.history.getPeaceMoveCount() >= END_PEACE_MOVE_COUNT;
     }
 
     /**
@@ -57,7 +58,7 @@ public class EndGameDetector {
     public boolean isDrawWithRepetitions() {
         logger.debug(
                 "Начата проверка на ничью при {} повторениях позиции доски", END_REPETITIONS_COUNT);
-        return roomSettings.history.checkRepetitions(END_REPETITIONS_COUNT);
+        return gs.history.checkRepetitions(END_REPETITIONS_COUNT);
     }
 
     /**
@@ -67,8 +68,8 @@ public class EndGameDetector {
      */
     public boolean isDrawWithNotEnoughMaterialForCheckmate() {
         logger.debug("Начата проверка на ничью при недостаточном количестве материала для мата");
-        List<Figure> whiteFigures = roomSettings.board.getFigures(Color.WHITE);
-        List<Figure> blackFigures = roomSettings.board.getFigures(Color.BLACK);
+        List<Figure> whiteFigures = gs.board.getFigures(Color.WHITE);
+        List<Figure> blackFigures = gs.board.getFigures(Color.BLACK);
 
         if (isKingsWithSameBishop(whiteFigures, blackFigures)) return true;
 
@@ -76,7 +77,7 @@ public class EndGameDetector {
         boolean isOneKingWhite = isAllFiguresSame(whiteFigures, oneKing);
         boolean isOneKingBlack = isAllFiguresSame(blackFigures, oneKing);
 
-        for (List<FigureType> figureTypes : material) {
+        for (List<FigureType> figureTypes : MATERIAL) {
             if (isOneKingWhite && isAllFiguresSame(blackFigures, figureTypes)) return true;
             if (isOneKingBlack && isAllFiguresSame(whiteFigures, figureTypes)) return true;
         }
@@ -141,13 +142,13 @@ public class EndGameDetector {
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(Color color) {
-        return roomSettings.moveSystem.getAllCorrectMovesForStalemate(color).isEmpty();
+        return gs.moveSystem.getAllCorrectMovesForStalemate(color).isEmpty();
     }
 
     /** @return true если игроку с указанным цветом ставят шах */
     public boolean isCheck(Color color) {
-        Figure king = roomSettings.board.findKing(color);
+        Figure king = gs.board.findKing(color);
         if (king == null) return false;
-        return Board.isAttackedCell(roomSettings, king.getCurrentPosition(), color.inverse());
+        return Board.isAttackedCell(gs, king.getCurrentPosition(), color.inverse());
     }
 }
