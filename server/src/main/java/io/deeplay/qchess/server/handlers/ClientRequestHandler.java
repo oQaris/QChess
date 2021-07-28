@@ -32,7 +32,7 @@ public class ClientRequestHandler {
                         ChatService::incomingMessage));
 
         if (redirector.size() != ClientToServerType.values().length) {
-            throw new UnsupportedOperationException("В сервере не рассмотрены все случаи запросов");
+            throw new ExceptionInInitializerError("В сервере не рассмотрены все случаи запросов");
         }
     }
 

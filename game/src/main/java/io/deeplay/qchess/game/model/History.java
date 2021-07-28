@@ -18,7 +18,20 @@ import org.slf4j.LoggerFactory;
 public class History {
     private static final Logger logger = LoggerFactory.getLogger(History.class);
     private static final int AVERAGE_MAXIMUM_MOVES = 300;
-    private final Map<FigureType, Character> notation = new EnumMap<>(FigureType.class);
+    private static final Map<FigureType, Character> NOTATION = new EnumMap<>(FigureType.class);
+
+    static {
+        NOTATION.put(FigureType.KING, 'K');
+        NOTATION.put(FigureType.QUEEN, 'Q');
+        NOTATION.put(FigureType.ROOK, 'R');
+        NOTATION.put(FigureType.BISHOP, 'B');
+        NOTATION.put(FigureType.KNIGHT, 'N');
+        NOTATION.put(FigureType.PAWN, 'P');
+        if (NOTATION.size() != FigureType.values().length) {
+            throw new ExceptionInInitializerError("NOTATION map не заполнен для всех случаев");
+        }
+    }
+
     private final GameSettings gameSettings;
 
     private final Map<BoardState, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
@@ -37,15 +50,25 @@ public class History {
 
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
+    }
 
-        notation.put(FigureType.KING, 'K');
-        notation.put(FigureType.QUEEN, 'Q');
-        notation.put(FigureType.ROOK, 'R');
-        notation.put(FigureType.BISHOP, 'B');
-        notation.put(FigureType.KNIGHT, 'N');
-        notation.put(FigureType.PAWN, 'P');
-
-        logger.debug("История инициализирована");
+    /** Копирует всю историю */
+    public History(History history, GameSettings gameSettings) {
+        this(gameSettings);
+        this.repetitionsMap.putAll(history.repetitionsMap);
+        this.recordsList.addAll(history.recordsList);
+        this.lastMove = history.lastMove;
+        this.hasMovedBeforeLastMove = history.hasMovedBeforeLastMove;
+        this.removedFigure =
+                Figure.build(
+                        history.removedFigure.getType(),
+                        history.removedFigure.getColor(),
+                        new Cell(
+                                history.removedFigure.getCurrentPosition().getColumn(),
+                                history.removedFigure.getCurrentPosition().getRow()));
+        this.peaceMoveCount = history.peaceMoveCount;
+        this.isWhiteCastlingPossibility = history.isWhiteCastlingPossibility;
+        this.isBlackCastlingPossibility = history.isBlackCastlingPossibility;
     }
 
     /**
@@ -123,7 +146,7 @@ public class History {
                 if (currentFigure == null) emptySlots++;
                 else {
                     if (emptySlots != 0) result.append(emptySlots);
-                    Character notationFigureChar = notation.get(currentFigure.getType());
+                    Character notationFigureChar = NOTATION.get(currentFigure.getType());
                     result.append(
                             currentFigure.getColor() == Color.WHITE
                                     ? notationFigureChar

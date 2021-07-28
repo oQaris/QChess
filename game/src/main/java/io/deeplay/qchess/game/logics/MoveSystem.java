@@ -24,16 +24,11 @@ import org.slf4j.LoggerFactory;
 /** Хранит различные данные об игре для контроля специфичных ситуаций */
 public class MoveSystem {
     private static final Logger logger = LoggerFactory.getLogger(MoveSystem.class);
-    private final GameSettings roomSettings;
-    private final Board board;
-    private final EndGameDetector endGameDetector;
-    private final History history;
 
-    public MoveSystem(GameSettings roomSettings) {
-        this.roomSettings = roomSettings;
-        board = roomSettings.board;
-        endGameDetector = roomSettings.endGameDetector;
-        history = roomSettings.history;
+    private final GameSettings gs;
+
+    public MoveSystem(GameSettings gs) {
+        this.gs = gs;
     }
 
     /**
@@ -238,7 +233,11 @@ public class MoveSystem {
     }
 
     public Figure move(Move move) throws ChessError {
-        return move(move, board, history);
+        return move(move, gs.board, gs.history);
+    }
+
+    public void undoMove() throws ChessError {
+        undoMove(gs.board, gs.history);
     }
 
     /**
@@ -246,16 +245,16 @@ public class MoveSystem {
      * @return все возможные ходы
      */
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
-        return getAllCorrectMoves(color, roomSettings);
+        return getAllCorrectMoves(color, gs);
     }
 
     public List<Move> getAllCorrectMovesForStalemate(Color color) {
         List<Move> res = new ArrayList<>(64);
         try {
-            for (Figure f : board.getFigures(color))
-                for (Move m : f.getAllMoves(roomSettings)) {
+            for (Figure f : gs.board.getFigures(color))
+                for (Move m : f.getAllMoves(gs)) {
                     if (isCorrectMoveWithoutCheckAvailableMoves(
-                            m, false, endGameDetector, board, history)) res.add(m);
+                            m, false, gs.endGameDetector, gs.board, gs.history)) res.add(m);
                 }
         } catch (ChessError ignore) {
         }
@@ -268,17 +267,17 @@ public class MoveSystem {
      */
     public List<Move> getAllCorrectMoves(Cell cell) throws ChessError {
         List<Move> res = new ArrayList<>(27);
-        if (!board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
-        Figure figure = board.getFigureUgly(cell);
+        if (!gs.board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
+        Figure figure = gs.board.getFigureUgly(cell);
         if (figure == null) return res;
-        for (Move m : figure.getAllMoves(roomSettings))
-            if (isCorrectVirtualMoveForCell(m)) res.add(m);
+        for (Move m : figure.getAllMoves(gs)) if (isCorrectVirtualMoveForCell(m)) res.add(m);
         return res;
     }
 
     private boolean isCorrectVirtualMoveForCell(Move move) throws ChessError {
         try {
-            return move != null && isCorrectVirtualMove(move, endGameDetector, board, history);
+            return move != null
+                    && isCorrectVirtualMove(move, gs.endGameDetector, gs.board, gs.history);
         } catch (ChessException | NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
@@ -294,7 +293,7 @@ public class MoveSystem {
             return move != null
                     && checkCorrectnessIfSpecificMove(move)
                     && inAvailableMoves(move)
-                    && isCorrectVirtualMove(move, endGameDetector, board, history);
+                    && isCorrectVirtualMove(move, gs.endGameDetector, gs.board, gs.history);
         } catch (ChessException | NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
@@ -307,8 +306,8 @@ public class MoveSystem {
     /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move) throws ChessException {
         logger.trace("Начата проверка хода {} на содержание его в доступных ходах", move);
-        Figure figure = board.getFigure(move.getFrom());
-        Set<Move> allMoves = figure.getAllMoves(roomSettings);
+        Figure figure = gs.board.getFigure(move.getFrom());
+        Set<Move> allMoves = figure.getAllMoves(gs);
         return allMoves.contains(move);
     }
 
