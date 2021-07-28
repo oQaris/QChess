@@ -232,6 +232,25 @@ public class MoveSystem {
         return res;
     }
 
+    /**
+     * Опасно! Выполняет ходы без проверки
+     *
+     * @param move Виртуальный ход.
+     * @param func Функция, выполняемая после виртуального хода.
+     * @return Результат функции func.
+     * @throws ChessException Если выбрасывается в функции func.
+     * @throws ChessError Если выбрасывается в функции func.
+     */
+    public <T> T virtualMove(Move move, ChessMoveFunc<T> func)
+        throws ChessException, ChessError {
+        logger.trace("Виртуальный ход {}", move);
+        Color figureToMove = gs.board.getFigureUgly(move.getFrom()).getColor();
+        Figure virtualKilled = move(move, gs.board, gs.history);
+        T res = func.apply(figureToMove, virtualKilled);
+        undoMove(gs.board, gs.history);
+        return res;
+    }
+
     public Figure move(Move move) throws ChessError {
         return move(move, gs.board, gs.history);
     }
