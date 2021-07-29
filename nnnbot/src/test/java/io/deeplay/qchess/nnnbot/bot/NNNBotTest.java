@@ -20,7 +20,7 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 50;
+    private static final int COUNT = 1;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -132,6 +132,11 @@ public class NNNBotTest {
                         nnnBot.getId(),
                         nnnBot.getGetCacheVirt(),
                         nnnBot.getNOTgetCacheVirt());
+                logger.info(
+                        "Average time to move by NNNBot #{}: {} sec; move count: {}",
+                        nnnBot.getId(),
+                        nnnBot.getAverageTimeToThink(),
+                        nnnBot.getMoveCount());
                 if (doneTasks == COUNT) allTasksAreDone = true;
             }
         }

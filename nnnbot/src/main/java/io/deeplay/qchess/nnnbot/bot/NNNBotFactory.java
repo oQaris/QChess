@@ -2,7 +2,6 @@ package io.deeplay.qchess.nnnbot.bot;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
-import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -20,7 +19,7 @@ public class NNNBotFactory {
 
         nnnBot.setId(++lastId);
 
-        int testCacheSize = NNNBot.MAX_DEPTH * new Random().nextInt(1000);
+        int testCacheSize = NNNBot.MAX_DEPTH * 16; // * new Random().nextInt(50);
         nnnBot.setCacheSize(testCacheSize);
         logger.info("Создан бот #{} с размером кеша: {}", lastId, testCacheSize);
 

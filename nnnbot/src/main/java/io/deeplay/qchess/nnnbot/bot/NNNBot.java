@@ -30,6 +30,9 @@ public class NNNBot extends RemotePlayer {
     @Deprecated private int NOTgetCacheVirt;
     @Deprecated private int NOTgetCache;
 
+    @Deprecated private int moveCount;
+    @Deprecated private double timeToThink;
+
     public NNNBot(GameSettings roomSettings, Color color) {
         super(roomSettings, color, "n-nn-bot-" + UUID.randomUUID());
         // cachedEstimatedStates = new HashMap<>(/*TODO: вычислять размер по MAX_DEPTH*/ );
@@ -71,10 +74,24 @@ public class NNNBot extends RemotePlayer {
         return NOTgetCacheVirt;
     }
 
+    @Deprecated
+    public double getAverageTimeToThink() {
+        return timeToThink / moveCount;
+    }
+
+    @Deprecated
+    public int getMoveCount() {
+        return moveCount;
+    }
+
     @Override
     public Move getNextMove() throws ChessError {
         // TODO: запуск потока для симуляции ходов, если еще не запущен
-        return getTheBestMove(roomSettings, color, MAX_DEPTH);
+        ++moveCount;
+        long startTime = System.currentTimeMillis();
+        Move move = getTheBestMove(roomSettings, color, MAX_DEPTH);
+        timeToThink += (System.currentTimeMillis() - startTime) / 1000.;
+        return move;
     }
 
     private Move getTheBestMove(GameSettings gs, Color color, int depth) throws ChessError {
@@ -178,7 +195,13 @@ public class NNNBot extends RemotePlayer {
         EstimatedBoard estimatedState =
                 cachedEstimatedStates.getOrDefault(
                         gs.history.getLastBoardState(), theWorstEstimation);
-        if (estimatedState.maxEstimatedDepth >= depth) return estimatedState.estimation;
+        if (estimatedState.maxEstimatedDepth >= depth) {
+            logger.trace("Взято лучшее состояние из кеша для {}", color);
+            ++getCache;
+            return estimatedState.estimation;
+        }
+        logger.trace("Не найдено лучшее состояние в кеше для {}", color);
+        ++NOTgetCache;
 
         double optEstimation = 0;
 
