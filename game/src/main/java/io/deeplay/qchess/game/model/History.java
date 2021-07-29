@@ -137,13 +137,13 @@ public class History {
         StringBuilder result = new StringBuilder();
         Figure currentFigure;
 
-        for (int y = 0; y < gameSettings.board.boardSize; y++) {
+        for (int y = 0; y < gameSettings.board.boardSize; ++y) {
             int emptySlots = 0;
 
-            for (int x = 0; x < gameSettings.board.boardSize; x++) {
+            for (int x = 0; x < gameSettings.board.boardSize; ++x) {
                 currentFigure = gameSettings.board.getFigure(new Cell(x, y));
 
-                if (currentFigure == null) emptySlots++;
+                if (currentFigure == null) ++emptySlots;
                 else {
                     if (emptySlots != 0) result.append(emptySlots);
                     Character notationFigureChar = NOTATION.get(currentFigure.getType());
@@ -181,7 +181,7 @@ public class History {
         if (rightRook != null && !rightRook.wasMoved()) res += "k";
         if (leftRook != null && !leftRook.wasMoved()) res += "q";
 
-        if (res.equals("")) {
+        if (res.isEmpty()) {
             if (color == Color.WHITE) isWhiteCastlingPossibility = false;
             else isBlackCastlingPossibility = false;
         }
@@ -208,10 +208,16 @@ public class History {
         return peaceMoveCount;
     }
 
-    /** @return Строка - последняя запись в списке */
+    /** @return Строка - последняя запись в списке или null, если записей нет */
     public String getLastRecord() {
-        assert recordsList.peek() != null;
-        return recordsList.peek().forsythEdwards;
+        BoardState lastBoardState = recordsList.peek();
+        if (lastBoardState == null) return null;
+        return lastBoardState.forsythEdwards;
+    }
+
+    /** @return последнее состояние доски */
+    public BoardState getLastBoardState() {
+        return recordsList.peek();
     }
 
     /** @return true - если было минимум repetition-кратных повторений, false - если было меньше */
@@ -231,11 +237,12 @@ public class History {
      */
     public BoardState undo() {
         BoardState lastBoardState = recordsList.pop();
-        if (recordsList.peek() == null) return lastBoardState;
-        hasMovedBeforeLastMove = recordsList.peek().hasMovedBeforeLastMove;
-        removedFigure = recordsList.peek().removedFigure;
-        lastMove = recordsList.peek().lastMove;
-        peaceMoveCount = recordsList.peek().peaceMoveCount;
+        BoardState prevLastBoardState = recordsList.peek();
+        if (prevLastBoardState == null) return lastBoardState;
+        hasMovedBeforeLastMove = prevLastBoardState.hasMovedBeforeLastMove;
+        removedFigure = prevLastBoardState.removedFigure;
+        lastMove = prevLastBoardState.lastMove;
+        peaceMoveCount = prevLastBoardState.peaceMoveCount;
         repetitionsMap.put(lastBoardState, repetitionsMap.getOrDefault(lastBoardState, 1) - 1);
         return lastBoardState;
     }
