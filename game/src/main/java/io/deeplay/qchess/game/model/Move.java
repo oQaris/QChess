@@ -57,7 +57,7 @@ public class Move {
 
     /** @return полный хеш мува */
     public int fullHashCode() {
-        return Objects.hash(moveType, from, to, turnInto);
+        return hashCode() * 10 + turnInto.ordinal();
     }
 
     /**
@@ -67,7 +67,7 @@ public class Move {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(moveType, from, to);
+        return (from.hashCode() * 100 + to.hashCode()) * 10 + moveType.ordinal();
     }
 
     @Override

@@ -43,7 +43,7 @@ public class NNNBot extends RemotePlayer {
     /** @deprecated Используется для тестов, чтобы найти оптимальный размер кеша */
     @Deprecated
     public void setCacheSize(int cacheSize) {
-        cachedEstimatedStates = new HashMap<>(cacheSize);
+        cachedEstimatedStates = new HashMap<>(40000);
     }
 
     @Deprecated

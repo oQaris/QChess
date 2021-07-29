@@ -110,7 +110,13 @@ public abstract class Figure {
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, wasMoved, position);
+        if (color == Color.WHITE) {
+            if (wasMoved) return position.hashCode();
+            else return position.hashCode() + 1;
+        } else {
+            if (wasMoved) return position.hashCode() + 2;
+            else return position.hashCode() + 3;
+        }
     }
 
     @Override
