@@ -20,7 +20,7 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 1;
+    private static final int COUNT = 2;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -137,6 +137,11 @@ public class NNNBotTest {
                         nnnBot.getId(),
                         nnnBot.getAverageTimeToThink(),
                         nnnBot.getMoveCount());
+                logger.info(
+                        "Max time to move by NNNBot #{}: {} sec; Min time: {} sec",
+                        nnnBot.getId(),
+                        nnnBot.getMaxTimeToThink(),
+                        nnnBot.getMinTimeToThink());
                 if (doneTasks == COUNT) allTasksAreDone = true;
             }
         }

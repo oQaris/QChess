@@ -32,6 +32,8 @@ public class NNNBot extends RemotePlayer {
 
     @Deprecated private int moveCount;
     @Deprecated private double timeToThink;
+    @Deprecated private double maxTimeToThink = Double.MIN_VALUE;
+    @Deprecated private double minTimeToThink = Double.MAX_VALUE;
 
     public NNNBot(GameSettings roomSettings, Color color) {
         super(roomSettings, color, "n-nn-bot-" + UUID.randomUUID());
@@ -84,13 +86,26 @@ public class NNNBot extends RemotePlayer {
         return moveCount;
     }
 
+    @Deprecated
+    public double getMaxTimeToThink() {
+        return maxTimeToThink;
+    }
+
+    @Deprecated
+    public double getMinTimeToThink() {
+        return minTimeToThink;
+    }
+
     @Override
     public Move getNextMove() throws ChessError {
         // TODO: запуск потока для симуляции ходов, если еще не запущен
         ++moveCount;
         long startTime = System.currentTimeMillis();
         Move move = getTheBestMove(roomSettings, color, MAX_DEPTH);
-        timeToThink += (System.currentTimeMillis() - startTime) / 1000.;
+        double time = (System.currentTimeMillis() - startTime) / 1000.;
+        timeToThink += time;
+        if (time < minTimeToThink) minTimeToThink = time;
+        if (time > maxTimeToThink) maxTimeToThink = time;
         return move;
     }
 
