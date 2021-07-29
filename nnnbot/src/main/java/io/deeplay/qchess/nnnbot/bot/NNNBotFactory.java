@@ -19,9 +19,14 @@ public class NNNBotFactory {
 
         nnnBot.setId(++lastId);
 
-        int testCacheSize = NNNBot.MAX_DEPTH * 16; // * new Random().nextInt(50);
-        nnnBot.setCacheSize(testCacheSize);
-        logger.info("Создан бот #{} с размером кеша: {}", lastId, testCacheSize);
+        int testCacheSize = NNNBot.MAX_DEPTH * 500; // * new Random().nextInt(50);
+        if (lastId % 2 == 0) {
+            nnnBot.includeCache();
+            nnnBot.setCacheSize(testCacheSize);
+            logger.info("Создан бот #{} с размером кеша: {}", lastId, testCacheSize);
+        } else {
+            logger.info("Создан бот #{} без кеша", lastId);
+        }
 
         return nnnBot;
     }

@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Figure {
+    public static final int[][][][] hashCodes = new int[2][2][8][8];
     private static final Logger logger = LoggerFactory.getLogger(Figure.class);
-
     protected static List<Cell> xMove =
             Arrays.asList(new Cell(-1, -1), new Cell(-1, 1), new Cell(1, -1), new Cell(1, 1));
     protected static List<Cell> plusMove =
@@ -31,6 +31,16 @@ public abstract class Figure {
                     new Cell(1, 2),
                     new Cell(2, -1),
                     new Cell(2, 1));
+
+    static {
+        for (int i = 0; i < 8; ++i)
+            for (int j = 0; j < 8; ++j) {
+                hashCodes[0][0][i][j] = Cell.hashCodes[i][j];
+                hashCodes[0][1][i][j] = Cell.hashCodes[i][j] + 1;
+                hashCodes[1][0][i][j] = Cell.hashCodes[i][j] + 2;
+                hashCodes[1][1][i][j] = Cell.hashCodes[i][j] + 3;
+            }
+    }
 
     protected final Color color;
     protected boolean wasMoved = false;
@@ -75,8 +85,6 @@ public abstract class Figure {
     public abstract Set<Move> getAllMoves(GameSettings settings);
 
     protected Set<Move> rayTrace(Board board, List<Cell> directions) {
-        logger.trace("Запущен рэйтрейс фигуры {} из точки {}", this, position);
-        Objects.requireNonNull(directions, "Список ходов не может быть null");
         Set<Move> result = new HashSet<>();
         for (Cell shift : directions) {
             Cell cord = position.createAdd(shift);
@@ -96,27 +104,27 @@ public abstract class Figure {
     }
 
     protected Set<Move> stepForEach(Board board, List<Cell> moves) {
-        logger.trace("Запущено нахождение ходов фигуры {} из точки {}", this, position);
-        Objects.requireNonNull(moves, "Список ходов не может быть null");
+        return stepForEachWithNewCell(board, moves, false);
+    }
+
+    protected Set<Move> stepForEachWithNewCell(Board board, List<Cell> moves, boolean withNewCell) {
+        Cell newCell = withNewCell ? new Cell(position.column, position.row) : position;
         Set<Move> result = new HashSet<>();
         for (Cell shift : moves) {
             Cell cord = position.createAdd(shift);
-            if (board.isEmptyCell(cord)) result.add(new Move(MoveType.QUIET_MOVE, position, cord));
+            if (board.isEmptyCell(cord)) result.add(new Move(MoveType.QUIET_MOVE, newCell, cord));
             else if (board.isEnemyFigureOn(color, cord))
-                result.add(new Move(MoveType.ATTACK, position, cord));
+                result.add(new Move(MoveType.ATTACK, newCell, cord));
         }
         return result;
     }
 
+    public abstract boolean isAttackedCell(GameSettings settings, Cell cell);
+
     @Override
     public int hashCode() {
-        if (color == Color.WHITE) {
-            if (wasMoved) return position.hashCode();
-            else return position.hashCode() + 1;
-        } else {
-            if (wasMoved) return position.hashCode() + 2;
-            else return position.hashCode() + 3;
-        }
+        return hashCodes[color == Color.WHITE ? 0 : 1][wasMoved ? 0 : 1][position.column][
+                position.row];
     }
 
     @Override

@@ -120,8 +120,8 @@ public class EndGameDetector {
         Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
         Cell blackBishopPosition = blackBishop.getCurrentPosition();
 
-        return (whiteBishopPosition.getColumn() + whiteBishopPosition.getRow()) % 2
-                == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
+        return (whiteBishopPosition.column + whiteBishopPosition.row) % 2
+                == (blackBishopPosition.column + blackBishopPosition.row) % 2;
     }
 
     /**
@@ -147,8 +147,8 @@ public class EndGameDetector {
 
     /** @return true если игроку с указанным цветом ставят шах */
     public boolean isCheck(Color color) {
-        Figure king = gs.board.findKing(color);
-        if (king == null) return false;
-        return Board.isAttackedCell(gs, king.getCurrentPosition(), color.inverse());
+        Cell kingCell = gs.board.findKingCell(color);
+        if (kingCell == null) return false;
+        return Board.isAttackedCell(gs, kingCell, color.inverse());
     }
 }

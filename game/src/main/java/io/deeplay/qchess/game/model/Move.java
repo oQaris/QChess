@@ -57,7 +57,7 @@ public class Move {
 
     /** @return полный хеш мува */
     public int fullHashCode() {
-        return hashCode() * 10 + turnInto.ordinal();
+        return hashCode() * 31 + (turnInto == null ? 0 : turnInto.ordinal());
     }
 
     /**
@@ -67,7 +67,8 @@ public class Move {
      */
     @Override
     public int hashCode() {
-        return (from.hashCode() * 100 + to.hashCode()) * 10 + moveType.ordinal();
+        return (Cell.hashCodes[from.column][from.row] * 31 + Cell.hashCodes[to.column][to.row]) * 10
+                + moveType.ordinal();
     }
 
     @Override

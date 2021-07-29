@@ -4,13 +4,18 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Board.BoardFilling;
+import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import java.time.LocalTime;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +25,7 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 2;
+    private static final int COUNT = 50;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -38,6 +43,31 @@ public class NNNBotTest {
 
     private static String time;
 
+    @Ignore
+    @Test
+    public void testHash() {
+        Board board = new Board(BoardFilling.STANDARD);
+        Random rand = new Random();
+        int count = 1000000;
+        int i = count;
+        double time = 0;
+        while (--i >= 0) {
+            try {
+                board.moveFigureUgly(
+                        new Move(
+                                MoveType.QUIET_MOVE,
+                                new Cell(rand.nextInt(8), rand.nextInt(8)),
+                                new Cell(rand.nextInt(8), rand.nextInt(8))));
+            } catch (NullPointerException ignore) {
+            }
+
+            long startTime = System.nanoTime();
+            board.hashCode();
+            time += (double) (System.nanoTime() - startTime) / count;
+        }
+        System.out.println(time);
+    }
+
     @Test
     public void testGame() {
         time = LocalTime.now().withNano(0).toString().replace(":", ";");
@@ -48,7 +78,8 @@ public class NNNBotTest {
         int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
         logger.info("Number of available processors: {}", availableProcessorsCount);
 
-        ExecutorService executor = Executors.newFixedThreadPool(availableProcessorsCount);
+        ExecutorService executor =
+                Executors.newFixedThreadPool(Math.min(availableProcessorsCount, COUNT));
         long startTime = System.currentTimeMillis();
 
         for (int i = 1; i <= COUNT; ++i) {
@@ -132,6 +163,10 @@ public class NNNBotTest {
                         nnnBot.getId(),
                         nnnBot.getGetCacheVirt(),
                         nnnBot.getNOTgetCacheVirt());
+                logger.info(
+                        "Ботом #{} положено оптимальных состояний: {}",
+                        nnnBot.getId(),
+                        nnnBot.getPutCache());
                 logger.info(
                         "Average time to move by NNNBot #{}: {} sec; move count: {}",
                         nnnBot.getId(),

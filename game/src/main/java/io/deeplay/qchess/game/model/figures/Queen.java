@@ -23,6 +23,12 @@ public class Queen extends Figure {
     }
 
     @Override
+    public boolean isAttackedCell(GameSettings settings, Cell cell) {
+        return Rook.isAttackedCell(settings, position, cell)
+                || Bishop.isAttackedCell(settings, position, cell);
+    }
+
+    @Override
     public FigureType getType() {
         return FigureType.QUEEN;
     }

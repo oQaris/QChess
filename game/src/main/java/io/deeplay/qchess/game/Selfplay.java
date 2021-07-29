@@ -30,7 +30,7 @@ public class Selfplay {
         currentPlayerToMove = firstPlayer;
         try {
             roomSettings.history.addRecord(null);
-        } catch (ChessException | ChessError | NullPointerException e) {
+        } catch (ChessError | NullPointerException e) {
             logger.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }

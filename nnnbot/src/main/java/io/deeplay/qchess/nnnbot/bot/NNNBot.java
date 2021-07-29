@@ -2,8 +2,6 @@ package io.deeplay.qchess.nnnbot.bot;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
@@ -11,7 +9,6 @@ import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,16 +16,22 @@ import org.slf4j.LoggerFactory;
 public class NNNBot extends RemotePlayer {
 
     public static final int MAX_DEPTH = 2;
+
     private static final Logger logger = LoggerFactory.getLogger(NNNBot.class);
+
     private static final EstimatedBoard theWorstEstimation = new EstimatedBoard(0, -100);
 
-    private /*final*/ Map<BoardState, EstimatedBoard> cachedEstimatedStates;
+    private int maxCacheSize;
+    private /*final*/ Map<Integer, EstimatedBoard> cachedEstimatedStates;
 
     @Deprecated private int id;
+
+    @Deprecated private boolean includeCache;
     @Deprecated private int getCacheVirt;
     @Deprecated private int getCache;
     @Deprecated private int NOTgetCacheVirt;
     @Deprecated private int NOTgetCache;
+    @Deprecated private int putCache;
 
     @Deprecated private int moveCount;
     @Deprecated private double timeToThink;
@@ -43,7 +46,13 @@ public class NNNBot extends RemotePlayer {
     /** @deprecated Используется для тестов, чтобы найти оптимальный размер кеша */
     @Deprecated
     public void setCacheSize(int cacheSize) {
-        cachedEstimatedStates = new HashMap<>(40000);
+        this.maxCacheSize = cacheSize * 10;
+        cachedEstimatedStates = new HashMap<>(cacheSize);
+    }
+
+    @Deprecated
+    public void includeCache() {
+        includeCache = true;
     }
 
     @Deprecated
@@ -96,6 +105,11 @@ public class NNNBot extends RemotePlayer {
         return minTimeToThink;
     }
 
+    @Deprecated
+    public int getPutCache() {
+        return putCache;
+    }
+
     @Override
     public Move getNextMove() throws ChessError {
         // TODO: запуск потока для симуляции ходов, если еще не запущен
@@ -139,61 +153,85 @@ public class NNNBot extends RemotePlayer {
     }
 
     private double getTheBestEvaluationAfterVirtualMove(
-            double optEstimation, Move move, GameSettings gs, Color color, int depth) {
-        EstimatedBoard estimatedState =
-                cachedEstimatedStates.getOrDefault(
-                        gs.history.getLastBoardState(), theWorstEstimation);
-        if (estimatedState.maxEstimatedDepth >= depth) {
-            logger.trace("Взято лучшее состояние из кеша для {}", color);
-            ++getCache;
-            return estimatedState.estimation;
-        }
-        logger.trace("Не найдено лучшее состояние в кеше для {}", color);
-        ++NOTgetCache;
-
-        if (--depth < 0) return getEvaluation(gs.board, color);
-
-        try {
-            gs.moveSystem.move(move);
-
+            double optEstimation, Move move, GameSettings gs, Color color, int depth)
+            throws ChessError {
+        EstimatedBoard estimatedState = null;
+        if (includeCache) {
             estimatedState =
                     cachedEstimatedStates.getOrDefault(
-                            gs.history.getLastBoardState(), theWorstEstimation);
-            if (estimatedState.maxEstimatedDepth < depth) {
-                logger.trace("Не найдено оптимальное состояние в кеше для {}", color);
-                ++NOTgetCacheVirt;
+                            gs.history.getLastRecord(), theWorstEstimation);
+            if (estimatedState.maxEstimatedDepth + 1 >= depth) {
+                ++getCache;
+                return estimatedState.estimation;
+            }
+            if (cachedEstimatedStates.remove(gs.history.getLastRecord()) != null) ++NOTgetCache;
+        }
+
+        if (--depth < 0) return getEvaluation(gs, color);
+
+        try {
+            // Мой ход
+            gs.moveSystem.move(move);
+        } catch (ChessError e) {
+            logger.error("Непредвиденная ошибка при выполнении хода: {}", e.getMessage());
+            throw e;
+        }
+
+        try {
+            if (includeCache)
+                estimatedState =
+                        cachedEstimatedStates.getOrDefault(
+                                gs.history.getLastRecord(), theWorstEstimation);
+            if (!includeCache || estimatedState.maxEstimatedDepth + 1 < depth) {
+                if (includeCache
+                        && cachedEstimatedStates.remove(gs.history.getLastRecord()) != null)
+                    ++NOTgetCacheVirt;
                 // Если еще нет лучшей оценки
-                gs.moveSystem.move(getTheBestMove(gs, color.inverse(), depth));
+                gs.moveSystem.move(getTheBestMoveForOpponent(gs, color.inverse(), depth));
                 double estimation = getTheBestEvaluation(gs, color, depth);
                 if (estimation > optEstimation) optEstimation = estimation;
                 gs.moveSystem.undoMove();
 
-                cachedEstimatedStates.put(
-                        gs.history.getLastBoardState(), new EstimatedBoard(optEstimation, depth));
+                if (includeCache && cachedEstimatedStates.size() < maxCacheSize) {
+                    cachedEstimatedStates.put(
+                            gs.history.getLastRecord(), new EstimatedBoard(optEstimation, depth));
+                    ++putCache;
+                }
                 // Если уже есть лучшая оценка
             } else if (estimatedState.estimation > optEstimation) {
                 optEstimation = estimatedState.estimation;
-                logger.trace("Взято оптимальное состояние из кеша для {}", color);
                 ++getCacheVirt;
             }
-
-            gs.moveSystem.undoMove();
-
         } catch (ChessError e) {
             // Только второй ход может кинуть исключение => нет ходов у противника
             optEstimation = 10000;
-            cachedEstimatedStates.put(
-                    gs.history.getLastBoardState(), new EstimatedBoard(optEstimation, depth));
-            try {
-                // Отмена первого хода
-                gs.moveSystem.undoMove();
-            } catch (ChessError ignore) {
-                logger.error("Невозможная ошибка при отмене хода");
+            if (includeCache && cachedEstimatedStates.size() < maxCacheSize) {
+                cachedEstimatedStates.put(
+                        gs.history.getLastRecord(), new EstimatedBoard(optEstimation, depth));
+                ++putCache;
             }
             logger.debug("Надена безвыходная позиция у оппонента");
         }
 
+        try {
+            // Отмена первого (моего) хода
+            gs.moveSystem.undoMove();
+        } catch (ChessError e) {
+            logger.error("Непредвиденная ошибка при отмене хода: {}", e.getMessage());
+            throw e;
+        }
+
         return optEstimation;
+    }
+
+    private Move getTheBestMoveForOpponent(GameSettings gs, Color color, int depth)
+            throws ChessError {
+        // return getTheBestMove(gs, color.inverse(), depth);
+        return getTheBestMoveGreedy(gs, color);
+    }
+
+    private Move getTheBestMoveGreedy(GameSettings gs, Color color) throws ChessError {
+        return getTheBestMove(gs, color, 0);
     }
 
     /**
@@ -207,16 +245,16 @@ public class NNNBot extends RemotePlayer {
      * getEvaluation(текущей доски)
      */
     private double getTheBestEvaluation(GameSettings gs, Color color, int depth) throws ChessError {
-        EstimatedBoard estimatedState =
-                cachedEstimatedStates.getOrDefault(
-                        gs.history.getLastBoardState(), theWorstEstimation);
-        if (estimatedState.maxEstimatedDepth >= depth) {
-            logger.trace("Взято лучшее состояние из кеша для {}", color);
-            ++getCache;
-            return estimatedState.estimation;
+        if (includeCache) {
+            EstimatedBoard estimatedState =
+                    cachedEstimatedStates.getOrDefault(
+                            gs.history.getLastRecord(), theWorstEstimation);
+            if (estimatedState.maxEstimatedDepth + 1 >= depth) {
+                ++getCache;
+                return estimatedState.estimation;
+            }
+            if (cachedEstimatedStates.remove(gs.history.getLastRecord()) != null) ++NOTgetCache;
         }
-        logger.trace("Не найдено лучшее состояние в кеше для {}", color);
-        ++NOTgetCache;
 
         double optEstimation = 0;
 
@@ -233,12 +271,12 @@ public class NNNBot extends RemotePlayer {
                     getTheBestEvaluationAfterVirtualMove(optEstimation, move, gs, color, depth);
         }
 
-        return optEstimation * getEvaluation(gs.board, color);
+        return optEstimation * getEvaluation(gs, color);
     }
 
-    private double getEvaluation(Board board, Color color) {
+    private double getEvaluation(GameSettings gs, Color color) throws ChessError {
         // Лучшая оценка всех времен и народов
-        return new Random().nextDouble();
+        return gs.moveSystem.getAllCorrectMoves(color).size() / 432.;
     }
 
     private static class EstimatedBoard {

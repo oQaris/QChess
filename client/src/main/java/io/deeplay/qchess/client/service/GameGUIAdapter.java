@@ -93,11 +93,7 @@ public class GameGUIAdapter {
 
     /** @return клетка короля цвета color */
     public static ViewCell getKingCell(boolean color) {
-        Cell cell =
-                GameDAO.getGameSettings()
-                        .board
-                        .findKing(color ? Color.WHITE : Color.BLACK)
-                        .getCurrentPosition();
+        Cell cell = GameDAO.getGameSettings().board.findKingCell(color ? Color.WHITE : Color.BLACK);
         return new ViewCell(cell.getRow(), cell.getColumn(), false);
     }
 }

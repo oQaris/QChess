@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
@@ -23,16 +22,22 @@ public class King extends Figure {
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
         Set<Move> res = getAttackedMoves(settings.board);
+        Cell newCell = new Cell(position.column, position.row);
         // рокировка
         if (isCorrectCastling(settings, true))
-            res.add(
-                    new Move(
-                            MoveType.SHORT_CASTLING, position, position.createAdd(new Cell(2, 0))));
+            res.add(new Move(MoveType.SHORT_CASTLING, newCell, position.createAdd(new Cell(2, 0))));
         if (isCorrectCastling(settings, false))
-            res.add(
-                    new Move(
-                            MoveType.LONG_CASTLING, position, position.createAdd(new Cell(-2, 0))));
+            res.add(new Move(MoveType.LONG_CASTLING, newCell, position.createAdd(new Cell(-2, 0))));
         return res;
+    }
+
+    @Override
+    public boolean isAttackedCell(GameSettings settings, Cell cell) {
+        int x = cell.column;
+        int y = cell.row;
+        int myX = position.column;
+        int myY = position.row;
+        return (x != myX || y != myY) && Math.abs(myX - x) <= 1 && Math.abs(myY - y) <= 1;
     }
 
     @Override
@@ -40,12 +45,19 @@ public class King extends Figure {
         return FigureType.KING;
     }
 
+    @Override
+    public void setCurrentPosition(Cell position) {
+        this.position.column = position.column;
+        this.position.row = position.row;
+    }
+
     /** @return ходы без рокировки */
     public Set<Move> getAttackedMoves(Board board) {
-        return stepForEach(
+        return stepForEachWithNewCell(
                 board,
                 Stream.concat(Figure.xMove.stream(), Figure.plusMove.stream())
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList()),
+                true);
     }
 
     /** @return true, если рокировка возможна */
@@ -67,14 +79,11 @@ public class King extends Figure {
                         settings,
                         position.createAdd(new Cell(shortCastling ? 2 : -2, 0)),
                         color.inverse())) return false;
-        try {
-            Figure rook =
-                    settings.board.getFigure(
-                            position.createAdd(new Cell(shortCastling ? 3 : -4, 0)));
-            return rook != null && !rook.wasMoved() && rook.getType() == FigureType.ROOK;
-        } catch (ChessException | NullPointerException e) {
-            logger.warn("В проверке на рокировку возникло исключение: {}", e.getMessage());
-            return false;
-        }
+
+        Figure rook =
+                shortCastling
+                        ? settings.board.findRightRookStandard(color)
+                        : settings.board.findLeftRookStandard(color);
+        return rook != null && !rook.wasMoved();
     }
 }

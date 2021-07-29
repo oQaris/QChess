@@ -12,9 +12,27 @@ public class Bishop extends Figure {
         super(color, position);
     }
 
+    public static boolean isAttackedCell(GameSettings settings, Cell fromPos, Cell cell) {
+        int x = cell.column;
+        int y = cell.row;
+        int myX = fromPos.column;
+        int myY = fromPos.row;
+        if (x == myX && y == myY) return false;
+        if (x != myY - y + myX && x != myX + y - myY) return false;
+        Cell attackVector = new Cell(Integer.compare(x, myX), Integer.compare(y, myY));
+        Cell pos = fromPos.createAdd(attackVector);
+        while (pos.column != x && settings.board.isEmptyCell(pos)) pos.shift(attackVector);
+        return pos.column == x;
+    }
+
     @Override
     public Set<Move> getAllMoves(GameSettings settings) {
         return rayTrace(settings.board, Figure.xMove);
+    }
+
+    @Override
+    public boolean isAttackedCell(GameSettings settings, Cell cell) {
+        return isAttackedCell(settings, position, cell);
     }
 
     @Override

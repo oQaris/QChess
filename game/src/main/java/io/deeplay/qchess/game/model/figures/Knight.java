@@ -18,6 +18,12 @@ public class Knight extends Figure {
     }
 
     @Override
+    public boolean isAttackedCell(GameSettings settings, Cell cell) {
+        for (Cell c : Figure.knightMove) if (position.createAdd(c).equals(cell)) return true;
+        return false;
+    }
+
+    @Override
     public FigureType getType() {
         return FigureType.KNIGHT;
     }

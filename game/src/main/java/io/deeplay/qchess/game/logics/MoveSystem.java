@@ -41,6 +41,7 @@ public class MoveSystem {
             logger.debug("Начато выполнение хода: {}", move);
 
             Figure moveFigure = board.getFigureUgly(move.getFrom());
+            moveFigure.setWasMoved(true);
 
             history.setHasMovedBeforeLastMove(moveFigure.wasMoved());
 
@@ -48,8 +49,8 @@ public class MoveSystem {
                     switch (move.getMoveType()) {
                             // взятие на проходе
                         case EN_PASSANT -> {
-                            board.moveFigure(move);
-                            yield board.removeFigure(history.getLastMove().getTo());
+                            board.moveFigureUgly(move);
+                            yield board.removeFigureUgly(history.getLastMove().getTo());
                         }
                             // превращение пешки
                         case TURN_INTO, TURN_INTO_ATTACK -> {
@@ -57,7 +58,7 @@ public class MoveSystem {
                             if (turnIntoType == null) turnIntoType = FigureType.QUEEN;
                             Figure turnIntoFigure =
                                     Figure.build(turnIntoType, moveFigure.getColor(), move.getTo());
-                            Figure removed = board.moveFigure(move);
+                            Figure removed = board.moveFigureUgly(move);
                             board.setFigureUgly(turnIntoFigure);
                             yield removed;
                         }
@@ -65,16 +66,16 @@ public class MoveSystem {
                         case SHORT_CASTLING -> {
                             Cell from = move.getFrom().createAdd(new Cell(3, 0));
                             Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                            board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-                            yield board.moveFigure(move);
+                            board.moveFigureUgly(new Move(MoveType.QUIET_MOVE, from, to));
+                            yield board.moveFigureUgly(move);
                         }
                         case LONG_CASTLING -> {
                             Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                             Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                            board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-                            yield board.moveFigure(move);
+                            board.moveFigureUgly(new Move(MoveType.QUIET_MOVE, from, to));
+                            yield board.moveFigureUgly(move);
                         }
-                        default -> board.moveFigure(move);
+                        default -> board.moveFigureUgly(move);
                     };
 
             history.setRemovedFigure(removedFigure);
@@ -83,7 +84,7 @@ public class MoveSystem {
 
             logger.debug("Ход <{}> выполнен успешно, удаленная фигура: {}", move, removedFigure);
             return removedFigure;
-        } catch (ChessException | NullPointerException e) {
+        } catch (NullPointerException e) {
             logger.error("Ошибка при выполнении хода: {}", move);
             throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
         }
@@ -200,17 +201,17 @@ public class MoveSystem {
             Move move, EndGameDetector egd, Board board, History history)
             throws ChessError, ChessException {
         logger.trace("Начата проверка виртуального хода {}", move);
-        return virtualMove(
-                move,
-                (figureToMove, virtualKilled) -> {
-                    if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
-                        logger.error("Срубили короля при проверке виртуального хода {}", move);
-                        throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
-                    }
-                    return !egd.isCheck(figureToMove);
-                },
-                board,
-                history);
+        Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
+        Figure virtualKilled = move(move, board, history);
+
+        if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
+            logger.error("Срубили короля при проверке виртуального хода {}", move);
+            throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
+        }
+        boolean isCheck = egd.isCheck(figureToMove);
+
+        undoMove(board, history);
+        return !isCheck;
     }
 
     /**
@@ -267,10 +268,12 @@ public class MoveSystem {
      */
     public List<Move> getAllCorrectMoves(Cell cell) throws ChessError {
         List<Move> res = new ArrayList<>(27);
-        if (!gs.board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
-        Figure figure = gs.board.getFigureUgly(cell);
-        if (figure == null) return res;
-        for (Move m : figure.getAllMoves(gs)) if (isCorrectVirtualMoveForCell(m)) res.add(m);
+        try {
+            for (Move m : gs.board.getFigureUgly(cell).getAllMoves(gs))
+                if (isCorrectVirtualMoveForCell(m)) res.add(m);
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException ignored) {
+            // Вместо проверки клетки на доске
+        }
         return res;
     }
 
@@ -294,7 +297,7 @@ public class MoveSystem {
                     && checkCorrectnessIfSpecificMove(move)
                     && inAvailableMoves(move)
                     && isCorrectVirtualMove(move, gs.endGameDetector, gs.board, gs.history);
-        } catch (ChessException | NullPointerException e) {
+        } catch (ChessException | NullPointerException | ArrayIndexOutOfBoundsException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
                     move,
@@ -304,9 +307,10 @@ public class MoveSystem {
     }
 
     /** @return true если ход лежит в доступных */
-    private boolean inAvailableMoves(Move move) throws ChessException {
+    private boolean inAvailableMoves(Move move)
+            throws ChessException, ArrayIndexOutOfBoundsException {
         logger.trace("Начата проверка хода {} на содержание его в доступных ходах", move);
-        Figure figure = gs.board.getFigure(move.getFrom());
+        Figure figure = gs.board.getFigureUgly(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(gs);
         return allMoves.contains(move);
     }
