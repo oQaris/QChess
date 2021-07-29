@@ -38,7 +38,7 @@ public class BoardState {
 
     @Override
     public int hashCode() {
-        final int h1 = lastMove == null ? 1 : lastMove.fullHashCode();
+        final int h1 = lastMove == null ? 0 : lastMove.fullHashCode();
         return Objects.hash(
                 h1, forsythEdwards, hasMovedBeforeLastMove, removedFigure, peaceMoveCount);
     }
