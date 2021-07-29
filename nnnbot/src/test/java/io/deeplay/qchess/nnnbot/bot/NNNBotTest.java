@@ -7,19 +7,24 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
+import java.time.LocalTime;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 2;
+    private static final int COUNT = 50;
+
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
+    private static volatile boolean allTasksAreDone;
 
     private static volatile int drawCount;
     private static volatile int drawWithPeaceMoveCount;
@@ -31,38 +36,52 @@ public class NNNBotTest {
     private static volatile int stalemateToNNNBot;
     private static volatile int stalemateToOpponent;
 
+    private static String time;
+
     @Test
     public void testGame() {
-        ExecutorService executor = Executors.newCachedThreadPool();
+        time = LocalTime.now().withNano(0).toString();
+        MDC.put("time", time);
+
+        new Random().setSeed(time.hashCode());
+
+        int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
+        logger.info("Number of available processors: {}", availableProcessorsCount);
+
+        ExecutorService executor = Executors.newFixedThreadPool(availableProcessorsCount);
         long startTime = System.currentTimeMillis();
 
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 1; i <= COUNT; ++i) {
             executor.execute(i % 2 == 0 ? new Game(Color.WHITE) : new Game(Color.BLACK));
         }
-        while (doneTasks != COUNT) Thread.onSpinWait();
+        while (!allTasksAreDone) Thread.onSpinWait();
 
         long timeInSec = (System.currentTimeMillis() - startTime) / 1000;
         executor.shutdown();
 
         logger.info("<------------------------------------------------------>");
         logger.info("Time: {} min {} sec", timeInSec / 60, timeInSec % 60);
+        logger.info("Game count: {}", COUNT);
+        logger.info("<------------------->");
+        logger.info("Draw count: {}", drawCount);
+        logger.info("Draw with peace move count: {}", drawWithPeaceMoveCount);
+        logger.info("Draw with repetitions: {}", drawWithRepetitions);
         logger.info(
-                "Draw count: {}\n"
-                        + "Draw with peace move count: {}\n"
-                        + "Draw with repetitions: {}\n"
-                        + "Draw with not enough material for checkmate: {}\n"
-                        + "Checkmate to NNNBot: {}\n"
-                        + "Checkmate to opponent: {}\n"
-                        + "Stalemate to NNNBot: {}\n"
-                        + "Stalemate to opponent: {}",
-                drawCount,
-                drawWithPeaceMoveCount,
-                drawWithRepetitions,
-                drawWithNotEnoughMaterialForCheckmate,
-                checkmateToNNNBot,
-                checkmateToOpponent,
-                stalemateToNNNBot,
-                stalemateToOpponent);
+                "Draw with not enough material for checkmate: {}",
+                drawWithNotEnoughMaterialForCheckmate);
+        logger.info("<------------------->");
+        logger.info("Checkmate to NNNBot: {}", checkmateToNNNBot);
+        logger.info("Checkmate to opponent: {}", checkmateToOpponent);
+        logger.info("Stalemate to NNNBot: {}", stalemateToNNNBot);
+        logger.info("Stalemate to opponent: {}", stalemateToOpponent);
+        logger.info("<------------------->");
+        logger.info(
+                "NNNBot win + semi-win rate: {}% + {}%",
+                checkmateToOpponent * 100 / COUNT, stalemateToOpponent * 100 / COUNT);
+        logger.info(
+                "Opponent win + semi-win rate: {}% + {}%",
+                checkmateToNNNBot * 100 / COUNT, stalemateToNNNBot * 100 / COUNT);
+        logger.info("Draw rate: {}%", drawCount * 100 / COUNT);
     }
 
     private static class Game implements Runnable {
@@ -80,12 +99,15 @@ public class NNNBotTest {
             gs = new GameSettings(Board.BoardFilling.STANDARD);
             Player firstPlayer;
             Player secondPlayer;
+            NNNBot nnnBot;
             if (NNNBotColor == Color.WHITE) {
-                firstPlayer = new NNNBot(gs, Color.WHITE);
+                nnnBot = NNNBotFactory.getNNNBot(time, gs, Color.WHITE);
+                firstPlayer = nnnBot;
                 secondPlayer = new RandomBot(gs, Color.BLACK);
             } else {
                 firstPlayer = new RandomBot(gs, Color.WHITE);
-                secondPlayer = new NNNBot(gs, Color.BLACK);
+                nnnBot = NNNBotFactory.getNNNBot(time, gs, Color.BLACK);
+                secondPlayer = nnnBot;
             }
 
             try {
@@ -98,7 +120,19 @@ public class NNNBotTest {
             synchronized (mutexDoneTask) {
                 ++doneTasks;
                 updateEndGameStatistics();
+                MDC.put("time", time);
                 logger.info("Games completed: {}/{}", doneTasks, COUNT);
+                logger.info(
+                        "Ботом #{} взято лучших состояний: {}; не взято: {}",
+                        nnnBot.getId(),
+                        nnnBot.getGetCache(),
+                        nnnBot.getNOTgetCache());
+                logger.info(
+                        "Ботом #{} взято оптимальных состояний: {}; не взято: {}",
+                        nnnBot.getId(),
+                        nnnBot.getGetCacheVirt(),
+                        nnnBot.getNOTgetCacheVirt());
+                if (doneTasks == COUNT) allTasksAreDone = true;
             }
         }
 

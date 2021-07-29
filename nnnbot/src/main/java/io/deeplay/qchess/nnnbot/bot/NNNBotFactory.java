@@ -1,0 +1,29 @@
+package io.deeplay.qchess.nnnbot.bot;
+
+import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.model.Color;
+import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+public class NNNBotFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(NNNBotFactory.class);
+
+    private static int lastId;
+
+    public static synchronized NNNBot getNNNBot(String time, GameSettings gs, Color color) {
+        MDC.put("time", time);
+
+        NNNBot nnnBot = new NNNBot(gs, color);
+
+        nnnBot.setId(++lastId);
+
+        int testCacheSize = NNNBot.MAX_DEPTH * new Random().nextInt(1000);
+        nnnBot.setCacheSize(testCacheSize);
+        logger.info("Создан бот #{} с размером кеша: {}", lastId, testCacheSize);
+
+        return nnnBot;
+    }
+}

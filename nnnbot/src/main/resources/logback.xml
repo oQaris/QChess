@@ -14,51 +14,50 @@
   </appender>
 
   <!-- Для вывода результатов игр локально -->
-  <appender class="ch.qos.logback.core.FileAppender" name="GAME-STATISTICS">
-    <append>false</append>
+  <appender name="GAME-STATISTICS" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>time</key>
+      <defaultValue>TIME</defaultValue>
+    </discriminator>
 
-    <encoder>
-      <pattern>%msg%n</pattern>
-    </encoder>
+    <sift>
+      <appender name="FILE-${time}" class="ch.qos.logback.core.FileAppender">
+        <append>false</append>
 
-    <file>logs/qchess-statistics.log</file>
+        <file>logs/${time}-qchess-statistics.log</file>
 
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
-    </filter>
+        <encoder>
+          <pattern>%msg%n</pattern>
+        </encoder>
+      </appender>
+    </sift>
   </appender>
 
-  <!-- DEBUG -->
-  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-DEBUG">
+  <!-- Все логи -->
+  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION">
     <append>false</append>
 
     <encoder>
-      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
+      <pattern>[%level] [%thread] "%logger{1}" - %msg%n</pattern>
     </encoder>
 
-    <file>logs/qchess-last-session-debug.log</file>
+    <file>logs/qchess-last-session-trace.log</file>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>DEBUG</level>
-    </filter>
-  </appender>
-
-  <!-- INFO -->
-  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-INFO">
-    <append>false</append>
-
-    <encoder>
-      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
-    </encoder>
-
-    <file>logs/qchess-last-session-info.log</file>
-
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
+      <level>ALL</level>
     </filter>
   </appender>
 
   <logger level="info" name="io.deeplay.qchess.nnnbot.bot.NNNBotTest">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="GAME-STATISTICS"/>
+  </logger>
+
+  <logger level="warn" name="io.deeplay.qchess.nnnbot.bot.NNNBot">
+    <appender-ref ref="FILE-LAST-SESSION"/>
+  </logger>
+
+  <logger level="info" name="io.deeplay.qchess.nnnbot.bot.NNNBotFactory">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="GAME-STATISTICS"/>
   </logger>

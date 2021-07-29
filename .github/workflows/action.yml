@@ -17,7 +17,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
       - name: Collect logs if failure
         uses: actions/upload-artifact@v2
-        if: failure()
+        #if: failure()
         with:
           name: logs
           path: logs/
