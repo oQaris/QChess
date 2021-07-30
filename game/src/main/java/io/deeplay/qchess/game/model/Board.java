@@ -51,13 +51,13 @@ public class Board {
             int x = 0;
             for (Character currentSymbol : placement.toCharArray()) {
                 if (currentSymbol.equals('/')) {
-                    y++;
+                    ++y;
                     x = 0;
                 } else if (Character.isDigit(currentSymbol)) {
-                    x += Integer.parseInt(String.valueOf(currentSymbol));
+                    x += currentSymbol - 48;
                 } else {
                     setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
-                    x++;
+                    ++x;
                 }
             }
         } catch (ChessException e) {
