@@ -1,37 +1,35 @@
 package io.deeplay.qchess.qbot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Board.BoardFilling;
-import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class QBotTest {
     private static final Logger log = LoggerFactory.getLogger(QBotTest.class);
-    private static final int COUNT = 10000;
+    private static final int COUNT = 100;
 
     @Test
-    void evaluateBoard() {
+    void evaluateBoard() throws InterruptedException {
         ExecutorService executor = Executors.newCachedThreadPool();
         log.error("//------------ Минимаксный и Рандомный боты ------------//");
         long m = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
+            int finalI = i;
             executor.execute(
                     () -> {
                         GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-                        Player firstPlayer = new QBot(roomSettings, Color.WHITE, 3);
+                        Player firstPlayer = new QBot(roomSettings, Color.WHITE);
                         Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
                         try {
                             Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -39,11 +37,12 @@ class QBotTest {
                         } catch (ChessError error) {
                             error.printStackTrace();
                         }
+                        System.out.println("1 - " + (finalI + 1) + "/" + COUNT);
                     });
-            System.out.println("1 - " + (i + 1) + "/" + COUNT);
         }
-        log.error("Time: {}\n", System.currentTimeMillis() - m);
         executor.shutdown();
+        executor.awaitTermination(1, TimeUnit.DAYS);
+        log.error("Time: {}\n", System.currentTimeMillis() - m);
     }
 
     /*public void testQBot() throws ChessError, ChessException {
@@ -164,9 +163,9 @@ class QBotTest {
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));*/
     }
 
-    public void testEvaluateBoard() throws ChessException, ChessError {
+    /*public void testEvaluateBoard() throws ChessException, ChessError {
         GameSettings roomSettings = new GameSettings(BoardFilling.STANDARD);
-        QBot bot = new QBot(roomSettings, Color.WHITE, 2);
+        QBot bot = new QBot(roomSettings, Color.WHITE);
 
         assertEquals(0, bot.evaluateBoard());
 
@@ -175,5 +174,5 @@ class QBotTest {
 
         roomSettings.board.removeFigure(new Cell(3, 7));
         assertEquals(-127, bot.evaluateBoard());
-    }
+    }*/
 }

@@ -97,20 +97,20 @@ public class Selfplay {
         }
         if (isDraw) {
             if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
-                logger.info(
+                logger.error(
                         "Ничья: {} ходов без взятия и хода пешки",
                         EndGameDetector.END_PEACE_MOVE_COUNT);
             if (roomSettings.endGameDetector.isDrawWithRepetitions())
-                logger.info(
+                logger.error(
                         "Ничья: {} повторений позиций доски",
                         EndGameDetector.END_REPETITIONS_COUNT);
             if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
-                logger.info("Ничья: недостаточно фигур, чтобы поставить мат");
+                logger.error("Ничья: недостаточно фигур, чтобы поставить мат");
         } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
-            logger.info(
+            logger.error(
                     "Мат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
         else
-            logger.info(
+            logger.error(
                     "Пат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
 
         // TODO: конец игры, отправлять GameResponse

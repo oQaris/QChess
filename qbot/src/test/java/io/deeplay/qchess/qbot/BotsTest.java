@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 class BotsTest {
     private static final Logger logger = LoggerFactory.getLogger(BotsTest.class);
 
-    private static final int COUNT = 50;
+    private static final int COUNT = 5;
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
     private static volatile int drawWithPeaceMoveCount;
