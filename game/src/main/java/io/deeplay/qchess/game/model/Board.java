@@ -6,6 +6,7 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.math.GameMath;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.Pawn;
@@ -24,17 +25,21 @@ public class Board {
 
     public final int boardSize;
     private final Figure[][] cells;
+    private final byte[] cellsType;
     public Cell blackKing;
     public Cell whiteKing;
+    private int cellsTypeHash;
 
     public Board(int size, BoardFilling fillingType) {
         boardSize = size;
         cells = new Figure[boardSize][boardSize];
+        cellsType = new byte[boardSize * boardSize];
         try {
             fill(fillingType);
         } catch (ChessException e) {
             logger.error("Ошибка при заполнении доски");
         }
+        cellsTypeHash = GameMath.hashCode64(cellsType);
     }
 
     public Board(BoardFilling fillingType) {
@@ -70,14 +75,26 @@ public class Board {
 
     /** Создает копию доски, включая копии фигур на ней */
     public Board(Board board) {
-        this(board.boardSize, BoardFilling.EMPTY);
+        boardSize = board.boardSize;
+        cells = new Figure[boardSize][boardSize];
+        cellsType = board.cellsType.clone();
+        cellsTypeHash = board.cellsTypeHash;
+
         for (int y = 0; y < boardSize; ++y)
-            for (int x = 0; x < boardSize; ++x)
-                cells[y][x] =
-                        Figure.build(
-                                board.cells[y][x].getType(),
-                                board.cells[y][x].getColor(),
-                                new Cell(x, y));
+            for (int x = 0; x < boardSize; ++x) {
+                if (board.cells[y][x] != null) {
+                    cells[y][x] =
+                            Figure.build(
+                                    board.cells[y][x].figureType,
+                                    board.cells[y][x].getColor(),
+                                    new Cell(x, y));
+                    if (cells[y][x].figureType == FigureType.KING) {
+                        if (cells[y][x].getColor() == Color.WHITE)
+                            whiteKing = cells[y][x].getCurrentPosition();
+                        else blackKing = cells[y][x].getCurrentPosition();
+                    }
+                }
+            }
     }
 
     /** @return true, если клетка cell атакуется цветом color */
@@ -158,7 +175,12 @@ public class Board {
             throw new ChessException(INCORRECT_COORDINATES);
         }
         cells[position.row][position.column] = figure;
-        if (figure.getType() == FigureType.KING) {
+
+        int i = position.row * 8 + position.column;
+        cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
+        cellsType[i] = figure.figureType.type;
+
+        if (figure.figureType == FigureType.KING) {
             if (figure.getColor() == Color.WHITE) whiteKing = figure.getCurrentPosition();
             else blackKing = figure.getCurrentPosition();
         }
@@ -169,6 +191,10 @@ public class Board {
     public void setFigureUgly(Figure figure) throws ArrayIndexOutOfBoundsException {
         Cell position = figure.getCurrentPosition();
         cells[position.row][position.column] = figure;
+
+        int i = position.row * 8 + position.column;
+        cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
+        cellsType[i] = figure.figureType.type;
     }
 
     /**
@@ -181,6 +207,27 @@ public class Board {
             for (Figure figure : figures)
                 if (figure != null && figure.getColor() == color) list.add(figure);
         return list;
+    }
+
+    /** @return все фигуры на доске */
+    public List<Figure> getAllFigures() {
+        List<Figure> list = new ArrayList<>(32);
+        for (Figure[] figures : cells)
+            for (Figure figure : figures) if (figure != null) list.add(figure);
+        return list;
+    }
+
+    public int getFigureCount(Color color) {
+        int count = 0;
+        for (int yl = 0, yr = boardSize - 1; yl < yr; ++yl, --yr) {
+            for (int xl = 0, xr = boardSize - 1; xl < xr; ++xl, --xr) {
+                if (cells[yl][xl] != null && cells[yl][xl].getColor() == color) ++count;
+                if (cells[yl][xr] != null && cells[yl][xr].getColor() == color) ++count;
+                if (cells[yr][xl] != null && cells[yr][xl].getColor() == color) ++count;
+                if (cells[yr][xr] != null && cells[yr][xr].getColor() == color) ++count;
+            }
+        }
+        return count;
     }
 
     /**
@@ -203,7 +250,7 @@ public class Board {
      */
     public Figure findLeftRookStandard(Color color) {
         Figure rook = cells[(color == Color.BLACK ? 0 : boardSize - 1)][0];
-        if (rook != null && rook.getType() == FigureType.ROOK && rook.getColor() == color)
+        if (rook != null && rook.figureType == FigureType.ROOK && rook.getColor() == color)
             return rook;
         return null;
     }
@@ -214,7 +261,7 @@ public class Board {
      */
     public Figure findRightRookStandard(Color color) {
         Figure rook = cells[(color == Color.BLACK ? 0 : boardSize - 1)][boardSize - 1];
-        if (rook != null && rook.getType() == FigureType.ROOK && rook.getColor() == color)
+        if (rook != null && rook.figureType == FigureType.ROOK && rook.getColor() == color)
             return rook;
         return null;
     }
@@ -290,6 +337,11 @@ public class Board {
         }
         Figure old = cells[cell.row][cell.column];
         cells[cell.row][cell.column] = null;
+
+        int i = cell.row * 8 + cell.column;
+        cellsTypeHash -= GameMath.hash64Coeff[i] * cellsType[i];
+        cellsType[i] = 0;
+
         return old;
     }
 
@@ -301,6 +353,11 @@ public class Board {
     public Figure removeFigureUgly(Cell cell) throws ArrayIndexOutOfBoundsException {
         Figure old = cells[cell.row][cell.column];
         cells[cell.row][cell.column] = null;
+
+        int i = cell.row * 8 + cell.column;
+        cellsTypeHash -= GameMath.hash64Coeff[i] * cellsType[i];
+        cellsType[i] = 0;
+
         return old;
     }
 
@@ -333,7 +390,7 @@ public class Board {
             sb.append('|');
             for (Figure figure : line) {
                 if (figure == null) sb.append("_");
-                else sb.append(Board.figureToIcon(figure.getColor(), figure.getType()));
+                else sb.append(Board.figureToIcon(figure.getColor(), figure.figureType));
                 sb.append('|');
             }
             sb.append(System.lineSeparator());
@@ -346,22 +403,17 @@ public class Board {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Board board = (Board) o;
-        return boardSize == board.boardSize && Arrays.deepEquals(cells, board.cells);
+        return cellsTypeHash == board.cellsTypeHash && Arrays.equals(cellsType, board.cellsType);
     }
 
     @Override
     public int hashCode() {
-        int h = boardSize;
-        for (int yl = 0, yr = boardSize - 1; yl < yr; ++yl, --yr) {
-            for (int xl = 0, xr = boardSize - 1; xl < xr; ++xl, --xr) {
-                h = 31 * 31 * 31 * 31 * h
-                    + 31 * 31 * 31 * (cells[yl][xl] == null ? 0 : cells[yl][xl].hashCode())
-                    + 31 * 31 * (cells[yl][xr] == null ? 0 : cells[yl][xr].hashCode())
-                    + 31 * (cells[yr][xl] == null ? 0 : cells[yr][xl].hashCode())
-                    + (cells[yr][xr] == null ? 0 : cells[yr][xr].hashCode());
-            }
-        }
-        return h;
+        return cellsTypeHash;
+    }
+
+    /** @return копия состояния типов фигур на доске */
+    public byte[] fastSnapshot() {
+        return cellsType.clone();
     }
 
     public enum BoardFilling {

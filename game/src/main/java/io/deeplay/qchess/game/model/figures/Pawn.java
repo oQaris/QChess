@@ -11,7 +11,7 @@ import java.util.Set;
 public class Pawn extends Figure {
 
     public Pawn(Color color, Cell position) {
-        super(color, position);
+        super(color, position, FigureType.PAWN);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Pawn extends Figure {
         Cell prevMoveTo = prevMove.getTo();
 
         Figure pawn = settings.board.getFigureUgly(prevMoveTo);
-        if (pawn == null || pawn.getType() != FigureType.PAWN || color == pawn.getColor())
+        if (pawn == null || pawn.figureType != FigureType.PAWN || color == pawn.getColor())
             return false;
 
         Cell shift = new Cell(0, pawn.getColor() == Color.WHITE ? 1 : -1);
@@ -92,10 +92,5 @@ public class Pawn extends Figure {
 
     private boolean isTurnInto(Cell end, GameSettings settings) {
         return end.row == (color == Color.WHITE ? 0 : settings.board.boardSize - 1);
-    }
-
-    @Override
-    public FigureType getType() {
-        return FigureType.PAWN;
     }
 }

@@ -9,7 +9,7 @@ import java.util.Set;
 public class Bishop extends Figure {
 
     public Bishop(Color color, Cell position) {
-        super(color, position);
+        super(color, position, FigureType.BISHOP);
     }
 
     public static boolean isAttackedCell(GameSettings settings, Cell fromPos, Cell cell) {
@@ -33,10 +33,5 @@ public class Bishop extends Figure {
     @Override
     public boolean isAttackedCell(GameSettings settings, Cell cell) {
         return isAttackedCell(settings, position, cell);
-    }
-
-    @Override
-    public FigureType getType() {
-        return FigureType.BISHOP;
     }
 }

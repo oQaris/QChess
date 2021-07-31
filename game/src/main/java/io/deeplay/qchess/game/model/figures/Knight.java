@@ -9,7 +9,7 @@ import java.util.Set;
 public class Knight extends Figure {
 
     public Knight(Color color, Cell position) {
-        super(color, position);
+        super(color, position, FigureType.KNIGHT);
     }
 
     @Override
@@ -21,10 +21,5 @@ public class Knight extends Figure {
     public boolean isAttackedCell(GameSettings settings, Cell cell) {
         for (Cell c : Figure.knightMove) if (position.createAdd(c).equals(cell)) return true;
         return false;
-    }
-
-    @Override
-    public FigureType getType() {
-        return FigureType.KNIGHT;
     }
 }

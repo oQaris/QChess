@@ -2,6 +2,10 @@ package io.deeplay.qchess.nnnbot.bot;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nnnbot.bot.evaluationfunc.FigurePositionsEvaluation;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.alfabetadeepsearch.AlfaBetaDeepSearch;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.alfabetadeepsearch.MinimaxAlfaBetaDeepSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -12,22 +16,21 @@ public class NNNBotFactory {
 
     private static int lastId;
 
-    public static synchronized NNNBot getNNNBot(String time, GameSettings gs, Color color) {
+    /** Устанавливает время для записи логов */
+    public static void setTime(String time) {
         MDC.put("time", time);
+    }
 
-        NNNBot nnnBot = new NNNBot(gs, color);
+    public static synchronized NNNBot getNNNBot(GameSettings gs, Color color) {
+
+        AlfaBetaDeepSearch deepSearch = new MinimaxAlfaBetaDeepSearch(5);
+        EvaluationFunc evaluationFunc = new FigurePositionsEvaluation();
+
+        NNNBot nnnBot = new NNNBot(gs, color, deepSearch, evaluationFunc);
 
         nnnBot.setId(++lastId);
 
-        int testCacheSize = NNNBot.MAX_DEPTH * 500; // * new Random().nextInt(50);
-        if (lastId % 2 == 0) {
-            nnnBot.includeCache();
-            nnnBot.setCacheSize(testCacheSize);
-            logger.info("Создан бот #{} с размером кеша: {}", lastId, testCacheSize);
-        } else {
-            logger.info("Создан бот #{} без кеша", lastId);
-        }
-
+        logger.info("Создан бот #{} с глубиной поиска {}", lastId, deepSearch.maxDepth);
         return nnnBot;
     }
 }

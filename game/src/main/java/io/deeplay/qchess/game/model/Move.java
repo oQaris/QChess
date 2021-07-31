@@ -55,16 +55,7 @@ public class Move {
         return to;
     }
 
-    /** @return полный хеш мува */
-    public int fullHashCode() {
-        return hashCode() * 31 + (turnInto == null ? 0 : turnInto.ordinal());
-    }
-
-    /**
-     * Не хеширует фигуру для превращения, читать подробнее: {@link #turnInto}
-     *
-     * <p>Для получения полного хеша используйте {@link #fullHashCode}
-     */
+    /** Не хеширует фигуру для превращения, читать подробнее: {@link #turnInto} */
     @Override
     public int hashCode() {
         return (Cell.hashCodes[from.column][from.row] * 31 + Cell.hashCodes[to.column][to.row]) * 10

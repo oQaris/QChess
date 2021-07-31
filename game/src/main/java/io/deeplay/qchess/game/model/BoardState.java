@@ -1,16 +1,18 @@
 package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.model.figures.Figure;
+import java.util.Arrays;
 
 /** Описывает состояние доски */
 public class BoardState {
-    /** TODO: переделать на полную доску */
-    public final int boardHash;
+    public final byte[] boardSnapshot;
+    public final int boardSnapshotHash;
     /** Учитывать в equals и hashCode только LONG_MOVE */
     public final Move lastMove;
 
-    public final boolean isWhiteCastlingPossibility = true;
-    public final boolean isBlackCastlingPossibility = true;
+    public final boolean isWhiteMove;
+    public final boolean isWhiteCastlingPossibility;
+    public final boolean isBlackCastlingPossibility;
 
     /** Не нужно учитывать в equals и hashCode */
     public final boolean hasMovedBeforeLastMove;
@@ -20,16 +22,24 @@ public class BoardState {
     public final int peaceMoveCount;
 
     public BoardState(
-            int boardHash,
+            byte[] boardSnapshot,
+            int boardSnapshotHash,
             Move lastMove,
             int peaceMoveCount,
             boolean hasMovedBeforeLastMove,
-            Figure removedFigure) {
-        this.boardHash = boardHash;
+            Figure removedFigure,
+            boolean isWhiteMove,
+            boolean isWhiteCastlingPossibility,
+            boolean isBlackCastlingPossibility) {
+        this.boardSnapshot = boardSnapshot;
+        this.boardSnapshotHash = boardSnapshotHash;
         this.lastMove = lastMove;
         this.peaceMoveCount = peaceMoveCount;
         this.hasMovedBeforeLastMove = hasMovedBeforeLastMove;
         this.removedFigure = removedFigure;
+        this.isWhiteMove = isWhiteMove;
+        this.isWhiteCastlingPossibility = isWhiteCastlingPossibility;
+        this.isBlackCastlingPossibility = isBlackCastlingPossibility;
     }
 
     /** Используется только для нахождения повторений доски */
@@ -39,13 +49,14 @@ public class BoardState {
         if (o == null || BoardState.class != o.getClass()) return false;
         BoardState that = (BoardState) o;
         try {
-            return boardHash == that.boardHash
+            return boardSnapshotHash == that.boardSnapshotHash
                     && isWhiteCastlingPossibility == that.isWhiteCastlingPossibility
                     && isBlackCastlingPossibility == that.isBlackCastlingPossibility
                     && (lastMove.getMoveType() == MoveType.LONG_MOVE
                                     && that.lastMove.getMoveType() == MoveType.LONG_MOVE
                             || lastMove.getMoveType() != MoveType.LONG_MOVE
-                                    && that.lastMove.getMoveType() != MoveType.LONG_MOVE);
+                                    && that.lastMove.getMoveType() != MoveType.LONG_MOVE)
+                    && Arrays.equals(boardSnapshot, that.boardSnapshot);
         } catch (NullPointerException e) {
             return false;
         }
@@ -54,10 +65,9 @@ public class BoardState {
     /** Используется только для нахождения повторений доски */
     @Override
     public int hashCode() {
-        final int h1 = lastMove == null ? 0 : lastMove.fullHashCode();
-        int result = 31 * h1 + boardHash;
-        result = 31 * result + (isWhiteCastlingPossibility ? 1 : 0);
+        final int h1 = lastMove == null ? 0 : lastMove.getMoveType() == MoveType.LONG_MOVE ? 1 : 2;
+        int result = 31 * h1 + (isWhiteCastlingPossibility ? 1 : 0);
         result = 31 * result + (isBlackCastlingPossibility ? 1 : 0);
-        return result;
+        return 31 * result + boardSnapshotHash;
     }
 }

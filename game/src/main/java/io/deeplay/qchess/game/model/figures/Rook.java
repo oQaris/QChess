@@ -9,7 +9,7 @@ import java.util.Set;
 public class Rook extends Figure {
 
     public Rook(Color color, Cell position) {
-        super(color, position);
+        super(color, position, FigureType.ROOK);
     }
 
     public static boolean isAttackedCell(GameSettings settings, Cell fromPos, Cell cell) {
@@ -40,10 +40,5 @@ public class Rook extends Figure {
     @Override
     public boolean isAttackedCell(GameSettings settings, Cell cell) {
         return isAttackedCell(settings, position, cell);
-    }
-
-    @Override
-    public FigureType getType() {
-        return FigureType.ROOK;
     }
 }

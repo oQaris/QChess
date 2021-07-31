@@ -95,7 +95,7 @@ public class EndGameDetector {
     private boolean isAllFiguresSame(List<Figure> figures, List<FigureType> figureTypes) {
         List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
         if (figures.size() != figureTypes.size()) return false;
-        for (Figure figure : figures) if (!figuresCopyType.remove(figure.getType())) return false;
+        for (Figure figure : figures) if (!figuresCopyType.remove(figure.figureType)) return false;
         return true;
     }
 
@@ -131,7 +131,7 @@ public class EndGameDetector {
      * @return найденного слона, или null - иначе
      */
     private Figure getBishop(List<Figure> figures) {
-        for (Figure figure : figures) if (figure.getType() == FigureType.BISHOP) return figure;
+        for (Figure figure : figures) if (figure.figureType == FigureType.BISHOP) return figure;
         return null;
     }
 
@@ -142,7 +142,7 @@ public class EndGameDetector {
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(Color color) {
-        return gs.moveSystem.getAllCorrectMovesForStalemate(color).isEmpty();
+        return gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
     }
 
     /** @return true если игроку с указанным цветом ставят шах */

@@ -25,7 +25,7 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 50;
+    private static final int COUNT = 1;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -45,7 +45,7 @@ public class NNNBotTest {
 
     @Ignore
     @Test
-    public void testHash() {
+    public void speedTest() {
         Board board = new Board(BoardFilling.STANDARD);
         Random rand = new Random();
         int count = 1000000;
@@ -72,23 +72,29 @@ public class NNNBotTest {
     public void testGame() {
         time = LocalTime.now().withNano(0).toString().replace(":", ";");
         MDC.put("time", time);
-
-        new Random().setSeed(time.hashCode());
+        NNNBotFactory.setTime(time);
 
         int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
         logger.info("Number of available processors: {}", availableProcessorsCount);
 
-        ExecutorService executor =
-                Executors.newFixedThreadPool(Math.min(availableProcessorsCount, COUNT));
-        long startTime = System.currentTimeMillis();
+        long startTime;
+        if (COUNT == 1) {
+            startTime = System.currentTimeMillis();
+            new Game(Color.WHITE).run();
 
-        for (int i = 1; i <= COUNT; ++i) {
-            executor.execute(i % 2 == 0 ? new Game(Color.WHITE) : new Game(Color.BLACK));
+        } else if (COUNT > 1) {
+            ExecutorService executor =
+                    Executors.newFixedThreadPool(Math.min(availableProcessorsCount, COUNT));
+            startTime = System.currentTimeMillis();
+
+            for (int i = 1; i <= COUNT; ++i) {
+                executor.execute(i % 2 == 0 ? new Game(Color.WHITE) : new Game(Color.BLACK));
+            }
+            while (!allTasksAreDone) Thread.onSpinWait();
+            executor.shutdown();
         }
-        while (!allTasksAreDone) Thread.onSpinWait();
 
         long timeInSec = (System.currentTimeMillis() - startTime) / 1000;
-        executor.shutdown();
 
         logger.info("<------------------------------------------------------>");
         logger.info("Time: {} min {} sec", timeInSec / 60, timeInSec % 60);
@@ -132,12 +138,12 @@ public class NNNBotTest {
             Player secondPlayer;
             NNNBot nnnBot;
             if (NNNBotColor == Color.WHITE) {
-                nnnBot = NNNBotFactory.getNNNBot(time, gs, Color.WHITE);
+                nnnBot = NNNBotFactory.getNNNBot(gs, Color.WHITE);
                 firstPlayer = nnnBot;
                 secondPlayer = new RandomBot(gs, Color.BLACK);
             } else {
                 firstPlayer = new RandomBot(gs, Color.WHITE);
-                nnnBot = NNNBotFactory.getNNNBot(time, gs, Color.BLACK);
+                nnnBot = NNNBotFactory.getNNNBot(gs, Color.BLACK);
                 secondPlayer = nnnBot;
             }
 
@@ -150,55 +156,78 @@ public class NNNBotTest {
 
             synchronized (mutexDoneTask) {
                 ++doneTasks;
-                updateEndGameStatistics();
+                EndGameType egt = updateEndGameStatistics();
                 MDC.put("time", time);
+                logger.info("<------------------->");
                 logger.info("Games completed: {}/{}", doneTasks, COUNT);
                 logger.info(
-                        "Ботом #{} взято лучших состояний: {}; не взято: {}",
-                        nnnBot.getId(),
-                        nnnBot.getGetCache(),
-                        nnnBot.getNOTgetCache());
-                logger.info(
-                        "Ботом #{} взято оптимальных состояний: {}; не взято: {}",
-                        nnnBot.getId(),
-                        nnnBot.getGetCacheVirt(),
-                        nnnBot.getNOTgetCacheVirt());
-                logger.info(
-                        "Ботом #{} положено оптимальных состояний: {}",
-                        nnnBot.getId(),
-                        nnnBot.getPutCache());
-                logger.info(
-                        "Average time to move by NNNBot #{}: {} sec; move count: {}",
+                        "Average time to move by #{}: {} sec; move count: {}",
                         nnnBot.getId(),
                         nnnBot.getAverageTimeToThink(),
                         nnnBot.getMoveCount());
                 logger.info(
-                        "Max time to move by NNNBot #{}: {} sec; Min time: {} sec",
+                        "Time to move by #{} (min - max): {} - {} sec",
                         nnnBot.getId(),
-                        nnnBot.getMaxTimeToThink(),
-                        nnnBot.getMinTimeToThink());
+                        nnnBot.getMinTimeToThink(),
+                        nnnBot.getMaxTimeToThink());
+                logger.info("End game type by #{}: {}", nnnBot.getId(), egt.msg);
                 if (doneTasks == COUNT) allTasksAreDone = true;
             }
         }
 
-        private void updateEndGameStatistics() {
+        private EndGameType updateEndGameStatistics() {
             synchronized (mutexDoneTask) {
                 if (gs.endGameDetector.isDraw()) {
                     ++drawCount;
-                    if (gs.endGameDetector.isDrawWithPeaceMoves()) ++drawWithPeaceMoveCount;
-                    if (gs.endGameDetector.isDrawWithRepetitions()) ++drawWithRepetitions;
-                    if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
+                    if (gs.endGameDetector.isDrawWithPeaceMoves()) {
+                        ++drawWithPeaceMoveCount;
+                        return EndGameType.DRAW_WITH_PEACE_MOVE_COUNT;
+                    }
+                    if (gs.endGameDetector.isDrawWithRepetitions()) {
+                        ++drawWithRepetitions;
+                        return EndGameType.DRAW_WITH_REPETITIONS;
+                    }
+                    if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate()) {
                         ++drawWithNotEnoughMaterialForCheckmate;
+                        return EndGameType.DRAW_WITH_NOT_ENOUGH_MATERIAL_FOR_CHECKMATE;
+                    }
                 } else if (gs.endGameDetector.isCheckmate(
                         game.getCurrentPlayerToMove().getColor())) {
-                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor)
+                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor) {
                         ++checkmateToNNNBot;
-                    else ++checkmateToOpponent;
+                        return EndGameType.CHECKMATE_TO_NNN_BOT;
+                    } else {
+                        ++checkmateToOpponent;
+                        return EndGameType.CHECKMATE_TO_OPPONENT;
+                    }
                 } else {
-                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor)
+                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor) {
                         ++stalemateToNNNBot;
-                    else ++stalemateToOpponent;
+                        return EndGameType.STALEMATE_TO_NNN_BOT;
+                    } else {
+                        ++stalemateToOpponent;
+                        return EndGameType.STALEMATE_TO_OPPONENT;
+                    }
                 }
+                return EndGameType.NOTHING;
+            }
+        }
+
+        private enum EndGameType {
+            NOTHING("NOTHING"),
+            DRAW_WITH_PEACE_MOVE_COUNT("Draw with peace move count"),
+            DRAW_WITH_REPETITIONS("Draw with repetitions"),
+            DRAW_WITH_NOT_ENOUGH_MATERIAL_FOR_CHECKMATE(
+                    "Draw with not enough material for checkmate"),
+            CHECKMATE_TO_NNN_BOT("Checkmate to NNNBot"),
+            CHECKMATE_TO_OPPONENT("Checkmate to opponent"),
+            STALEMATE_TO_NNN_BOT("Stalemate to NNNBot"),
+            STALEMATE_TO_OPPONENT("Stalemate to opponent");
+
+            public final String msg;
+
+            EndGameType(String msg) {
+                this.msg = msg;
             }
         }
     }

@@ -44,6 +44,7 @@ public class History {
 
     private int peaceMoveCount = 0;
 
+    private boolean isWhiteMove = true;
     private boolean isWhiteCastlingPossibility = true;
     private boolean isBlackCastlingPossibility = true;
 
@@ -58,13 +59,16 @@ public class History {
         this.recordsList.addAll(history.recordsList);
         this.lastMove = history.lastMove;
         this.hasMovedBeforeLastMove = history.hasMovedBeforeLastMove;
-        Cell removedFigurePosition = history.removedFigure.getCurrentPosition();
-        this.removedFigure =
-                Figure.build(
-                        history.removedFigure.getType(),
-                        history.removedFigure.getColor(),
-                        new Cell(removedFigurePosition.column, removedFigurePosition.row));
+        if (history.removedFigure != null) {
+            Cell removedFigurePosition = history.removedFigure.getCurrentPosition();
+            this.removedFigure =
+                    Figure.build(
+                            history.removedFigure.figureType,
+                            history.removedFigure.getColor(),
+                            new Cell(removedFigurePosition.column, removedFigurePosition.row));
+        }
         this.peaceMoveCount = history.peaceMoveCount;
+        this.isWhiteMove = history.isWhiteMove;
         this.isWhiteCastlingPossibility = history.isWhiteCastlingPossibility;
         this.isBlackCastlingPossibility = history.isBlackCastlingPossibility;
     }
@@ -78,18 +82,27 @@ public class History {
      */
     public String addRecord(Move lastMove) throws ChessError {
         this.lastMove = lastMove;
+        isWhiteMove = !isWhiteMove;
 
-        // String rec = convertBoardToStringForsythEdwards();
-        // TODO: исправить
-        int rec = gameSettings.board.hashCode() * 31 + (recordsList.size() % 2 == 0 ? 0 : 1);
+        byte[] boardSnapshot = gameSettings.board.fastSnapshot();
+
+        isWhiteCastlingPossibility = isCastlingPossible(Color.WHITE);
+        isBlackCastlingPossibility = isCastlingPossible(Color.BLACK);
 
         BoardState boardState =
                 new BoardState(
-                        rec, lastMove, peaceMoveCount, hasMovedBeforeLastMove, removedFigure);
-        recordsList.push(boardState);
+                        boardSnapshot,
+                        gameSettings.board.hashCode(),
+                        lastMove,
+                        peaceMoveCount,
+                        hasMovedBeforeLastMove,
+                        removedFigure,
+                        isWhiteMove,
+                        isWhiteCastlingPossibility,
+                        isBlackCastlingPossibility);
 
+        recordsList.push(boardState);
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
-        logger.debug("Запись <{}> добавлена в историю", rec);
 
         return null;
     }
@@ -114,7 +127,7 @@ public class History {
         if (move.getMoveType() == MoveType.ATTACK
                 || move.getMoveType() == MoveType.EN_PASSANT
                 || move.getMoveType() == MoveType.TURN_INTO_ATTACK
-                || gameSettings.board.getFigureUgly(move.getTo()).getType() == FigureType.PAWN)
+                || gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN)
             peaceMoveCount = 0;
         else ++peaceMoveCount;
     }
@@ -147,7 +160,7 @@ public class History {
                 if (currentFigure == null) ++emptySlots;
                 else {
                     if (emptySlots != 0) result.append(emptySlots);
-                    Character notationFigureChar = NOTATION.get(currentFigure.getType());
+                    Character notationFigureChar = NOTATION.get(currentFigure.figureType);
                     result.append(
                             currentFigure.getColor() == Color.WHITE
                                     ? notationFigureChar
@@ -187,6 +200,16 @@ public class History {
         return color == Color.WHITE ? res.toUpperCase() : res;
     }
 
+    private boolean isCastlingPossible(Color color) throws ChessError {
+        Figure king = gameSettings.board.findKing(color);
+        if (king == null) throw new ChessError(KING_NOT_FOUND);
+        if (king.wasMoved()) return false;
+        Figure leftRook = gameSettings.board.findLeftRookStandard(color);
+        Figure rightRook = gameSettings.board.findRightRookStandard(color);
+        return leftRook != null && !leftRook.wasMoved()
+                || rightRook != null && !rightRook.wasMoved();
+    }
+
     /**
      * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на
      *     проходе следующим ходом
@@ -207,11 +230,15 @@ public class History {
         return peaceMoveCount;
     }
 
-    /** @return Строка - последняя запись в списке или null, если записей нет */
-    public int getLastRecord() {
+    /**
+     * @return строка FEN - последняя запись в списке или null, если записей нет
+     * @deprecated не используется и не реализовано
+     */
+    @Deprecated
+    public String getLastRecord() {
         BoardState lastBoardState = recordsList.peek();
-        if (lastBoardState == null) return 0;
-        return lastBoardState.boardHash;
+        if (lastBoardState == null) return null;
+        return null; // TODO
     }
 
     /** @return последнее состояние доски */
@@ -231,21 +258,16 @@ public class History {
         return lastMove;
     }
 
-    /**
-     * Отменяет последний ход в истории
-     *
-     * @return отмененное состояние доски
-     */
-    public BoardState undo() {
+    /** Отменяет последний ход в истории */
+    public void undo() {
         BoardState lastBoardState = recordsList.pop();
         BoardState prevLastBoardState = recordsList.peek();
-        if (prevLastBoardState == null) return lastBoardState;
+        if (prevLastBoardState == null) return;
         hasMovedBeforeLastMove = prevLastBoardState.hasMovedBeforeLastMove;
         removedFigure = prevLastBoardState.removedFigure;
         lastMove = prevLastBoardState.lastMove;
         peaceMoveCount = prevLastBoardState.peaceMoveCount;
         repetitionsMap.put(lastBoardState, repetitionsMap.getOrDefault(lastBoardState, 1) - 1);
-        return lastBoardState;
     }
 
     /**

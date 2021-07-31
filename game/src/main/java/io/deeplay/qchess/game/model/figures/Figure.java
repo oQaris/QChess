@@ -42,13 +42,15 @@ public abstract class Figure {
             }
     }
 
+    public final FigureType figureType;
     protected final Color color;
     protected boolean wasMoved = false;
     protected Cell position;
 
-    protected Figure(Color color, Cell position) {
+    protected Figure(Color color, Cell position, FigureType figureType) {
         this.color = color;
         this.position = position;
+        this.figureType = figureType;
         logger.trace("Фигура {} была создана", this);
     }
 
@@ -139,9 +141,6 @@ public abstract class Figure {
 
     @Override
     public String toString() {
-        return color.toString() + " " + getType();
+        return String.join(" ", color.toString(), FigureType.nameOfTypeNumber[figureType.type]);
     }
-
-    /** @return тип фигуры */
-    public abstract FigureType getType();
 }

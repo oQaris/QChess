@@ -16,7 +16,7 @@ public class King extends Figure {
     private static final Logger logger = LoggerFactory.getLogger(King.class);
 
     public King(Color color, Cell position) {
-        super(color, position);
+        super(color, position, FigureType.KING);
     }
 
     @Override
@@ -38,11 +38,6 @@ public class King extends Figure {
         int myX = position.column;
         int myY = position.row;
         return (x != myX || y != myY) && Math.abs(myX - x) <= 1 && Math.abs(myY - y) <= 1;
-    }
-
-    @Override
-    public FigureType getType() {
-        return FigureType.KING;
     }
 
     @Override
