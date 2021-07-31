@@ -79,7 +79,7 @@ public class MinimaxAlfaBetaDeepSearch extends AlfaBetaDeepSearch {
                     if (estimation < optEstimation) optEstimation = estimation;
                     if (beta > optEstimation) beta = optEstimation;
                 }
-                if (beta < alfa) return optEstimation;
+                if (beta <= alfa) return optEstimation;
             }
         }
 

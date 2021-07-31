@@ -13,7 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class BoardTest {
@@ -27,7 +26,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testFindKingCell() throws ChessException, ChessError {
+    public void testFindKingCell() throws ChessException {
         Figure whiteKing = new King(Color.WHITE, Cell.parse("c1"));
         Figure whitePawn = new Pawn(Color.WHITE, Cell.parse("a1"));
         Figure blackPawn = new Pawn(Color.BLACK, Cell.parse("e7"));
@@ -38,7 +37,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testSetGetFigures() throws ChessException, ChessError {
+    public void testSetGetFigures() throws ChessException {
         // нет фигур
         Assert.assertEquals(List.of(), board.getFigures(Color.WHITE));
         Assert.assertEquals(List.of(), board.getFigures(Color.BLACK));
@@ -125,23 +124,21 @@ public class BoardTest {
                         new Move(MoveType.QUIET_MOVE, Cell.parse("a1"), Cell.parse("a5"))));
     }
 
-    @Ignore
     @Test
-    public void testBoardStringConstructor1() throws ChessError, ChessException {
+    public void testBoardStringConstructor1() throws ChessError {
         String placement = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
         String expected = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq";
         gameSettings = new GameSettings(placement);
 
         History history = new History(gameSettings);
         history.addRecord(null);
-        Assert.assertEquals(expected, history.addRecord(null));
+        Assert.assertEquals(expected, history.getBoardToStringForsythEdwards());
     }
 
-    @Ignore
     @Test
     public void testBoardStringConstructor2() throws ChessError, ChessException {
         String placement = "4k3/ppp2ppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR w KQ a3";
+        String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQ a3";
         gameSettings = new GameSettings(placement);
 
         History history = new History(gameSettings);
@@ -149,6 +146,7 @@ public class BoardTest {
         Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
         gameSettings.board.moveFigure(move);
 
-        Assert.assertEquals(expected, history.addRecord(move));
+        history.addRecord(move);
+        Assert.assertEquals(expected, history.getBoardToStringForsythEdwards());
     }
 }

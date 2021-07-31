@@ -32,6 +32,8 @@ public abstract class AlfaBetaDeepSearch implements SearchFunc {
     @Override
     public Move findBest(GameSettings gs, Color color, EvaluationFunc evaluationFunc)
             throws ChessError {
+        gs.history.setMinBoardStateToSave(maxDepth);
+
         Move theBestMove = null;
         double optEstimation = Double.MIN_VALUE;
         double estimation;
