@@ -14,14 +14,18 @@ public class NNNBotFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotFactory.class);
 
-    private static int lastId;
+    private static String time;
+
+    private static int lastBotId;
 
     /** Устанавливает время для записи логов */
     public static void setTime(String time) {
-        MDC.put("time", time);
+        NNNBotFactory.time = time;
     }
 
     public static synchronized NNNBot getNNNBot(GameSettings gs, Color color) {
+        MDC.put("time", time);
+
         final int maxDepth = 3;
         gs.history.setMinBoardStateToSave(maxDepth);
 
@@ -30,9 +34,9 @@ public class NNNBotFactory {
 
         NNNBot nnnBot = new NNNBot(gs, color, deepSearch, evaluationFunc);
 
-        nnnBot.setId(++lastId);
+        nnnBot.setId(++lastBotId);
 
-        logger.info("Создан бот #{} с глубиной поиска {}", lastId, deepSearch.maxDepth);
+        logger.info("Создан бот #{} с глубиной поиска {}", lastBotId, deepSearch.maxDepth);
         return nnnBot;
     }
 }

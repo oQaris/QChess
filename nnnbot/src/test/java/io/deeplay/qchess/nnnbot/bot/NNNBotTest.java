@@ -11,7 +11,7 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,7 +70,7 @@ public class NNNBotTest {
 
     @Test
     public void testGame() {
-        time = LocalTime.now().withNano(0).toString().replace(":", ";");
+        time = LocalDateTime.now().withNano(0).toString().replace('T', '~').replace(":", ";");
         MDC.put("time", time);
         NNNBotFactory.setTime(time);
 

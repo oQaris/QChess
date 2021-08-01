@@ -46,7 +46,7 @@ public class MinimaxAlfaBetaDeepSearch extends AlfaBetaDeepSearch {
         List<Move> allMoves = gs.moveSystem.getAllCorrectMovesSilence(color);
         if (allMoves.isEmpty()) return theBestEstimation;
 
-        // allMoves.sort(movesPriority);
+        allMoves.sort(movesPriority);
         // Для дополнительных не очень важных ходов (превращение пешки в коня)
         Move[] additionalMoves = new Move[8];
         double optEstimation = isMyMove ? Double.MIN_VALUE : Double.MAX_VALUE;
