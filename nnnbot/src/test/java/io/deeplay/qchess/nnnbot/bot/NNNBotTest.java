@@ -25,7 +25,7 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 1;
+    private static final int COUNT = 50;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -177,7 +177,24 @@ public class NNNBotTest {
 
         private EndGameType updateEndGameStatistics() {
             synchronized (mutexDoneTask) {
-                if (gs.endGameDetector.isDraw()) {
+                if (gs.endGameDetector.isCheckmate(game.getCurrentPlayerToMove().getColor())) {
+                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor) {
+                        ++checkmateToNNNBot;
+                        return EndGameType.CHECKMATE_TO_NNN_BOT;
+                    } else {
+                        ++checkmateToOpponent;
+                        return EndGameType.CHECKMATE_TO_OPPONENT;
+                    }
+                } else if (gs.endGameDetector.isStalemate(
+                        game.getCurrentPlayerToMove().getColor())) {
+                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor) {
+                        ++stalemateToNNNBot;
+                        return EndGameType.STALEMATE_TO_NNN_BOT;
+                    } else {
+                        ++stalemateToOpponent;
+                        return EndGameType.STALEMATE_TO_OPPONENT;
+                    }
+                } else if (gs.endGameDetector.isDraw()) {
                     ++drawCount;
                     if (gs.endGameDetector.isDrawWithPeaceMoves()) {
                         ++drawWithPeaceMoveCount;
@@ -190,23 +207,6 @@ public class NNNBotTest {
                     if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate()) {
                         ++drawWithNotEnoughMaterialForCheckmate;
                         return EndGameType.DRAW_WITH_NOT_ENOUGH_MATERIAL_FOR_CHECKMATE;
-                    }
-                } else if (gs.endGameDetector.isCheckmate(
-                        game.getCurrentPlayerToMove().getColor())) {
-                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor) {
-                        ++checkmateToNNNBot;
-                        return EndGameType.CHECKMATE_TO_NNN_BOT;
-                    } else {
-                        ++checkmateToOpponent;
-                        return EndGameType.CHECKMATE_TO_OPPONENT;
-                    }
-                } else {
-                    if (game.getCurrentPlayerToMove().getColor() == NNNBotColor) {
-                        ++stalemateToNNNBot;
-                        return EndGameType.STALEMATE_TO_NNN_BOT;
-                    } else {
-                        ++stalemateToOpponent;
-                        return EndGameType.STALEMATE_TO_OPPONENT;
                     }
                 }
                 return EndGameType.NOTHING;

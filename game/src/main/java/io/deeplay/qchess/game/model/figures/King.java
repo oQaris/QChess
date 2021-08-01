@@ -75,10 +75,8 @@ public class King extends Figure {
                         position.createAdd(new Cell(shortCastling ? 2 : -2, 0)),
                         color.inverse())) return false;
 
-        Figure rook =
-                shortCastling
-                        ? settings.board.findRightRookStandard(color)
-                        : settings.board.findLeftRookStandard(color);
-        return rook != null && !rook.wasMoved();
+        return shortCastling
+                ? settings.board.isNotRightRookStandardMoved(color)
+                : settings.board.isNotLeftRookStandardMoved(color);
     }
 }

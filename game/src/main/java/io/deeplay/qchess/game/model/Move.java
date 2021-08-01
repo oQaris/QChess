@@ -39,10 +39,12 @@ public class Move {
         return turnInto;
     }
 
+    // TODO: удалить
     public void setTurnInto(final FigureType turnInto) {
         this.turnInto = turnInto;
     }
 
+    // TODO: удалить
     public MoveType getMoveType() {
         return moveType;
     }

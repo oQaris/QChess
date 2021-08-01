@@ -2,6 +2,7 @@ package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -244,26 +245,35 @@ public class Board {
         return color == Color.WHITE ? whiteKing : blackKing;
     }
 
+    public boolean isCastlingPossible(Color color) throws ChessError {
+        Figure king = findKing(color);
+        if (king == null) throw new ChessError(KING_NOT_FOUND);
+        if (king.wasMoved()) return false;
+        return isNotLeftRookStandardMoved(color) || isNotRightRookStandardMoved(color);
+    }
+
     /**
      * @param color цвет ладьи
      * @return левая ладья в углу для длинной рокировки цвета color или null, если не найдена
      */
-    public Figure findLeftRookStandard(Color color) {
+    public boolean isNotLeftRookStandardMoved(Color color) {
         Figure rook = cells[(color == Color.BLACK ? 0 : boardSize - 1)][0];
-        if (rook != null && rook.figureType == FigureType.ROOK && rook.getColor() == color)
-            return rook;
-        return null;
+        return rook != null
+                && rook.figureType == FigureType.ROOK
+                && rook.getColor() == color
+                && !rook.wasMoved();
     }
 
     /**
      * @param color цвет ладьи
      * @return правая ладья в углу для короткой рокировки цвета color или null, если не найдена
      */
-    public Figure findRightRookStandard(Color color) {
+    public boolean isNotRightRookStandardMoved(Color color) {
         Figure rook = cells[(color == Color.BLACK ? 0 : boardSize - 1)][boardSize - 1];
-        if (rook != null && rook.figureType == FigureType.ROOK && rook.getColor() == color)
-            return rook;
-        return null;
+        return rook != null
+                && rook.figureType == FigureType.ROOK
+                && rook.getColor() == color
+                && !rook.wasMoved();
     }
 
     /**

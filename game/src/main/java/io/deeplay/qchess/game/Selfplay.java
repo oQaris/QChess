@@ -95,7 +95,13 @@ public class Selfplay {
                 // TODO: отправлять ответ GameResponse, что ход некорректный
             }
         }
-        if (isDraw) {
+        if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
+            logger.info(
+                    "Мат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+        else if (roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor()))
+            logger.info(
+                    "Пат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+        else if (isDraw) {
             logger.info("Игра окончена: ничья");
             if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
                 logger.info(
@@ -107,12 +113,7 @@ public class Selfplay {
                         EndGameDetector.END_REPETITIONS_COUNT);
             if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
                 logger.info("Ничья: недостаточно фигур, чтобы поставить мат");
-        } else if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
-            logger.info(
-                    "Мат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        else
-            logger.info(
-                    "Пат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
+        }
 
         // TODO: конец игры, отправлять GameResponse
     }
@@ -121,13 +122,16 @@ public class Selfplay {
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);
-            logger.debug(
-                    "{} сделал ход: {} фигурой: {}",
-                    currentPlayerToMove,
-                    move,
-                    roomSettings.board.getFigure(move.getTo()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(
+                        "{} сделал ход: {} фигурой: {}",
+                        currentPlayerToMove,
+                        move,
+                        roomSettings.board.getFigureUgly(move.getTo()));
+                logger.debug(roomSettings.board.toString());
+            }
             return removedFigure;
-        } catch (ChessException | NullPointerException e) {
+        } catch (NullPointerException e) {
             logger.error("Не удалось выполнить проверенный ход: {}", move);
             throw new ChessError(ERROR_WHILE_ADD_PEACE_MOVE_COUNT, e);
         }

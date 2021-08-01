@@ -6,7 +6,6 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class MinimaxAlfaBetaDeepSearch extends AlfaBetaDeepSearch {
      * @throws IllegalArgumentException если maxDepth <= 0
      */
     public MinimaxAlfaBetaDeepSearch(int maxDepth) {
-        super(Double.MAX_VALUE, maxDepth);
+        super(Double.MAX_VALUE, Double.MIN_VALUE, maxDepth);
     }
 
     @Override
@@ -47,16 +46,16 @@ public class MinimaxAlfaBetaDeepSearch extends AlfaBetaDeepSearch {
         List<Move> allMoves = gs.moveSystem.getAllCorrectMovesSilence(color);
         if (allMoves.isEmpty()) return theBestEstimation;
 
-        allMoves.sort(movesPriority);
+        // allMoves.sort(movesPriority);
         // Для дополнительных не очень важных ходов (превращение пешки в коня)
-        AddMoves addMoves = new AddMoves();
+        Move[] additionalMoves = new Move[8];
         double optEstimation = isMyMove ? Double.MIN_VALUE : Double.MAX_VALUE;
         double estimation;
 
         for (Move move : allMoves) {
             estimation =
                     getTheBestEvaluationAfterVirtualMove(
-                            addMoves, move, isMyMove, alfa, beta, depth);
+                            additionalMoves, move, isMyMove, alfa, beta, depth);
             if (isMyMove) {
                 if (estimation > optEstimation) optEstimation = estimation;
                 if (alfa < optEstimation) alfa = optEstimation;
@@ -68,31 +67,35 @@ public class MinimaxAlfaBetaDeepSearch extends AlfaBetaDeepSearch {
         }
 
         // Превращения пешки в коня
-        if (addMoves.additionalMoves != null) {
-            for (Move move : addMoves.additionalMoves) {
-                estimation =
-                        getTheBestEvaluationAfterVirtualMove(move, isMyMove, alfa, beta, depth);
-                if (isMyMove) {
-                    if (estimation > optEstimation) optEstimation = estimation;
-                    if (alfa < optEstimation) alfa = optEstimation;
-                } else {
-                    if (estimation < optEstimation) optEstimation = estimation;
-                    if (beta > optEstimation) beta = optEstimation;
-                }
-                if (beta <= alfa) return optEstimation;
+        for (Move move : additionalMoves) {
+            if (move == null) return optEstimation;
+            estimation = getTheBestEvaluationAfterVirtualMove(move, isMyMove, alfa, beta, depth);
+            if (isMyMove) {
+                if (estimation > optEstimation) optEstimation = estimation;
+                if (alfa < optEstimation) alfa = optEstimation;
+            } else {
+                if (estimation < optEstimation) optEstimation = estimation;
+                if (beta > optEstimation) beta = optEstimation;
             }
+            if (beta <= alfa) return optEstimation;
         }
 
         return optEstimation;
     }
 
     private double getTheBestEvaluationAfterVirtualMove(
-            AddMoves addMoves, Move move, boolean isMyMove, double alfa, double beta, int depth)
+            Move[] additionalMoves,
+            Move move,
+            boolean isMyMove,
+            double alfa,
+            double beta,
+            int depth)
             throws ChessError {
         double estimation;
         try {
             gs.moveSystem.move(move);
-            estimation = minimax(!isMyMove, alfa, beta, depth);
+            if (gs.history.checkRepetitions(3)) estimation = theWorstEstimation;
+            else estimation = minimax(!isMyMove, alfa, beta, depth);
             gs.moveSystem.undoMove();
 
             return estimation;
@@ -102,8 +105,9 @@ public class MinimaxAlfaBetaDeepSearch extends AlfaBetaDeepSearch {
             estimation = getTheBestEvaluationAfterVirtualMove(move, isMyMove, alfa, beta, depth);
 
             move.setTurnInto(FigureType.KNIGHT);
-            if (addMoves.additionalMoves == null) addMoves.additionalMoves = new ArrayList<>(5);
-            addMoves.additionalMoves.add(move);
+            int i = 0;
+            while (additionalMoves[i] != null) ++i;
+            additionalMoves[i] = move;
 
             return estimation;
         }
@@ -111,14 +115,13 @@ public class MinimaxAlfaBetaDeepSearch extends AlfaBetaDeepSearch {
 
     private double getTheBestEvaluationAfterVirtualMove(
             Move move, boolean isMyMove, double alfa, double beta, int depth) throws ChessError {
+        double estimation;
+
         gs.moveSystem.move(move);
-        double estimation = minimax(!isMyMove, alfa, beta, depth);
+        if (gs.history.checkRepetitions(3)) estimation = theWorstEstimation;
+        else estimation = minimax(!isMyMove, alfa, beta, depth);
         gs.moveSystem.undoMove();
 
         return estimation;
-    }
-
-    private static class AddMoves {
-        public List<Move> additionalMoves;
     }
 }

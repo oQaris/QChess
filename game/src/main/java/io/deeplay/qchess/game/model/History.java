@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class History {
-    private static final int AVERAGE_MAXIMUM_MOVES = 50;
+    private static final int AVERAGE_MAXIMUM_MOVES = 100;
     private static final Map<FigureType, Character> NOTATION = new EnumMap<>(FigureType.class);
 
     static {
@@ -29,7 +29,6 @@ public class History {
     }
 
     private final GameSettings gameSettings;
-
     private final Map<BoardState, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
     /** using like a stack */
     private final Deque<BoardState> recordsList = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
@@ -40,13 +39,12 @@ public class History {
     private Figure removedFigure;
 
     private int peaceMoveCount = 0;
-
     private boolean isWhiteMove = true;
     private boolean isWhiteCastlingPossibility = true;
     private boolean isBlackCastlingPossibility = true;
 
     /** Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки */
-    private int minBoardStateToSave = 1;
+    private int minBoardStateToSave;
 
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
@@ -84,8 +82,8 @@ public class History {
 
         byte[] boardSnapshot = gameSettings.board.fastSnapshot();
 
-        isWhiteCastlingPossibility = isCastlingPossible(Color.WHITE);
-        isBlackCastlingPossibility = isCastlingPossible(Color.BLACK);
+        isWhiteCastlingPossibility = gameSettings.board.isCastlingPossible(Color.WHITE);
+        isBlackCastlingPossibility = gameSettings.board.isCastlingPossible(Color.BLACK);
 
         BoardState boardState =
                 new BoardState(
@@ -122,13 +120,11 @@ public class History {
     public void checkAndAddPeaceMoveCount(Move move) {
         if (move.getMoveType() == MoveType.ATTACK
                 || move.getMoveType() == MoveType.EN_PASSANT
-                || move.getMoveType() == MoveType.TURN_INTO_ATTACK
-                || gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN)
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK) peaceMoveCount = 0;
+        else if (gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN) {
+            // clearHistory(minBoardStateToSave);
             peaceMoveCount = 0;
-        else {
-            ++peaceMoveCount;
-            clearHistory(minBoardStateToSave);
-        }
+        } else ++peaceMoveCount;
     }
 
     /**
@@ -148,9 +144,11 @@ public class History {
     public void clearHistory(int minBoardStateToSave) {
         int stateCountToClear = recordsList.size() - minBoardStateToSave;
         if (stateCountToClear <= 0) return;
+
         for (int i = 0; i < stateCountToClear; ++i) {
             BoardState boardState = recordsList.pollLast();
-            repetitionsMap.remove(boardState);
+            int boardStateCount = repetitionsMap.remove(boardState);
+            if (boardStateCount > 1) repetitionsMap.put(boardState, boardStateCount - 1);
         }
     }
 
@@ -210,26 +208,14 @@ public class History {
         Figure king = gameSettings.board.findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return res;
-        Figure leftRook = gameSettings.board.findLeftRookStandard(color);
-        Figure rightRook = gameSettings.board.findRightRookStandard(color);
-        if (rightRook != null && !rightRook.wasMoved()) res += "k";
-        if (leftRook != null && !leftRook.wasMoved()) res += "q";
+        if (gameSettings.board.isNotRightRookStandardMoved(color)) res += "k";
+        if (gameSettings.board.isNotLeftRookStandardMoved(color)) res += "q";
 
         if (res.isEmpty()) {
             if (color == Color.WHITE) isWhiteCastlingPossibility = false;
             else isBlackCastlingPossibility = false;
         }
         return color == Color.WHITE ? res.toUpperCase() : res;
-    }
-
-    private boolean isCastlingPossible(Color color) throws ChessError {
-        Figure king = gameSettings.board.findKing(color);
-        if (king == null) throw new ChessError(KING_NOT_FOUND);
-        if (king.wasMoved()) return false;
-        Figure leftRook = gameSettings.board.findLeftRookStandard(color);
-        Figure rightRook = gameSettings.board.findRightRookStandard(color);
-        return leftRook != null && !leftRook.wasMoved()
-                || rightRook != null && !rightRook.wasMoved();
     }
 
     /**
@@ -280,6 +266,14 @@ public class History {
         peaceMoveCount = prevLastBoardState.peaceMoveCount;
         int boardStateCount = repetitionsMap.remove(lastBoardState);
         if (boardStateCount > 1) repetitionsMap.put(lastBoardState, boardStateCount - 1);
+    }
+
+    /** Берет последние данные из истории и обновляет текущие */
+    public void restore() {
+        BoardState lastBoardState = recordsList.peek();
+        if (lastBoardState == null) return;
+        hasMovedBeforeLastMove = lastBoardState.hasMovedBeforeLastMove;
+        removedFigure = lastBoardState.removedFigure;
     }
 
     /**

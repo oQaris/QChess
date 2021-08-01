@@ -22,8 +22,10 @@ public class NNNBotFactory {
     }
 
     public static synchronized NNNBot getNNNBot(GameSettings gs, Color color) {
+        final int maxDepth = 3;
+        gs.history.setMinBoardStateToSave(maxDepth);
 
-        AlfaBetaDeepSearch deepSearch = new MinimaxAlfaBetaDeepSearch(5);
+        AlfaBetaDeepSearch deepSearch = new MinimaxAlfaBetaDeepSearch(maxDepth);
         EvaluationFunc evaluationFunc = new FigurePositionsEvaluation();
 
         NNNBot nnnBot = new NNNBot(gs, color, deepSearch, evaluationFunc);
