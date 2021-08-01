@@ -26,11 +26,13 @@ class QBotTest {
         long m = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
             int finalI = i;
-            executor.execute(
-                    () -> {
+            /*executor.execute(
+                    () -> {*/
                         GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-                        Player firstPlayer = new QBot(roomSettings, Color.WHITE);
-                        Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+                        // Color myBotColor = finalI % 2 == 0 ? Color.WHITE : Color.BLACK;
+                        Color myBotColor = Color.BLACK;
+                        Player firstPlayer = new QBot(roomSettings, myBotColor);
+                        Player secondPlayer = new RandomBot(roomSettings, myBotColor.inverse());
                         try {
                             Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
                             game.run();
@@ -38,10 +40,10 @@ class QBotTest {
                             error.printStackTrace();
                         }
                         System.out.println("1 - " + (finalI + 1) + "/" + COUNT);
-                    });
+                    /*});*/
         }
-        executor.shutdown();
-        executor.awaitTermination(1, TimeUnit.DAYS);
+        /*executor.shutdown();
+        executor.awaitTermination(1, TimeUnit.DAYS);*/
         log.error("Time: {}\n", System.currentTimeMillis() - m);
     }
 

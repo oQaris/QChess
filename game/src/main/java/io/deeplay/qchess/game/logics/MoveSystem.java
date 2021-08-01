@@ -160,13 +160,13 @@ public class MoveSystem {
             Move move, boolean checkKing, EndGameDetector egd, Board board, History history)
             throws ChessError {
         try {
-            return move != null && checkCorrectnessIfSpecificMove(move) && checkKing
+            return move != null && checkCorrectnessIfSpecificMove(move) && (checkKing
                     ? isCorrectVirtualMove(move, egd, board, history)
                     : virtualMove(
                             move,
                             (figureToMove, virtualKilled) -> !egd.isCheck(figureToMove),
                             board,
-                            history);
+                            history));
         } catch (ChessException | NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",

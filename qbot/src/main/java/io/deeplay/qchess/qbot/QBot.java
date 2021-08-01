@@ -88,7 +88,9 @@ public class QBot extends RemotePlayer {
 
         final List<Move> allMoves = ms.getAllCorrectMoves(curColor);
         // todo вынести в функцию оценки
-        if (allMoves.isEmpty() && egd.isCheck(curColor)) return initGrade;
+        if (allMoves.isEmpty())
+            if (egd.isCheck(curColor))
+                return initGrade;
 
         setTurnIntoAll(allMoves);
         for (Move move : allMoves) {
@@ -104,9 +106,9 @@ public class QBot extends RemotePlayer {
             else bestGrade = Math.min(bestGrade, curGrade);
 
             // Альфа-бетта отсечение
-            if (isMaximisingPlayer) alpha = Math.max(alpha, bestGrade);
+            /*if (isMaximisingPlayer) alpha = Math.max(alpha, bestGrade);
             else beta = Math.min(beta, bestGrade);
-            if (beta <= alpha) return bestGrade;
+            if (beta <= alpha) return bestGrade;*/
         }
         logger.trace("Текущая оценка доски: {}", depth);
         return bestGrade;
