@@ -217,7 +217,7 @@ public class MoveSystem {
      * @return все возможные ходы
      */
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
-        List<Move> res = new ArrayList<>(64);
+        List<Move> res = new ArrayList<>(70);
         for (Figure f : board.getFigures(color))
             for (Move m : f.getAllMoves(gs))
                 if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
@@ -225,7 +225,7 @@ public class MoveSystem {
     }
 
     public List<Move> getAllCorrectMovesSilence(Color color) {
-        List<Move> res = new ArrayList<>(64);
+        List<Move> res = new ArrayList<>(70);
         try {
             for (Figure f : board.getFigures(color))
                 for (Move m : f.getAllMoves(gs))

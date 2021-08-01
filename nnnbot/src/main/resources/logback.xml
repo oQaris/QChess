@@ -33,6 +33,25 @@
     </sift>
   </appender>
 
+  <appender name="GAME-MOVES" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>game</key>
+      <defaultValue>GAME</defaultValue>
+    </discriminator>
+
+    <sift>
+      <appender name="FILE-${game}" class="ch.qos.logback.core.FileAppender">
+        <append>false</append>
+
+        <file>logs/${game}-qchess-statistics.log</file>
+
+        <encoder>
+          <pattern>%msg%n</pattern>
+        </encoder>
+      </appender>
+    </sift>
+  </appender>
+
   <!-- Все логи -->
   <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION">
     <append>false</append>
@@ -48,8 +67,8 @@
     </filter>
   </appender>
 
-  <logger level="off" name="io.deeplay.qchess.game.Selfplay">
-    <appender-ref ref="STDOUT"/>
+  <logger level="debug" name="io.deeplay.qchess.game.Selfplay">
+    <appender-ref ref="GAME-MOVES"/>
   </logger>
 
   <logger level="info" name="io.deeplay.qchess.nnnbot.bot.NNNBotTest">

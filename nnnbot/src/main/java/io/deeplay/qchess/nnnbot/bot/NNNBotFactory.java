@@ -3,9 +3,9 @@ package io.deeplay.qchess.nnnbot.bot;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nnnbot.bot.evaluationfunc.FigurePositionsEvaluation;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.alfabetadeepsearch.AlfaBetaDeepSearch;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.alfabetadeepsearch.MinimaxAlfaBetaDeepSearch;
+import io.deeplay.qchess.nnnbot.bot.evaluationfunc.FigureCountEvaluation;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.alfabetadeepsearch.MinimaxParallelSearch;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.alfabetadeepsearch.ParallelSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -26,17 +26,20 @@ public class NNNBotFactory {
     public static synchronized NNNBot getNNNBot(GameSettings gs, Color color) {
         MDC.put("time", time);
 
-        final int maxDepth = 3;
+        final int maxDepth = 5;
         gs.history.setMinBoardStateToSave(maxDepth);
 
-        AlfaBetaDeepSearch deepSearch = new MinimaxAlfaBetaDeepSearch(maxDepth);
-        EvaluationFunc evaluationFunc = new FigurePositionsEvaluation();
+        EvaluationFunc evaluationFunc = FigureCountEvaluation::attackDefenseZeroSum;
+        ParallelSearch deepSearch = new MinimaxParallelSearch(gs, color, evaluationFunc, maxDepth);
 
-        NNNBot nnnBot = new NNNBot(gs, color, deepSearch, evaluationFunc);
+        NNNBot nnnBot = new NNNBot(gs, color, deepSearch);
 
         nnnBot.setId(++lastBotId);
 
-        logger.info("Создан бот #{} с глубиной поиска {}", lastBotId, deepSearch.maxDepth);
+        logger.info(
+                "[NNNBotFactory] Создан бот #{} с глубиной поиска {}",
+                lastBotId,
+                deepSearch.maxDepth);
         return nnnBot;
     }
 }

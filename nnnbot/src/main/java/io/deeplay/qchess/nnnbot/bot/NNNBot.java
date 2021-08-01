@@ -5,14 +5,12 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.SearchFunc;
 import java.util.UUID;
 
 public class NNNBot extends RemotePlayer {
 
     private final SearchFunc searchFunc;
-    private final EvaluationFunc evaluationFunc;
 
     @Deprecated private int id;
 
@@ -21,14 +19,9 @@ public class NNNBot extends RemotePlayer {
     @Deprecated private double maxTimeToThink = Double.MIN_VALUE;
     @Deprecated private double minTimeToThink = Double.MAX_VALUE;
 
-    public NNNBot(
-            GameSettings roomSettings,
-            Color color,
-            SearchFunc searchFunc,
-            EvaluationFunc evaluationFunc) {
+    public NNNBot(GameSettings roomSettings, Color color, SearchFunc searchFunc) {
         super(roomSettings, color, "n-nn-bot-" + UUID.randomUUID());
         this.searchFunc = searchFunc;
-        this.evaluationFunc = evaluationFunc;
     }
 
     @Deprecated
@@ -66,7 +59,7 @@ public class NNNBot extends RemotePlayer {
         ++moveCount;
         long startTime = System.currentTimeMillis();
 
-        Move move = searchFunc.findBest(roomSettings, color, evaluationFunc);
+        Move move = searchFunc.findBest();
 
         double time = (System.currentTimeMillis() - startTime) / 1000.;
         timeToThink += time;

@@ -41,6 +41,10 @@ public class NNNBotTest {
     private static volatile int stalemateToNNNBot;
     private static volatile int stalemateToOpponent;
 
+    private static volatile double averageTimeToMove;
+    private static volatile double minTimeToMove = Double.MAX_VALUE;
+    private static volatile double maxTimeToMove = Double.MIN_VALUE;
+
     private static String time;
 
     @Ignore
@@ -80,7 +84,7 @@ public class NNNBotTest {
         long startTime;
         if (COUNT == 1) {
             startTime = System.currentTimeMillis();
-            new Game(Color.WHITE).run();
+            new Game(0).run();
 
         } else if (COUNT > 1) {
             ExecutorService executor =
@@ -88,7 +92,7 @@ public class NNNBotTest {
             startTime = System.currentTimeMillis();
 
             for (int i = 1; i <= COUNT; ++i) {
-                executor.execute(i % 2 == 0 ? new Game(Color.WHITE) : new Game(Color.BLACK));
+                executor.execute(new Game(i));
             }
             while (!allTasksAreDone) Thread.onSpinWait();
             executor.shutdown();
@@ -97,8 +101,10 @@ public class NNNBotTest {
         long timeInSec = (System.currentTimeMillis() - startTime) / 1000;
 
         logger.info("<------------------------------------------------------>");
-        logger.info("Time: {} min {} sec", timeInSec / 60, timeInSec % 60);
         logger.info("Game count: {}", COUNT);
+        logger.info("Time: {} min {} sec", timeInSec / 60, timeInSec % 60);
+        logger.info("Average time to move: {} sec", averageTimeToMove / COUNT);
+        logger.info("Time to move (min - max): {} - {} sec", minTimeToMove, maxTimeToMove);
         logger.info("<------------------->");
         logger.info("Draw count: {}", drawCount);
         logger.info("Draw with peace move count: {}", drawWithPeaceMoveCount);
@@ -123,12 +129,15 @@ public class NNNBotTest {
 
     private static class Game implements Runnable {
 
+        private final int id;
+
         private final Color NNNBotColor;
         private GameSettings gs;
         private Selfplay game;
 
-        public Game(Color NNNBotColor) {
-            this.NNNBotColor = NNNBotColor;
+        public Game(int id) {
+            this.NNNBotColor = id % 2 == 0 ? Color.WHITE : Color.BLACK;
+            this.id = id;
         }
 
         @Override
@@ -148,6 +157,7 @@ public class NNNBotTest {
             }
 
             try {
+                MDC.put("game", Integer.toString(id));
                 game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();
             } catch (ChessError e) {
@@ -156,6 +166,9 @@ public class NNNBotTest {
 
             synchronized (mutexDoneTask) {
                 ++doneTasks;
+                averageTimeToMove += nnnBot.getAverageTimeToThink();
+                minTimeToMove = Math.min(minTimeToMove, nnnBot.getMinTimeToThink());
+                maxTimeToMove = Math.max(maxTimeToMove, nnnBot.getMaxTimeToThink());
                 EndGameType egt = updateEndGameStatistics();
                 MDC.put("time", time);
                 logger.info("<------------------->");
