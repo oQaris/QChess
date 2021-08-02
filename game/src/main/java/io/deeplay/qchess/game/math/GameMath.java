@@ -3,10 +3,15 @@ package io.deeplay.qchess.game.math;
 public class GameMath {
 
     public static final int[] hash64Coeff = new int[64];
-    public static final int pow31in64 = pow(31, 64);
+    public static final int pow31in64;
 
     static {
-        for (int i = 0; i < 64; ++i) hash64Coeff[i] = pow(31, 63 - i);
+        int degree = 1;
+        for (int i = 63; i >= 0; --i) {
+            hash64Coeff[i] = degree;
+            degree *= 31;
+        }
+        pow31in64 = degree;
     }
 
     /** @return a в степени n */

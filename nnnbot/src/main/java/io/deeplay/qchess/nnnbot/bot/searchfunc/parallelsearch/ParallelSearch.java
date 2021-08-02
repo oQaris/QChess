@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nnnbot.bot.searchfunc.alfabetadeepsearch;
+package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
