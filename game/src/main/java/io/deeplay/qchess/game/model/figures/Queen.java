@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class Queen extends Figure {
 
     public Queen(Color color, Cell position) {
-        super(color, position);
+        super(color, position, FigureType.QUEEN);
     }
 
     @Override
@@ -23,7 +23,8 @@ public class Queen extends Figure {
     }
 
     @Override
-    public FigureType getType() {
-        return FigureType.QUEEN;
+    public boolean isAttackedCell(GameSettings settings, Cell cell) {
+        return Rook.isAttackedCell(settings, position, cell)
+                || Bishop.isAttackedCell(settings, position, cell);
     }
 }

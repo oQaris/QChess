@@ -25,15 +25,11 @@
     </dependency>
     <!-- QChess modules -->
     <dependency>
-      <artifactId>QChess-client-server-conversation</artifactId>
-      <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
-    </dependency>
-    <dependency>
       <artifactId>QChess-game</artifactId>
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
+    <!-- Tests -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>

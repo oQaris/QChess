@@ -16,6 +16,8 @@ import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,14 +31,14 @@ public class MoveSystemTest {
     private Cell cell2;
     private Cell cell3;
     private Cell cell4;
-    private Pawn fB1;
-    private Pawn fB2;
-    private Pawn fB3;
-    private Pawn fB4;
-    private Pawn fW1;
-    private Pawn fW2;
-    private Pawn fW3;
-    private Pawn fW4;
+    private PawnTest fB1;
+    private PawnTest fB2;
+    private PawnTest fB3;
+    private PawnTest fB4;
+    private PawnTest fW1;
+    private PawnTest fW2;
+    private PawnTest fW3;
+    private PawnTest fW4;
 
     @Before
     public void setUp() {
@@ -70,10 +72,10 @@ public class MoveSystemTest {
         cell2 = Cell.parse("c4");
         cell3 = Cell.parse("c2");
         cell4 = Cell.parse("d2");
-        fB1 = new Pawn(Color.BLACK, Cell.parse("b4"));
-        fB2 = new Pawn(Color.BLACK, Cell.parse("b5"));
-        fB3 = new Pawn(Color.BLACK, Cell.parse("b3"));
-        fB4 = new Pawn(Color.BLACK, Cell.parse("c3"));
+        fB1 = new PawnTest(Color.BLACK, Cell.parse("b4"));
+        fB2 = new PawnTest(Color.BLACK, Cell.parse("b5"));
+        fB3 = new PawnTest(Color.BLACK, Cell.parse("b3"));
+        fB4 = new PawnTest(Color.BLACK, Cell.parse("c3"));
         board.setFigure(fB1);
         board.setFigure(fB2);
         board.setFigure(fB3);
@@ -165,10 +167,10 @@ public class MoveSystemTest {
         cell2 = Cell.parse("c5");
         cell3 = Cell.parse("c7");
         cell4 = Cell.parse("d7");
-        fW1 = new Pawn(Color.WHITE, Cell.parse("b5"));
-        fW2 = new Pawn(Color.WHITE, Cell.parse("b4"));
-        fW3 = new Pawn(Color.WHITE, Cell.parse("b6"));
-        fW4 = new Pawn(Color.WHITE, Cell.parse("c6"));
+        fW1 = new PawnTest(Color.WHITE, Cell.parse("b5"));
+        fW2 = new PawnTest(Color.WHITE, Cell.parse("b4"));
+        fW3 = new PawnTest(Color.WHITE, Cell.parse("b6"));
+        fW4 = new PawnTest(Color.WHITE, Cell.parse("c6"));
         board.setFigure(fW1);
         board.setFigure(fW2);
         board.setFigure(fW3);
@@ -218,7 +220,7 @@ public class MoveSystemTest {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Move white2 = new Move(MoveType.ATTACK, Cell.parse("b2"), Cell.parse("c3"));
         Pawn figure1 = new Pawn(Color.WHITE, white1.getTo());
-        Pawn figure2 = new Pawn(Color.WHITE, white2.getFrom());
+        PawnTest figure2 = new PawnTest(Color.WHITE, white2.getFrom());
 
         setPrevMove(white1);
 
@@ -481,5 +483,33 @@ public class MoveSystemTest {
                 List.of(new Move(MoveType.QUIET_MOVE, Cell.parse("d4"), Cell.parse("d3")));
 
         Assert.assertEquals(expected, list);
+    }
+
+    private static class PawnTest extends Pawn {
+
+        private static final Method method;
+
+        static {
+            try {
+                method =
+                        Pawn.class.getDeclaredMethod(
+                                "isPawnEnPassant", GameSettings.class, Cell.class);
+                method.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                throw new ExceptionInInitializerError(e);
+            }
+        }
+
+        public PawnTest(Color color, Cell position) {
+            super(color, position);
+        }
+
+        public boolean isPawnEnPassant(GameSettings gs, Cell cell) {
+            try {
+                return (boolean) method.invoke(this, gs, cell);
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

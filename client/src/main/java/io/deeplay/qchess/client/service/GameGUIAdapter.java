@@ -11,6 +11,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,8 +25,8 @@ public class GameGUIAdapter {
             for (Move move : GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(cell)) {
                 ViewCell vc =
                         new ViewCell(
-                                move.getTo().getRow(),
-                                move.getTo().getColumn(),
+                                move.getTo().row,
+                                move.getTo().column,
                                 move.getMoveType() == MoveType.ATTACK
                                         || move.getMoveType() == MoveType.TURN_INTO_ATTACK
                                         || move.getMoveType() == MoveType.EN_PASSANT);
@@ -58,7 +59,8 @@ public class GameGUIAdapter {
                 vf =
                         new ViewFigure(
                                 figure.getColor().toString(),
-                                ViewFigureType.valueOf(figure.getType().name()));
+                                ViewFigureType.valueOf(
+                                        FigureType.nameOfTypeNumber[figure.figureType.type]));
             }
         } catch (ChessException e) {
             e.printStackTrace();
@@ -93,11 +95,7 @@ public class GameGUIAdapter {
 
     /** @return клетка короля цвета color */
     public static ViewCell getKingCell(boolean color) {
-        Cell cell =
-                GameDAO.getGameSettings()
-                        .board
-                        .findKing(color ? Color.WHITE : Color.BLACK)
-                        .getCurrentPosition();
-        return new ViewCell(cell.getRow(), cell.getColumn(), false);
+        Cell cell = GameDAO.getGameSettings().board.findKingCell(color ? Color.WHITE : Color.BLACK);
+        return new ViewCell(cell.row, cell.column, false);
     }
 }

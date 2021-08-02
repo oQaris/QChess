@@ -46,7 +46,7 @@ public class AttackBot extends RemotePlayer {
             try {
                 Figure figure = board.getFigure(move.getTo());
 
-                int curGrade = figure != null ? grades.get(figure.getType()) : 0;
+                int curGrade = figure != null ? grades.get(figure.figureType) : 0;
                 if (curGrade > maxGrade) {
                     maxGrade = curGrade;
                     topMoves.clear();
