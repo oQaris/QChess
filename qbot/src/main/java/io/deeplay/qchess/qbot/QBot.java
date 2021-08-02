@@ -10,17 +10,19 @@ import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.qbot.strategy.IStrategy;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class QBot extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(QBot.class);
     private final IStrategy strategy;
     private final int depth;
+    public int countNode = 0;
 
     public QBot(
             final GameSettings roomSettings,
@@ -30,27 +32,46 @@ public class QBot extends RemotePlayer {
         super(roomSettings, color, "minimax-bot-" + UUID.randomUUID());
         this.strategy = strategy;
         this.depth = searchDepth;
+        if (depth < 0)
+            throw new IllegalArgumentException("Глубина не должна быть отрицательная!");
     }
 
     public QBot(final GameSettings roomSettings, final Color color) {
         this(roomSettings, color, 1, new MatrixStrategy());
     }
 
+    public QBot(GameSettings roomSettings, Color color, int searchDepth) {
+        this(roomSettings, color, searchDepth, new MatrixStrategy());
+    }
+
     @Override
     public Move getNextMove() throws ChessError {
+        final List<Move> topMoves = getTopMoves();
+        return topMoves.get(new Random().nextInt(topMoves.size()));
+    }
+
+    public List<Move> getTopMoves() throws ChessError {
         final List<Move> topMoves = new ArrayList<>();
-        int maxGrade = Integer.MIN_VALUE;
+        int maxGrade = color == Color.WHITE ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         final List<Move> allMoves = ms.getAllCorrectMoves(color);
         setTurnIntoAll(allMoves);
         for (Move move : allMoves) {
             int curGrade = minimaxRoot(move);
-            if (curGrade > maxGrade) {
-                maxGrade = curGrade;
-                topMoves.clear();
+            if (color == Color.WHITE) {
+                if (curGrade > maxGrade) {
+                    maxGrade = curGrade;
+                    topMoves.clear();
+                }
+                if (curGrade >= maxGrade) topMoves.add(move);
+            } else {
+                if (curGrade < maxGrade) {
+                    maxGrade = curGrade;
+                    topMoves.clear();
+                }
+                if (curGrade <= maxGrade) topMoves.add(move);
             }
-            if (curGrade >= maxGrade) topMoves.add(move);
         }
-        return topMoves.get(new Random().nextInt(topMoves.size()));
+        return topMoves;
     }
 
     public int minimaxRoot(final Move move) throws ChessError {
@@ -66,8 +87,25 @@ public class QBot extends RemotePlayer {
                                             Integer.MIN_VALUE,
                                             Integer.MAX_VALUE,
                                             // т.к. следующий ход противника, то максимизируем его,
-                                            // если сами играем за чёрных
-                                            color != Color.WHITE));
+                                            // если сами играем за чёрных (а он за белых)
+                                            color == Color.BLACK));
+        } catch (ChessException e) {
+            logger.error("Ошибка в минимаксе: {}", e.getLocalizedMessage());
+        }
+        logger.debug("Оценка хода: {}", res);
+        return res;
+    }
+
+    public int minimaxRoot(final int depth, boolean isMaximisingPlayer) throws ChessError {
+        logger.debug("Минимакс стартовал с глубиной поиска: {}", depth);
+        int res = 0;
+        try {
+            res =
+                    minimax(
+                            depth,
+                            Integer.MIN_VALUE,
+                            Integer.MAX_VALUE,
+                            isMaximisingPlayer);
         } catch (ChessException e) {
             logger.error("Ошибка в минимаксе: {}", e.getLocalizedMessage());
         }
@@ -78,19 +116,18 @@ public class QBot extends RemotePlayer {
     private int minimax(final int depth, int alpha, int beta, final boolean isMaximisingPlayer)
             throws ChessError, ChessException {
         logger.trace("Глубина поиска: {}", depth);
+        countNode++;
         if (depth == 0) return strategy.evaluateBoard(board);
 
         final int initGrade = isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         int bestGrade = initGrade / 2;
 
-        // максимальное берём из наших, минимальное - из противника
-        Color curColor = isMaximisingPlayer ? color : color.inverse();
+        Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
 
         final List<Move> allMoves = ms.getAllCorrectMoves(curColor);
         // todo вынести в функцию оценки
-        if (allMoves.isEmpty())
-            if (egd.isCheck(curColor))
-                return initGrade;
+        if (allMoves.isEmpty() && egd.isCheck(curColor))
+            return initGrade;
 
         setTurnIntoAll(allMoves);
         for (Move move : allMoves) {
@@ -106,9 +143,10 @@ public class QBot extends RemotePlayer {
             else bestGrade = Math.min(bestGrade, curGrade);
 
             // Альфа-бетта отсечение
-            /*if (isMaximisingPlayer) alpha = Math.max(alpha, bestGrade);
+            if (isMaximisingPlayer) alpha = Math.max(alpha, bestGrade);
             else beta = Math.min(beta, bestGrade);
-            if (beta <= alpha) return bestGrade;*/
+            if (beta <= alpha)
+                return bestGrade;
         }
         logger.trace("Текущая оценка доски: {}", depth);
         return bestGrade;

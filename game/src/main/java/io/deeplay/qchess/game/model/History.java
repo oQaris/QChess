@@ -173,7 +173,8 @@ public class History {
 
         Figure king = gameSettings.board.findKing(color);
         if (king == null)
-            throw new ChessError(KING_NOT_FOUND);
+            return "";
+            //throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return res;
         Figure leftRook =
                 gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
