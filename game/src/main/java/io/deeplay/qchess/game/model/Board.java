@@ -198,6 +198,12 @@ public class Board {
         cellsType[i] = figure.figureType.type;
     }
 
+    public void setFigureUglyWithoutRecalcHash(Figure figure)
+            throws ArrayIndexOutOfBoundsException {
+        Cell position = figure.getCurrentPosition();
+        cells[position.row][position.column] = figure;
+    }
+
     /**
      * @param color цвет игрока
      * @return фигуры определенного цвета
@@ -312,6 +318,15 @@ public class Board {
         return figureTo;
     }
 
+    public Figure moveFigureUglyWithoutRecalcHash(Move move) throws ArrayIndexOutOfBoundsException {
+        Figure figureFrom = getFigureUgly(move.getFrom());
+        Figure figureTo = getFigureUgly(move.getTo());
+        figureFrom.setCurrentPosition(move.getTo());
+        setFigureUglyWithoutRecalcHash(figureFrom);
+        removeFigureUglyWithoutRecalcHash(move.getFrom());
+        return figureTo;
+    }
+
     /**
      * @return фигура или null, если клетка пуста
      * @throws ChessException если клетка не лежит в пределах доски
@@ -370,6 +385,12 @@ public class Board {
         cellsTypeHash -= GameMath.hash64Coeff[i] * cellsType[i];
         cellsType[i] = 0;
 
+        return old;
+    }
+
+    public Figure removeFigureUglyWithoutRecalcHash(Cell cell) {
+        Figure old = cells[cell.row][cell.column];
+        cells[cell.row][cell.column] = null;
         return old;
     }
 

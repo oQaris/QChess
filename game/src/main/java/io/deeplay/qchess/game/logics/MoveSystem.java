@@ -49,42 +49,66 @@ public class MoveSystem {
      */
     public Figure move(Move move, boolean useHistoryRecord) throws ChessError {
         try {
-            logger.debug("Начато выполнение хода: {}", move);
-
             Figure moveFigure = board.getFigureUgly(move.getFrom());
 
             Figure removedFigure =
                     switch (move.getMoveType()) {
                             // взятие на проходе
                         case EN_PASSANT -> {
-                            board.moveFigureUgly(move);
-                            yield board.removeFigureUgly(history.getLastMove().getTo());
+                            Cell enemyPawn = history.getLastMove().getTo();
+                            if (useHistoryRecord) {
+                                board.moveFigureUgly(move);
+                                yield board.removeFigureUgly(enemyPawn);
+                            } else {
+                                board.moveFigureUglyWithoutRecalcHash(move);
+                                yield board.removeFigureUglyWithoutRecalcHash(enemyPawn);
+                            }
                         }
                             // превращение пешки
                         case TURN_INTO, TURN_INTO_ATTACK -> {
                             FigureType turnIntoType = move.getTurnInto();
                             Figure turnIntoFigure =
                                     Figure.build(turnIntoType, moveFigure.getColor(), move.getTo());
-                            Figure removed = board.moveFigureUgly(move);
-                            board.setFigureUgly(turnIntoFigure);
+                            Figure removed;
+                            if (useHistoryRecord) {
+                                removed = board.moveFigureUgly(move);
+                                board.setFigureUgly(turnIntoFigure);
+                            } else {
+                                removed = board.moveFigureUglyWithoutRecalcHash(move);
+                                board.setFigureUglyWithoutRecalcHash(turnIntoFigure);
+                            }
                             yield removed;
                         }
                             // рокировка
                         case SHORT_CASTLING -> {
                             Cell from = move.getFrom().createAdd(new Cell(3, 0));
                             Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                            board.moveFigureUgly(new Move(MoveType.QUIET_MOVE, from, to));
-                            board.getFigureUgly(to).setWasMoved(true);
-                            yield board.moveFigureUgly(move);
+                            Move rookMove = new Move(MoveType.QUIET_MOVE, from, to);
+                            board.getFigureUgly(from).setWasMoved(true);
+                            if (useHistoryRecord) {
+                                board.moveFigureUgly(rookMove);
+                                yield board.moveFigureUgly(move);
+                            } else {
+                                board.moveFigureUglyWithoutRecalcHash(rookMove);
+                                yield board.moveFigureUglyWithoutRecalcHash(move);
+                            }
                         }
                         case LONG_CASTLING -> {
                             Cell from = move.getFrom().createAdd(new Cell(-4, 0));
                             Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                            board.moveFigureUgly(new Move(MoveType.QUIET_MOVE, from, to));
-                            board.getFigureUgly(to).setWasMoved(true);
-                            yield board.moveFigureUgly(move);
+                            Move rookMove = new Move(MoveType.QUIET_MOVE, from, to);
+                            board.getFigureUgly(from).setWasMoved(true);
+                            if (useHistoryRecord) {
+                                board.moveFigureUgly(rookMove);
+                                yield board.moveFigureUgly(move);
+                            } else {
+                                board.moveFigureUglyWithoutRecalcHash(rookMove);
+                                yield board.moveFigureUglyWithoutRecalcHash(move);
+                            }
                         }
-                        default -> board.moveFigureUgly(move);
+                        default -> useHistoryRecord
+                                ? board.moveFigureUgly(move)
+                                : board.moveFigureUglyWithoutRecalcHash(move);
                     };
 
             history.setHasMovedBeforeLastMove(moveFigure.wasMoved());
@@ -112,13 +136,12 @@ public class MoveSystem {
         boolean hasMoved = history.isHasMovedBeforeLastMove();
         Figure removedFigure = history.getRemovedFigure();
         try {
-            logger.debug("Начата отмена хода: {}", move);
-
             Move revertMove = new Move(MoveType.QUIET_MOVE, move.getTo(), move.getFrom());
             if (useHistoryRecord) history.undo();
             else history.restore();
 
-            board.moveFigureUgly(revertMove);
+            if (useHistoryRecord) board.moveFigureUgly(revertMove);
+            else board.moveFigureUglyWithoutRecalcHash(revertMove);
             Figure figureThatMoved = board.getFigureUgly(move.getFrom());
             figureThatMoved.setWasMoved(hasMoved);
 
@@ -130,30 +153,43 @@ public class MoveSystem {
                                     figureThatMoved.getColor().inverse(),
                                     history.getLastMove().getTo());
                     pawn.setWasMoved(true);
-                    board.setFigureUgly(pawn);
+                    if (useHistoryRecord) board.setFigureUgly(pawn);
+                    else board.setFigureUglyWithoutRecalcHash(pawn);
                 }
                     // превращение пешки
                 case TURN_INTO, TURN_INTO_ATTACK -> {
                     Pawn pawn = new Pawn(figureThatMoved.getColor(), move.getFrom());
                     pawn.setWasMoved(true);
-                    board.setFigureUgly(pawn);
-                    if (removedFigure != null) board.setFigureUgly(removedFigure);
+                    if (useHistoryRecord) {
+                        board.setFigureUgly(pawn);
+                        if (removedFigure != null) board.setFigureUgly(removedFigure);
+                    } else {
+                        board.setFigureUglyWithoutRecalcHash(pawn);
+                        if (removedFigure != null)
+                            board.setFigureUglyWithoutRecalcHash(removedFigure);
+                    }
                 }
                     // рокировка
                 case SHORT_CASTLING -> {
                     Cell to = move.getFrom().createAdd(new Cell(3, 0));
                     Cell from = move.getFrom().createAdd(new Cell(1, 0));
-                    board.moveFigureUgly(new Move(MoveType.QUIET_MOVE, from, to));
+                    Move rookMove = new Move(MoveType.QUIET_MOVE, from, to);
+                    if (useHistoryRecord) board.moveFigureUgly(rookMove);
+                    else board.moveFigureUglyWithoutRecalcHash(rookMove);
                     board.getFigureUgly(to).setWasMoved(false);
                 }
                 case LONG_CASTLING -> {
                     Cell to = move.getFrom().createAdd(new Cell(-4, 0));
                     Cell from = move.getFrom().createAdd(new Cell(-1, 0));
-                    board.moveFigureUgly(new Move(MoveType.QUIET_MOVE, from, to));
+                    Move rookMove = new Move(MoveType.QUIET_MOVE, from, to);
+                    if (useHistoryRecord) board.moveFigureUgly(rookMove);
+                    else board.moveFigureUglyWithoutRecalcHash(rookMove);
                     board.getFigureUgly(to).setWasMoved(false);
                 }
                 default -> {
-                    if (removedFigure != null) board.setFigureUgly(removedFigure);
+                    if (removedFigure != null)
+                        if (useHistoryRecord) board.setFigureUgly(removedFigure);
+                        else board.setFigureUglyWithoutRecalcHash(removedFigure);
                 }
             }
 
