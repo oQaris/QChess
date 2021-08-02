@@ -206,7 +206,8 @@ public class History {
         if (color == Color.BLACK && !isBlackCastlingPossibility) return res;
 
         Figure king = gameSettings.board.findKing(color);
-        if (king == null) throw new ChessError(KING_NOT_FOUND);
+        if (king == null)
+            throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return res;
         if (gameSettings.board.isNotRightRookStandardMoved(color)) res += "k";
         if (gameSettings.board.isNotLeftRookStandardMoved(color)) res += "q";

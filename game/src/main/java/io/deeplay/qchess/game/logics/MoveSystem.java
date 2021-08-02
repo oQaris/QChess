@@ -213,6 +213,24 @@ public class MoveSystem {
     }
 
     /**
+     * Опасно! Выполняет ходы без проверки
+     *
+     * @param move Виртуальный ход.
+     * @param func Функция, выполняемая после виртуального хода.
+     * @return Результат функции func.
+     * @throws ChessException Если выбрасывается в функции func.
+     * @throws ChessError Если выбрасывается в функции func.
+     */
+    public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
+        logger.trace("Виртуальный ход {}", move);
+        Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
+        Figure virtualKilled = move(move);
+        T res = func.apply(figureToMove, virtualKilled);
+        undoMove();
+        return res;
+    }
+
+    /**
      * @param color цвет фигур
      * @return все возможные ходы
      */
@@ -302,5 +320,10 @@ public class MoveSystem {
         Figure figure = board.getFigureUgly(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(gs);
         return allMoves.contains(move);
+    }
+
+    @FunctionalInterface
+    public interface ChessMoveFunc<T> {
+        T apply(Color figureToMove, Figure virtualKilled) throws ChessException, ChessError;
     }
 }

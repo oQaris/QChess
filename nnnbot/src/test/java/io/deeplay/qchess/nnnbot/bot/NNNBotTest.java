@@ -72,6 +72,7 @@ public class NNNBotTest {
         System.out.println(time);
     }
 
+    @Ignore
     @Test
     public void testGame() {
         time = LocalDateTime.now().withNano(0).toString().replace('T', '~').replace(":", ";");

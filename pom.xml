@@ -17,6 +17,7 @@
     <module>game</module>
     <module>core</module>
     <module>nnnbot</module>
+    <module>qbot</module>
   </modules>
 
   <properties>
