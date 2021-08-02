@@ -1,21 +1,20 @@
 package io.deeplay.qchess.game.player;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.CONSOLE_PLAYER_ERROR;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.UNKNOWN_FIGURE_SELECTED;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.CONSOLE_PLAYER_ERROR;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.UNKNOWN_FIGURE_SELECTED;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConsolePlayer extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);

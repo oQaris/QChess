@@ -4,7 +4,6 @@ import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.ClientGUI;
 import io.deeplay.qchess.server.view.IServerView;
 import io.deeplay.qchess.server.view.ServerConsole;
-
 import java.io.IOException;
 import java.util.Scanner;
 

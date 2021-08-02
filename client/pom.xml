@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>QChess-client</artifactId>
 
-    <parent>
-        <groupId>io.deeplay</groupId>
-        <artifactId>QChess</artifactId>
-        <version>0.0.1</version>
-    </parent>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>io.deeplay.qchess.client.Main</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <id>make-assembly</id>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.3.0</version>
+      </plugin>
+    </plugins>
+  </build>
 
-    <artifactId>QChess-client</artifactId>
+  <dependencies>
+    <!-- Logger -->
+    <dependency>
+      <artifactId>slf4j-api</artifactId>
+      <groupId>org.slf4j</groupId>
+      <version>1.7.31</version>
+    </dependency>
+    <dependency>
+      <artifactId>logback-classic</artifactId>
+      <groupId>ch.qos.logback</groupId>
+      <version>1.2.3</version>
+    </dependency>
+    <!-- QChess modules -->
+    <dependency>
+      <artifactId>QChess-client-server-conversation</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>QChess-game</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
+    <!-- NNNBot -->
+    <dependency>
+      <artifactId>QChess-n-nn-bot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
+  </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>QChess</artifactId>
+    <groupId>io.deeplay</groupId>
     <version>0.0.1</version>
+  </parent>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>io.deeplay.qchess.client.Main</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
-                <groupId>org.apache.maven.plugins</groupId>
-                <version>3.3.0</version>
-            </plugin>
-        </plugins>
-    </build>
+  <properties>
+    <maven.compiler.source>14</maven.compiler.source>
+    <maven.compiler.target>14</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-    <dependencies>
-        <!-- Logger -->
-        <dependency>
-            <artifactId>slf4j-api</artifactId>
-            <groupId>org.slf4j</groupId>
-            <version>1.7.31</version>
-        </dependency>
-        <dependency>
-            <artifactId>logback-classic</artifactId>
-            <groupId>ch.qos.logback</groupId>
-            <version>1.2.3</version>
-        </dependency>
-        <!-- QChess modules -->
-        <dependency>
-            <artifactId>QChess-client-server-conversation</artifactId>
-            <groupId>io.deeplay</groupId>
-            <version>0.0.1</version>
-        </dependency>
-        <dependency>
-            <artifactId>QChess-game</artifactId>
-            <groupId>io.deeplay</groupId>
-            <version>0.0.1</version>
-        </dependency>
-        <!-- NNNBot -->
-        <dependency>
-            <artifactId>QChess-n-nn-bot</artifactId>
-            <groupId>io.deeplay</groupId>
-            <version>0.0.1</version>
-        </dependency>
-    </dependencies>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>14</maven.compiler.target>
-    </properties>
+  <version>0.0.1</version>
 
 </project>

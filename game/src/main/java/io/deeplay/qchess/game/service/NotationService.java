@@ -1,14 +1,24 @@
 package io.deeplay.qchess.game.service;
 
+import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
+
 import io.deeplay.qchess.game.exceptions.ChessErrorCode;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.model.figures.*;
-
-import java.util.*;
-
-import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
+import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Knight;
+import io.deeplay.qchess.game.model.figures.Pawn;
+import io.deeplay.qchess.game.model.figures.Queen;
+import io.deeplay.qchess.game.model.figures.Rook;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Используется для нотации Форсайта-Эдвардса (FEN)

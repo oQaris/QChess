@@ -12,7 +12,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -89,16 +88,12 @@ public class GameGUIAdapter {
         return null;
     }
 
-    /**
-     * @return true, если королю цвета color поставили шах
-     */
+    /** @return true, если королю цвета color поставили шах */
     public static boolean isCheck(boolean color) {
         return GameDAO.getGameSettings().endGameDetector.isCheck(color ? Color.WHITE : Color.BLACK);
     }
 
-    /**
-     * @return клетка короля цвета color
-     */
+    /** @return клетка короля цвета color */
     public static ViewCell getKingCell(boolean color) {
         Cell cell = GameDAO.getGameSettings().board.findKingCell(color ? Color.WHITE : Color.BLACK);
         return new ViewCell(cell.row, cell.column, false);

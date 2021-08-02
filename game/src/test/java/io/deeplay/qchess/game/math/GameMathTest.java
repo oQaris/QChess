@@ -1,10 +1,9 @@
 package io.deeplay.qchess.game.math;
 
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.Arrays;
 
 public class GameMathTest {
 

@@ -1,21 +1,25 @@
 package io.deeplay.qchess.game.logics;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_WAS_KILLED_IN_VIRTUAL_MOVE;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.*;
+import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.History;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.Pawn;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_WAS_KILLED_IN_VIRTUAL_MOVE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Хранит различные данные об игре для контроля специфичных ситуаций
@@ -237,7 +241,7 @@ public class MoveSystem {
     /**
      * @param move корректный ход
      */
-    private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
+    private boolean isCorrectVirtualMove(Move move) throws ChessError {
         logger.trace("Начата проверка виртуального хода {}", move);
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
         Figure virtualKilled = move(move, false);
@@ -261,6 +265,7 @@ public class MoveSystem {
      * @throws ChessException Если выбрасывается в функции func.
      * @throws ChessError     Если выбрасывается в функции func.
      */
+    @Deprecated
     public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
         logger.trace("Виртуальный ход {}", move);
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
@@ -333,7 +338,7 @@ public class MoveSystem {
     private boolean isCorrectVirtualMoveForCell(Move move) throws ChessError {
         try {
             return move != null && isCorrectVirtualMove(move);
-        } catch (ChessException | NullPointerException e) {
+        } catch (NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
                     move,
@@ -363,8 +368,7 @@ public class MoveSystem {
     /**
      * @return true если ход лежит в доступных
      */
-    private boolean inAvailableMoves(Move move)
-            throws ChessException, ArrayIndexOutOfBoundsException {
+    private boolean inAvailableMoves(Move move){
         Figure figure = board.getFigureUgly(move.getFrom());
         Set<Move> allMoves = figure.getAllMoves(gs);
         return allMoves.contains(move);

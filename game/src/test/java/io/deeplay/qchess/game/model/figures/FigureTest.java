@@ -2,14 +2,17 @@ package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class FigureTest {
     private GameSettings gameSettings;
@@ -679,7 +682,7 @@ public class FigureTest {
     @Test
     public void testPawnEnPassant()
             throws ChessException, IllegalArgumentException, NoSuchFieldException,
-            IllegalAccessException {
+                    IllegalAccessException {
         Move white1 = new Move(MoveType.LONG_MOVE, Cell.parse("c2"), Cell.parse("c4"));
         Figure figureW1 = new Pawn(Color.WHITE, white1.getTo());
 
@@ -707,7 +710,7 @@ public class FigureTest {
     @Test
     public void testFalsePawnEnPassant()
             throws ChessException, IllegalArgumentException, NoSuchFieldException,
-            IllegalAccessException {
+                    IllegalAccessException {
 
         Figure whitePawn = new Pawn(Color.WHITE, Cell.parse("c5"));
         Figure blackPawn1 = new Pawn(Color.BLACK, Cell.parse("b6"));

@@ -6,12 +6,9 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.SearchFunc;
-
 import java.util.List;
 
-/**
- * Поиск с альфа-бета отсечением на заданную глубину
- */
+/** Поиск с альфа-бета отсечением на заданную глубину */
 public abstract class ParallelSearch implements SearchFunc {
 
     public final int maxDepth;

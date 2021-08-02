@@ -2,10 +2,9 @@ package io.deeplay.qchess.client.view.gui;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
-
-import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JOptionPane;
 
 public class CloseFrameListener extends WindowAdapter {
     private final Frame frame;

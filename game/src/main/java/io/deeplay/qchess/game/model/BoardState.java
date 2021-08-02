@@ -1,42 +1,27 @@
 package io.deeplay.qchess.game.model;
 
 import io.deeplay.qchess.game.model.figures.Figure;
-
 import java.util.Arrays;
 
-/**
- * Описывает состояние доски
- */
+/** Описывает состояние доски */
 public class BoardState {
     public final byte[] boardSnapshot;
     public final int boardSnapshotHash;
-    /**
-     * Учитывать в equals и hashCode только LONG_MOVE
-     */
+    /** Учитывать в equals и hashCode только LONG_MOVE */
     public final Move lastMove;
 
     public final boolean isWhiteMove;
 
-    /**
-     * 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе
-     */
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
     public final int isWhiteCastlingPossibility;
-    /**
-     * 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе
-     */
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
     public final int isBlackCastlingPossibility;
 
-    /**
-     * Не нужно учитывать в equals и hashCode
-     */
+    /** Не нужно учитывать в equals и hashCode */
     public final boolean hasMovedBeforeLastMove;
-    /**
-     * Не нужно учитывать в equals и hashCode
-     */
+    /** Не нужно учитывать в equals и hashCode */
     public final Figure removedFigure;
-    /**
-     * Не нужно учитывать в equals и hashCode
-     */
+    /** Не нужно учитывать в equals и hashCode */
     public final int peaceMoveCount;
 
     public BoardState(
@@ -60,9 +45,7 @@ public class BoardState {
         this.isBlackCastlingPossibility = isBlackCastlingPossibility;
     }
 
-    /**
-     * Используется только для нахождения повторений доски
-     */
+    /** Используется только для нахождения повторений доски */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,18 +57,16 @@ public class BoardState {
                     && isWhiteCastlingPossibility == that.isWhiteCastlingPossibility
                     && isBlackCastlingPossibility == that.isBlackCastlingPossibility
                     && (lastMove.getMoveType() == MoveType.LONG_MOVE
-                    && that.lastMove.getMoveType() == MoveType.LONG_MOVE
-                    || lastMove.getMoveType() != MoveType.LONG_MOVE
-                    && that.lastMove.getMoveType() != MoveType.LONG_MOVE)
+                                    && that.lastMove.getMoveType() == MoveType.LONG_MOVE
+                            || lastMove.getMoveType() != MoveType.LONG_MOVE
+                                    && that.lastMove.getMoveType() != MoveType.LONG_MOVE)
                     && Arrays.equals(boardSnapshot, that.boardSnapshot);
         } catch (NullPointerException e) {
             return false;
         }
     }
 
-    /**
-     * Используется только для нахождения повторений доски
-     */
+    /** Используется только для нахождения повторений доски */
     @Override
     public int hashCode() {
         final int h1 = lastMove == null ? 0 : lastMove.getMoveType() == MoveType.LONG_MOVE ? 1 : 2;

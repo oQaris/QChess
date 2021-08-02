@@ -1,9 +1,11 @@
 package io.deeplay.qchess.client.view.gui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 public class MainFrame {
     private ChooseMyPlayerFrame chooseMyPlayerFrame;

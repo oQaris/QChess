@@ -1,6 +1,7 @@
 package io.deeplay.qchess.client.view.gui;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class MessageFrame {
     public MessageFrame(JFrame frame, String title, Object message) {

@@ -1,42 +1,27 @@
 package io.deeplay.qchess.client.view;
 
 import io.deeplay.qchess.client.view.model.ViewBoard;
-
 import java.io.Closeable;
 
-/**
- * Управляет окружением клиента
- */
+/** Управляет окружением клиента */
 public interface IClientView extends Closeable {
 
-    /**
-     * Запускает окружение
-     */
+    /** Запускает окружение */
     void startView();
 
-    /**
-     * Выводит сообщение
-     */
+    /** Выводит сообщение */
     void print(String message);
 
-    /**
-     * Выводит окно с сообщением
-     */
+    /** Выводит окно с сообщением */
     void showMessage(String message);
 
-    /**
-     * Перерисовывает доску
-     */
+    /** Перерисовывает доску */
     void drawBoard();
 
-    /**
-     * @return доска
-     */
+    /** @return доска */
     ViewBoard getBoard();
 
-    /**
-     * Закрывает View клиента и отключается от сервера
-     */
+    /** Закрывает View клиента и отключается от сервера */
     void closeGame(String reason);
 
     /**
@@ -46,8 +31,6 @@ public interface IClientView extends Closeable {
      */
     void disconnect(String reason);
 
-    /**
-     * Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет)
-     */
+    /** Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет) */
     void changeMyColorOnBoard(boolean color);
 }

@@ -7,7 +7,6 @@ import io.deeplay.qchess.client.view.model.ViewBoard;
 import io.deeplay.qchess.client.view.model.ViewColor;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.client.view.model.ViewFigureType;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

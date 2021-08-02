@@ -5,7 +5,6 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-
 import java.util.HashSet;
 import java.util.Set;
 

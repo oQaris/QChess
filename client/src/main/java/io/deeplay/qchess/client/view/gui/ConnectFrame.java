@@ -3,11 +3,17 @@ package io.deeplay.qchess.client.view.gui;
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.service.GameService;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 public class ConnectFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
@@ -65,8 +71,7 @@ public class ConnectFrame extends Frame {
         connectButton.addMouseListener(
                 new MouseListener() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                    }
+                    public void mouseClicked(MouseEvent e) {}
 
                     @Override
                     public void mousePressed(MouseEvent e) {
@@ -100,16 +105,13 @@ public class ConnectFrame extends Frame {
                     }
 
                     @Override
-                    public void mouseReleased(MouseEvent e) {
-                    }
+                    public void mouseReleased(MouseEvent e) {}
 
                     @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
+                    public void mouseEntered(MouseEvent e) {}
 
                     @Override
-                    public void mouseExited(MouseEvent e) {
-                    }
+                    public void mouseExited(MouseEvent e) {}
                 });
 
         return connectButton;

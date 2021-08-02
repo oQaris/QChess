@@ -7,7 +7,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -39,9 +38,9 @@ public class MinimaxParallelSearch extends ParallelSearch {
 
     /**
      * @param alfa минимальная оценка из максимальных для максимизирующего игрока (лучшая из
-     *             гарантированных для него)
+     *     гарантированных для него)
      * @param beta максимальная оценка из минимальных для минимизирующего игрока (лучшая из
-     *             гарантированных для него)
+     *     гарантированных для него)
      */
     private double minimax(boolean isMaximizingPlayer, double alfa, double beta, int depth)
             throws ChessError {

@@ -24,7 +24,6 @@ import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
-
 import java.util.List;
 
 public class GameService {
