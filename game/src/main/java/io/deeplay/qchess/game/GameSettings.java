@@ -45,7 +45,9 @@ public class GameSettings {
         moveSystem = new MoveSystem(this);
     }
 
-    /** Копирует gs */
+    /**
+     * Копирует gs
+     */
     public GameSettings(GameSettings gs) {
         this.board = new Board(gs.board);
         this.moveSystem = new MoveSystem(this);

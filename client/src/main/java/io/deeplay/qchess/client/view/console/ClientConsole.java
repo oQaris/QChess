@@ -7,6 +7,7 @@ import io.deeplay.qchess.client.view.model.ViewBoard;
 import io.deeplay.qchess.client.view.model.ViewColor;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.client.view.model.ViewFigureType;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,7 +20,8 @@ public class ClientConsole implements IClientView {
             new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
     private final ViewBoard board = new ViewBoard();
 
-    public ClientConsole() {}
+    public ClientConsole() {
+    }
 
     @Override
     public void close() throws IOException {

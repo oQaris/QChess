@@ -1,10 +1,5 @@
 package io.deeplay.qchess.client;
 
-import static io.deeplay.qchess.client.exceptions.ClientErrorCode.CLIENT_IS_ALREADY_CONNECTED;
-import static io.deeplay.qchess.client.exceptions.ClientErrorCode.CLIENT_IS_NOT_CONNECTED;
-import static io.deeplay.qchess.client.exceptions.ClientErrorCode.CONNECTION_WAS_BROKEN;
-import static io.deeplay.qchess.client.exceptions.ClientErrorCode.FAILED_CONNECT;
-
 import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.handlers.InputTrafficHandler;
@@ -16,10 +11,13 @@ import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientType;
 import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
-import java.io.IOException;
-import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.Socket;
+
+import static io.deeplay.qchess.client.exceptions.ClientErrorCode.*;
 
 public class LocalClient implements IClient {
     private static final Logger logger = LoggerFactory.getLogger(LocalClient.class);
@@ -28,7 +26,9 @@ public class LocalClient implements IClient {
     private static int port;
     private static volatile boolean waitForResponse;
 
-    /** volatile используется, т.к. нужно следить за изменением ссылки, а не объекта */
+    /**
+     * volatile используется, т.к. нужно следить за изменением ссылки, а не объекта
+     */
     private static volatile ServerToClientDTO lastResponse;
 
     private final Object mutex = new Object();
@@ -38,9 +38,12 @@ public class LocalClient implements IClient {
     private volatile boolean isConnected;
     private volatile boolean killClient;
 
-    private LocalClient() {}
+    private LocalClient() {
+    }
 
-    /** @return возвращает экземпляр клиента */
+    /**
+     * @return возвращает экземпляр клиента
+     */
     public static LocalClient getInstance() {
         if (localClient == null) localClient = new LocalClient();
         return localClient;
@@ -91,7 +94,9 @@ public class LocalClient implements IClient {
         killClient = true;
     }
 
-    /** @throws ClientException если клиент не подключен */
+    /**
+     * @throws ClientException если клиент не подключен
+     */
     private void checkIsNotConnected() throws ClientException {
         if (!isConnected) {
             logger.warn("Клиент еще не подключен");
@@ -99,7 +104,9 @@ public class LocalClient implements IClient {
         }
     }
 
-    /** @throws ClientException если клиент подключен */
+    /**
+     * @throws ClientException если клиент подключен
+     */
     private void checkIsConnected() throws ClientException {
         if (isConnected) {
             logger.warn("Клиент уже подключен к серверу {}:{}", ip, port);

@@ -10,7 +10,6 @@ import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.qbot.strategy.IStrategy;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,13 +121,14 @@ class QBotTest {
     @Test
     public void testQBotStalemate1Step() throws ChessError, ChessException {
         // мат ладьёй за один ход
-        GameSettings roomSettings = new GameSettings(5, Board.BoardFilling.EMPTY);
+        GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
         roomSettings.board.setFigure(new King(Color.WHITE, Cell.parse("a8")));
+        roomSettings.board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
         roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("c7")));
         roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("d5")));
         System.out.println(roomSettings.board);
 
-        QBot bot = new QBot(roomSettings, Color.BLACK, 2);
+        QBot bot = new QBot(roomSettings, Color.BLACK, 3);
         List<Move> moves = bot.getTopMoves();
 
         assertEquals(1, moves.size());

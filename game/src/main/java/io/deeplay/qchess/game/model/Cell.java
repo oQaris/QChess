@@ -1,11 +1,11 @@
 package io.deeplay.qchess.game.model;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
-import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
-
 import com.google.gson.annotations.SerializedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
+import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
 public class Cell {
     public static final transient int[][] hashCodes = new int[STD_BOARD_SIZE][STD_BOARD_SIZE];
@@ -29,7 +29,9 @@ public class Cell {
         this.row = row;
     }
 
-    /** @deprecated Использует стандартный размер доски - плохо для гибкости */
+    /**
+     * @deprecated Использует стандартный размер доски - плохо для гибкости
+     */
     @Deprecated(since = "only for tests")
     public static Cell parse(String pos) {
         if (pos.length() == 2) {
@@ -44,19 +46,25 @@ public class Cell {
         throw new IllegalArgumentException(INCORRECT_COORDINATES.getMessage());
     }
 
-    /** @return создает новую клетку, суммируя с текущей */
+    /**
+     * @return создает новую клетку, суммируя с текущей
+     */
     public Cell createAdd(Cell shiftCell) {
         return new Cell(column + shiftCell.column, row + shiftCell.row);
     }
 
-    /** Сдвигает текущую клетку на указанный вектор */
+    /**
+     * Сдвигает текущую клетку на указанный вектор
+     */
     public Cell shift(Cell shiftCell) {
         column += shiftCell.column;
         row += shiftCell.row;
         return this;
     }
 
-    /** @deprecated Не использовать вне доски */
+    /**
+     * @deprecated Не использовать вне доски
+     */
     @Deprecated
     @Override
     public int hashCode() {
@@ -71,7 +79,9 @@ public class Cell {
         return column == cell.column && row == cell.row;
     }
 
-    /** @deprecated Использует стандартный размер доски - плохо для гибкости */
+    /**
+     * @deprecated Использует стандартный размер доски - плохо для гибкости
+     */
     @Deprecated
     @Override
     public String toString() {

@@ -1,16 +1,13 @@
 package io.deeplay.qchess.game.model;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
+
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 public class History {
     private static final int AVERAGE_MAXIMUM_MOVES = 100;
@@ -30,29 +27,41 @@ public class History {
 
     private final GameSettings gameSettings;
     private final Map<BoardState, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
-    /** using like a stack */
+    /**
+     * using like a stack
+     */
     private final Deque<BoardState> recordsList = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
 
     private Move lastMove;
     private boolean hasMovedBeforeLastMove;
-    /** Исключая пешку при взятии на проходе */
+    /**
+     * Исключая пешку при взятии на проходе
+     */
     private Figure removedFigure;
 
     private int peaceMoveCount = 0;
     private boolean isWhiteMove = true;
-    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    /**
+     * 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе
+     */
     private int isWhiteCastlingPossibility = 3;
-    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    /**
+     * 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе
+     */
     private int isBlackCastlingPossibility = 3;
 
-    /** Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки */
+    /**
+     * Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки
+     */
     private int minBoardStateToSave;
 
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
     }
 
-    /** Копирует всю историю */
+    /**
+     * Копирует всю историю
+     */
     public History(History history, GameSettings gameSettings) {
         this(gameSettings);
         this.repetitionsMap.putAll(history.repetitionsMap);
@@ -142,7 +151,7 @@ public class History {
      * Чистить историю от ненужных состояний доски
      *
      * @param minBoardStateToSave минимум состояний доски в истории ходов, которое необходимо
-     *     сохранить после чистки
+     *                            сохранить после чистки
      */
     public void clearHistory(int minBoardStateToSave) {
         int stateCountToClear = recordsList.size() - minBoardStateToSave;
@@ -155,7 +164,9 @@ public class History {
         }
     }
 
-    /** @return текущая доска в записи FEN */
+    /**
+     * @return текущая доска в записи FEN
+     */
     public String getBoardToStringForsythEdwards() throws ChessError {
         StringBuilder rec = new StringBuilder(70);
 
@@ -169,7 +180,9 @@ public class History {
         return rec.toString();
     }
 
-    /** @return Строка - часть записи отвечающая за позиционирование фигур на доске */
+    /**
+     * @return Строка - часть записи отвечающая за позиционирование фигур на доске
+     */
     private String getConvertingFigurePosition() {
         StringBuilder result = new StringBuilder();
         Figure currentFigure;
@@ -198,7 +211,9 @@ public class History {
         return result.toString();
     }
 
-    /** @return Строка - часть записи отвечающая, можно ли использовать рокировки */
+    /**
+     * @return Строка - часть записи отвечающая, можно ли использовать рокировки
+     */
     private String getCastlingPossibility() throws ChessError {
         return getCastlingPossibility(Color.WHITE) + getCastlingPossibility(Color.BLACK);
     }
@@ -223,7 +238,7 @@ public class History {
 
     /**
      * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на
-     *     проходе следующим ходом
+     * проходе следующим ходом
      */
     private String getPawnEnPassantPossibility() {
         StringBuilder result = new StringBuilder();
@@ -241,14 +256,16 @@ public class History {
         return peaceMoveCount;
     }
 
-    /** @return последнее состояние доски */
+    /**
+     * @return последнее состояние доски
+     */
     public BoardState getLastBoardState() {
         return recordsList.peek();
     }
 
     /**
      * @return true - если было минимум repetition-кратных повторений последней доски, false - если
-     *     было меньше
+     * было меньше
      */
     public boolean checkRepetitions(int repetition) {
         return repetitionsMap.get(recordsList.peek()) >= repetition;
@@ -258,7 +275,9 @@ public class History {
         return lastMove;
     }
 
-    /** Отменяет последний ход в истории */
+    /**
+     * Отменяет последний ход в истории
+     */
     public void undo() {
         BoardState lastBoardState = recordsList.pop();
         BoardState prevLastBoardState = recordsList.peek();
@@ -271,7 +290,9 @@ public class History {
         if (boardStateCount > 1) repetitionsMap.put(lastBoardState, boardStateCount - 1);
     }
 
-    /** Берет последние данные из истории и обновляет текущие */
+    /**
+     * Берет последние данные из истории и обновляет текущие
+     */
     public void restore() {
         BoardState lastBoardState = recordsList.peek();
         if (lastBoardState == null) return;

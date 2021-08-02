@@ -55,5 +55,6 @@ public class ClientGUI implements IClientView {
     }
 
     @Override
-    public void close() {}
+    public void close() {
+    }
 }

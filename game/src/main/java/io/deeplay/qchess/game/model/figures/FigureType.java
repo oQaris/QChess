@@ -9,10 +9,12 @@ public enum FigureType {
     ROOK((byte) 5);
 
     public static final String[] nameOfTypeNumber = {
-        "BISHOP", "KING", "KNIGHT", "PAWN", "QUEEN", "ROOK"
+            "BISHOP", "KING", "KNIGHT", "PAWN", "QUEEN", "ROOK"
     };
 
-    /** Нужен для быстрого вычисления состояния доски */
+    /**
+     * Нужен для быстрого вычисления состояния доски
+     */
     public final byte type;
 
     FigureType(byte type) {

@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
+
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;

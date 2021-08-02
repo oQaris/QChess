@@ -61,12 +61,14 @@ public class QBot extends RemotePlayer {
                 if (curGrade > maxGrade) {
                     maxGrade = curGrade;
                     topMoves.clear();
+                    System.err.println(move + " " + curGrade);
                 }
                 if (curGrade >= maxGrade) topMoves.add(move);
             } else {
                 if (curGrade < maxGrade) {
                     maxGrade = curGrade;
                     topMoves.clear();
+                    System.err.println(move + " " + curGrade);
                 }
                 if (curGrade <= maxGrade) topMoves.add(move);
             }
@@ -125,9 +127,11 @@ public class QBot extends RemotePlayer {
         Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
 
         final List<Move> allMoves = ms.getAllCorrectMoves(curColor);
-        // todo вынести в функцию оценки
-        if (allMoves.isEmpty() && egd.isCheck(curColor))
+        // Если терминальный узел
+        if (allMoves.isEmpty() && egd.isCheck(curColor)) {
+            System.err.println("yes");
             return initGrade;
+        }
 
         setTurnIntoAll(allMoves);
         for (Move move : allMoves) {
@@ -168,5 +172,6 @@ public class QBot extends RemotePlayer {
                 moves.add(new Move(move, FigureType.KNIGHT));
             }
         }
+        moves.sort((m1, m2) -> m2.getMoveType().importantLevel - m1.getMoveType().importantLevel);
     }
 }

@@ -1,18 +1,11 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.MoveType;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import io.deeplay.qchess.game.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public abstract class Figure {
     public static final int[][][][] hashCodes = new int[2][2][8][8];
@@ -73,17 +66,23 @@ public abstract class Figure {
         this.position = position;
     }
 
-    /** Устанавливает, делала ли фигура хотя бы один ход */
+    /**
+     * Устанавливает, делала ли фигура хотя бы один ход
+     */
     public void setWasMoved(boolean wasMoved) {
         this.wasMoved = wasMoved;
     }
 
-    /** @return true, если фигура делала ход */
+    /**
+     * @return true, если фигура делала ход
+     */
     public boolean wasMoved() {
         return wasMoved;
     }
 
-    /** @return все возможные ходы фигуры, не учитывая шаха */
+    /**
+     * @return все возможные ходы фигуры, не учитывая шаха
+     */
     public abstract Set<Move> getAllMoves(GameSettings settings);
 
     protected Set<Move> rayTrace(Board board, List<Cell> directions) {
@@ -100,7 +99,9 @@ public abstract class Figure {
         return result;
     }
 
-    /** @return цвет фигуры */
+    /**
+     * @return цвет фигуры
+     */
     public Color getColor() {
         return color;
     }

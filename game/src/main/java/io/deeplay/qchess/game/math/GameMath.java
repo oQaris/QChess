@@ -14,7 +14,9 @@ public class GameMath {
         pow31in64 = degree;
     }
 
-    /** @return a в степени n */
+    /**
+     * @return a в степени n
+     */
     public static int pow(int a, int n) {
         int res = 1;
         while (n != 0) {

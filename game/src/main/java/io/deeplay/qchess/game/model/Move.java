@@ -2,6 +2,7 @@ package io.deeplay.qchess.game.model;
 
 import com.google.gson.annotations.SerializedName;
 import io.deeplay.qchess.game.model.figures.FigureType;
+
 import java.util.Objects;
 
 public class Move {
@@ -57,7 +58,9 @@ public class Move {
         return to;
     }
 
-    /** Не хеширует фигуру для превращения, читать подробнее: {@link #turnInto} */
+    /**
+     * Не хеширует фигуру для превращения, читать подробнее: {@link #turnInto}
+     */
     @Override
     public int hashCode() {
         return (Cell.hashCodes[from.column][from.row] * 31 + Cell.hashCodes[to.column][to.row]) * 10

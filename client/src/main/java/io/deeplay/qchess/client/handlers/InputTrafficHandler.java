@@ -1,29 +1,23 @@
 package io.deeplay.qchess.client.handlers;
 
-import static io.deeplay.qchess.client.exceptions.ClientErrorCode.ERROR_CREATE_TRAFFIC_HANDLER;
-import static io.deeplay.qchess.client.exceptions.ClientErrorCode.ERROR_GET_SOCKET_INPUT;
-import static io.deeplay.qchess.client.exceptions.ClientErrorCode.ERROR_GET_SOCKET_OUTPUT;
-
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.clientserverconversation.dto.main.ServerToClientDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationException;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/** Обрабатывает входящий трафик от сервера */
+import static io.deeplay.qchess.client.exceptions.ClientErrorCode.*;
+
+/**
+ * Обрабатывает входящий трафик от сервера
+ */
 public class InputTrafficHandler extends Thread {
     private static final Logger logger = LoggerFactory.getLogger(InputTrafficHandler.class);
     private final Socket socket;
@@ -127,7 +121,9 @@ public class InputTrafficHandler extends Thread {
         logger.debug("Обработчик трафика {} завершил свою работу", this);
     }
 
-    /** Отправляет серверу строку, если она не null */
+    /**
+     * Отправляет серверу строку, если она не null
+     */
     public void sendIfNotNull(String json) {
         if (json != null) {
             out.println(json);

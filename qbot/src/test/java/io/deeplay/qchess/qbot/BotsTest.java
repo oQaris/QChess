@@ -7,7 +7,8 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.Player;
-import io.deeplay.qchess.game.player.RandomBot;
+import io.deeplay.qchess.qbot.strategy.CounterStrategy;
+import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +33,10 @@ class BotsTest {
     private static Map<EndGameType, Integer> initGameResults() {
         return new ConcurrentHashMap<>(
                 Map.of(
-                        EndGameType.CHECKMATE_TO_BLACK, 0,
-                        EndGameType.CHECKMATE_TO_WHITE, 0,
-                        EndGameType.STALEMATE_TO_BLACK, 0,
-                        EndGameType.STALEMATE_TO_WHITE, 0,
+                        CHECKMATE_TO_BLACK, 0,
+                        CHECKMATE_TO_WHITE, 0,
+                        STALEMATE_TO_BLACK, 0,
+                        STALEMATE_TO_WHITE, 0,
                         DRAW_WITH_NOT_ENOUGH_MATERIAL, 0,
                         DRAW_WITH_PEACE_MOVE_COUNT, 0,
                         DRAW_WITH_REPETITIONS, 0));
@@ -62,9 +63,9 @@ class BotsTest {
         int d = d1 + d2 + d3;
 
         logger.info("\n<------------------------------------------------------>");
-        logger.info("Time: {} min {} sec", timeInSec / 60, timeInSec % 60);
+        logger.info("\nTime: {} min {} sec", timeInSec / 60, timeInSec % 60);
         logger.info(
-                "Draw count: {}\n"
+                "\nDraw count: {}\n"
                         + " Draw with peace move count: {}\n"
                         + " Draw with repetitions: {}\n"
                         + " Draw with not enough material: {}\n"
@@ -91,8 +92,9 @@ class BotsTest {
         @Override
         public void run() {
             GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new QBot(gs, QBotColor, 1);
-            Player secondPlayer = new QBot(gs, QBotColor.inverse(), 3);
+            Player firstPlayer = new QBot(gs, QBotColor, 1, new CounterStrategy());
+            Player secondPlayer = new QBot(gs, QBotColor.inverse(), 1, new SimpleStrategy());
+            //Player secondPlayer = NNNBotFactory.getNNNBot(gs, QBotColor.inverse());
             try {
                 Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();

@@ -1,7 +1,5 @@
 package io.deeplay.qchess.game.player;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.BOT_ERROR;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -10,14 +8,12 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.BOT_ERROR;
 
 public class AttackBot extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(AttackBot.class);

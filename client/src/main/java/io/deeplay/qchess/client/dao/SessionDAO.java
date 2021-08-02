@@ -4,12 +4,16 @@ import io.deeplay.qchess.client.database.Database;
 
 public class SessionDAO {
 
-    /** @return токен для подключения к серверу */
+    /**
+     * @return токен для подключения к серверу
+     */
     public static String getSessionToken() {
         return Database.getInstance().getSessionToken();
     }
 
-    /** Устанавливает токен для подключения к серверу */
+    /**
+     * Устанавливает токен для подключения к серверу
+     */
     public static void setSessionToken(String sessionToken) {
         Database.getInstance().setSessionToken(sessionToken);
     }

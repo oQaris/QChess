@@ -1,8 +1,5 @@
 package io.deeplay.qchess.game;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PEACE_MOVE_COUNT;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
-
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
@@ -15,6 +12,9 @@ import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PEACE_MOVE_COUNT;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
+
 public class Selfplay {
     private static final Logger logger = LoggerFactory.getLogger(Selfplay.class);
     private final Player secondPlayer;
@@ -23,7 +23,9 @@ public class Selfplay {
     private Player currentPlayerToMove;
     private boolean isDraw;
 
-    /** @throws ChessError если заполнение доски некорректное */
+    /**
+     * @throws ChessError если заполнение доски некорректное
+     */
     public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer)
             throws ChessError {
         this.roomSettings = roomSettings;
@@ -83,7 +85,9 @@ public class Selfplay {
         }
     }
 
-    /** @deprecated Можно запускать только один раз. Используется только для проверки игры */
+    /**
+     * @deprecated Можно запускать только один раз. Используется только для проверки игры
+     */
     @Deprecated
     public void run() throws ChessError {
         while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
@@ -123,7 +127,9 @@ public class Selfplay {
         // TODO: конец игры, отправлять GameResponse
     }
 
-    /** @return удаленная фигура или null, если клетка была пуста */
+    /**
+     * @return удаленная фигура или null, если клетка была пуста
+     */
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);

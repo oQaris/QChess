@@ -39,7 +39,9 @@ public abstract class Player {
         return color;
     }
 
-    /** @return возвращает проверенный ход */
+    /**
+     * @return возвращает проверенный ход
+     */
     public abstract Move getNextMove() throws ChessError;
 
     @Override

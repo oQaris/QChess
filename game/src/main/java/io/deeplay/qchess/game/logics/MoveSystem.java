@@ -1,27 +1,25 @@
 package io.deeplay.qchess.game.logics;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_WAS_KILLED_IN_VIRTUAL_MOVE;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.model.History;
-import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.*;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.Pawn;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Хранит различные данные об игре для контроля специфичных ситуаций */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHEN_MOVING_FIGURE;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_WAS_KILLED_IN_VIRTUAL_MOVE;
+
+/**
+ * Хранит различные данные об игре для контроля специфичных ситуаций
+ */
 public class MoveSystem {
     private static final Logger logger = LoggerFactory.getLogger(MoveSystem.class);
 
@@ -53,7 +51,7 @@ public class MoveSystem {
 
             Figure removedFigure =
                     switch (move.getMoveType()) {
-                            // взятие на проходе
+                        // взятие на проходе
                         case EN_PASSANT -> {
                             Cell enemyPawn = history.getLastMove().getTo();
                             if (useHistoryRecord) {
@@ -64,7 +62,7 @@ public class MoveSystem {
                                 yield board.removeFigureUglyWithoutRecalcHash(enemyPawn);
                             }
                         }
-                            // превращение пешки
+                        // превращение пешки
                         case TURN_INTO, TURN_INTO_ATTACK -> {
                             FigureType turnIntoType = move.getTurnInto();
                             Figure turnIntoFigure =
@@ -79,7 +77,7 @@ public class MoveSystem {
                             }
                             yield removed;
                         }
-                            // рокировка
+                        // рокировка
                         case SHORT_CASTLING -> {
                             Cell from = move.getFrom().createAdd(new Cell(3, 0));
                             Cell to = move.getFrom().createAdd(new Cell(1, 0));
@@ -130,7 +128,9 @@ public class MoveSystem {
         undoMove(true);
     }
 
-    /** Отменяет последний ход без проверок */
+    /**
+     * Отменяет последний ход без проверок
+     */
     public void undoMove(boolean useHistoryRecord) throws ChessError {
         Move move = useHistoryRecord ? history.getLastMove() : prevMoveIfRecordNotUse;
         boolean hasMoved = history.isHasMovedBeforeLastMove();
@@ -146,7 +146,7 @@ public class MoveSystem {
             figureThatMoved.setWasMoved(hasMoved);
 
             switch (move.getMoveType()) {
-                    // взятие на проходе
+                // взятие на проходе
                 case EN_PASSANT -> {
                     Pawn pawn =
                             new Pawn(
@@ -156,7 +156,7 @@ public class MoveSystem {
                     if (useHistoryRecord) board.setFigureUgly(pawn);
                     else board.setFigureUglyWithoutRecalcHash(pawn);
                 }
-                    // превращение пешки
+                // превращение пешки
                 case TURN_INTO, TURN_INTO_ATTACK -> {
                     Pawn pawn = new Pawn(figureThatMoved.getColor(), move.getFrom());
                     pawn.setWasMoved(true);
@@ -169,7 +169,7 @@ public class MoveSystem {
                             board.setFigureUglyWithoutRecalcHash(removedFigure);
                     }
                 }
-                    // рокировка
+                // рокировка
                 case SHORT_CASTLING -> {
                     Cell to = move.getFrom().createAdd(new Cell(3, 0));
                     Cell from = move.getFrom().createAdd(new Cell(1, 0));
@@ -211,13 +211,15 @@ public class MoveSystem {
                 || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
             return move.getTurnInto() != null
                     && (move.getTurnInto() == FigureType.BISHOP
-                            || move.getTurnInto() == FigureType.KNIGHT
-                            || move.getTurnInto() == FigureType.QUEEN
-                            || move.getTurnInto() == FigureType.ROOK);
+                    || move.getTurnInto() == FigureType.KNIGHT
+                    || move.getTurnInto() == FigureType.QUEEN
+                    || move.getTurnInto() == FigureType.ROOK);
         return true;
     }
 
-    /** @return true если ход корректный */
+    /**
+     * @return true если ход корректный
+     */
     private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
         try {
             return move != null
@@ -232,7 +234,9 @@ public class MoveSystem {
         }
     }
 
-    /** @param move корректный ход */
+    /**
+     * @param move корректный ход
+     */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
         logger.trace("Начата проверка виртуального хода {}", move);
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
@@ -255,7 +259,7 @@ public class MoveSystem {
      * @param func Функция, выполняемая после виртуального хода.
      * @return Результат функции func.
      * @throws ChessException Если выбрасывается в функции func.
-     * @throws ChessError Если выбрасывается в функции func.
+     * @throws ChessError     Если выбрасывается в функции func.
      */
     public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
         logger.trace("Виртуальный ход {}", move);
@@ -289,7 +293,9 @@ public class MoveSystem {
         return res;
     }
 
-    /** @return true если ход корректный */
+    /**
+     * @return true если ход корректный
+     */
     private boolean isCorrectMoveWithoutCheckAvailableMovesSilence(Move move) throws ChessError {
         try {
             return checkCorrectnessIfSpecificMove(move) && isCorrectVirtualMoveSilence(move);
@@ -298,7 +304,9 @@ public class MoveSystem {
         }
     }
 
-    /** @param move корректный ход */
+    /**
+     * @param move корректный ход
+     */
     private boolean isCorrectVirtualMoveSilence(Move move) throws ChessError {
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
         move(move, false);
@@ -334,7 +342,9 @@ public class MoveSystem {
         }
     }
 
-    /** @return true если ход корректный */
+    /**
+     * @return true если ход корректный
+     */
     public boolean isCorrectMove(Move move) throws ChessError {
         try {
             return move != null
@@ -350,7 +360,9 @@ public class MoveSystem {
         }
     }
 
-    /** @return true если ход лежит в доступных */
+    /**
+     * @return true если ход лежит в доступных
+     */
     private boolean inAvailableMoves(Move move)
             throws ChessException, ArrayIndexOutOfBoundsException {
         Figure figure = board.getFigureUgly(move.getFrom());

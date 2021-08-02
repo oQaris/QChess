@@ -26,7 +26,7 @@ public class NNNBotFactory {
     public static synchronized NNNBot getNNNBot(GameSettings gs, Color color) {
         MDC.put("time", time);
 
-        final int maxDepth = 5;
+        final int maxDepth = 7;
         gs.history.setMinBoardStateToSave(maxDepth);
 
         EvaluationFunc evaluationFunc = FigureCountEvaluation::attackDefenseZeroSum;

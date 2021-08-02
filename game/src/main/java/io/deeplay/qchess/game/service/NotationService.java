@@ -1,26 +1,18 @@
 package io.deeplay.qchess.game.service;
 
-import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
-
 import io.deeplay.qchess.game.exceptions.ChessErrorCode;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.model.figures.Bishop;
-import io.deeplay.qchess.game.model.figures.Figure;
-import io.deeplay.qchess.game.model.figures.King;
-import io.deeplay.qchess.game.model.figures.Knight;
-import io.deeplay.qchess.game.model.figures.Pawn;
-import io.deeplay.qchess.game.model.figures.Queen;
-import io.deeplay.qchess.game.model.figures.Rook;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import io.deeplay.qchess.game.model.figures.*;
 
-/** Используется для нотации Форсайта-Эдвардса (FEN) */
+import java.util.*;
+
+import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
+
+/**
+ * Используется для нотации Форсайта-Эдвардса (FEN)
+ */
 public class NotationService {
     private static final Set<Character> appropriateCharacters =
             Set.of(
@@ -31,7 +23,9 @@ public class NotationService {
     private static final int KQ_COUNT = 1;
     private static final int RNB_COUNT = 2;
 
-    /** @return true если строка с расстаовкой является корректной, false - некорректной */
+    /**
+     * @return true если строка с расстаовкой является корректной, false - некорректной
+     */
     public static boolean checkValidityPlacement(String placement) {
         String[] placementRows = placement.split("/");
         for (String placementRow : placementRows) {
@@ -45,7 +39,9 @@ public class NotationService {
                 && checkFigureTypes(getAllFigureSymbols(placement, Color.WHITE));
     }
 
-    /** @return возвращает конкретную фигуру по входному символу, в позиции x,y */
+    /**
+     * @return возвращает конкретную фигуру по входному символу, в позиции x,y
+     */
     public static Figure getFigureByChar(Character symbol, int x, int y) throws ChessException {
         char lowerSymbol = Character.toLowerCase(symbol);
         Color figureColor = Character.isLowerCase(symbol) ? Color.BLACK : Color.WHITE;
@@ -114,7 +110,7 @@ public class NotationService {
                     for (int detour = 0; detour < 9; detour++) {
                         if (detour != 4
                                 && placementTable[(detour / 3) - 1 + y][(detour % 3) - 1 + x]
-                                        == 'k') {
+                                == 'k') {
                             return false;
                         }
                     }
@@ -151,11 +147,11 @@ public class NotationService {
         }
 
         int[] figureOverflow = {
-            PAWN_COUNT - figureMap.getOrDefault('p', 0),
-            figureMap.getOrDefault('b', 0) - RNB_COUNT,
-            figureMap.getOrDefault('r', 0) - RNB_COUNT,
-            figureMap.getOrDefault('n', 0) - RNB_COUNT,
-            figureMap.getOrDefault('q', 0) - KQ_COUNT
+                PAWN_COUNT - figureMap.getOrDefault('p', 0),
+                figureMap.getOrDefault('b', 0) - RNB_COUNT,
+                figureMap.getOrDefault('r', 0) - RNB_COUNT,
+                figureMap.getOrDefault('n', 0) - RNB_COUNT,
+                figureMap.getOrDefault('q', 0) - KQ_COUNT
         };
 
         for (int i = 1; i < figureOverflow.length; i++) {

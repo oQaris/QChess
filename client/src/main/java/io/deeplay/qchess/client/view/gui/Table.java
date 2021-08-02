@@ -1,16 +1,12 @@
 package io.deeplay.qchess.client.view.gui;
 
-import static javax.swing.SwingUtilities.isLeftMouseButton;
-
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
 import io.deeplay.qchess.client.view.model.ViewFigure;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -18,19 +14,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import java.util.*;
+
+import static javax.swing.SwingUtilities.isLeftMouseButton;
 
 public class Table extends Frame {
     private static final int BOARD_SIZE = 8;
@@ -251,8 +238,8 @@ public class Table extends Frame {
                                             if (action == 3) {
                                                 int coeff = myColor ? BOARD_SIZE : 1;
                                                 for (int i = BOARD_SIZE * (coeff - 1);
-                                                        i < BOARD_SIZE * coeff;
-                                                        i++) {
+                                                     i < BOARD_SIZE * coeff;
+                                                     i++) {
                                                     boardPanel.boardCells.get(i).drawCell();
                                                 }
                                             }
@@ -311,14 +298,14 @@ public class Table extends Frame {
                     ClientController.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             if (figure != null) {
                 try (InputStream png =
-                        getClass()
-                                .getResourceAsStream(
-                                        String.format(
-                                                "%s/%s/%s_%s.png",
-                                                defaultFigureImagesPath,
-                                                figureStyle,
-                                                figure.getColor().toLowerCase(),
-                                                figure.getType().toString().toLowerCase()))) {
+                             getClass()
+                                     .getResourceAsStream(
+                                             String.format(
+                                                     "%s/%s/%s_%s.png",
+                                                     defaultFigureImagesPath,
+                                                     figureStyle,
+                                                     figure.getColor().toLowerCase(),
+                                                     figure.getType().toString().toLowerCase()))) {
                     assert png != null;
                     final BufferedImage image = ImageIO.read(png);
 
