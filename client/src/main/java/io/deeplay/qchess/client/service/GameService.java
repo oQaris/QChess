@@ -92,6 +92,7 @@ public class GameService {
             case USER -> new RemotePlayer(gs, color, "user");
             case EASYBOT -> new RandomBot(gs, color);
             case MEDIUMBOT -> new AttackBot(gs, color);
+                // TODO: использовать своего бота
             case HARDBOT -> NNNBotFactory.getNNNBot(gs, color);
         };
     }

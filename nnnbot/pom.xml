@@ -10,7 +10,7 @@
     <version>0.0.1</version>
   </parent>
 
-  <artifactId>n-nn-bot</artifactId>
+  <artifactId>QChess-n-nn-bot</artifactId>
   <version>0.0.1</version>
 
   <build>
