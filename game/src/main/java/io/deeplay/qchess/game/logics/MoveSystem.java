@@ -241,8 +241,7 @@ public class MoveSystem {
      * @throws ChessException Если выбрасывается в функции func.
      * @throws ChessError Если выбрасывается в функции func.
      */
-    public <T> T virtualMove(Move move, ChessMoveFunc<T> func)
-        throws ChessException, ChessError {
+    public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
         logger.trace("Виртуальный ход {}", move);
         Color figureToMove = gs.board.getFigureUgly(move.getFrom()).getColor();
         Figure virtualKilled = move(move, gs.board, gs.history);

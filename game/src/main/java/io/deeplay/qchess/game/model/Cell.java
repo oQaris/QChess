@@ -4,7 +4,6 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDIN
 import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
 import com.google.gson.annotations.SerializedName;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +23,7 @@ public class Cell {
 
     /** @deprecated Использует стандартный размер доски - плохо для гибкости */
     @Deprecated(since = "only for tests")
-    public static Cell parse(String pos) throws ChessException {
+    public static Cell parse(String pos) {
         if (pos.length() == 2) {
             char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
@@ -34,7 +33,7 @@ public class Cell {
             }
         }
         logger.warn("Координаты клетки заданы некорректно");
-        throw new ChessException(INCORRECT_COORDINATES);
+        throw new IllegalArgumentException(INCORRECT_COORDINATES.getMessage());
     }
 
     /** @return создает новую клетку, суммируя с текущей */
