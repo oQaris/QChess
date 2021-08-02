@@ -11,8 +11,11 @@ public class BoardState {
     public final Move lastMove;
 
     public final boolean isWhiteMove;
-    public final boolean isWhiteCastlingPossibility;
-    public final boolean isBlackCastlingPossibility;
+
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    public final int isWhiteCastlingPossibility;
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    public final int isBlackCastlingPossibility;
 
     /** Не нужно учитывать в equals и hashCode */
     public final boolean hasMovedBeforeLastMove;
@@ -29,8 +32,8 @@ public class BoardState {
             boolean hasMovedBeforeLastMove,
             Figure removedFigure,
             boolean isWhiteMove,
-            boolean isWhiteCastlingPossibility,
-            boolean isBlackCastlingPossibility) {
+            int isWhiteCastlingPossibility,
+            int isBlackCastlingPossibility) {
         this.boardSnapshot = boardSnapshot;
         this.boardSnapshotHash = boardSnapshotHash;
         this.lastMove = lastMove;
@@ -49,7 +52,8 @@ public class BoardState {
         if (o == null || BoardState.class != o.getClass()) return false;
         BoardState that = (BoardState) o;
         try {
-            return boardSnapshotHash == that.boardSnapshotHash
+            return isWhiteMove == that.isWhiteMove
+                    && boardSnapshotHash == that.boardSnapshotHash
                     && isWhiteCastlingPossibility == that.isWhiteCastlingPossibility
                     && isBlackCastlingPossibility == that.isBlackCastlingPossibility
                     && (lastMove.getMoveType() == MoveType.LONG_MOVE
@@ -66,8 +70,9 @@ public class BoardState {
     @Override
     public int hashCode() {
         final int h1 = lastMove == null ? 0 : lastMove.getMoveType() == MoveType.LONG_MOVE ? 1 : 2;
-        int result = 31 * h1 + (isWhiteCastlingPossibility ? 1 : 0);
-        result = 31 * result + (isBlackCastlingPossibility ? 1 : 0);
+        int result = 31 * h1 + isWhiteCastlingPossibility;
+        result = 31 * result + isBlackCastlingPossibility;
+        result = 31 * result + (isWhiteMove ? 1 : 0);
         return 31 * result + boardSnapshotHash;
     }
 }

@@ -40,8 +40,10 @@ public class History {
 
     private int peaceMoveCount = 0;
     private boolean isWhiteMove = true;
-    private boolean isWhiteCastlingPossibility = true;
-    private boolean isBlackCastlingPossibility = true;
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    private int isWhiteCastlingPossibility = 3;
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    private int isBlackCastlingPossibility = 3;
 
     /** Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки */
     private int minBoardStateToSave;
@@ -118,10 +120,11 @@ public class History {
     }
 
     public void checkAndAddPeaceMoveCount(Move move) {
-        if (move.getMoveType() == MoveType.ATTACK
-                || move.getMoveType() == MoveType.EN_PASSANT
-                || move.getMoveType() == MoveType.TURN_INTO_ATTACK) peaceMoveCount = 0;
-        else if (gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN) {
+        if (move.getMoveType() == MoveType.ATTACK) peaceMoveCount = 0;
+        else if (move.getMoveType() == MoveType.EN_PASSANT
+                || move.getMoveType() == MoveType.TURN_INTO
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK
+                || gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN) {
             // clearHistory(minBoardStateToSave);
             peaceMoveCount = 0;
         } else ++peaceMoveCount;
@@ -202,19 +205,18 @@ public class History {
 
     private String getCastlingPossibility(Color color) throws ChessError {
         String res = "";
-        if (color == Color.WHITE && !isWhiteCastlingPossibility) return res;
-        if (color == Color.BLACK && !isBlackCastlingPossibility) return res;
+        if (color == Color.WHITE && isWhiteCastlingPossibility == 0) return res;
+        if (color == Color.BLACK && isBlackCastlingPossibility == 0) return res;
 
         Figure king = gameSettings.board.findKing(color);
-        if (king == null)
-            throw new ChessError(KING_NOT_FOUND);
+        if (king == null) throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return res;
         if (gameSettings.board.isNotRightRookStandardMoved(color)) res += "k";
         if (gameSettings.board.isNotLeftRookStandardMoved(color)) res += "q";
 
         if (res.isEmpty()) {
-            if (color == Color.WHITE) isWhiteCastlingPossibility = false;
-            else isBlackCastlingPossibility = false;
+            if (color == Color.WHITE) isWhiteCastlingPossibility = 0;
+            else isBlackCastlingPossibility = 0;
         }
         return color == Color.WHITE ? res.toUpperCase() : res;
     }
