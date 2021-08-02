@@ -31,7 +31,7 @@ public class SimpleStrategy implements IStrategy {
         int grade = 0;
         for (Figure figure : board.getAllFigures()) {
             final int coef = figure.getColor() == Color.WHITE ? 1 : -1;
-            grade += coef * grades.get(figure.getType());
+            grade += coef * grades.get(figure.figureType);
         }
         logger.debug("Текущая оценка доски: {}", grade);
         return grade;

@@ -37,7 +37,7 @@ class QBotTest {
                     () -> {*/
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             Color myBotColor = finalI % 2 == 0 ? Color.WHITE : Color.BLACK;
-            QBot firstPlayer = new QBot(roomSettings, myBotColor, 2);
+            QBot firstPlayer = new QBot(roomSettings, myBotColor, 3);
             Player secondPlayer = new RandomBot(roomSettings, myBotColor.inverse());
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);

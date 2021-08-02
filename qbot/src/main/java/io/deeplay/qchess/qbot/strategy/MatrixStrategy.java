@@ -92,14 +92,14 @@ public class MatrixStrategy implements IStrategy {
     public int evaluateBoard(Board board) {
         int grade = 0;
         for (Figure figure : board.getAllFigures()) {
-            final int column = figure.getCurrentPosition().getColumn();
-            final int tempRow = figure.getCurrentPosition().getRow();
+            final int column = figure.getCurrentPosition().column;
+            final int tempRow = figure.getCurrentPosition().row;
             // разворачиваем массив ценностей для чёрных
             final int row =
                     figure.getColor() == Color.BLACK ? STD_BOARD_SIZE - 1 - tempRow : tempRow;
 
             final int coef = figure.getColor() == Color.WHITE ? 1 : -1;
-            grade += coef * grades.get(figure.getType())[row][column];
+            grade += coef * grades.get(figure.figureType)[row][column];
         }
         logger.debug("Текущая оценка доски: {}", grade);
         return grade;

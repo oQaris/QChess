@@ -38,10 +38,6 @@ public class Selfplay {
         }
     }
 
-    public static Move createMove(String from, String to, String type) {
-        return new Move(MoveType.valueOf(type), Cell.parse(from), Cell.parse(to));
-    }
-
     /**
      * @return true, если ход корректный, иначе false
      * @throws ChessError если во время игры случилась критическая ошибка
