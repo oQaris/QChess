@@ -26,15 +26,13 @@ public class EndGameDetector {
                     Arrays.asList(FigureType.KING, FigureType.KNIGHT, FigureType.KNIGHT));
 
     private final GameSettings gs;
-    private EndGameType gameResult;
+    private EndGameType gameResult = EndGameType.NOTHING;
 
     public EndGameDetector(GameSettings gs) {
         this.gs = gs;
     }
 
     public EndGameType getGameResult() {
-        if (gameResult == null)
-            throw new IllegalArgumentException("gameResult was not initialized");
         return gameResult;
     }
 
@@ -180,6 +178,7 @@ public class EndGameDetector {
     }
 
     public enum EndGameType {
+        NOTHING,
         DRAW_WITH_PEACE_MOVE_COUNT,
         DRAW_WITH_REPETITIONS,
         DRAW_WITH_NOT_ENOUGH_MATERIAL,

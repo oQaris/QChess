@@ -6,8 +6,10 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
+import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.player.Player;
 import org.slf4j.Logger;
@@ -49,6 +51,10 @@ public class Selfplay {
             return false;
         }
         return true;
+    }
+
+    public static Move createMove(String from, String to, String type) {
+        return new Move(MoveType.valueOf(type), Cell.parse(from), Cell.parse(to));
     }
 
     /**
