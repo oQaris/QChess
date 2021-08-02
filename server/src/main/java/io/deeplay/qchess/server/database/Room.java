@@ -226,7 +226,12 @@ public class Room {
 
     /** @return статус конца игры для игрока цвета color или null, если игра еще не окончена */
     private String getEndGameStatus(Color color) {
-        if (gs.endGameDetector.isDraw()) {
+        boolean isStalemate = gs.endGameDetector.isStalemate(color);
+        if (isStalemate && gs.endGameDetector.isCheck(color)) {
+            return "Мат " + (color == Color.BLACK ? "черным" : "белым");
+        } else if (isStalemate) {
+            return "Пат " + (color == Color.BLACK ? "черным" : "белым");
+        } else {
             if (gs.endGameDetector.isDrawWithPeaceMoves()) {
                 return String.format(
                         "Ничья: %d ходов без взятия и хода пешки",
@@ -237,12 +242,6 @@ public class Room {
                         EndGameDetector.END_REPETITIONS_COUNT);
             } else if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate()) {
                 return "Ничья: недостаточно фигур, чтобы поставить мат";
-            }
-        } else {
-            if (gs.endGameDetector.isCheckmate(color)) {
-                return "Мат " + (color == Color.BLACK ? "черным" : "белым");
-            } else if (gs.endGameDetector.isStalemate(color)) {
-                return "Пат " + (color == Color.BLACK ? "черным" : "белым");
             }
         }
         return null;

@@ -8,13 +8,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Cell {
+    public static final transient int[][] hashCodes = new int[STD_BOARD_SIZE][STD_BOARD_SIZE];
+
     private static final transient Logger logger = LoggerFactory.getLogger(Cell.class);
 
+    static {
+        for (int i = 0; i < STD_BOARD_SIZE; ++i)
+            for (int j = 0; j < STD_BOARD_SIZE; ++j)
+                hashCodes[i][j] = (i * STD_BOARD_SIZE + j) * 10;
+    }
+
     @SerializedName("column")
-    private int column;
+    public int column;
 
     @SerializedName("row")
-    private int row;
+    public int row;
 
     public Cell(final int column, final int row) {
         this.column = column;
@@ -42,17 +50,17 @@ public class Cell {
     }
 
     /** Сдвигает текущую клетку на указанный вектор */
-    public void shift(Cell shiftCell) {
+    public Cell shift(Cell shiftCell) {
         column += shiftCell.column;
         row += shiftCell.row;
+        return this;
     }
 
     /** @deprecated Не использовать вне доски */
     @Deprecated
     @Override
     public int hashCode() {
-        // Из-за небольших размеров доски конкатенация чисел однозначно определяет клетку
-        return STD_BOARD_SIZE * column + row;
+        return hashCodes[column][row];
     }
 
     @Override
@@ -68,13 +76,5 @@ public class Cell {
     @Override
     public String toString() {
         return String.format("%c%d", 'a' + column, STD_BOARD_SIZE - row);
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public int getRow() {
-        return row;
     }
 }

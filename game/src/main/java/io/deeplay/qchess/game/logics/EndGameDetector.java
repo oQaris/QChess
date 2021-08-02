@@ -26,15 +26,13 @@ public class EndGameDetector {
                     Arrays.asList(FigureType.KING, FigureType.KNIGHT, FigureType.KNIGHT));
 
     private final GameSettings gs;
-    private EndGameType gameResult;
+    private EndGameType gameResult = EndGameType.NOTHING;
 
     public EndGameDetector(GameSettings gs) {
         this.gs = gs;
     }
 
     public EndGameType getGameResult() {
-        if (gameResult == null)
-            throw new IllegalArgumentException("gameResult was not initialized");
         return gameResult;
     }
 
@@ -110,7 +108,7 @@ public class EndGameDetector {
     private boolean isAllFiguresSame(List<Figure> figures, List<FigureType> figureTypes) {
         List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
         if (figures.size() != figureTypes.size()) return false;
-        for (Figure figure : figures) if (!figuresCopyType.remove(figure.getType())) return false;
+        for (Figure figure : figures) if (!figuresCopyType.remove(figure.figureType)) return false;
         return true;
     }
 
@@ -135,8 +133,8 @@ public class EndGameDetector {
         Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
         Cell blackBishopPosition = blackBishop.getCurrentPosition();
 
-        return (whiteBishopPosition.getColumn() + whiteBishopPosition.getRow()) % 2
-                == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
+        return (whiteBishopPosition.column + whiteBishopPosition.row) % 2
+                == (blackBishopPosition.column + blackBishopPosition.row) % 2;
     }
 
     /**
@@ -146,7 +144,7 @@ public class EndGameDetector {
      * @return найденного слона, или null - иначе
      */
     private Figure getBishop(List<Figure> figures) {
-        for (Figure figure : figures) if (figure.getType() == FigureType.BISHOP) return figure;
+        for (Figure figure : figures) if (figure.figureType == FigureType.BISHOP) return figure;
         return null;
     }
 
@@ -163,7 +161,7 @@ public class EndGameDetector {
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(Color color) {
-        boolean res = gs.moveSystem.getAllCorrectMovesForStalemate(color).isEmpty();
+        boolean res = gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
         if (res && gameResult == null)
             gameResult =
                     (color == Color.WHITE
@@ -174,12 +172,13 @@ public class EndGameDetector {
 
     /** @return true если игроку с указанным цветом ставят шах */
     public boolean isCheck(Color color) {
-        Figure king = gs.board.findKing(color);
-        if (king == null) return false;
-        return Board.isAttackedCell(gs, king.getCurrentPosition(), color.inverse());
+        Cell kingCell = gs.board.findKingCell(color);
+        if (kingCell == null) return false;
+        return Board.isAttackedCell(gs, kingCell, color.inverse());
     }
 
     public enum EndGameType {
+        NOTHING,
         DRAW_WITH_PEACE_MOVE_COUNT,
         DRAW_WITH_REPETITIONS,
         DRAW_WITH_NOT_ENOUGH_MATERIAL,

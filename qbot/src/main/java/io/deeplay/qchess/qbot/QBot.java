@@ -181,13 +181,13 @@ public class QBot extends RemotePlayer {
     public int evaluateBoard() {
         int grade = 0;
         for (Figure figure : board.getAllFigures()) {
-            int absX = figure.getCurrentPosition().getColumn();
-            int y = figure.getCurrentPosition().getRow();
+            int absX = figure.getCurrentPosition().column;
+            int y = figure.getCurrentPosition().row;
             // разворачиваем массив ценностей для чёрных
             int absY = figure.getColor() == Color.BLACK ? STD_BOARD_SIZE - 1 - y : y;
 
             int coef = figure.getColor() == color ? 1 : -1;
-            grade += coef * grades.get(figure.getType())[absY][absX];
+            grade += coef * grades.get(figure.figureType)[absY][absX];
         }
         logger.trace("Оценка доски: {}", grade);
         return grade;

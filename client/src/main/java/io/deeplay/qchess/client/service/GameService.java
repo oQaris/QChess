@@ -23,6 +23,7 @@ import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
 import java.util.List;
 
 public class GameService {
@@ -91,8 +92,8 @@ public class GameService {
             case USER -> new RemotePlayer(gs, color, "user");
             case EASYBOT -> new RandomBot(gs, color);
             case MEDIUMBOT -> new AttackBot(gs, color);
-                // TODO: изменить на создание своего бота
-            case HARDBOT -> new AttackBot(gs, color);
+                // TODO: использовать своего бота
+            case HARDBOT -> NNNBotFactory.getNNNBot(gs, color);
         };
     }
 
@@ -107,10 +108,10 @@ public class GameService {
         ActionDTO dto = SerializationService.serverToClientDTORequest(json, ActionDTO.class);
 
         makeMove(
-                dto.move.getFrom().getRow(),
-                dto.move.getFrom().getColumn(),
-                dto.move.getTo().getRow(),
-                dto.move.getTo().getColumn(),
+                dto.move.getFrom().row,
+                dto.move.getFrom().column,
+                dto.move.getTo().row,
+                dto.move.getTo().column,
                 dto.move.getTurnInto());
 
         ClientController.drawBoard();
