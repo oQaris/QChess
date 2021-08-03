@@ -48,6 +48,27 @@ public class MoveSystemTest {
     }
 
     @Test
+    public void testGetAllCorrectMoves() throws ChessException, ChessError {
+        // превращение пешки
+        board.setFigure(new Pawn(Color.WHITE, Cell.parse("a7")));
+        board.setFigure(new Pawn(Color.BLACK, Cell.parse("a2")));
+
+        List<Move> expectedForWhite =
+            List.of(new Move(MoveType.TURN_INTO, Cell.parse("a7"), Cell.parse("a8")));
+
+        Assert.assertEquals(expectedForWhite, ms.getAllCorrectMoves(Color.WHITE));
+        Assert.assertEquals(expectedForWhite, ms.getAllCorrectMovesSilence(Color.WHITE));
+        Assert.assertEquals(expectedForWhite, ms.getAllCorrectMoves(Cell.parse("a7")));
+
+        List<Move> expectedForBlack =
+            List.of(new Move(MoveType.TURN_INTO, Cell.parse("a2"), Cell.parse("a1")));
+
+        Assert.assertEquals(expectedForBlack, ms.getAllCorrectMoves(Color.BLACK));
+        Assert.assertEquals(expectedForBlack, ms.getAllCorrectMovesSilence(Color.BLACK));
+        Assert.assertEquals(expectedForBlack, ms.getAllCorrectMoves(Cell.parse("a2")));
+    }
+
+    @Test
     public void testIsCorrectPawnEnPassant_blackPawnAttack_1()
             throws ChessException, IllegalArgumentException, NoSuchFieldException,
                     IllegalAccessException {

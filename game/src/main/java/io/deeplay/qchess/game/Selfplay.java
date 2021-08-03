@@ -57,10 +57,6 @@ public class Selfplay {
         return true;
     }
 
-    public static Move createMove(String from, String to, String type) {
-        return new Move(MoveType.valueOf(type), Cell.parse(from), Cell.parse(to));
-    }
-
     /**
      * Обновляется после каждого хода
      *
