@@ -14,6 +14,7 @@ import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.service.NotationService;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,6 +125,43 @@ public class Board {
                 case ROOK -> '♖';
             };
         };
+    }
+
+    /**
+     * @param gs нужен для получения ходов пешек и проверки на шах после хода
+     * @return список ходов для цвета color, включая превращения пешек ТОЛЬКО в ферзя и коня *
+     *     (создает 2 отдельных хода). Все ходы гарантированно корректные и проверены на шах
+     */
+    public List<Move> getAllPreparedMoves(GameSettings gs, Color color) throws ChessError {
+        List<Move> allMoves = new LinkedList<>();
+        for (int i = 0; i < 8; ++i) {
+            if (i == 1 || i == 6) { // на диагоналях 2 и 7 - кандидаты (пешки) на превращение
+                for (Figure figure : cells[i])
+                    if (figure != null && figure.getColor() == color)
+                        if (figure.figureType == FigureType.PAWN) { // у пешки смотрим превращения
+                            for (Move move : figure.getAllMoves(gs)) {
+                                if (move.getMoveType() == MoveType.TURN_INTO
+                                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+                                    move.setTurnInto(FigureType.QUEEN); // 1 тип превращения
+                                    // проверка на шах 1 превращения:
+                                    if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
+                                        allMoves.add(move);
+                                    move = new Move(move, FigureType.KNIGHT); // 2 тип превращения
+                                }
+                                // проверка на шах 2 превращения либо другого хода пешки:
+                                if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
+                                    allMoves.add(move);
+                            }
+                        } else // обычное заполнение
+                        for (Move move : figure.getAllMoves(gs)) // проверка на шах:
+                            if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) allMoves.add(move);
+            } else // остальные диагонали
+            for (Figure figure : cells[i])
+                    if (figure != null && figure.getColor() == color) // обычное заполнение
+                    for (Move move : figure.getAllMoves(gs)) // проверка на шах:
+                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) allMoves.add(move);
+        }
+        return allMoves;
     }
 
     private void fill(BoardFilling fillingType) throws ChessException {

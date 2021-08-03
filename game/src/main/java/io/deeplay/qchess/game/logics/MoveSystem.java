@@ -16,6 +16,7 @@ import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -241,7 +242,7 @@ public class MoveSystem {
      */
     @Deprecated
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
-        List<Move> res = new ArrayList<>(70);
+        List<Move> res = new LinkedList<>();
         for (Figure f : board.getFigures(color))
             for (Move m : f.getAllMoves(gs))
                 if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
@@ -272,7 +273,7 @@ public class MoveSystem {
      */
     @Deprecated(forRemoval = true)
     public List<Move> getAllCorrectMovesSilence(Color color) {
-        List<Move> res = new ArrayList<>(70);
+        List<Move> res = new LinkedList<>();
         try {
             for (Figure f : board.getFigures(color))
                 for (Move m : f.getAllMoves(gs)) {
