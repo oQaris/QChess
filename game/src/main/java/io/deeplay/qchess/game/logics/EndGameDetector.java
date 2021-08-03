@@ -6,12 +6,13 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EndGameDetector {
     public static final int END_PEACE_MOVE_COUNT = 75;
@@ -36,7 +37,9 @@ public class EndGameDetector {
         return gameResult;
     }
 
-    /** @return true, если это не ничья */
+    /**
+     * @return true, если это не ничья
+     */
     public boolean isDraw() {
         if (isDrawWithPeaceMoves()) {
             gameResult = EndGameType.DRAW_WITH_PEACE_MOVE_COUNT;
@@ -100,10 +103,10 @@ public class EndGameDetector {
     /**
      * Проверяет, что все фигуры в figures соответствуют своим типам в figureTypes
      *
-     * @param figures Список фигур
+     * @param figures     Список фигур
      * @param figureTypes Список требуемых типов
      * @return true - если списки равны и фигуры из первого списка соответствуют типам из второго
-     *     (без учёта порядка)
+     * (без учёта порядка)
      */
     private boolean isAllFiguresSame(List<Figure> figures, List<FigureType> figureTypes) {
         List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
@@ -148,7 +151,9 @@ public class EndGameDetector {
         return null;
     }
 
-    /** @return true, если установленному цвету поставили мат */
+    /**
+     * @return true, если установленному цвету поставили мат
+     */
     public boolean isCheckmate(Color color) {
         boolean res = isStalemate(color) && isCheck(color);
         if (res)
@@ -159,10 +164,12 @@ public class EndGameDetector {
         return res;
     }
 
-    /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
+    /**
+     * @return true, если установленному цвету поставили пат (нет доступных ходов)
+     */
     public boolean isStalemate(Color color) {
         boolean res = gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
-        if (res && gameResult == null)
+        if (res && gameResult == EndGameType.NOTHING)
             gameResult =
                     (color == Color.WHITE
                             ? EndGameType.STALEMATE_TO_WHITE
@@ -170,7 +177,9 @@ public class EndGameDetector {
         return res;
     }
 
-    /** @return true если игроку с указанным цветом ставят шах */
+    /**
+     * @return true если игроку с указанным цветом ставят шах
+     */
     public boolean isCheck(Color color) {
         Cell kingCell = gs.board.findKingCell(color);
         if (kingCell == null) return false;
@@ -191,6 +200,10 @@ public class EndGameDetector {
         CHECKMATE_TO_WHITE,
         CHECKMATE_TO_BLACK,
         STALEMATE_TO_WHITE,
-        STALEMATE_TO_BLACK
+        STALEMATE_TO_BLACK;
+
+        public boolean isDraw() {
+            return this == DRAW_WITH_PEACE_MOVE_COUNT || this == DRAW_WITH_REPETITIONS || this == DRAW_WITH_NOT_ENOUGH_MATERIAL;
+        }
     }
 }

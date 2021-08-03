@@ -9,19 +9,20 @@ import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.qbot.strategy.IStrategy;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class QBot extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(QBot.class);
     private final IStrategy strategy;
     private final int depth;
-    private int countNode = 0;
-    private int countAB = 0;
+    public int countNode = 0;
+    public int countAB = 0;
 
     public QBot(
             final GameSettings roomSettings,
@@ -104,18 +105,15 @@ public class QBot extends RemotePlayer {
 
     private int minimax(final int depth, int alpha, int beta, final boolean isMaximisingPlayer)
             throws ChessError {
-        logger.trace("Глубина поиска: {}", depth);
+        /*logger.trace("Глубина поиска: {}", depth);
         countNode++;
         if (depth == 0) return strategy.evaluateBoard(board);
 
-        final int initGrade = isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-        int bestGrade = initGrade / 2;
-
+        int bestGrade = isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
-
         final List<Move> allMoves = ms.getAllCorrectMoves(curColor);
         // Если терминальный узел
-        if (allMoves.isEmpty() && egd.isCheck(curColor)) return initGrade;
+        if (allMoves.isEmpty()) return IStrategy.gradeIfTerminalNode(roomSettings, curColor);
 
         setTurnIntoAllAndSort(allMoves);
         for (Move move : allMoves) {
@@ -130,14 +128,63 @@ public class QBot extends RemotePlayer {
                 bestGrade = Math.min(bestGrade, curGrade);
                 beta = Math.min(beta, bestGrade);
             }
-            // Альфа-бетта отсечение
             if (beta <= alpha) {
                 countAB++;
                 return bestGrade;
             }
+        }*/
+        /* if depth = 0 or node is a terminal node then
+        return the heuristic value of node
+
+        if maximizingPlayer then
+        value := −∞
+        for each child of node do
+            value := max(value, alphabeta(child, depth − 1, α, β, FALSE))
+        α := max(α, value)
+        if value ≥ β then
+        break (* β cutoff *)
+
+        return value
+    else
+        value := +∞
+        for each child of node do
+            value := min(value, alphabeta(child, depth − 1, α, β, TRUE))
+        β := min(β, value)
+        if value ≤ α then
+        break (* α cutoff *)
+        return value*/
+
+        if (depth == 0) return strategy.evaluateBoard(board);
+
+        Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
+        final List<Move> allMoves = ms.getAllCorrectMoves(curColor);
+        // Если терминальный узел
+        if (allMoves.isEmpty()) return IStrategy.gradeIfTerminalNode(roomSettings, curColor);
+
+        int value;
+        if (isMaximisingPlayer) {
+            value = Integer.MIN_VALUE;
+            setTurnIntoAllAndSort(allMoves);
+            for (Move move : allMoves) {
+                ms.move(move);
+                value = Math.max(value, minimax(depth - 1, alpha, beta, false));
+                ms.undoMove();
+                alpha = Math.max(alpha, value);
+                if (value >= beta)
+                    break;
+            }
+        } else {
+            value = Integer.MAX_VALUE;
+            for (Move move : allMoves) {
+                ms.move(move);
+                value = Math.min(value, minimax(depth - 1, alpha, beta, true));
+                ms.undoMove();
+                beta = Math.min(beta, value);
+                if (value <= alpha)
+                    break;
+            }
         }
-        logger.trace("Текущая оценка доски: {}", depth);
-        return bestGrade;
+        return value;
     }
 
     /**

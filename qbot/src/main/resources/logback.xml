@@ -49,24 +49,6 @@
     </filter>
   </appender>
 
-  <!-- Для вывода результатов игр с сервера -->
-  <appender class="ch.qos.logback.classic.sift.SiftingAppender" name="SIFTER">
-    <discriminator>
-      <defaultValue>ALL</defaultValue>
-      <key>path</key>
-    </discriminator>
-
-    <sift>
-      <appender class="ch.qos.logback.core.FileAppender" name="FILE-${path}">
-        <encoder>
-          <pattern>%msg%n</pattern>
-        </encoder>
-
-        <file>target/logs/rooms/${path}.log</file>
-      </appender>
-    </sift>
-  </appender>
-
   <!-- DEBUG -->
   <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-DEBUG">
     <append>false</append>
@@ -101,15 +83,10 @@
     <appender-ref ref="GAME-STATISTICS"/>
   </logger>
 
-  <logger level="info" name="io.deeplay.qchess.server.service.StatisticService">
-    <appender-ref ref="SIFTER"/>
-  </logger>
-
-  <root level="debug">
-    <appender-ref ref="STDOUT"/>
+  <logger level="debug" name="io.deeplay.qchess.qbot">
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
     <appender-ref ref="FILE-LAST-SESSION-INFO"/>
-  </root>
+  </logger>
 
 </configuration>

@@ -1,34 +1,49 @@
 package io.deeplay.qchess.qbot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
-import io.deeplay.qchess.game.model.Board;
-import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.MoveType;
-import io.deeplay.qchess.game.model.figures.Bishop;
-import io.deeplay.qchess.game.model.figures.King;
-import io.deeplay.qchess.game.model.figures.Knight;
-import io.deeplay.qchess.game.model.figures.Pawn;
-import io.deeplay.qchess.game.model.figures.Rook;
+import io.deeplay.qchess.game.model.*;
+import io.deeplay.qchess.game.model.figures.*;
+import io.deeplay.qchess.game.player.Player;
+import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.qbot.strategy.IStrategy;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
-import java.util.List;
+import io.deeplay.qchess.qbot.strategy.MonteCarloStrategy;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QBotTest {
     private void setKings(Cell whitePos, Cell blackPos, GameSettings gs) throws ChessException {
-        final King kingB = new King(Color.BLACK, new Cell(5, 5));
+        final King kingB = new King(Color.BLACK, blackPos);
         kingB.setWasMoved(true);
         gs.board.setFigure(kingB);
-        final King kingW = new King(Color.WHITE, new Cell(7, 7));
+        final King kingW = new King(Color.WHITE, whitePos);
         kingW.setWasMoved(true);
         gs.board.setFigure(kingW);
+    }
+
+    @Test
+    void testQBotGame() throws ChessError, ChessException {
+        Color myColor = Color.WHITE;
+        for (int i = 0; i < 1; i++) {
+            GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
+            QBot firstPlayer = new QBot(gs, myColor, 1, new MonteCarloStrategy());
+            Player secondPlayer = new RandomBot(gs, myColor.inverse());
+            try {
+                System.out.println();
+                System.out.println(firstPlayer.getTopMoves());
+                System.out.println();
+                /*Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
+                game.run();*/
+            } catch (ChessError e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test
