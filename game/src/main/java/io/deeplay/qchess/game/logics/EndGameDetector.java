@@ -1,22 +1,21 @@
 package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EndGameDetector {
     public static final int END_PEACE_MOVE_COUNT = 75;
     public static final int END_REPETITIONS_COUNT = 5;
-    private static final Logger logger = LoggerFactory.getLogger(EndGameDetector.class);
     private static final List<List<FigureType>> MATERIAL =
             Arrays.asList(
                     // todo Добавить Король против короля с 2 одноцветными слонами
@@ -36,19 +35,43 @@ public class EndGameDetector {
         return gameResult;
     }
 
+    public void resetGameResult() {
+        gameResult = EndGameType.NOTHING;
+    }
+
+    /** @return результат игры для цвета color */
+    public EndGameType updateGameResult(Color color) {
+        return updateGameResult(gs.moveSystem.getAllCorrectMovesSilence(color), color);
+    }
+
+    /**
+     * @param allMoves все доступные ходы цвета color
+     * @return результат игры для цвета color, у которого все доступные ходы в allMoves
+     */
+    public EndGameType updateGameResult(List<Move> allMoves, Color color) {
+        boolean isStalemate = allMoves.isEmpty();
+        if (isStalemate) {
+            gameResult = isCheck(color) ? EndGameType.CHECKMATE : EndGameType.STALEMATE;
+        } else {
+            isDraw();
+        }
+        return gameResult;
+    }
+
     /** @return true, если это не ничья */
     public boolean isDraw() {
+        boolean isDraw = false;
         if (isDrawWithPeaceMoves()) {
             gameResult = EndGameType.DRAW_WITH_PEACE_MOVE_COUNT;
-            return true;
+            isDraw = true;
         } else if (isDrawWithRepetitions()) {
             gameResult = EndGameType.DRAW_WITH_REPETITIONS;
-            return true;
+            isDraw = true;
         } else if (isDrawWithNotEnoughMaterialForCheckmate()) {
             gameResult = EndGameType.DRAW_WITH_NOT_ENOUGH_MATERIAL;
-            return true;
+            isDraw = true;
         }
-        return false;
+        return isDraw;
     }
 
     /**
@@ -57,9 +80,6 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithPeaceMoves() {
-        logger.debug(
-                "Начата проверка на ничью при {} ходов без взятия и хода пешки",
-                END_PEACE_MOVE_COUNT);
         return gs.history.getPeaceMoveCount() >= END_PEACE_MOVE_COUNT;
     }
 
@@ -69,8 +89,6 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithRepetitions() {
-        logger.debug(
-                "Начата проверка на ничью при {} повторениях позиции доски", END_REPETITIONS_COUNT);
         return gs.history.checkRepetitions(END_REPETITIONS_COUNT);
     }
 
@@ -80,7 +98,6 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithNotEnoughMaterialForCheckmate() {
-        logger.debug("Начата проверка на ничью при недостаточном количестве материала для мата");
         List<Figure> whiteFigures = gs.board.getFigures(Color.WHITE);
         List<Figure> blackFigures = gs.board.getFigures(Color.BLACK);
 
@@ -150,24 +167,12 @@ public class EndGameDetector {
 
     /** @return true, если установленному цвету поставили мат */
     public boolean isCheckmate(Color color) {
-        boolean res = isStalemate(color) && isCheck(color);
-        if (res)
-            gameResult =
-                    (color == Color.WHITE
-                            ? EndGameType.CHECKMATE_TO_WHITE
-                            : EndGameType.CHECKMATE_TO_BLACK);
-        return res;
+        return isStalemate(color) && isCheck(color);
     }
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(Color color) {
-        boolean res = gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
-        if (res && gameResult == null)
-            gameResult =
-                    (color == Color.WHITE
-                            ? EndGameType.STALEMATE_TO_WHITE
-                            : EndGameType.STALEMATE_TO_BLACK);
-        return res;
+        return gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
     }
 
     /** @return true если игроку с указанным цветом ставят шах */
@@ -182,9 +187,7 @@ public class EndGameDetector {
         DRAW_WITH_PEACE_MOVE_COUNT,
         DRAW_WITH_REPETITIONS,
         DRAW_WITH_NOT_ENOUGH_MATERIAL,
-        CHECKMATE_TO_WHITE,
-        CHECKMATE_TO_BLACK,
-        STALEMATE_TO_WHITE,
-        STALEMATE_TO_BLACK
+        CHECKMATE,
+        STALEMATE
     }
 }

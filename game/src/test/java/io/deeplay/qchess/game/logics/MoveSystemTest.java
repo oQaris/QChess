@@ -54,14 +54,14 @@ public class MoveSystemTest {
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("a2")));
 
         List<Move> expectedForWhite =
-            List.of(new Move(MoveType.TURN_INTO, Cell.parse("a7"), Cell.parse("a8")));
+                List.of(new Move(MoveType.TURN_INTO, Cell.parse("a7"), Cell.parse("a8")));
 
         Assert.assertEquals(expectedForWhite, ms.getAllCorrectMoves(Color.WHITE));
         Assert.assertEquals(expectedForWhite, ms.getAllCorrectMovesSilence(Color.WHITE));
         Assert.assertEquals(expectedForWhite, ms.getAllCorrectMoves(Cell.parse("a7")));
 
         List<Move> expectedForBlack =
-            List.of(new Move(MoveType.TURN_INTO, Cell.parse("a2"), Cell.parse("a1")));
+                List.of(new Move(MoveType.TURN_INTO, Cell.parse("a2"), Cell.parse("a1")));
 
         Assert.assertEquals(expectedForBlack, ms.getAllCorrectMoves(Color.BLACK));
         Assert.assertEquals(expectedForBlack, ms.getAllCorrectMovesSilence(Color.BLACK));

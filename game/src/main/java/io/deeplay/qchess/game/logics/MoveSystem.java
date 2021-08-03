@@ -199,39 +199,6 @@ public class MoveSystem {
         }
     }
 
-    /**
-     * Проверяет специфичные ситуации
-     *
-     * @param move ход для этой фигуры
-     * @return true если move специфичный и корректный либо move не специфичный, иначе false
-     */
-    private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
-        // превращение пешки
-        if (move.getMoveType() == MoveType.TURN_INTO
-                || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
-            return move.getTurnInto() != null
-                    && (move.getTurnInto() == FigureType.BISHOP
-                            || move.getTurnInto() == FigureType.KNIGHT
-                            || move.getTurnInto() == FigureType.QUEEN
-                            || move.getTurnInto() == FigureType.ROOK);
-        return true;
-    }
-
-    /** @return true если ход корректный */
-    private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
-        try {
-            return move != null
-                    && checkCorrectnessIfSpecificMove(move)
-                    && isCorrectVirtualMove(move);
-        } catch (ChessException | NullPointerException e) {
-            logger.warn(
-                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
-                    move,
-                    e.getMessage());
-            return false;
-        }
-    }
-
     /** @param move корректный ход */
     private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
         logger.trace("Начата проверка виртуального хода {}", move);
@@ -269,7 +236,10 @@ public class MoveSystem {
     /**
      * @param color цвет фигур
      * @return все возможные ходы
+     * @deprecated использовать только внутри движка. Для своих целей лучше использовать {@link
+     *     #getAllPreparedMoves(Color color)}
      */
+    @Deprecated
     public List<Move> getAllCorrectMoves(Color color) throws ChessError {
         List<Move> res = new ArrayList<>(70);
         for (Figure f : board.getFigures(color))
@@ -278,28 +248,62 @@ public class MoveSystem {
         return res;
     }
 
+    /** @return true если ход корректный */
+    private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
+        try {
+            if (move.getMoveType() == MoveType.TURN_INTO
+                    || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
+                move.setTurnInto(FigureType.QUEEN); // только для проверки виртуального хода
+            boolean isCorrect = isCorrectVirtualMove(move);
+            move.setTurnInto(null);
+            return isCorrect;
+        } catch (ChessException | NullPointerException e) {
+            logger.warn(
+                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
+                    move,
+                    e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * @deprecated TODO: заменить реализацией в доске (просто проверить на наличие ходов)
+     *     <p>Используйте {@link #getAllPreparedMoves(Color color)}
+     */
+    @Deprecated(forRemoval = true)
     public List<Move> getAllCorrectMovesSilence(Color color) {
         List<Move> res = new ArrayList<>(70);
         try {
             for (Figure f : board.getFigures(color))
-                for (Move m : f.getAllMoves(gs))
-                    if (isCorrectMoveWithoutCheckAvailableMovesSilence(m)) res.add(m);
+                for (Move m : f.getAllMoves(gs)) {
+                    if (m.getMoveType() == MoveType.TURN_INTO
+                            || m.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+                        m.setTurnInto(FigureType.QUEEN); // только для проверки виртуального хода
+                        if (isCorrectVirtualMoveSilence(m)) res.add(m);
+                        m.setTurnInto(null);
+                    } else if (isCorrectVirtualMoveSilence(m)) res.add(m);
+                }
         } catch (ChessError ignore) {
         }
         return res;
     }
 
-    /** @return true если ход корректный */
-    private boolean isCorrectMoveWithoutCheckAvailableMovesSilence(Move move) throws ChessError {
-        try {
-            return checkCorrectnessIfSpecificMove(move) && isCorrectVirtualMoveSilence(move);
-        } catch (ChessException | NullPointerException e) {
-            return false;
-        }
+    /**
+     * Использует реализацию низкого уровня из доски {@link Board#getAllPreparedMoves(GameSettings
+     * gs, Color color)}
+     *
+     * @return список ходов для цвета color, включая превращения пешек ТОЛЬКО в ферзя и коня
+     *     (создает 2 отдельных хода). Все ходы гарантированно корректные и проверены на шах
+     */
+    public List<Move> getAllPreparedMoves(Color color) throws ChessError {
+        return board.getAllPreparedMoves(gs, color);
     }
 
-    /** @param move корректный ход */
-    private boolean isCorrectVirtualMoveSilence(Move move) throws ChessError {
+    /**
+     * @param move корректный ход
+     * @return true, если после хода нет шаха королю цвета той фигуры, которой был сделан ход
+     */
+    public boolean isCorrectVirtualMoveSilence(Move move) throws ChessError {
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
         move(move, false);
         boolean isCheck = egd.isCheck(figureToMove);
@@ -315,23 +319,11 @@ public class MoveSystem {
         List<Move> res = new ArrayList<>(27);
         try {
             for (Move m : board.getFigureUgly(cell).getAllMoves(gs))
-                if (isCorrectVirtualMoveForCell(m)) res.add(m);
+                if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
         } catch (ArrayIndexOutOfBoundsException | NullPointerException ignored) {
             // Вместо проверки клетки на доске
         }
         return res;
-    }
-
-    private boolean isCorrectVirtualMoveForCell(Move move) throws ChessError {
-        try {
-            return move != null && isCorrectVirtualMove(move);
-        } catch (ChessException | NullPointerException e) {
-            logger.warn(
-                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
-                    move,
-                    e.getMessage());
-            return false;
-        }
     }
 
     /** @return true если ход корректный */
@@ -348,6 +340,24 @@ public class MoveSystem {
                     e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Проверяет специфичные ситуации
+     *
+     * @param move ход для этой фигуры
+     * @return true если move специфичный и корректный либо move не специфичный, иначе false
+     */
+    private boolean checkCorrectnessIfSpecificMove(Move move) {
+        // превращение пешки
+        if (move.getMoveType() == MoveType.TURN_INTO
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
+            return move.getTurnInto() != null
+                    && (move.getTurnInto() == FigureType.BISHOP
+                            || move.getTurnInto() == FigureType.KNIGHT
+                            || move.getTurnInto() == FigureType.QUEEN
+                            || move.getTurnInto() == FigureType.ROOK);
+        return true;
     }
 
     /** @return true если ход лежит в доступных */
