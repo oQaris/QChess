@@ -27,6 +27,8 @@ public class Selfplay {
      */
     public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer)
             throws ChessError {
+        if(firstPlayer.getColor()==secondPlayer.getColor())
+            throw new IllegalArgumentException("Должны быть разные цвета!");
         this.roomSettings = roomSettings;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;

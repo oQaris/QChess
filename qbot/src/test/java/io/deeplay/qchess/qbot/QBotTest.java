@@ -10,6 +10,7 @@ import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.qbot.strategy.IStrategy;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
 import io.deeplay.qchess.qbot.strategy.MonteCarloStrategy;
+import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,7 +33,7 @@ class QBotTest {
         Color myColor = Color.WHITE;
         for (int i = 0; i < 1; i++) {
             GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
-            QBot firstPlayer = new QBot(gs, myColor, 1, new MonteCarloStrategy());
+            QBot firstPlayer = new QBot(gs, myColor, 1, new PestoStrategy());
             Player secondPlayer = new RandomBot(gs, myColor.inverse());
             try {
                 System.out.println();

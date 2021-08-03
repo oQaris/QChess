@@ -8,7 +8,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
-import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
+import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -108,8 +108,8 @@ class BotsTest {
         @Override
         public void run() {
             GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
-            QBot firstPlayer = new QBot(gs, myColor, 3, new MatrixStrategy());
-            Player secondPlayer = new QBot(gs, myColor, 3, new SimpleStrategy());
+            QBot firstPlayer = new QBot(gs, myColor, 3, new PestoStrategy());
+            Player secondPlayer = new QBot(gs, myColor.inverse(), 3, new MatrixStrategy());
             // Player secondPlayer = NNNBotFactory.getNNNBot(gs, myColor.inverse());
             try {
                 Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
