@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FigureService {
-    //public final static int FULL = 139;
-
     private final static Map<FigureType, Character> charFigureMap = new HashMap<>();
     private final static Map<Character, Integer> intCharMap = new HashMap<>();
     private final static Map<FigureType, Integer> figureValMap = new HashMap<>();
@@ -40,15 +38,17 @@ public class FigureService {
         figureValMap.put(FigureType.KING, 1800);
     }
 
+    @Deprecated
     public static char convertFigureToChar(Figure figure) {
-        return charFigureMap.get(figure.getType());
+        return charFigureMap.get(figure.figureType);
     }
 
+    @Deprecated
     public static int convertCharFigureToInt(char cell) {
         return intCharMap.get(Character.toLowerCase(cell));
     }
 
     public static int convertFigureToVal(Figure figure) {
-        return figureValMap.get(figure.getType());
+        return figureValMap.get(figure.figureType);
     }
 }

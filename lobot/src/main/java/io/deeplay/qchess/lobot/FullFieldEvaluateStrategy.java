@@ -86,13 +86,11 @@ public class FullFieldEvaluateStrategy implements EvaluateStrategy {
             int coef = (figure.getColor() == color) ? 1 : -1;
             int inverse = figure.getColor() == Color.WHITE? 1 : -1;
             int val = FigureService.convertFigureToVal(figure);
-            int rowCoord = (figure.getCurrentPosition().getRow() - ((1 - inverse) / 2) * (Board.STD_BOARD_SIZE - 1)) * inverse;
-            int columnCoord = (figure.getCurrentPosition().getColumn() - ((1 - inverse) / 2) * (Board.STD_BOARD_SIZE - 1)) * inverse;
-            int cur = (coef * (val + figureFieldMap.get(figure.getType())[rowCoord][columnCoord]));
+            int rowCoord = (figure.getCurrentPosition().row - ((1 - inverse) / 2) * (Board.STD_BOARD_SIZE - 1)) * inverse;
+            int columnCoord = (figure.getCurrentPosition().column - ((1 - inverse) / 2) * (Board.STD_BOARD_SIZE - 1)) * inverse;
+            int cur = (coef * (val + figureFieldMap.get(figure.figureType)[rowCoord][columnCoord]));
             result += cur;
-            //System.out.println(FigureService.convertFigureToChar(figure) + ": " + cur);
         }
-        //System.out.println('\n');
         return result;
     }
 }
