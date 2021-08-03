@@ -7,6 +7,9 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.Player;
+import io.deeplay.qchess.game.player.RandomBot;
+import io.deeplay.qchess.lobot.strategy.StaticPositionMatrixEvaluateStrategy;
+import io.deeplay.qchess.lobot.strategy.FiguresCostSumEvaluateStrategy;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,43 +19,113 @@ import org.slf4j.LoggerFactory;
 
 public class LoBotTest {
     private static final Logger logger = LoggerFactory.getLogger(LoBotTest.class);
-
-    private static final int COUNT = 100;
-
-    private final int[] results = new int[3];
+    private static final int COUNT = 1000;
 
     @Test
     public void testGame() {
-        Arrays.fill(results, 0);
         ExecutorService executor = Executors.newCachedThreadPool();
         long startTime = System.currentTimeMillis();
-        int avr = 0;
-        int max = 0;
 
         for (int i = 1; i <= COUNT; i++) {
             // executor.execute(
             //        () -> {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.BLACK, new SimpleEvaluateStrategy(), 2);
-            Player secondPlayer = new LoBot(roomSettings, Color.WHITE, new FullFieldEvaluateStrategy(), 2);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 4);
+            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
                 game.run();
+            } catch (ChessError e) {
+                e.printStackTrace();
+            }
+            //        });
+            logger.info("Game {} complete", i);
+        }
+        logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
+        executor.shutdown();
+    }
 
-                roomSettings.endGameDetector.isCheckmate(Color.BLACK);
-                roomSettings.endGameDetector.isCheckmate(Color.WHITE);
-                roomSettings.endGameDetector.isDraw();
+    @Test
+    public void testGameMinimax() {
+        final int[] results = new int[3];
+        Arrays.fill(results, 0);
+        long startTime = System.currentTimeMillis();
+
+        for (int i = 1; i <= COUNT; i++) {
+            GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 2, TraversalAlgorithm.MINIMAX);
+            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+            try {
+                Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
+                game.run();
                 int index = getEndGameType(roomSettings.endGameDetector.getGameResult());
                 if (index < 3) {
                     results[index]++;
                 } else {
                     logger.info("{} WTF?!", i);
-
                 }
             } catch (ChessError e) {
                 e.printStackTrace();
             }
-            //        });
+            logger.info("Game {} complete", i);
+        }
+        logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
+        logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
+    }
+
+    @Test
+    public void testGameExpectimax() {
+        final int[] results = new int[3];
+        Arrays.fill(results, 0);
+        long startTime = System.currentTimeMillis();
+
+        for (int i = 1; i <= COUNT; i++) {
+            GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 2, TraversalAlgorithm.EXPECTIMAX);
+            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+            try {
+                Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
+                game.run();
+                int index = getEndGameType(roomSettings.endGameDetector.getGameResult());
+                if (index < 3) {
+                    results[index]++;
+                } else {
+                    logger.info("{} WTF?!", i);
+                }
+            } catch (ChessError e) {
+                e.printStackTrace();
+            }
+            logger.info("Game {} complete", i);
+        }
+        logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
+        logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
+    }
+
+    @Test
+    public void testGameWithTime() {
+        final int[] results = new int[3];
+        Arrays.fill(results, 0);
+        long startTime = System.currentTimeMillis();
+        int avr = 0;
+        int max = 0;
+
+        for (int i = 1; i <= COUNT; i++) {
+            GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 4);
+            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+            try {
+                Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
+                game.run();
+
+                int index = getEndGameType(roomSettings.endGameDetector.getGameResult());
+                if (index < 3) {
+                    results[index]++;
+                } else {
+                    logger.info("{} WTF?!", i);
+                }
+            } catch (ChessError e) {
+                e.printStackTrace();
+            }
             logger.info("Game {} complete", i);
 
             logger.info("MAX TIME: {}", LoBot.MAX);
@@ -69,7 +142,6 @@ public class LoBotTest {
         logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
         logger.info("AVR MAX: {}", (max * 1.0 / COUNT));
         logger.info("AVR AVR: {}", (avr * 1.0 / COUNT));
-        executor.shutdown();
     }
 
     private int getEndGameType(EndGameType egt) {

@@ -1,4 +1,4 @@
-package io.deeplay.qchess.lobot;
+package io.deeplay.qchess.lobot.strategy;
 
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;

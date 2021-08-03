@@ -1,13 +1,14 @@
-package io.deeplay.qchess.lobot;
+package io.deeplay.qchess.lobot.strategy;
 
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
+import io.deeplay.qchess.lobot.FigureService;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FullFieldEvaluateStrategy implements EvaluateStrategy {
+public class StaticPositionMatrixEvaluateStrategy implements EvaluateStrategy {
     private final int[][] pawnEvaluate = {
         {0, 0, 0, 0, 0, 0, 0, 0},
         {10, 10, 10, 10, 10, 10, 10, 10},
@@ -68,9 +69,9 @@ public class FullFieldEvaluateStrategy implements EvaluateStrategy {
         {4, 4, 0, 0, 0, 0, 4, 4},
         {4, 6, 2, 0, 0, 2, 6, 4}};
 
-    private Map<FigureType, int[][]> figureFieldMap = new HashMap<>();
+    private final Map<FigureType, int[][]> figureFieldMap = new HashMap<>();
 
-    public FullFieldEvaluateStrategy() {
+    public StaticPositionMatrixEvaluateStrategy() {
         figureFieldMap.put(FigureType.PAWN, pawnEvaluate);
         figureFieldMap.put(FigureType.ROOK, rookEvaluate);
         figureFieldMap.put(FigureType.KNIGHT, knightEvaluate);
