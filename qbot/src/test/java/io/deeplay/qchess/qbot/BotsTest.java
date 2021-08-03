@@ -1,5 +1,13 @@
 package io.deeplay.qchess.qbot;
 
+import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.CHECKMATE_TO_BLACK;
+import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.CHECKMATE_TO_WHITE;
+import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.DRAW_WITH_NOT_ENOUGH_MATERIAL;
+import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.DRAW_WITH_PEACE_MOVE_COUNT;
+import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.DRAW_WITH_REPETITIONS;
+import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.STALEMATE_TO_BLACK;
+import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.STALEMATE_TO_WHITE;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -9,11 +17,6 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -21,13 +24,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class BotsTest {
     private static final Logger logger = LoggerFactory.getLogger(BotsTest.class);
 
-    private static final int COUNT = 100;
+    private static final int COUNT = 10;
     private static final Map<EndGameType, Integer> gameResultsWhite = initGameResults();
     private static final Map<EndGameType, Integer> gameResultsBlack = initGameResults();
     private static final AtomicInteger doneTasks = new AtomicInteger(0);
@@ -90,7 +95,8 @@ class BotsTest {
                 gameResultsBlack.get(CHECKMATE_TO_BLACK) + gameResultsWhite.get(CHECKMATE_TO_WHITE),
                 gameResultsBlack.get(CHECKMATE_TO_WHITE) + gameResultsWhite.get(CHECKMATE_TO_BLACK),
                 gameResultsBlack.get(STALEMATE_TO_BLACK) + gameResultsWhite.get(STALEMATE_TO_WHITE),
-                gameResultsBlack.get(STALEMATE_TO_WHITE) + gameResultsWhite.get(STALEMATE_TO_BLACK));
+                gameResultsBlack.get(STALEMATE_TO_WHITE)
+                        + gameResultsWhite.get(STALEMATE_TO_BLACK));
         logger.warn("Всего нодов: {}", countNode.get());
         logger.warn("Всего отсечений: {}", countAB.get());
         Assertions.assertTrue(true);
@@ -108,8 +114,9 @@ class BotsTest {
         @Override
         public void run() {
             GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
-            QBot firstPlayer = new QBot(gs, myColor, 3, new PestoStrategy());
-            Player secondPlayer = new QBot(gs, myColor.inverse(), 3, new MatrixStrategy());
+            Player firstPlayer = new TimeWrapper(new QBot(gs, myColor, 3, new PestoStrategy()));
+            Player secondPlayer =
+                    new TimeWrapper(new QBot(gs, myColor.inverse(), 3, new MatrixStrategy()));
             // Player secondPlayer = NNNBotFactory.getNNNBot(gs, myColor.inverse());
             try {
                 Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
@@ -117,10 +124,22 @@ class BotsTest {
             } catch (ChessError e) {
                 e.printStackTrace();
             }
-            countNode.addAndGet(firstPlayer.countNode);
-            countAB.addAndGet(firstPlayer.countAB);
+            /*countNode.addAndGet(firstPlayer.countNode);
+            countAB.addAndGet(firstPlayer.countAB);*/
             resultsOutput.computeIfPresent(gs.endGameDetector.getGameResult(), (k, v) -> v + 1);
             System.out.println("Games completed: " + (doneTasks.incrementAndGet()) + "/" + COUNT);
+            System.out.println("== First ==");
+            System.out.println("Mean: " + ((TimeWrapper) firstPlayer).getMean());
+            System.out.println("Median: " + ((TimeWrapper) firstPlayer).getMedian());
+            System.out.println("Mode: " + ((TimeWrapper) firstPlayer).getMode());
+            System.out.println("Max: " + ((TimeWrapper) firstPlayer).getMax());
+            System.out.println("Min: " + ((TimeWrapper) firstPlayer).getMin());
+            System.out.println("== Second ==");
+            System.out.println("Mean: " + ((TimeWrapper) secondPlayer).getMean());
+            System.out.println("Median: " + ((TimeWrapper) secondPlayer).getMedian());
+            System.out.println("Mode: " + ((TimeWrapper) secondPlayer).getMode());
+            System.out.println("Max: " + ((TimeWrapper) secondPlayer).getMax());
+            System.out.println("Min: " + ((TimeWrapper) secondPlayer).getMin());
         }
     }
 }

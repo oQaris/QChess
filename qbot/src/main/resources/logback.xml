@@ -84,6 +84,7 @@
   </logger>
 
   <logger level="debug" name="io.deeplay.qchess.qbot">
+    <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
     <appender-ref ref="FILE-LAST-SESSION-INFO"/>

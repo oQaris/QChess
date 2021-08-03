@@ -6,11 +6,6 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 
 public interface IStrategy {
-    /**
-     * Функция оценки позиции на доске. Чем больше значение, тем лучше для белых
-     */
-    int evaluateBoard(Board board);
-
     static int gradeIfTerminalNode(GameSettings gs, Color activeColor) {
         gs.endGameDetector.updateEndGameStatus();
         EndGameDetector.EndGameType result = gs.endGameDetector.getGameResult();
@@ -24,4 +19,9 @@ public interface IStrategy {
             default -> 0;
         };
     }
+
+    /**
+     * Функция оценки позиции на доске. Чем больше значение, тем лучше для белых
+     */
+    int evaluateBoard(Board board);
 }
