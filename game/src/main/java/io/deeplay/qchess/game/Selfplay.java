@@ -20,7 +20,6 @@ public class Selfplay {
     private final Player firstPlayer;
     private final GameSettings roomSettings;
     private Player currentPlayerToMove;
-    private boolean isDraw;
 
     /** @throws ChessError если заполнение доски некорректное */
     public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer)
@@ -50,7 +49,6 @@ public class Selfplay {
     public boolean move(Move move) throws ChessError {
         if (isCorrectPlayerColor(move) && roomSettings.moveSystem.isCorrectMove(move)) {
             tryMove(move);
-            isDraw = roomSettings.endGameDetector.isDraw();
             currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
         } else {
             return false;
@@ -91,11 +89,9 @@ public class Selfplay {
                 == EndGameDetector.EndGameType.NOTHING) {
             // TODO: получать Action, сделать предложение ничьи и возможность сдаться
             Move move = currentPlayerToMove.getNextMove();
-            logger.debug("От игрока пришел ход: {}", move);
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 tryMove(move);
-                isDraw = roomSettings.endGameDetector.isDraw();
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
@@ -104,24 +100,7 @@ public class Selfplay {
             }
             roomSettings.endGameDetector.updateEndGameStatus();
         }
-        /*if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
-            logger.info(
-                    "Мат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        else if (roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor()))
-            logger.info(
-                    "Пат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        else if (isDraw) {
-            if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
-                logger.info(
-                        "Ничья: {} ходов без взятия и хода пешки",
-                        EndGameDetector.END_PEACE_MOVE_COUNT);
-            if (roomSettings.endGameDetector.isDrawWithRepetitions())
-                logger.info(
-                        "Ничья: {} повторений позиций доски",
-                        EndGameDetector.END_REPETITIONS_COUNT);
-            if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
-                logger.info("Ничья: недостаточно фигур, чтобы поставить мат");*/
-
+        logger.info("Результат игры: {}\n", roomSettings.endGameDetector.getGameResult());
         // TODO: конец игры, отправлять GameResponse
     }
 

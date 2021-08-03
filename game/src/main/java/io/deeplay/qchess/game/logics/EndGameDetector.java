@@ -26,6 +26,8 @@ public class EndGameDetector {
                     Arrays.asList(FigureType.KING, FigureType.KNIGHT, FigureType.KNIGHT));
 
     private final GameSettings gs;
+
+    private EndGameType prevGameResult = EndGameType.NOTHING;
     private EndGameType gameResult = EndGameType.NOTHING;
 
     public EndGameDetector(GameSettings gs) {
@@ -178,9 +180,14 @@ public class EndGameDetector {
     }
 
     public void updateEndGameStatus() {
+        prevGameResult = gameResult;
         isCheckmate(Color.WHITE);
         isCheckmate(Color.BLACK);
         isDraw();
+    }
+
+    public void revertEndGameStatus() {
+        gameResult = prevGameResult;
     }
 
     public enum EndGameType {

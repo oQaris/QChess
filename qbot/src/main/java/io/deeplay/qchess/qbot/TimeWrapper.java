@@ -52,4 +52,12 @@ public class TimeWrapper extends RemotePlayer {
     public long getMin() {
         return times.stream().min(Long::compare).orElse(0L);
     }
+
+    public void printGraph() {
+        final long min = getMin();
+        for (Long time : times) {
+            long t = time / min;
+            System.out.println("*".repeat((int) t));
+        }
+    }
 }

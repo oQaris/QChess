@@ -39,14 +39,10 @@
     <append>false</append>
 
     <encoder>
-      <pattern>%msg%n</pattern>
+      <pattern>[%thread] %msg%n</pattern>
     </encoder>
 
     <file>logs/qchess-statistics.log</file>
-
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
-    </filter>
   </appender>
 
   <!-- DEBUG -->
@@ -79,11 +75,11 @@
     </filter>
   </appender>
 
-  <logger level="info" name="io.deeplay.qchess.game.Selfplay">
+  <logger level="debug" name="io.deeplay.qchess.game.Selfplay">
     <appender-ref ref="GAME-STATISTICS"/>
   </logger>
 
-  <logger level="debug" name="io.deeplay.qchess.qbot">
+  <logger level="debug" name="io.deeplay.qchess.qbot.BotsTest">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
