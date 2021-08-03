@@ -113,6 +113,7 @@ public class History {
         if (move.getMoveType() == MoveType.ATTACK
                 || move.getMoveType() == MoveType.EN_PASSANT
                 || move.getMoveType() == MoveType.TURN_INTO_ATTACK
+            || move.getMoveType() == MoveType.TURN_INTO
                 || gameSettings.board.getFigure(move.getTo()).getType() == FigureType.PAWN)
             peaceMoveCount = 0;
         else ++peaceMoveCount;
