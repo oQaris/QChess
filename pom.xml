@@ -16,7 +16,8 @@
     <module>clientserverconversation</module>
     <module>game</module>
     <module>core</module>
-    <module>lobot</module>
+    <module>nnnbot</module>
+    <module>qbot</module>
   </modules>
 
   <properties>

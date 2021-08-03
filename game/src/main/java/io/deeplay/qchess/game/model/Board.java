@@ -2,16 +2,18 @@ package io.deeplay.qchess.game.model;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_STRING_FOR_FILLING_BOARD;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.math.GameMath;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.service.NotationService;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,15 +26,21 @@ public class Board {
 
     public final int boardSize;
     private final Figure[][] cells;
+    private final byte[] cellsType;
+    public Cell blackKing;
+    public Cell whiteKing;
+    private int cellsTypeHash;
 
     public Board(int size, BoardFilling fillingType) {
         boardSize = size;
         cells = new Figure[boardSize][boardSize];
+        cellsType = new byte[boardSize * boardSize];
         try {
             fill(fillingType);
         } catch (ChessException e) {
             logger.error("Ошибка при заполнении доски");
         }
+        cellsTypeHash = GameMath.hashCode64(cellsType);
     }
 
     public Board(BoardFilling fillingType) {
@@ -51,13 +59,13 @@ public class Board {
             int x = 0;
             for (Character currentSymbol : placement.toCharArray()) {
                 if (currentSymbol.equals('/')) {
-                    y++;
+                    ++y;
                     x = 0;
                 } else if (Character.isDigit(currentSymbol)) {
-                    x += Integer.parseInt(String.valueOf(currentSymbol));
+                    x += currentSymbol - 48;
                 } else {
                     setFigure(NotationService.getFigureByChar(currentSymbol, x, y));
-                    x++;
+                    ++x;
                 }
             }
         } catch (ChessException e) {
@@ -68,23 +76,32 @@ public class Board {
 
     /** Создает копию доски, включая копии фигур на ней */
     public Board(Board board) {
-        this(board.boardSize, BoardFilling.EMPTY);
+        boardSize = board.boardSize;
+        cells = new Figure[boardSize][boardSize];
+        cellsType = board.cellsType.clone();
+        cellsTypeHash = board.cellsTypeHash;
+
         for (int y = 0; y < boardSize; ++y)
-            for (int x = 0; x < boardSize; ++x)
-                cells[y][x] =
-                        Figure.build(
-                                board.cells[y][x].getType(),
-                                board.cells[y][x].getColor(),
-                                new Cell(x, y));
+            for (int x = 0; x < boardSize; ++x) {
+                if (board.cells[y][x] != null) {
+                    cells[y][x] =
+                            Figure.build(
+                                    board.cells[y][x].figureType,
+                                    board.cells[y][x].getColor(),
+                                    new Cell(x, y));
+                    if (cells[y][x].figureType == FigureType.KING) {
+                        if (cells[y][x].getColor() == Color.WHITE)
+                            whiteKing = cells[y][x].getCurrentPosition();
+                        else blackKing = cells[y][x].getCurrentPosition();
+                    }
+                }
+            }
     }
 
     /** @return true, если клетка cell атакуется цветом color */
     public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
         for (Figure f : settings.board.getFigures(color))
-            for (Move m :
-                    f.getType() == FigureType.KING
-                            ? ((King) f).getAttackedMoves(settings.board)
-                            : f.getAllMoves(settings)) if (m.getTo().equals(cell)) return true;
+            if (f.isAttackedCell(settings, cell)) return true;
         return false;
     }
 
@@ -130,6 +147,7 @@ public class Board {
     }
 
     /** @return true, если клетка принадлежит доске */
+    @Deprecated
     public boolean isCorrectCell(int column, int row) {
         return column >= 0 && row >= 0 && column < boardSize && row < boardSize;
     }
@@ -150,21 +168,40 @@ public class Board {
     }
 
     /** Устанавливает фигуру на доску */
+    @Deprecated
     public void setFigure(Figure figure) throws ChessException {
-        int x = figure.getCurrentPosition().getColumn();
-        int y = figure.getCurrentPosition().getRow();
-        if (!isCorrectCell(x, y)) {
+        Cell position = figure.getCurrentPosition();
+        if (!isCorrectCell(position.column, position.row)) {
             logger.warn("Ошибка установки фигуры {} на доску", figure);
             throw new ChessException(INCORRECT_COORDINATES);
         }
-        cells[y][x] = figure;
+        cells[position.row][position.column] = figure;
+
+        int i = position.row * 8 + position.column;
+        cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
+        cellsType[i] = figure.figureType.type;
+
+        if (figure.figureType == FigureType.KING) {
+            if (figure.getColor() == Color.WHITE) whiteKing = figure.getCurrentPosition();
+            else blackKing = figure.getCurrentPosition();
+        }
         logger.trace("Фигура {} установлена на доску", figure);
     }
 
     /** Устанавливает фигуру на доску БЕЗ ПРОВЕРОК */
-    public void setFigureUgly(Figure figure) {
-        cells[figure.getCurrentPosition().getRow()][figure.getCurrentPosition().getColumn()] =
-                figure;
+    public void setFigureUgly(Figure figure) throws ArrayIndexOutOfBoundsException {
+        Cell position = figure.getCurrentPosition();
+        cells[position.row][position.column] = figure;
+
+        int i = position.row * 8 + position.column;
+        cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
+        cellsType[i] = figure.figureType.type;
+    }
+
+    public void setFigureUglyWithoutRecalcHash(Figure figure)
+            throws ArrayIndexOutOfBoundsException {
+        Cell position = figure.getCurrentPosition();
+        cells[position.row][position.column] = figure;
     }
 
     /**
@@ -187,32 +224,64 @@ public class Board {
         return list;
     }
 
+    public int getFigureCount(Color color) {
+        int count = 0;
+        for (int yl = 0, yr = boardSize - 1; yl < yr; ++yl, --yr) {
+            for (int xl = 0, xr = boardSize - 1; xl < xr; ++xl, --xr) {
+                if (cells[yl][xl] != null && cells[yl][xl].getColor() == color) ++count;
+                if (cells[yl][xr] != null && cells[yl][xr].getColor() == color) ++count;
+                if (cells[yr][xl] != null && cells[yr][xl].getColor() == color) ++count;
+                if (cells[yr][xr] != null && cells[yr][xr].getColor() == color) ++count;
+            }
+        }
+        return count;
+    }
+
     /**
      * @param color цвет игрока
      * @return позиция короля определенного цвета или null, если король не найден
      */
     public Figure findKing(Color color) {
-        for (Figure[] figures : cells)
-            for (Figure f : figures)
-                if (f != null && f.getColor() == color && f.getType() == FigureType.KING) return f;
-        logger.error("Король {} не был найден", color);
-        return null;
+        return color == Color.WHITE
+                ? cells[whiteKing.row][whiteKing.column]
+                : cells[blackKing.row][blackKing.column];
+    }
+
+    public Cell findKingCell(Color color) {
+        return color == Color.WHITE ? whiteKing : blackKing;
+    }
+
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    public int isCastlingPossible(Color color) throws ChessError {
+        Figure king = findKing(color);
+        if (king == null) throw new ChessError(KING_NOT_FOUND);
+        if (king.wasMoved()) return 0;
+        return (isNotLeftRookStandardMoved(color) ? 1 : 0)
+                + (isNotRightRookStandardMoved(color) ? 2 : 0);
     }
 
     /**
-     * @param cell стартовая клетка
      * @param color цвет ладьи
-     * @param shift вектор смещения (поиск в эту сторону)
-     * @return ладья относительно стартовой клетки цвета color или null, если не найдена
+     * @return левая ладья в углу для длинной рокировки цвета color или null, если не найдена
      */
-    public Figure findRook(Cell cell, Color color, Cell shift) {
-        while (isCorrectCell(cell.getColumn(), cell.getRow())) {
-            Figure figure = cells[cell.getRow()][cell.getColumn()];
-            if (figure != null && figure.getColor() == color && figure.getType() == FigureType.ROOK)
-                return figure;
-            cell = cell.createAdd(shift);
-        }
-        return null;
+    public boolean isNotLeftRookStandardMoved(Color color) {
+        Figure rook = cells[(color == Color.BLACK ? 0 : boardSize - 1)][0];
+        return rook != null
+                && rook.figureType == FigureType.ROOK
+                && rook.getColor() == color
+                && !rook.wasMoved();
+    }
+
+    /**
+     * @param color цвет ладьи
+     * @return правая ладья в углу для короткой рокировки цвета color или null, если не найдена
+     */
+    public boolean isNotRightRookStandardMoved(Color color) {
+        Figure rook = cells[(color == Color.BLACK ? 0 : boardSize - 1)][boardSize - 1];
+        return rook != null
+                && rook.figureType == FigureType.ROOK
+                && rook.getColor() == color
+                && !rook.wasMoved();
     }
 
     /**
@@ -222,6 +291,7 @@ public class Board {
      * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
      * @throws ChessException если ход выходит за пределы доски
      */
+    @Deprecated
     public Figure moveFigure(Move move) throws ChessException {
         logger.trace("Начато перемещение фигуры: {}", move);
         Figure figureFrom = getFigure(move.getFrom());
@@ -234,26 +304,42 @@ public class Board {
         return figureTo;
     }
 
-    /** Перемещает фигуру без проверок и установки флагов перемещения */
-    public void moveFigureUgly(Move move) {
+    /**
+     * Перемещает фигуру без проверок и установки флагов перемещения
+     *
+     * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
+     */
+    public Figure moveFigureUgly(Move move) throws ArrayIndexOutOfBoundsException {
         Figure figureFrom = getFigureUgly(move.getFrom());
+        Figure figureTo = getFigureUgly(move.getTo());
         figureFrom.setCurrentPosition(move.getTo());
         setFigureUgly(figureFrom);
         removeFigureUgly(move.getFrom());
+        return figureTo;
+    }
+
+    public Figure moveFigureUglyWithoutRecalcHash(Move move) throws ArrayIndexOutOfBoundsException {
+        Figure figureFrom = getFigureUgly(move.getFrom());
+        Figure figureTo = getFigureUgly(move.getTo());
+        figureFrom.setCurrentPosition(move.getTo());
+        setFigureUglyWithoutRecalcHash(figureFrom);
+        removeFigureUglyWithoutRecalcHash(move.getFrom());
+        return figureTo;
     }
 
     /**
      * @return фигура или null, если клетка пуста
      * @throws ChessException если клетка не лежит в пределах доски
      */
+    @Deprecated
     public Figure getFigure(Cell cell) throws ChessException {
-        int x = cell.getColumn();
-        int y = cell.getRow();
-        if (!isCorrectCell(x, y)) {
+        int x = cell.column;
+        int y = cell.row;
+        if (x < 0 || y < 0 || x >= boardSize || y >= boardSize) {
             logger.warn("Фигура не была установлена на клетку: {}", cell);
             throw new ChessException(INCORRECT_COORDINATES);
         }
-        return cells[y][x];
+        return cells[cell.row][cell.column];
     }
 
     /**
@@ -261,8 +347,8 @@ public class Board {
      *
      * @return фигура или null, если клетка пуста.
      */
-    public Figure getFigureUgly(Cell cell) {
-        return cells[cell.getRow()][cell.getColumn()];
+    public Figure getFigureUgly(Cell cell) throws ArrayIndexOutOfBoundsException {
+        return cells[cell.row][cell.column];
     }
 
     /**
@@ -270,28 +356,51 @@ public class Board {
      *
      * @return удаленную фигуру или null, если клетка была пуста
      */
+    @Deprecated
     public Figure removeFigure(Cell cell) throws ChessException {
-        int x = cell.getColumn();
-        int y = cell.getRow();
-        if (!isCorrectCell(x, y)) {
+        if (!isCorrectCell(cell.column, cell.row)) {
             logger.warn("Фигура не была удалена с клетки: {}", cell);
             throw new ChessException(INCORRECT_COORDINATES);
         }
-        Figure old = cells[y][x];
-        cells[y][x] = null;
+        Figure old = cells[cell.row][cell.column];
+        cells[cell.row][cell.column] = null;
+
+        int i = cell.row * 8 + cell.column;
+        cellsTypeHash -= GameMath.hash64Coeff[i] * cellsType[i];
+        cellsType[i] = 0;
+
         return old;
     }
 
-    /** Убирает фигуру с доски БЕЗ ПРОВЕРОК */
-    public void removeFigureUgly(Cell cell) {
-        cells[cell.getRow()][cell.getColumn()] = null;
+    /**
+     * Убирает фигуру с доски БЕЗ ПРОВЕРОК
+     *
+     * @return удаленную фигуру или null, если клетка была пуста
+     */
+    public Figure removeFigureUgly(Cell cell) throws ArrayIndexOutOfBoundsException {
+        Figure old = cells[cell.row][cell.column];
+        cells[cell.row][cell.column] = null;
+
+        int i = cell.row * 8 + cell.column;
+        cellsTypeHash -= GameMath.hash64Coeff[i] * cellsType[i];
+        cellsType[i] = 0;
+
+        return old;
+    }
+
+    public Figure removeFigureUglyWithoutRecalcHash(Cell cell) {
+        Figure old = cells[cell.row][cell.column];
+        cells[cell.row][cell.column] = null;
+        return old;
     }
 
     /** @return true, если клетка лежит на доске и она пустая, иначе false */
     public boolean isEmptyCell(Cell cell) {
-        int x = cell.getColumn();
-        int y = cell.getRow();
-        return isCorrectCell(x, y) && cells[y][x] == null;
+        try {
+            return cells[cell.row][cell.column] == null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     /**
@@ -299,9 +408,11 @@ public class Board {
      * @return true, если клетка лежит на доске и на этой клетке есть фражеская фигура, иначе false
      */
     public boolean isEnemyFigureOn(Color color, Cell cell) {
-        int x = cell.getColumn();
-        int y = cell.getRow();
-        return isCorrectCell(x, y) && cells[y][x] != null && cells[y][x].getColor() != color;
+        try {
+            return cells[cell.row][cell.column].getColor() != color;
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+            return false;
+        }
     }
 
     @Override
@@ -312,12 +423,30 @@ public class Board {
             sb.append('|');
             for (Figure figure : line) {
                 if (figure == null) sb.append("_");
-                else sb.append(Board.figureToIcon(figure.getColor(), figure.getType()));
+                else sb.append(Board.figureToIcon(figure.getColor(), figure.figureType));
                 sb.append('|');
             }
             sb.append(System.lineSeparator());
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board board = (Board) o;
+        return cellsTypeHash == board.cellsTypeHash && Arrays.equals(cellsType, board.cellsType);
+    }
+
+    @Override
+    public int hashCode() {
+        return cellsTypeHash;
+    }
+
+    /** @return копия состояния типов фигур на доске */
+    public byte[] fastSnapshot() {
+        return cellsType.clone();
     }
 
     public enum BoardFilling {

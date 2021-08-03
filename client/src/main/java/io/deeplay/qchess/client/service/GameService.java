@@ -23,6 +23,7 @@ import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
 import io.deeplay.qchess.lobot.LoBot;
 import java.util.List;
 
@@ -107,10 +108,10 @@ public class GameService {
         ActionDTO dto = SerializationService.serverToClientDTORequest(json, ActionDTO.class);
 
         makeMove(
-                dto.move.getFrom().getRow(),
-                dto.move.getFrom().getColumn(),
-                dto.move.getTo().getRow(),
-                dto.move.getTo().getColumn(),
+                dto.move.getFrom().row,
+                dto.move.getFrom().column,
+                dto.move.getTo().row,
+                dto.move.getTo().column,
                 dto.move.getTurnInto());
 
         ClientController.drawBoard();

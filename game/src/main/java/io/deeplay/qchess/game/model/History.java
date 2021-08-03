@@ -4,7 +4,6 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.ArrayDeque;
@@ -12,12 +11,9 @@ import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class History {
-    private static final Logger logger = LoggerFactory.getLogger(History.class);
-    private static final int AVERAGE_MAXIMUM_MOVES = 300;
+    private static final int AVERAGE_MAXIMUM_MOVES = 100;
     private static final Map<FigureType, Character> NOTATION = new EnumMap<>(FigureType.class);
 
     static {
@@ -33,7 +29,6 @@ public class History {
     }
 
     private final GameSettings gameSettings;
-
     private final Map<BoardState, Integer> repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
     /** using like a stack */
     private final Deque<BoardState> recordsList = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
@@ -44,9 +39,14 @@ public class History {
     private Figure removedFigure;
 
     private int peaceMoveCount = 0;
+    private boolean isWhiteMove = true;
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    private int isWhiteCastlingPossibility = 3;
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    private int isBlackCastlingPossibility = 3;
 
-    private boolean isWhiteCastlingPossibility = true;
-    private boolean isBlackCastlingPossibility = true;
+    /** Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки */
+    private int minBoardStateToSave;
 
     public History(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
@@ -59,38 +59,48 @@ public class History {
         this.recordsList.addAll(history.recordsList);
         this.lastMove = history.lastMove;
         this.hasMovedBeforeLastMove = history.hasMovedBeforeLastMove;
-        this.removedFigure =
-                Figure.build(
-                        history.removedFigure.getType(),
-                        history.removedFigure.getColor(),
-                        new Cell(
-                                history.removedFigure.getCurrentPosition().getColumn(),
-                                history.removedFigure.getCurrentPosition().getRow()));
+        if (history.removedFigure != null) {
+            Cell removedFigurePosition = history.removedFigure.getCurrentPosition();
+            this.removedFigure =
+                    Figure.build(
+                            history.removedFigure.figureType,
+                            history.removedFigure.getColor(),
+                            new Cell(removedFigurePosition.column, removedFigurePosition.row));
+        }
         this.peaceMoveCount = history.peaceMoveCount;
+        this.isWhiteMove = history.isWhiteMove;
         this.isWhiteCastlingPossibility = history.isWhiteCastlingPossibility;
         this.isBlackCastlingPossibility = history.isBlackCastlingPossibility;
     }
 
     /**
-     * Добавляет в список записей запись текущего состояния доски и все нужные дополнительные
-     * приписки
+     * Добавляет в список записей запись текущего состояния доски
      *
      * @param lastMove последний ход или null, если его не было
-     * @return Строка - только что добавленная запись
      */
-    public String addRecord(Move lastMove) throws ChessException, ChessError {
+    public void addRecord(Move lastMove) throws ChessError {
         this.lastMove = lastMove;
+        isWhiteMove = !isWhiteMove;
 
-        String rec = convertBoardToStringForsythEdwards();
+        byte[] boardSnapshot = gameSettings.board.fastSnapshot();
+
+        isWhiteCastlingPossibility = gameSettings.board.isCastlingPossible(Color.WHITE);
+        isBlackCastlingPossibility = gameSettings.board.isCastlingPossible(Color.BLACK);
+
         BoardState boardState =
                 new BoardState(
-                        rec, lastMove, peaceMoveCount, hasMovedBeforeLastMove, removedFigure);
+                        boardSnapshot,
+                        gameSettings.board.hashCode(),
+                        lastMove,
+                        peaceMoveCount,
+                        hasMovedBeforeLastMove,
+                        removedFigure,
+                        isWhiteMove,
+                        isWhiteCastlingPossibility,
+                        isBlackCastlingPossibility);
+
         recordsList.push(boardState);
-
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
-        logger.debug("Запись <{}> добавлена в историю", rec);
-
-        return rec;
     }
 
     public boolean isHasMovedBeforeLastMove() {
@@ -109,22 +119,48 @@ public class History {
         this.removedFigure = removedFigure;
     }
 
-    public void checkAndAddPeaceMoveCount(Move move) throws ChessException {
-        if (move.getMoveType() == MoveType.ATTACK
-                || move.getMoveType() == MoveType.EN_PASSANT
+    public void checkAndAddPeaceMoveCount(Move move) {
+        if (move.getMoveType() == MoveType.ATTACK) peaceMoveCount = 0;
+        else if (move.getMoveType() == MoveType.EN_PASSANT
+                || move.getMoveType() == MoveType.TURN_INTO
                 || move.getMoveType() == MoveType.TURN_INTO_ATTACK
-            || move.getMoveType() == MoveType.TURN_INTO
-                || gameSettings.board.getFigure(move.getTo()).getType() == FigureType.PAWN)
+                || gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN) {
+            // clearHistory(minBoardStateToSave);
             peaceMoveCount = 0;
-        else ++peaceMoveCount;
+        } else ++peaceMoveCount;
     }
 
-    /** @return Строка - запись в виде нотации Форсайта-Эдвардса */
-    private String convertBoardToStringForsythEdwards() throws ChessException, ChessError {
+    /**
+     * Устанавливает минимум состояний доски в истории ходов, которое необходимо сохранить после
+     * чистки
+     */
+    public void setMinBoardStateToSave(int minBoardStateToSave) {
+        this.minBoardStateToSave = minBoardStateToSave;
+    }
+
+    /**
+     * Чистить историю от ненужных состояний доски
+     *
+     * @param minBoardStateToSave минимум состояний доски в истории ходов, которое необходимо
+     *     сохранить после чистки
+     */
+    public void clearHistory(int minBoardStateToSave) {
+        int stateCountToClear = recordsList.size() - minBoardStateToSave;
+        if (stateCountToClear <= 0) return;
+
+        for (int i = 0; i < stateCountToClear; ++i) {
+            BoardState boardState = recordsList.pollLast();
+            int boardStateCount = repetitionsMap.remove(boardState);
+            if (boardStateCount > 1) repetitionsMap.put(boardState, boardStateCount - 1);
+        }
+    }
+
+    /** @return текущая доска в записи FEN */
+    public String getBoardToStringForsythEdwards() throws ChessError {
         StringBuilder rec = new StringBuilder(70);
 
         rec.append(getConvertingFigurePosition());
-        rec.append(' ').append(recordsList.size() % 2 == 0 ? 'w' : 'b');
+        rec.append(' ').append(isWhiteMove ? 'w' : 'b');
 
         String castlingPossibility = getCastlingPossibility();
         if (!"".equals(castlingPossibility)) rec.append(' ').append(castlingPossibility);
@@ -134,20 +170,20 @@ public class History {
     }
 
     /** @return Строка - часть записи отвечающая за позиционирование фигур на доске */
-    private String getConvertingFigurePosition() throws ChessException {
+    private String getConvertingFigurePosition() {
         StringBuilder result = new StringBuilder();
         Figure currentFigure;
 
-        for (int y = 0; y < gameSettings.board.boardSize; y++) {
+        for (int y = 0; y < gameSettings.board.boardSize; ++y) {
             int emptySlots = 0;
 
-            for (int x = 0; x < gameSettings.board.boardSize; x++) {
-                currentFigure = gameSettings.board.getFigure(new Cell(x, y));
+            for (int x = 0; x < gameSettings.board.boardSize; ++x) {
+                currentFigure = gameSettings.board.getFigureUgly(new Cell(x, y));
 
-                if (currentFigure == null) emptySlots++;
+                if (currentFigure == null) ++emptySlots;
                 else {
                     if (emptySlots != 0) result.append(emptySlots);
-                    Character notationFigureChar = NOTATION.get(currentFigure.getType());
+                    Character notationFigureChar = NOTATION.get(currentFigure.figureType);
                     result.append(
                             currentFigure.getColor() == Color.WHITE
                                     ? notationFigureChar
@@ -169,22 +205,18 @@ public class History {
 
     private String getCastlingPossibility(Color color) throws ChessError {
         String res = "";
-        if (color == Color.WHITE && !isWhiteCastlingPossibility) return res;
-        if (color == Color.BLACK && !isBlackCastlingPossibility) return res;
+        if (color == Color.WHITE && isWhiteCastlingPossibility == 0) return res;
+        if (color == Color.BLACK && isBlackCastlingPossibility == 0) return res;
 
         Figure king = gameSettings.board.findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return res;
-        Figure leftRook =
-                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(-1, 0));
-        Figure rightRook =
-                gameSettings.board.findRook(king.getCurrentPosition(), color, new Cell(1, 0));
-        if (rightRook != null && !rightRook.wasMoved()) res += "k";
-        if (leftRook != null && !leftRook.wasMoved()) res += "q";
+        if (gameSettings.board.isNotRightRookStandardMoved(color)) res += "k";
+        if (gameSettings.board.isNotLeftRookStandardMoved(color)) res += "q";
 
-        if (res.equals("")) {
-            if (color == Color.WHITE) isWhiteCastlingPossibility = false;
-            else isBlackCastlingPossibility = false;
+        if (res.isEmpty()) {
+            if (color == Color.WHITE) isWhiteCastlingPossibility = 0;
+            else isBlackCastlingPossibility = 0;
         }
         return color == Color.WHITE ? res.toUpperCase() : res;
     }
@@ -193,12 +225,12 @@ public class History {
      * @return Строка - часть записи (c пробелом вначале) отвечающая за то, доступно ли взятие на
      *     проходе следующим ходом
      */
-    private String getPawnEnPassantPossibility() throws ChessException {
+    private String getPawnEnPassantPossibility() {
         StringBuilder result = new StringBuilder();
         if (lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE) {
-            result.append(' ').append((char) (lastMove.getTo().getColumn() + 'a'));
+            result.append(' ').append((char) (lastMove.getTo().column + 'a'));
             result.append(
-                    gameSettings.board.getFigure(lastMove.getTo()).getColor() == Color.WHITE
+                    gameSettings.board.getFigureUgly(lastMove.getTo()).getColor() == Color.WHITE
                             ? '3'
                             : '6');
         }
@@ -209,36 +241,42 @@ public class History {
         return peaceMoveCount;
     }
 
-    /** @return Строка - последняя запись в списке */
-    public String getLastRecord() {
-        assert recordsList.peek() != null;
-        return recordsList.peek().forsythEdwards;
+    /** @return последнее состояние доски */
+    public BoardState getLastBoardState() {
+        return recordsList.peek();
     }
 
-    /** @return true - если было минимум repetition-кратных повторений, false - если было меньше */
+    /**
+     * @return true - если было минимум repetition-кратных повторений последней доски, false - если
+     *     было меньше
+     */
     public boolean checkRepetitions(int repetition) {
-        for (Integer rep : repetitionsMap.values()) if (rep >= repetition) return true;
-        return false;
+        return repetitionsMap.get(recordsList.peek()) >= repetition;
     }
 
     public Move getLastMove() {
         return lastMove;
     }
 
-    /**
-     * Отменяет последний ход в истории
-     *
-     * @return отмененное состояние доски
-     */
-    public BoardState undo() {
+    /** Отменяет последний ход в истории */
+    public void undo() {
         BoardState lastBoardState = recordsList.pop();
-        if (recordsList.peek() == null) return lastBoardState;
-        hasMovedBeforeLastMove = recordsList.peek().hasMovedBeforeLastMove;
-        removedFigure = recordsList.peek().removedFigure;
-        lastMove = recordsList.peek().lastMove;
-        peaceMoveCount = recordsList.peek().peaceMoveCount;
-        repetitionsMap.put(lastBoardState, repetitionsMap.getOrDefault(lastBoardState, 1) - 1);
-        return lastBoardState;
+        BoardState prevLastBoardState = recordsList.peek();
+        if (prevLastBoardState == null) return;
+        hasMovedBeforeLastMove = prevLastBoardState.hasMovedBeforeLastMove;
+        removedFigure = prevLastBoardState.removedFigure;
+        lastMove = prevLastBoardState.lastMove;
+        peaceMoveCount = prevLastBoardState.peaceMoveCount;
+        int boardStateCount = repetitionsMap.remove(lastBoardState);
+        if (boardStateCount > 1) repetitionsMap.put(lastBoardState, boardStateCount - 1);
+    }
+
+    /** Берет последние данные из истории и обновляет текущие */
+    public void restore() {
+        BoardState lastBoardState = recordsList.peek();
+        if (lastBoardState == null) return;
+        hasMovedBeforeLastMove = lastBoardState.hasMovedBeforeLastMove;
+        removedFigure = lastBoardState.removedFigure;
     }
 
     /**

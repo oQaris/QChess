@@ -26,16 +26,29 @@ public class EndGameDetector {
                     Arrays.asList(FigureType.KING, FigureType.KNIGHT, FigureType.KNIGHT));
 
     private final GameSettings gs;
+    private EndGameType gameResult = EndGameType.NOTHING;
 
     public EndGameDetector(GameSettings gs) {
         this.gs = gs;
     }
 
+    public EndGameType getGameResult() {
+        return gameResult;
+    }
+
     /** @return true, если это не ничья */
     public boolean isDraw() {
-        return isDrawWithPeaceMoves()
-                || isDrawWithRepetitions()
-                || isDrawWithNotEnoughMaterialForCheckmate();
+        if (isDrawWithPeaceMoves()) {
+            gameResult = EndGameType.DRAW_WITH_PEACE_MOVE_COUNT;
+            return true;
+        } else if (isDrawWithRepetitions()) {
+            gameResult = EndGameType.DRAW_WITH_REPETITIONS;
+            return true;
+        } else if (isDrawWithNotEnoughMaterialForCheckmate()) {
+            gameResult = EndGameType.DRAW_WITH_NOT_ENOUGH_MATERIAL;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -95,7 +108,7 @@ public class EndGameDetector {
     private boolean isAllFiguresSame(List<Figure> figures, List<FigureType> figureTypes) {
         List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
         if (figures.size() != figureTypes.size()) return false;
-        for (Figure figure : figures) if (!figuresCopyType.remove(figure.getType())) return false;
+        for (Figure figure : figures) if (!figuresCopyType.remove(figure.figureType)) return false;
         return true;
     }
 
@@ -120,8 +133,8 @@ public class EndGameDetector {
         Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
         Cell blackBishopPosition = blackBishop.getCurrentPosition();
 
-        return (whiteBishopPosition.getColumn() + whiteBishopPosition.getRow()) % 2
-                == (blackBishopPosition.getColumn() + blackBishopPosition.getRow()) % 2;
+        return (whiteBishopPosition.column + whiteBishopPosition.row) % 2
+                == (blackBishopPosition.column + blackBishopPosition.row) % 2;
     }
 
     /**
@@ -131,24 +144,47 @@ public class EndGameDetector {
      * @return найденного слона, или null - иначе
      */
     private Figure getBishop(List<Figure> figures) {
-        for (Figure figure : figures) if (figure.getType() == FigureType.BISHOP) return figure;
+        for (Figure figure : figures) if (figure.figureType == FigureType.BISHOP) return figure;
         return null;
     }
 
     /** @return true, если установленному цвету поставили мат */
     public boolean isCheckmate(Color color) {
-        return isStalemate(color) && isCheck(color);
+        boolean res = isStalemate(color) && isCheck(color);
+        if (res)
+            gameResult =
+                    (color == Color.WHITE
+                            ? EndGameType.CHECKMATE_TO_WHITE
+                            : EndGameType.CHECKMATE_TO_BLACK);
+        return res;
     }
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(Color color) {
-        return gs.moveSystem.getAllCorrectMovesForStalemate(color).isEmpty();
+        boolean res = gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
+        if (res && gameResult == null)
+            gameResult =
+                    (color == Color.WHITE
+                            ? EndGameType.STALEMATE_TO_WHITE
+                            : EndGameType.STALEMATE_TO_BLACK);
+        return res;
     }
 
     /** @return true если игроку с указанным цветом ставят шах */
     public boolean isCheck(Color color) {
-        Figure king = gs.board.findKing(color);
-        if (king == null) return false;
-        return Board.isAttackedCell(gs, king.getCurrentPosition(), color.inverse());
+        Cell kingCell = gs.board.findKingCell(color);
+        if (kingCell == null) return false;
+        return Board.isAttackedCell(gs, kingCell, color.inverse());
+    }
+
+    public enum EndGameType {
+        NOTHING,
+        DRAW_WITH_PEACE_MOVE_COUNT,
+        DRAW_WITH_REPETITIONS,
+        DRAW_WITH_NOT_ENOUGH_MATERIAL,
+        CHECKMATE_TO_WHITE,
+        CHECKMATE_TO_BLACK,
+        STALEMATE_TO_WHITE,
+        STALEMATE_TO_BLACK
     }
 }

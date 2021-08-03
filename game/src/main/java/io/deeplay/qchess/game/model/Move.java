@@ -39,10 +39,12 @@ public class Move {
         return turnInto;
     }
 
+    // TODO: удалить
     public void setTurnInto(final FigureType turnInto) {
         this.turnInto = turnInto;
     }
 
+    // TODO: удалить
     public MoveType getMoveType() {
         return moveType;
     }
@@ -55,19 +57,11 @@ public class Move {
         return to;
     }
 
-    /** @return полный хеш мува */
-    public int fullHashCode() {
-        return Objects.hash(moveType, from, to, turnInto);
-    }
-
-    /**
-     * Не хеширует фигуру для превращения, читать подробнее: {@link #turnInto}
-     *
-     * <p>Для получения полного хеша используйте {@link #fullHashCode}
-     */
+    /** Не хеширует фигуру для превращения, читать подробнее: {@link #turnInto} */
     @Override
     public int hashCode() {
-        return Objects.hash(moveType, from, to);
+        return (Cell.hashCodes[from.column][from.row] * 31 + Cell.hashCodes[to.column][to.row]) * 10
+                + moveType.ordinal();
     }
 
     @Override

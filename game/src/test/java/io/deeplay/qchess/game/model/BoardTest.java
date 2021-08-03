@@ -26,7 +26,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testFindKingCell() throws ChessException, ChessError {
+    public void testFindKingCell() throws ChessException {
         Figure whiteKing = new King(Color.WHITE, Cell.parse("c1"));
         Figure whitePawn = new Pawn(Color.WHITE, Cell.parse("a1"));
         Figure blackPawn = new Pawn(Color.BLACK, Cell.parse("e7"));
@@ -37,7 +37,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testSetGetFigures() throws ChessException, ChessError {
+    public void testSetGetFigures() throws ChessException {
         // нет фигур
         Assert.assertEquals(List.of(), board.getFigures(Color.WHITE));
         Assert.assertEquals(List.of(), board.getFigures(Color.BLACK));
@@ -56,10 +56,10 @@ public class BoardTest {
 
         Comparator<Figure> figureComparator =
                 (o1, o2) -> {
-                    int x1 = o1.getCurrentPosition().getColumn();
-                    int y1 = o1.getCurrentPosition().getRow();
-                    int x2 = o2.getCurrentPosition().getColumn();
-                    int y2 = o2.getCurrentPosition().getRow();
+                    int x1 = o1.getCurrentPosition().column;
+                    int y1 = o1.getCurrentPosition().row;
+                    int x2 = o2.getCurrentPosition().column;
+                    int y2 = o2.getCurrentPosition().row;
                     return x1 != x2 ? x1 - x2 : y1 - y2;
                 };
 
@@ -125,20 +125,20 @@ public class BoardTest {
     }
 
     @Test
-    public void testBoardStringConstructor1() throws ChessError, ChessException {
+    public void testBoardStringConstructor1() throws ChessError {
         String placement = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
         String expected = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq";
         gameSettings = new GameSettings(placement);
 
         History history = new History(gameSettings);
         history.addRecord(null);
-        Assert.assertEquals(expected, history.addRecord(null));
+        Assert.assertEquals(expected, history.getBoardToStringForsythEdwards());
     }
 
     @Test
     public void testBoardStringConstructor2() throws ChessError, ChessException {
         String placement = "4k3/ppp2ppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR w KQ a3";
+        String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQ a3";
         gameSettings = new GameSettings(placement);
 
         History history = new History(gameSettings);
@@ -146,6 +146,7 @@ public class BoardTest {
         Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
         gameSettings.board.moveFigure(move);
 
-        Assert.assertEquals(expected, history.addRecord(move));
+        history.addRecord(move);
+        Assert.assertEquals(expected, history.getBoardToStringForsythEdwards());
     }
 }
