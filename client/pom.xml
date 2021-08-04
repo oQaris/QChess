@@ -71,6 +71,12 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
+    <!-- LoBot -->
+    <dependency>
+      <artifactId>QChess-lobot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
   </dependencies>
 
   <properties>

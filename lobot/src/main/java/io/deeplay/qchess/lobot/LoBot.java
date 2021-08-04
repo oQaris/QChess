@@ -17,11 +17,9 @@ import java.util.Random;
 import java.util.UUID;
 
 public class LoBot extends RemotePlayer {
-    public static int COUNT = 0;
-    public static long TIME = 0;
-    public static long MAX = 0;
-    private final int MIN_INT = -9999;
-    private final int MAX_INT = 9999;
+    public static int STEP_COUNT = 0;
+    public static long FULL_TIME = 0;
+    public static long MAX_TIME = 0;
 
     private final EvaluateStrategy evaluateStrategy;
     private final int depth;
@@ -46,7 +44,7 @@ public class LoBot extends RemotePlayer {
     private ChessMoveFunc<Integer> getAlgorithm(TraversalAlgorithm traversal) {
         if (traversal == TraversalAlgorithm.MINIMAX) {
             return (from, to) ->
-                minimax(depth - 1, MIN_INT - 1, MAX_INT + 1, color.inverse());
+                minimax(depth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, color.inverse());
         } else if(traversal == TraversalAlgorithm.EXPECTIMAX) {
             return (from, to) -> expectimax(depth - 1, color.inverse());
         }
@@ -59,12 +57,12 @@ public class LoBot extends RemotePlayer {
         try {
             long startTime = System.currentTimeMillis();
 
-            Move move = runRoot(algorithm);
+            Move move = runRoot();
 
             long time = System.currentTimeMillis() - startTime;
-            TIME += time;
-            COUNT++;
-            if(time > MAX) MAX = time;
+            FULL_TIME += time;
+            STEP_COUNT++;
+            if(time > MAX_TIME) MAX_TIME = time;
 
             return move;
         } catch (ChessException e) {
@@ -73,20 +71,18 @@ public class LoBot extends RemotePlayer {
         return null;
     }
 
-    private Move runRoot(ChessMoveFunc<Integer> algorithm) throws ChessError, ChessException {
+    private Move runRoot() throws ChessError, ChessException {
 
         List<Move> moves = ms.getAllCorrectMoves(color);
         setTurnIntoAll(moves);
-        int bestMove = MIN_INT;
+        int bestMove = Integer.MIN_VALUE;
         List<Move> bestMoves = new ArrayList<>();
 
         for (Move move : moves) {
             int value = roomSettings.moveSystem.virtualMove(move, algorithm);
             if (value > bestMove) {
                 bestMove = value;
-                if (!bestMoves.isEmpty()) {
-                    bestMoves.clear();
-                }
+                bestMoves.clear();
                 bestMoves.add(move);
             } else if (value == bestMove) {
                 bestMoves.add(move);
@@ -96,97 +92,67 @@ public class LoBot extends RemotePlayer {
         return bestMoves.get((new Random()).nextInt(bestMoves.size()));
     }
 
-    private int expectimax(int depth, Color curColor) throws ChessError, ChessException {
+    private int expectimax(int depth, Color currentColor) throws ChessError, ChessException {
         if (depth == 0) {
             return evaluateStrategy.evaluateBoard(roomSettings.board, color);
         }
 
-        List<Move> moves = ms.getAllCorrectMoves(curColor);
+        List<Move> moves = ms.getAllCorrectMoves(currentColor);
 
-        if (moves.isEmpty() && egd.isCheck(curColor)) return color == curColor? MIN_INT : MAX_INT;
+        if (moves.isEmpty() && egd.isCheck(currentColor)) return color == currentColor? Integer.MIN_VALUE : Integer.MAX_VALUE;
         setTurnIntoAll(moves);
 
-        if (color == curColor) {
-            int bestMove = MIN_INT;
+        if (color == currentColor) {
+            int bestMoveValue = Integer.MIN_VALUE;
             for (Move move : moves) {
-                int cur = roomSettings.moveSystem.virtualMove(move, (from, to) ->
-                    expectimax(depth - 1, curColor.inverse()));
-                bestMove = Math.max(bestMove, cur);
+                int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+                    expectimax(depth - 1, currentColor.inverse()));
+                bestMoveValue = Math.max(bestMoveValue, currentValue);
             }
-            return bestMove;
+            return bestMoveValue;
         } else {
             int sum = 0;
             for (Move move : moves) {
-                int cur = roomSettings.moveSystem.virtualMove(move, (from, to) ->
-                    expectimax(depth - 1, curColor.inverse()));
-                sum += cur;
+                int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+                    expectimax(depth - 1, currentColor.inverse()));
+                sum += currentValue;
             }
             return (int) Math.round((sum * 1.0) / moves.size());
         }
     }
 
-    private int minimax(int depth, int alpha, int beta, Color curColor) throws ChessError, ChessException {
+    private int minimax(int depth, int alpha, int beta, Color currentColor) throws ChessError, ChessException {
         if (depth == 0) {
             return evaluateStrategy.evaluateBoard(roomSettings.board, color);
         }
 
-        List<Move> moves = ms.getAllCorrectMoves(curColor);
+        List<Move> moves = ms.getAllCorrectMoves(currentColor);
 
-        if (moves.isEmpty() && egd.isCheck(curColor)) return color == curColor? MIN_INT : MAX_INT;
+        if (moves.isEmpty() && egd.isCheck(currentColor)) return color == currentColor? Integer.MIN_VALUE : Integer.MAX_VALUE;
         setTurnIntoAll(moves);
 
-        int bestMove = color == curColor? MIN_INT / 2 : MAX_INT / 2;
+        int bestMoveValue = color == currentColor? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;
         for (Move move : moves) {
             int alphaForLambda = alpha;
             int betaForLambda = beta;
-            int cur = roomSettings.moveSystem.virtualMove(move, (from, to) ->
-                minimax(depth - 1, alphaForLambda, betaForLambda, curColor.inverse()));
+            int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+                minimax(depth - 1, alphaForLambda, betaForLambda, currentColor.inverse()));
 
-            if (color == curColor) {
-                bestMove = Math.max(bestMove, cur);
-                if (bestMove >= beta) {
-                    return bestMove;
+            if (color == currentColor) {
+                bestMoveValue = Math.max(bestMoveValue, currentValue);
+                if (bestMoveValue >= beta) {
+                    return bestMoveValue;
                 }
-                alpha = Math.max(alpha, bestMove);
+                alpha = Math.max(alpha, bestMoveValue);
             } else {
-                bestMove = Math.min(bestMove, cur);
-                if (bestMove <= alpha) {
-                    return bestMove;
+                bestMoveValue = Math.min(bestMoveValue, currentValue);
+                if (bestMoveValue <= alpha) {
+                    return bestMoveValue;
                 }
-                beta = Math.min(beta, bestMove);
+                beta = Math.min(beta, bestMoveValue);
             }
         }
-        return bestMove;
-
-        /*if (color == curColor) {
-            int bestMove = MIN_INT;
-            for (Move move : moves) {
-                int alphaForLambda = alpha;
-                int betaForLambda = beta;
-                int cur = roomSettings.moveSystem.virtualMove(move, (from, to) ->
-                        minimax(depth - 1, alphaForLambda, betaForLambda, curColor.inverse()));
-                bestMove = Math.max(bestMove, cur);
-                if (bestMove >= beta) {
-                    return bestMove;
-                }
-                alpha = Math.max(alpha, bestMove);
-            }
-            return bestMove;
-        } else {
-            int bestMove = MAX_INT;
-            for (Move move : moves) {
-                int alphaForLambda = alpha;
-                int betaForLambda = beta;
-                int cur = roomSettings.moveSystem.virtualMove(move, (from, to) ->
-                        minimax(depth - 1, alphaForLambda, betaForLambda, curColor.inverse()));
-                bestMove = Math.min(bestMove, cur);
-                if (bestMove <= alpha) {
-                    return bestMove;
-                }
-                beta = Math.min(beta, bestMove);
-            }
-            return bestMove;
-        }*/
+        return bestMoveValue;
     }
 
     private void setTurnIntoAll(List<Move> moves) {

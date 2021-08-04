@@ -19,18 +19,18 @@ import org.slf4j.LoggerFactory;
 
 public class LoBotTest {
     private static final Logger logger = LoggerFactory.getLogger(LoBotTest.class);
-    private static final int COUNT = 1000;
+    private static final int GAME_COUNT = 50;
 
     @Test
     public void testGame() {
         ExecutorService executor = Executors.newCachedThreadPool();
         long startTime = System.currentTimeMillis();
 
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 1; i <= GAME_COUNT; i++) {
             // executor.execute(
             //        () -> {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 4);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 2);
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -51,7 +51,7 @@ public class LoBotTest {
         Arrays.fill(results, 0);
         long startTime = System.currentTimeMillis();
 
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 1; i <= GAME_COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 2, TraversalAlgorithm.MINIMAX);
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
@@ -79,7 +79,7 @@ public class LoBotTest {
         Arrays.fill(results, 0);
         long startTime = System.currentTimeMillis();
 
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 1; i <= GAME_COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 2, TraversalAlgorithm.EXPECTIMAX);
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
@@ -109,9 +109,9 @@ public class LoBotTest {
         int avr = 0;
         int max = 0;
 
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 1; i <= GAME_COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 4);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 2);
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -128,20 +128,20 @@ public class LoBotTest {
             }
             logger.info("Game {} complete", i);
 
-            logger.info("MAX TIME: {}", LoBot.MAX);
-            logger.info("AVR TIME: {}", ((LoBot.TIME * 1.0) / LoBot.COUNT));
-            logger.info("COUNT: {}\n", LoBot.COUNT);
+            logger.info("MAX TIME: {}", LoBot.MAX_TIME);
+            logger.info("AVR TIME: {}", ((LoBot.FULL_TIME * 1.0) / LoBot.STEP_COUNT));
+            logger.info("COUNT: {}\n", LoBot.STEP_COUNT);
 
-            max += LoBot.MAX;
-            avr += ((LoBot.TIME * 1.0) / LoBot.COUNT);
-            LoBot.MAX = 0;
-            LoBot.TIME = 0;
-            LoBot.COUNT = 0;
+            max += LoBot.MAX_TIME;
+            avr += ((LoBot.FULL_TIME * 1.0) / LoBot.STEP_COUNT);
+            LoBot.MAX_TIME = 0;
+            LoBot.FULL_TIME = 0;
+            LoBot.STEP_COUNT = 0;
         }
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
         logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
-        logger.info("AVR MAX: {}", (max * 1.0 / COUNT));
-        logger.info("AVR AVR: {}", (avr * 1.0 / COUNT));
+        logger.info("AVR MAX: {}", (max * 1.0 / GAME_COUNT));
+        logger.info("AVR AVR: {}", (avr * 1.0 / GAME_COUNT));
     }
 
     private int getEndGameType(EndGameType egt) {
