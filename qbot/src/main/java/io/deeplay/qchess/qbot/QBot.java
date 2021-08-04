@@ -9,12 +9,14 @@ import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.qbot.strategy.IStrategy;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
+import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class QBot extends RemotePlayer {
     private static final Logger logger = LoggerFactory.getLogger(QBot.class);
@@ -121,7 +123,7 @@ public class QBot extends RemotePlayer {
                 value = Math.max(value, minimax(depth - 1, alpha, beta, false));
                 ms.undoMove();
                 alpha = Math.max(alpha, value);
-                if (value >= beta) break;
+                //if (value >= beta) break;
             }
         } else {
             value = Integer.MAX_VALUE;
@@ -130,10 +132,11 @@ public class QBot extends RemotePlayer {
                 value = Math.min(value, minimax(depth - 1, alpha, beta, true));
                 ms.undoMove();
                 beta = Math.min(beta, value);
-                if (value <= alpha) break;
+                //if (value <= alpha) break;
             }
         }
-        return value;
+        // отнимаем грубину, чтоб из ходов с одинаковыми оценками выбирался тот, который достигается за меньшее число ходов
+        return value - depth;
     }
 
     /**
