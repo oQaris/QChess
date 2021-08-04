@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 class BotsTest {
     private static final Logger logger = LoggerFactory.getLogger(BotsTest.class);
 
-    private static final int COUNT = 10000;
+    private static final int COUNT = 10;
     private static final Map<EndGameType, Integer> gameResultsWhite = initGameResults();
     private static final Map<EndGameType, Integer> gameResultsBlack = initGameResults();
     private static final AtomicLong meanMedianFirst = new AtomicLong(0);
