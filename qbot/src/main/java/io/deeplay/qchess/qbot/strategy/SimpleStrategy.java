@@ -10,7 +10,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SimpleStrategy implements IStrategy {
+/** Простая стратегия оценки доски, учитывающая количество и ценность фигур. */
+public class SimpleStrategy extends Strategy {
     private static final Logger logger = LoggerFactory.getLogger(SimpleStrategy.class);
     private static final Map<FigureType, Integer> grades;
 

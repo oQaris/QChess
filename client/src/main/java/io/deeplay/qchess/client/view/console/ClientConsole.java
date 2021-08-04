@@ -19,8 +19,7 @@ public class ClientConsole implements IClientView {
             new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
     private final ViewBoard board = new ViewBoard();
 
-    public ClientConsole() {
-    }
+    public ClientConsole() {}
 
     @Override
     public void close() throws IOException {

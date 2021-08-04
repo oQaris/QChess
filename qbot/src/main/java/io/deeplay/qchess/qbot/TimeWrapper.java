@@ -27,14 +27,17 @@ public class TimeWrapper extends RemotePlayer {
         return result;
     }
 
+    /** @return Среднее арифметическое времени хода */
     public double getMean() {
         return (double) times.stream().mapToLong(Long::longValue).sum() / times.size();
     }
 
+    /** @return Медиану времени хода */
     public long getMedian() {
         return times.stream().sorted().skip(times.size() / 2).findFirst().orElse(0L);
     }
 
+    /** @return Моду времени хода */
     public long getMode() {
         final Optional<Entry<Long, Long>> maxInFrequency =
                 times.stream()
@@ -45,14 +48,17 @@ public class TimeWrapper extends RemotePlayer {
         return maxInFrequency.isPresent() ? maxInFrequency.get().getKey() : 0L;
     }
 
+    /** @return Максимальное временя хода */
     public long getMax() {
         return times.stream().max(Long::compare).orElse(0L);
     }
 
+    /** @return Минимальное временя хода */
     public long getMin() {
         return times.stream().min(Long::compare).orElse(0L);
     }
 
+    /** Выводит на консоль схематичный график времени обдумывания каждого хода */
     public void printGraph() {
         final long min = getMin();
         for (Long time : times) {

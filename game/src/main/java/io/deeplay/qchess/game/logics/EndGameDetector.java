@@ -35,28 +35,6 @@ public class EndGameDetector {
         return gameResult;
     }
 
-    public void resetGameResult() {
-        gameResult = EndGameType.NOTHING;
-    }
-
-    //    * @return результат игры для цвета color
-    //    public EndGameType updateGameResult(Color color) {
-    //        return updateGameResult(gs.moveSystem.getAllCorrectMovesSilence(color), color);
-    //    }
-
-    //    /**
-    //     * @param allMoves все доступные ходы цвета color
-    //     * @return результат игры для цвета color, у которого все доступные ходы в allMoves
-    //    public EndGameType updateGameResult(List<Move> allMoves, Color color) {
-    //        boolean isStalemate = allMoves.isEmpty();
-    //        if (isStalemate) {
-    //            gameResult = isCheck(color) ? EndGameType.CHECKMATE : EndGameType.STALEMATE;
-    //        } else {
-    //            isDraw();
-    //        }
-    //        return gameResult;
-    //    }*/
-
     /** @return true, если это не ничья */
     public boolean isDraw() {
         boolean isDraw = false;

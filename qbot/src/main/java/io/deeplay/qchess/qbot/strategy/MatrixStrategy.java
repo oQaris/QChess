@@ -12,7 +12,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MatrixStrategy implements IStrategy {
+/** Матричная стратегия оценки доски, учитывает положение фигур на доске. */
+public class MatrixStrategy extends Strategy {
     private static final Logger logger = LoggerFactory.getLogger(MatrixStrategy.class);
     private static final Map<FigureType, Integer[][]> grades;
     private static final Integer[][] pawnEval = {

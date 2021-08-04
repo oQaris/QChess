@@ -13,13 +13,13 @@ public class Main {
                 "Введите \"s\", чтобы запустить сервер или \"c\", чтобы запустить клиент");
 
         switch (new Scanner(System.in).nextLine()) {
-            // Сервер
+                // Сервер
             case "s", "-s", "server" -> {
                 IServerView view = new ServerConsole();
                 view.startView();
                 view.close();
             }
-            // Клиент
+                // Клиент
             case "c", "-c", "client" -> {
                 IClientView view = new ClientGUI();
                 view.startView();

@@ -92,7 +92,7 @@ public class GameService {
             case USER -> new RemotePlayer(gs, color, "user");
             case EASYBOT -> new RandomBot(gs, color);
             case MEDIUMBOT -> new AttackBot(gs, color);
-            // TODO: использовать своего бота
+                // TODO: использовать своего бота
             case HARDBOT -> NNNBotFactory.getNNNBot(gs, color);
         };
     }
@@ -152,9 +152,7 @@ public class GameService {
         return null;
     }
 
-    /**
-     * Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть
-     */
+    /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
     public static void botMove() {
         try {
             Move move = GameDAO.getGame().getCurrentPlayerToMove().getNextMove();

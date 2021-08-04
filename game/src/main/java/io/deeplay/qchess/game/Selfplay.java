@@ -8,7 +8,6 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
@@ -23,9 +22,7 @@ public class Selfplay {
     private final GameSettings roomSettings;
     private Player currentPlayerToMove;
 
-    /**
-     * @throws ChessError если заполнение доски некорректное
-     */
+    /** @throws ChessError если заполнение доски некорректное */
     public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer)
             throws ChessError {
         if (firstPlayer.getColor() == secondPlayer.getColor())
@@ -86,13 +83,11 @@ public class Selfplay {
         }
     }
 
-    /**
-     * @deprecated Можно запускать только один раз. Используется только для проверки игры
-     */
+    /** @deprecated Можно запускать только один раз. Используется только для проверки игры */
     @Deprecated
     public void run() throws ChessError {
-        while (roomSettings.endGameDetector.getGameResult()
-                == EndGameDetector.EndGameType.NOTHING) {
+        EndGameDetector egd = roomSettings.endGameDetector;
+        while (egd.getGameResult() == EndGameDetector.EndGameType.NOTHING) {
             // TODO: получать Action, сделать предложение ничьи и возможность сдаться
             Move move = currentPlayerToMove.getNextMove();
 
@@ -104,10 +99,9 @@ public class Selfplay {
                 // TODO: отправлять ответ GameResponse, что ход некорректный
                 throw new IllegalArgumentException("некорректный ход");
             }
-            roomSettings.endGameDetector.updateEndGameStatus();
+            egd.updateEndGameStatus();
         }
-        Color endColor = currentPlayerToMove.getColor();
-        switch (roomSettings.endGameDetector.getGameResult()) {
+        switch (egd.getGameResult()) {
             case NOTHING -> throw new ChessError(GAME_RESULT_ERROR);
             case CHECKMATE_TO_WHITE -> logger.info("Мат белым");
             case CHECKMATE_TO_BLACK -> logger.info("Мат черным");
@@ -125,9 +119,7 @@ public class Selfplay {
         // TODO: конец игры, отправлять GameResponse
     }
 
-    /**
-     * @return удаленная фигура или null, если клетка была пуста
-     */
+    /** @return удаленная фигура или null, если клетка была пуста */
     private Figure tryMove(Move move) throws ChessError {
         try {
             Figure removedFigure = roomSettings.moveSystem.move(move);

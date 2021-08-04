@@ -22,11 +22,8 @@ import org.slf4j.LoggerFactory;
 public class Board {
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
 
-    /**
-     * @deprecated Плохо для гибкости
-     */
-    @Deprecated
-    public static int STD_BOARD_SIZE = 8;
+    /** @deprecated Плохо для гибкости */
+    @Deprecated public static int STD_BOARD_SIZE = 8;
 
     public final int boardSize;
     private final Figure[][] cells;
@@ -78,9 +75,7 @@ public class Board {
         }
     }
 
-    /**
-     * Создает копию доски, включая копии фигур на ней
-     */
+    /** Создает копию доски, включая копии фигур на ней */
     public Board(Board board) {
         boardSize = board.boardSize;
         cells = new Figure[boardSize][boardSize];
@@ -104,9 +99,7 @@ public class Board {
             }
     }
 
-    /**
-     * @return true, если клетка cell атакуется цветом color
-     */
+    /** @return true, если клетка cell атакуется цветом color */
     public static boolean isAttackedCell(GameSettings settings, Cell cell, Color color) {
         for (Figure f : settings.board.getFigures(color))
             if (f.isAttackedCell(settings, cell)) return true;
@@ -175,25 +168,23 @@ public class Board {
         logger.debug("Начато заполнение {} доски", fillingType);
         switch (fillingType) {
             case STANDARD -> fillBoardForFirstLine(
-                    new FigureType[]{
-                            FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
-                            FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
-                            FigureType.KNIGHT, FigureType.ROOK
+                    new FigureType[] {
+                        FigureType.ROOK, FigureType.KNIGHT, FigureType.BISHOP,
+                        FigureType.QUEEN, FigureType.KING, FigureType.BISHOP,
+                        FigureType.KNIGHT, FigureType.ROOK
                     });
             case CHESS960 -> fillBoardForFirstLine(
                     // todo Добавить рандома
-                    new FigureType[]{
-                            FigureType.KNIGHT, FigureType.QUEEN, FigureType.ROOK,
-                            FigureType.KING, FigureType.BISHOP, FigureType.ROOK,
-                            FigureType.KNIGHT, FigureType.BISHOP
+                    new FigureType[] {
+                        FigureType.KNIGHT, FigureType.QUEEN, FigureType.ROOK,
+                        FigureType.KING, FigureType.BISHOP, FigureType.ROOK,
+                        FigureType.KNIGHT, FigureType.BISHOP
                     });
         }
         logger.debug("Доска {} инициализирована", fillingType);
     }
 
-    /**
-     * @return true, если клетка принадлежит доске
-     */
+    /** @return true, если клетка принадлежит доске */
     @Deprecated
     public boolean isCorrectCell(int column, int row) {
         return column >= 0 && row >= 0 && column < boardSize && row < boardSize;
@@ -214,9 +205,7 @@ public class Board {
         }
     }
 
-    /**
-     * Устанавливает фигуру на доску
-     */
+    /** Устанавливает фигуру на доску */
     @Deprecated
     public void setFigure(Figure figure) throws ChessException {
         Cell position = figure.getCurrentPosition();
@@ -226,7 +215,7 @@ public class Board {
         }
         cells[position.row][position.column] = figure;
 
-        int i = position.row * 8 + position.column;
+        int i = position.row * STD_BOARD_SIZE + position.column;
         cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
         cellsType[i] = figure.figureType.type;
 
@@ -237,9 +226,7 @@ public class Board {
         logger.trace("Фигура {} установлена на доску", figure);
     }
 
-    /**
-     * Устанавливает фигуру на доску БЕЗ ПРОВЕРОК
-     */
+    /** Устанавливает фигуру на доску БЕЗ ПРОВЕРОК */
     public void setFigureUgly(Figure figure) throws ArrayIndexOutOfBoundsException {
         Cell position = figure.getCurrentPosition();
         cells[position.row][position.column] = figure;
@@ -267,9 +254,7 @@ public class Board {
         return list;
     }
 
-    /**
-     * @return все фигуры на доске
-     */
+    /** @return все фигуры на доске */
     public List<Figure> getAllFigures() {
         List<Figure> list = new ArrayList<>(32);
         for (Figure[] figures : cells)
@@ -304,9 +289,7 @@ public class Board {
         return color == Color.WHITE ? whiteKing : blackKing;
     }
 
-    /**
-     * 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе
-     */
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
     public int isCastlingPossible(Color color) throws ChessError {
         Figure king = findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
@@ -449,9 +432,7 @@ public class Board {
         return old;
     }
 
-    /**
-     * @return true, если клетка лежит на доске и она пустая, иначе false
-     */
+    /** @return true, если клетка лежит на доске и она пустая, иначе false */
     public boolean isEmptyCell(Cell cell) {
         try {
             return cells[cell.row][cell.column] == null;
@@ -501,9 +482,7 @@ public class Board {
         return cellsTypeHash;
     }
 
-    /**
-     * @return копия состояния типов фигур на доске
-     */
+    /** @return копия состояния типов фигур на доске */
     public byte[] fastSnapshot() {
         return cellsType.clone();
     }

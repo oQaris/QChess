@@ -37,8 +37,6 @@ class BotsTest {
     private static final AtomicLong meanMedianFirst = new AtomicLong(0);
     private static final AtomicLong meanMedianSecond = new AtomicLong(0);
     private static final AtomicInteger doneTasks = new AtomicInteger(0);
-    private static final AtomicLong countNode = new AtomicLong(0);
-    private static final AtomicLong countAB = new AtomicLong(0);
 
     private static Map<EndGameType, Integer> initGameResults() {
         return new ConcurrentHashMap<>(
@@ -98,8 +96,6 @@ class BotsTest {
                 gameResultsBlack.get(STALEMATE_TO_BLACK) + gameResultsWhite.get(STALEMATE_TO_WHITE),
                 gameResultsBlack.get(STALEMATE_TO_WHITE)
                         + gameResultsWhite.get(STALEMATE_TO_BLACK));
-        /*logger.warn("Всего нодов: {}", countNode.get());
-        logger.warn("Всего отсечений: {}", countAB.get());*/
         logger.warn("Mean Median firstPlayer: {}", meanMedianFirst.get());
         logger.warn("Mean Median secondPlayer: {}", meanMedianSecond.get());
         Assertions.assertTrue(true);
@@ -118,17 +114,14 @@ class BotsTest {
         public void run() {
             GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
             TimeWrapper firstPlayer =
-                    new TimeWrapper(new QMinimaxBot(gs, myColor, 5, new PestoStrategy()));
+                    new TimeWrapper(new QMinimaxBot(gs, myColor, 3, new PestoStrategy()));
             TimeWrapper secondPlayer = new TimeWrapper(new RandomBot(gs, myColor.inverse()));
-            // Player secondPlayer = NNNBotFactory.getNNNBot(gs, myColor.inverse());
             try {
                 Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();
             } catch (ChessError e) {
                 e.printStackTrace();
             }
-            /*countNode.addAndGet(firstPlayer.countNode);
-            countAB.addAndGet(firstPlayer.countAB);*/
             resultsOutput.computeIfPresent(gs.endGameDetector.getGameResult(), (k, v) -> v + 1);
             meanMedianFirst.addAndGet(firstPlayer.getMedian() / COUNT);
             meanMedianSecond.addAndGet(secondPlayer.getMedian() / COUNT);
@@ -139,13 +132,13 @@ class BotsTest {
             logger.info("Mode: " + firstPlayer.getMode());
             logger.info("Max: " + firstPlayer.getMax());
             logger.info("Min: " + firstPlayer.getMin());
-            firstPlayer.printGraph();
-            /*logger.info("== Second ==");
+            // firstPlayer.printGraph();
+            logger.info("== Second ==");
             logger.info("Mean: " + secondPlayer.getMean());
             logger.info("Median: " + secondPlayer.getMedian());
             logger.info("Mode: " + secondPlayer.getMode());
             logger.info("Max: " + secondPlayer.getMax());
-            logger.info("Min: " + secondPlayer.getMin());*/
+            logger.info("Min: " + secondPlayer.getMin());
         }
     }
 }
