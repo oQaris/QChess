@@ -152,7 +152,9 @@ public class GameService {
         return null;
     }
 
-    /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
+    /**
+     * Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть
+     */
     public static void botMove() {
         try {
             Move move = GameDAO.getGame().getCurrentPlayerToMove().getNextMove();

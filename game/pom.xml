@@ -2,16 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>io.deeplay</groupId>
-    <artifactId>QChess</artifactId>
-    <version>0.0.1</version>
-  </parent>
-
   <artifactId>QChess-game</artifactId>
-  <version>0.0.1</version>
 
   <build>
     <plugins>
@@ -61,22 +52,31 @@
     <dependency>
       <artifactId>logback-classic</artifactId>
       <groupId>ch.qos.logback</groupId>
-      <version>1.2.3</version>
       <scope>test</scope>
+      <version>1.2.3</version>
     </dependency>
     <!-- Gson -->
     <dependency>
-      <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
+      <groupId>com.google.code.gson</groupId>
       <version>2.8.7</version>
     </dependency>
   </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>QChess</artifactId>
+    <groupId>io.deeplay</groupId>
+    <version>0.0.1</version>
+  </parent>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
     <maven.test.skip>false</maven.test.skip>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <version>0.0.1</version>
 
 </project>

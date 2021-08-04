@@ -13,33 +13,23 @@ public class GameSettings {
     public final History history;
     public final int boardSize;
     public final Board.BoardFilling boardType;
-    public final String boardFillingForsythEdwards;
-
-    public GameSettings(int boardSize, Board.BoardFilling boardType) {
-        this.boardSize = boardSize;
-        this.boardType = boardType;
-        this.boardFillingForsythEdwards = null;
-        board = new Board(boardSize, boardType);
-        history = new History(this);
-        endGameDetector = new EndGameDetector(this);
-        moveSystem = new MoveSystem(this);
-    }
+    public final String fen;
 
     public GameSettings(Board.BoardFilling boardType) {
         this.boardSize = Board.STD_BOARD_SIZE;
         this.boardType = boardType;
-        this.boardFillingForsythEdwards = null;
+        this.fen = null;
         board = new Board(boardType);
         history = new History(this);
         endGameDetector = new EndGameDetector(this);
         moveSystem = new MoveSystem(this);
     }
 
-    public GameSettings(String boardFillingForsythEdwards) throws ChessError {
+    public GameSettings(String fen) throws ChessError {
         this.boardSize = 0;
         this.boardType = null;
-        this.boardFillingForsythEdwards = boardFillingForsythEdwards;
-        board = new Board(boardFillingForsythEdwards);
+        this.fen = fen;
+        board = new Board(fen);
         history = new History(this);
         endGameDetector = new EndGameDetector(this);
         moveSystem = new MoveSystem(this);
@@ -53,12 +43,10 @@ public class GameSettings {
         this.history = new History(gs.history, this);
         this.boardSize = gs.boardSize;
         this.boardType = gs.boardType;
-        this.boardFillingForsythEdwards = gs.boardFillingForsythEdwards;
+        this.fen = gs.fen;
     }
 
     public GameSettings newWithTheSameSettings() throws ChessError {
-        return boardType != null
-                ? new GameSettings(boardSize, boardType)
-                : new GameSettings(boardFillingForsythEdwards);
+        return boardType != null ? new GameSettings(boardType) : new GameSettings(fen);
     }
 }

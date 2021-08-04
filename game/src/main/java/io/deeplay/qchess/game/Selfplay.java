@@ -22,11 +22,14 @@ public class Selfplay {
     private final Player firstPlayer;
     private final GameSettings roomSettings;
     private Player currentPlayerToMove;
-    private boolean isDraw;
 
-    /** @throws ChessError если заполнение доски некорректное */
+    /**
+     * @throws ChessError если заполнение доски некорректное
+     */
     public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer)
             throws ChessError {
+        if (firstPlayer.getColor() == secondPlayer.getColor())
+            throw new IllegalArgumentException("Должны быть разные цвета!");
         this.roomSettings = roomSettings;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
@@ -50,7 +53,6 @@ public class Selfplay {
     public boolean move(Move move) throws ChessError {
         if (isCorrectPlayerColor(move) && roomSettings.moveSystem.isCorrectMove(move)) {
             tryMove(move);
-            isDraw = roomSettings.endGameDetector.isDraw();
             currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
         } else {
             return false;
@@ -84,29 +86,33 @@ public class Selfplay {
         }
     }
 
-    /** @deprecated Можно запускать только один раз. Используется только для проверки игры */
+    /**
+     * @deprecated Можно запускать только один раз. Используется только для проверки игры
+     */
     @Deprecated
     public void run() throws ChessError {
-        while (!roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor())
-                && !isDraw) {
+        while (roomSettings.endGameDetector.getGameResult()
+                == EndGameDetector.EndGameType.NOTHING) {
             // TODO: получать Action, сделать предложение ничьи и возможность сдаться
             Move move = currentPlayerToMove.getNextMove();
-            logger.debug("От игрока пришел ход: {}", move);
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 tryMove(move);
-                isDraw = roomSettings.endGameDetector.isDraw();
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ GameResponse, что ход некорректный
+                throw new IllegalArgumentException("некорректный ход");
             }
+            roomSettings.endGameDetector.updateEndGameStatus();
         }
         Color endColor = currentPlayerToMove.getColor();
-        switch (roomSettings.endGameDetector.updateGameResult(endColor)) {
+        switch (roomSettings.endGameDetector.getGameResult()) {
             case NOTHING -> throw new ChessError(GAME_RESULT_ERROR);
-            case CHECKMATE -> logger.info("Мат: {}", endColor == Color.WHITE ? "белым" : "черным");
-            case STALEMATE -> logger.info("Пат: {}", endColor == Color.WHITE ? "белым" : "черным");
+            case CHECKMATE_TO_WHITE -> logger.info("Мат белым");
+            case CHECKMATE_TO_BLACK -> logger.info("Мат черным");
+            case STALEMATE_TO_WHITE -> logger.info("Пат белым");
+            case STALEMATE_TO_BLACK -> logger.info("Пат черным");
             case DRAW_WITH_REPETITIONS -> logger.info(
                     "Ничья: {} повторений позиций доски", EndGameDetector.END_REPETITIONS_COUNT);
             case DRAW_WITH_NOT_ENOUGH_MATERIAL -> logger.info(
@@ -119,10 +125,11 @@ public class Selfplay {
         // TODO: конец игры, отправлять GameResponse
     }
 
-    /** @return удаленная фигура или null, если клетка была пуста */
+    /**
+     * @return удаленная фигура или null, если клетка была пуста
+     */
     private Figure tryMove(Move move) throws ChessError {
         try {
-            roomSettings.endGameDetector.resetGameResult();
             Figure removedFigure = roomSettings.moveSystem.move(move);
             if (logger.isDebugEnabled()) {
                 logger.debug(

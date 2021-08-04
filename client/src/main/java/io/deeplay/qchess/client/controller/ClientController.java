@@ -21,12 +21,15 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.Set;
 
-/** Нужен для связи: View <-> Controller <-> Model */
+/**
+ * Нужен для связи: View <-> Controller <-> Model
+ */
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
     private static IClientView view;
 
-    private ClientController() {}
+    private ClientController() {
+    }
 
     /**
      * Устанавливает окружение клиента
@@ -41,7 +44,9 @@ public class ClientController {
         ClientController.view = view;
     }
 
-    /** Отправляет сообщение View, если view и message не null */
+    /**
+     * Отправляет сообщение View, если view и message не null
+     */
     public static void print(String message) {
         if (view != null && message != null) view.print(message);
     }
@@ -50,7 +55,7 @@ public class ClientController {
      * Подключается к серверу
      *
      * @throws ClientException если клиент уже подключен к серверу или возникла ошибка при
-     *     подключении
+     *                         подключении
      */
     public static void connect(String ip, int port) throws ClientException {
         client.connect(ip, port);
@@ -66,12 +71,16 @@ public class ClientController {
         view.disconnect(reason);
     }
 
-    /** @return true, если клиент подключен к серверу, false иначе */
+    /**
+     * @return true, если клиент подключен к серверу, false иначе
+     */
     public static boolean isConnected() {
         return client.isConnected();
     }
 
-    /** @return порт сервера, к которому подключен клиент */
+    /**
+     * @return порт сервера, к которому подключен клиент
+     */
     public static int getPort() {
         return client.getPort();
     }
@@ -85,7 +94,9 @@ public class ClientController {
         client.setPort(port);
     }
 
-    /** @return IP сервера, к которому подключен клиент */
+    /**
+     * @return IP сервера, к которому подключен клиент
+     */
     public static String getIp() {
         return client.getIp();
     }
@@ -127,19 +138,23 @@ public class ClientController {
         client.sendIfNotNull(json);
     }
 
-    /** @return все возможные ходы в удобной форме для View */
+    /**
+     * @return все возможные ходы в удобной форме для View
+     */
     public static Set<ViewCell> getAllMoves(int row, int column) {
         return GameGUIAdapter.getAllMoves(row, column);
     }
 
-    /** @return true, если фигура на указанной клетке isWhite */
+    /**
+     * @return true, если фигура на указанной клетке isWhite
+     */
     public static boolean checkFigure(int row, int column, boolean isWhite) {
         return GameGUIAdapter.checkFigure(row, column, isWhite);
     }
 
     /**
      * @return фигура на указанной клетке в удобной форме для View или null, если фигуры на
-     *     указанной клетке нет
+     * указанной клетке нет
      */
     public static ViewFigure getFigure(int row, int column) {
         return GameGUIAdapter.getFigure(row, column);
@@ -193,50 +208,66 @@ public class ClientController {
         return null;
     }
 
-    /** @return true, если сейчас ход клиента */
+    /**
+     * @return true, если сейчас ход клиента
+     */
     public static boolean isMyStep() {
         return GameDAO.isGameStarted()
                 && GameDAO.getGame().getCurrentPlayerToMove().getColor() == GameDAO.getMyColor();
     }
 
-    /** Перерисовывает доску */
+    /**
+     * Перерисовывает доску
+     */
     public static void drawBoard() {
         view.drawBoard();
     }
 
-    /** Выбирает тип соперника */
+    /**
+     * Выбирает тип соперника
+     */
     public static void chooseEnemy(PlayerType playerType) {
         GameService.chooseEnemy(playerType);
     }
 
-    /** Выбирает КЕМ играть */
+    /**
+     * Выбирает КЕМ играть
+     */
     public static void chooseMyType(PlayerType playerType) {
         GameDAO.setMyType(playerType);
     }
 
-    /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
+    /**
+     * Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть
+     */
     public static void botMove() {
         GameService.botMove();
     }
 
-    /** Закрывает View клиента и отключается от сервера */
+    /**
+     * Закрывает View клиента и отключается от сервера
+     */
     public static void closeGame(String reason) {
         view.closeGame(reason);
     }
 
-    /** Выводит окно с сообщением */
+    /**
+     * Выводит окно с сообщением
+     */
     public static void showMessage(String message) {
         view.showMessage(message);
     }
 
-    /** Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет) */
+    /**
+     * Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет)
+     */
     public static void resetMyColorOnBoard(Color color) {
         view.changeMyColorOnBoard(color == Color.WHITE);
     }
 
     /**
      * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
-     *     было разорвано
+     *                         было разорвано
      */
     public static void sendFindGameRequest() throws ClientException {
         client.sendIfNotNull(
@@ -259,12 +290,16 @@ public class ClientController {
         };
     }
 
-    /** @return true, если королю цвета color поставили шах */
+    /**
+     * @return true, если королю цвета color поставили шах
+     */
     public static boolean isCheck(boolean color) {
         return GameGUIAdapter.isCheck(color);
     }
 
-    /** @return клетка короля цвета color */
+    /**
+     * @return клетка короля цвета color
+     */
     public static ViewCell getKingCell(boolean color) {
         return GameGUIAdapter.getKingCell(color);
     }

@@ -53,7 +53,7 @@ public class MoveSystem {
 
             Figure removedFigure =
                     switch (move.getMoveType()) {
-                            // взятие на проходе
+                        // взятие на проходе
                         case EN_PASSANT -> {
                             Cell enemyPawn = history.getLastMove().getTo();
                             if (useHistoryRecord) {
@@ -64,7 +64,7 @@ public class MoveSystem {
                                 yield board.removeFigureUglyWithoutRecalcHash(enemyPawn);
                             }
                         }
-                            // превращение пешки
+                        // превращение пешки
                         case TURN_INTO, TURN_INTO_ATTACK -> {
                             FigureType turnIntoType = move.getTurnInto();
                             Figure turnIntoFigure =
@@ -79,7 +79,7 @@ public class MoveSystem {
                             }
                             yield removed;
                         }
-                            // рокировка
+                        // рокировка
                         case SHORT_CASTLING -> {
                             Cell from = move.getFrom().createAdd(new Cell(3, 0));
                             Cell to = move.getFrom().createAdd(new Cell(1, 0));
@@ -146,7 +146,7 @@ public class MoveSystem {
             figureThatMoved.setWasMoved(hasMoved);
 
             switch (move.getMoveType()) {
-                    // взятие на проходе
+                // взятие на проходе
                 case EN_PASSANT -> {
                     Pawn pawn =
                             new Pawn(
@@ -156,7 +156,7 @@ public class MoveSystem {
                     if (useHistoryRecord) board.setFigureUgly(pawn);
                     else board.setFigureUglyWithoutRecalcHash(pawn);
                 }
-                    // превращение пешки
+                // превращение пешки
                 case TURN_INTO, TURN_INTO_ATTACK -> {
                     Pawn pawn = new Pawn(figureThatMoved.getColor(), move.getFrom());
                     pawn.setWasMoved(true);
@@ -169,7 +169,7 @@ public class MoveSystem {
                             board.setFigureUglyWithoutRecalcHash(removedFigure);
                     }
                 }
-                    // рокировка
+                // рокировка
                 case SHORT_CASTLING -> {
                     Cell to = move.getFrom().createAdd(new Cell(3, 0));
                     Cell from = move.getFrom().createAdd(new Cell(1, 0));
@@ -222,8 +222,9 @@ public class MoveSystem {
      * @param func Функция, выполняемая после виртуального хода.
      * @return Результат функции func.
      * @throws ChessException Если выбрасывается в функции func.
-     * @throws ChessError Если выбрасывается в функции func.
+     * @throws ChessError     Если выбрасывается в функции func.
      */
+    @Deprecated
     public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
         logger.trace("Виртуальный ход {}", move);
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
