@@ -7,10 +7,9 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,10 +83,10 @@ public abstract class Figure {
     }
 
     /** @return все возможные ходы фигуры, не учитывая шаха */
-    public abstract Set<Move> getAllMoves(GameSettings settings);
+    public abstract List<Move> getAllMoves(GameSettings settings);
 
-    protected Set<Move> rayTrace(Board board, List<Cell> directions) {
-        Set<Move> result = new HashSet<>();
+    protected List<Move> rayTrace(Board board, List<Cell> directions) {
+        List<Move> result = new LinkedList<>();
         for (Cell shift : directions) {
             Cell cord = position.createAdd(shift);
             while (board.isEmptyCell(cord)) {
@@ -105,13 +104,14 @@ public abstract class Figure {
         return color;
     }
 
-    protected Set<Move> stepForEach(Board board, List<Cell> moves) {
+    protected List<Move> stepForEach(Board board, List<Cell> moves) {
         return stepForEachWithNewCell(board, moves, false);
     }
 
-    protected Set<Move> stepForEachWithNewCell(Board board, List<Cell> moves, boolean withNewCell) {
+    protected List<Move> stepForEachWithNewCell(
+            Board board, List<Cell> moves, boolean withNewCell) {
         Cell newCell = withNewCell ? new Cell(position.column, position.row) : position;
-        Set<Move> result = new HashSet<>();
+        List<Move> result = new LinkedList<>();
         for (Cell shift : moves) {
             Cell cord = position.createAdd(shift);
             if (board.isEmptyCell(cord)) result.add(new Move(MoveType.QUIET_MOVE, newCell, cord));

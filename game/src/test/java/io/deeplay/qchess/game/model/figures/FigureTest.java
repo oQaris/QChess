@@ -8,8 +8,8 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,11 +18,28 @@ public class FigureTest {
     private GameSettings gameSettings;
     private Board board;
 
-    private static Set<Move> toMoveSet(Cell from, MoveType type, String... tos)
-            throws ChessException {
-        Set<Move> result = new HashSet<>(tos.length);
+    private static List<Move> toMoveList(Cell from, MoveType type, String... tos) {
+        List<Move> result = new ArrayList<>(tos.length);
         for (String to : tos) result.add(new Move(type, from, Cell.parse(to)));
+        sort(result);
         return result;
+    }
+
+    private static List<Move> sort(List<Move> moves) {
+        moves.sort(
+                (m1, m2) -> {
+                    if (m1.getFrom().column == m2.getFrom().column) {
+                        if (m1.getFrom().row == m2.getFrom().row) {
+                            if (m1.getTo().column == m2.getTo().column) {
+                                return m1.getTo().row - m2.getTo().row;
+                            }
+                            return m1.getTo().column - m2.getTo().column;
+                        }
+                        return m1.getFrom().row - m2.getFrom().row;
+                    }
+                    return m1.getFrom().column - m2.getFrom().column;
+                });
+        return moves;
     }
 
     @Before
@@ -38,7 +55,7 @@ public class FigureTest {
         Figure bishop1 = new Bishop(Color.BLACK, from1);
         board.setFigure(bishop1);
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         from1,
                         MoveType.QUIET_MOVE,
                         "D8",
@@ -50,14 +67,14 @@ public class FigureTest {
                         "B4",
                         "H4",
                         "A3"),
-                bishop1.getAllMoves(gameSettings));
+                sort(bishop1.getAllMoves(gameSettings)));
 
         // --- Белый --- //
         Cell from2 = Cell.parse("b3");
         Figure bishop2 = new Bishop(Color.WHITE, from2);
         board.setFigure(bishop2);
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         from2,
                         MoveType.QUIET_MOVE,
                         "A4",
@@ -69,15 +86,15 @@ public class FigureTest {
                         "E6",
                         "F7",
                         "G8"),
-                bishop2.getAllMoves(gameSettings));
+                sort(bishop2.getAllMoves(gameSettings)));
 
         // --- Угловой --- //
         Cell from3 = Cell.parse("h1");
         Figure bishop3 = new Bishop(Color.BLACK, from3);
         board.setFigure(bishop3);
         Assert.assertEquals(
-                toMoveSet(from3, MoveType.QUIET_MOVE, "A8", "B7", "C6", "D5", "E4", "F3", "G2"),
-                bishop3.getAllMoves(gameSettings));
+                toMoveList(from3, MoveType.QUIET_MOVE, "A8", "B7", "C6", "D5", "E4", "F3", "G2"),
+                sort(bishop3.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -90,17 +107,17 @@ public class FigureTest {
         Figure enemyPawn = new Pawn(Color.BLACK, Cell.parse("e3"));
         board.setFigure(enemyPawn);
 
-        Set<Move> expected = toMoveSet(from, MoveType.QUIET_MOVE, "A3", "B2", "D2");
-        expected.addAll(toMoveSet(from, MoveType.ATTACK, "E3"));
+        List<Move> expected = toMoveList(from, MoveType.QUIET_MOVE, "A3", "B2", "D2");
+        expected.addAll(toMoveList(from, MoveType.ATTACK, "E3"));
 
-        Assert.assertEquals(expected, bishop.getAllMoves(gameSettings));
+        Assert.assertEquals(expected, sort(bishop.getAllMoves(gameSettings)));
 
         // --- Слон с дружеской пешкой --- //
         Figure friendPawn = new Pawn(Color.WHITE, Cell.parse("a3"));
         board.setFigure(friendPawn);
         expected.remove(new Move(MoveType.QUIET_MOVE, from, Cell.parse("a3")));
 
-        Assert.assertEquals(expected, bishop.getAllMoves(gameSettings));
+        Assert.assertEquals(expected, sort(bishop.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -110,7 +127,7 @@ public class FigureTest {
         Figure rook = new Rook(Color.BLACK, from);
         board.setFigure(rook);
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         from,
                         MoveType.QUIET_MOVE,
                         "A8",
@@ -127,7 +144,7 @@ public class FigureTest {
                         "F6",
                         "G6",
                         "H6"),
-                rook.getAllMoves(gameSettings));
+                sort(rook.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -142,10 +159,10 @@ public class FigureTest {
         board.setFigure(enemyRook1);
         board.setFigure(enemyRook2);
 
-        Set<Move> expected = toMoveSet(from, MoveType.QUIET_MOVE, "b8", "a7");
-        expected.addAll(toMoveSet(from, MoveType.ATTACK, "a6", "c8"));
+        List<Move> expected = toMoveList(from, MoveType.QUIET_MOVE, "b8", "a7");
+        expected.addAll(toMoveList(from, MoveType.ATTACK, "a6", "c8"));
 
-        Assert.assertEquals(expected, rook.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected), sort(rook.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -155,7 +172,7 @@ public class FigureTest {
         Figure queen = new Queen(Color.BLACK, from);
         board.setFigure(queen);
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         from,
                         MoveType.QUIET_MOVE,
                         "A4",
@@ -181,7 +198,7 @@ public class FigureTest {
                         "F3",
                         "G3",
                         "H3"),
-                queen.getAllMoves(gameSettings));
+                sort(queen.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -198,11 +215,11 @@ public class FigureTest {
         board.setFigure(new Pawn(Color.WHITE, Cell.parse("d6")));
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("f3")));
 
-        Set<Move> expected =
-                toMoveSet(from, MoveType.QUIET_MOVE, "B7", "A8", "B5", "A4", "D5", "E4");
-        expected.addAll(toMoveSet(from, MoveType.ATTACK, "F3", "D7"));
+        List<Move> expected =
+                toMoveList(from, MoveType.QUIET_MOVE, "B7", "A8", "B5", "A4", "D5", "E4");
+        expected.addAll(toMoveList(from, MoveType.ATTACK, "F3", "D7"));
 
-        Assert.assertEquals(expected, queen.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected), sort(queen.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -216,11 +233,11 @@ public class FigureTest {
         board.setFigure(king2);
 
         Assert.assertEquals(
-                toMoveSet(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1"),
-                king1.getAllMoves(gameSettings));
+                toMoveList(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1"),
+                sort(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8"),
-                king2.getAllMoves(gameSettings));
+                toMoveList(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8"),
+                sort(king2.getAllMoves(gameSettings)));
 
         // --- Рокировка --- //
         Figure rookW1 = new Rook(Color.WHITE, Cell.parse("h1"));
@@ -232,16 +249,16 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        Set<Move> expected1 = toMoveSet(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1");
-        expected1.addAll(toMoveSet(from1, MoveType.SHORT_CASTLING, "G1"));
-        expected1.addAll(toMoveSet(from1, MoveType.LONG_CASTLING, "C1"));
+        List<Move> expected1 = toMoveList(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1");
+        expected1.addAll(toMoveList(from1, MoveType.SHORT_CASTLING, "G1"));
+        expected1.addAll(toMoveList(from1, MoveType.LONG_CASTLING, "C1"));
 
-        Set<Move> expected2 = toMoveSet(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8");
-        expected2.addAll(toMoveSet(from2, MoveType.SHORT_CASTLING, "G8"));
-        expected2.addAll(toMoveSet(from2, MoveType.LONG_CASTLING, "C8"));
+        List<Move> expected2 = toMoveList(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8");
+        expected2.addAll(toMoveList(from2, MoveType.SHORT_CASTLING, "G8"));
+        expected2.addAll(toMoveList(from2, MoveType.LONG_CASTLING, "C8"));
 
-        Assert.assertEquals(expected1, king1.getAllMoves(gameSettings));
-        Assert.assertEquals(expected2, king2.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected1), sort(king1.getAllMoves(gameSettings)));
+        Assert.assertEquals(sort(expected2), sort(king2.getAllMoves(gameSettings)));
 
         // --- Уже низя рокировку --- //
         Figure pawnB1 = new Pawn(Color.BLACK, Cell.parse("b1"));
@@ -254,11 +271,11 @@ public class FigureTest {
         board.setFigure(pawnW2);
 
         Assert.assertEquals(
-                toMoveSet(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1"),
-                king1.getAllMoves(gameSettings));
+                toMoveList(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1"),
+                sort(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8"),
-                king2.getAllMoves(gameSettings));
+                toMoveList(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8"),
+                sort(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -280,11 +297,11 @@ public class FigureTest {
         board.setFigure(knightB2);
 
         Assert.assertEquals(
-                toMoveSet(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1"),
-                king1.getAllMoves(gameSettings));
+                toMoveList(from1, MoveType.QUIET_MOVE, "D1", "D2", "E2", "F2", "F1"),
+                sort(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8"),
-                king2.getAllMoves(gameSettings));
+                toMoveList(from2, MoveType.QUIET_MOVE, "D8", "D7", "E7", "F7", "F8"),
+                sort(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -303,8 +320,8 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        Set<Move> expected1 =
-                toMoveSet(
+        List<Move> expected1 =
+                toMoveList(
                         king1.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D1",
@@ -316,10 +333,10 @@ public class FigureTest {
                 new Move(MoveType.LONG_CASTLING, king1.getCurrentPosition(), Cell.parse("C1")));
         expected1.add(
                 new Move(MoveType.SHORT_CASTLING, king1.getCurrentPosition(), Cell.parse("G1")));
-        Assert.assertEquals(expected1, king1.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected1), sort(king1.getAllMoves(gameSettings)));
 
-        Set<Move> expected2 =
-                toMoveSet(
+        List<Move> expected2 =
+                toMoveList(
                         king2.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D8",
@@ -331,7 +348,7 @@ public class FigureTest {
                 new Move(MoveType.LONG_CASTLING, king2.getCurrentPosition(), Cell.parse("C8")));
         expected2.add(
                 new Move(MoveType.SHORT_CASTLING, king2.getCurrentPosition(), Cell.parse("G8")));
-        Assert.assertEquals(expected2, king2.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected2), sort(king2.getAllMoves(gameSettings)));
 
         rookW1.setWasMoved(true);
         rookW2.setWasMoved(true);
@@ -339,7 +356,7 @@ public class FigureTest {
         rookB2.setWasMoved(true);
 
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king1.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D1",
@@ -347,9 +364,9 @@ public class FigureTest {
                         "E2",
                         "F2",
                         "F1"),
-                king1.getAllMoves(gameSettings));
+                sort(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king2.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D8",
@@ -357,7 +374,7 @@ public class FigureTest {
                         "E7",
                         "F7",
                         "F8"),
-                king2.getAllMoves(gameSettings));
+                sort(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -380,7 +397,7 @@ public class FigureTest {
         king2.setWasMoved(true);
 
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king1.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D1",
@@ -388,9 +405,9 @@ public class FigureTest {
                         "E2",
                         "F2",
                         "F1"),
-                king1.getAllMoves(gameSettings));
+                sort(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king2.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D8",
@@ -398,7 +415,7 @@ public class FigureTest {
                         "E7",
                         "F7",
                         "F8"),
-                king2.getAllMoves(gameSettings));
+                sort(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -423,7 +440,7 @@ public class FigureTest {
         board.setFigure(FrookW);
 
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king1.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D1",
@@ -431,9 +448,9 @@ public class FigureTest {
                         "E2",
                         "F2",
                         "F1"),
-                king1.getAllMoves(gameSettings));
+                sort(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king2.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D8",
@@ -441,7 +458,7 @@ public class FigureTest {
                         "E7",
                         "F7",
                         "F8"),
-                king2.getAllMoves(gameSettings));
+                sort(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -470,7 +487,7 @@ public class FigureTest {
         board.setFigure(FrookW2);
 
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king1.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D1",
@@ -478,9 +495,9 @@ public class FigureTest {
                         "E2",
                         "F2",
                         "F1"),
-                king1.getAllMoves(gameSettings));
+                sort(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king2.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D8",
@@ -488,7 +505,7 @@ public class FigureTest {
                         "E7",
                         "F7",
                         "F8"),
-                king2.getAllMoves(gameSettings));
+                sort(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -517,7 +534,7 @@ public class FigureTest {
         board.setFigure(FrookW2);
 
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king1.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D1",
@@ -525,9 +542,9 @@ public class FigureTest {
                         "E2",
                         "F2",
                         "F1"),
-                king1.getAllMoves(gameSettings));
+                sort(king1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         king2.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "D8",
@@ -535,7 +552,7 @@ public class FigureTest {
                         "E7",
                         "F7",
                         "F8"),
-                king2.getAllMoves(gameSettings));
+                sort(king2.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -544,7 +561,7 @@ public class FigureTest {
         Figure knight = new Knight(Color.BLACK, Cell.parse("f4"));
         board.setFigure(knight);
         Assert.assertEquals(
-                toMoveSet(
+                toMoveList(
                         knight.getCurrentPosition(),
                         MoveType.QUIET_MOVE,
                         "E6",
@@ -555,7 +572,7 @@ public class FigureTest {
                         "G2",
                         "H3",
                         "H5"),
-                knight.getAllMoves(gameSettings));
+                sort(knight.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -571,8 +588,8 @@ public class FigureTest {
         board.setFigure(pawn2);
         board.setFigure(pawn3);
         Assert.assertEquals(
-                toMoveSet(knight.getCurrentPosition(), MoveType.QUIET_MOVE, "b3", "c2"),
-                knight.getAllMoves(gameSettings));
+                toMoveList(knight.getCurrentPosition(), MoveType.QUIET_MOVE, "b3", "c2"),
+                sort(knight.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -583,17 +600,17 @@ public class FigureTest {
         board.setFigure(pawn);
         board.setFigure(enemy);
 
-        Set<Move> expected = toMoveSet(pawn.getCurrentPosition(), MoveType.QUIET_MOVE, "C3");
+        List<Move> expected = toMoveList(pawn.getCurrentPosition(), MoveType.QUIET_MOVE, "C3");
         expected.add(new Move(MoveType.LONG_MOVE, pawn.getCurrentPosition(), Cell.parse("C4")));
         expected.add(new Move(MoveType.ATTACK, pawn.getCurrentPosition(), Cell.parse("D3")));
 
-        Assert.assertEquals(expected, pawn.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected), sort(pawn.getAllMoves(gameSettings)));
 
         board.setFigure(new Pawn(Color.BLACK, Cell.parse("c3")));
 
         Assert.assertEquals(
-                toMoveSet(pawn.getCurrentPosition(), MoveType.ATTACK, "D3"),
-                pawn.getAllMoves(gameSettings));
+                toMoveList(pawn.getCurrentPosition(), MoveType.ATTACK, "D3"),
+                sort(pawn.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -601,7 +618,7 @@ public class FigureTest {
         // --- Пешка дошедшая до конца поля --- //
         Figure pawn = new Pawn(Color.BLACK, Cell.parse("d1"));
         board.setFigure(pawn);
-        Assert.assertEquals(Set.of(), pawn.getAllMoves(gameSettings));
+        Assert.assertEquals(List.of(), sort(pawn.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -620,8 +637,8 @@ public class FigureTest {
         board.setFigure(pawn4);
         board.setFigure(pawn5);
         Assert.assertEquals(
-                toMoveSet(pawn.getCurrentPosition(), MoveType.ATTACK, "B6", "D6"),
-                pawn.getAllMoves(gameSettings));
+                toMoveList(pawn.getCurrentPosition(), MoveType.ATTACK, "B6", "D6"),
+                sort(pawn.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -639,10 +656,10 @@ public class FigureTest {
         board.setFigure(pawn3);
         board.setFigure(pawn4);
 
-        Set<Move> expected = toMoveSet(pawn.getCurrentPosition(), MoveType.ATTACK, "B6", "D6");
+        List<Move> expected = toMoveList(pawn.getCurrentPosition(), MoveType.ATTACK, "B6", "D6");
         expected.add(new Move(MoveType.QUIET_MOVE, pawn.getCurrentPosition(), Cell.parse("c6")));
 
-        Assert.assertEquals(expected, pawn.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected), sort(pawn.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -661,16 +678,16 @@ public class FigureTest {
         board.setFigure(pawn4);
         setPrevMove(new Move(MoveType.LONG_MOVE, Cell.parse("b2"), Cell.parse("b4")));
 
-        Set<Move> expected = toMoveSet(pawn1.getCurrentPosition(), MoveType.EN_PASSANT, "b3");
+        List<Move> expected = toMoveList(pawn1.getCurrentPosition(), MoveType.EN_PASSANT, "b3");
         expected.add(new Move(MoveType.QUIET_MOVE, pawn1.getCurrentPosition(), Cell.parse("a3")));
 
-        Assert.assertEquals(expected, pawn1.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected), sort(pawn1.getAllMoves(gameSettings)));
         setPrevMove(new Move(MoveType.LONG_MOVE, Cell.parse("g2"), Cell.parse("g4")));
 
-        expected = toMoveSet(pawn2.getCurrentPosition(), MoveType.EN_PASSANT, "g3");
+        expected = toMoveList(pawn2.getCurrentPosition(), MoveType.EN_PASSANT, "g3");
         expected.add(new Move(MoveType.QUIET_MOVE, pawn2.getCurrentPosition(), Cell.parse("h3")));
 
-        Assert.assertEquals(expected, pawn2.getAllMoves(gameSettings));
+        Assert.assertEquals(sort(expected), sort(pawn2.getAllMoves(gameSettings)));
     }
 
     private void setPrevMove(Move move) throws NoSuchFieldException, IllegalAccessException {
@@ -697,14 +714,14 @@ public class FigureTest {
         board.setFigure(figureW2);
         board.setFigure(figureW3);
 
-        Set<Move> expected = toMoveSet(figureB1.getCurrentPosition(), MoveType.QUIET_MOVE, "b3");
+        List<Move> expected = toMoveList(figureB1.getCurrentPosition(), MoveType.QUIET_MOVE, "b3");
         expected.add(
                 new Move(MoveType.EN_PASSANT, figureB1.getCurrentPosition(), Cell.parse("c3")));
 
-        Assert.assertEquals(expected, figureB1.getAllMoves(gameSettings));
+        Assert.assertEquals(expected, sort(figureB1.getAllMoves(gameSettings)));
         Assert.assertEquals(
-                toMoveSet(figureW3.getCurrentPosition(), MoveType.QUIET_MOVE, "b3"),
-                figureW3.getAllMoves(gameSettings));
+                toMoveList(figureW3.getCurrentPosition(), MoveType.QUIET_MOVE, "b3"),
+                sort(figureW3.getAllMoves(gameSettings)));
     }
 
     @Test
@@ -725,10 +742,10 @@ public class FigureTest {
         board.setFigure(blackPawn2);
         board.setFigure(blackPawn3);
 
-        Set<Move> expected = toMoveSet(whitePawn.getCurrentPosition(), MoveType.ATTACK, "b6");
+        List<Move> expected = toMoveList(whitePawn.getCurrentPosition(), MoveType.ATTACK, "b6");
         expected.add(
                 new Move(MoveType.EN_PASSANT, whitePawn.getCurrentPosition(), Cell.parse("d6")));
 
-        Assert.assertEquals(expected, whitePawn.getAllMoves(gameSettings));
+        Assert.assertEquals(expected, sort(whitePawn.getAllMoves(gameSettings)));
     }
 }

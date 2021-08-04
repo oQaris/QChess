@@ -28,11 +28,11 @@ public class Move {
         this.to = to;
     }
 
-    public Move(Move move, FigureType type) {
+    public Move(Move move, FigureType turnInto) {
         this.moveType = move.moveType;
         this.from = move.from;
         this.to = move.to;
-        this.turnInto = type;
+        this.turnInto = turnInto;
     }
 
     public FigureType getTurnInto() {

@@ -7,7 +7,7 @@
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>WARN</level>
+      <level>INFO</level>
     </filter>
 
     <target>System.out</target>
@@ -58,28 +58,13 @@
 
     <sift>
       <appender name="FILE-${path}" class="ch.qos.logback.core.FileAppender">
-        <file>target/logs/rooms/${path}.log</file>
+        <file>logs/rooms/${path}.log</file>
 
         <encoder>
           <pattern>%msg%n</pattern>
         </encoder>
       </appender>
     </sift>
-  </appender>
-
-  <!-- DEBUG -->
-  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-DEBUG">
-    <append>false</append>
-
-    <encoder>
-      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
-    </encoder>
-
-    <file>logs/qchess-last-session-debug.log</file>
-
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>DEBUG</level>
-    </filter>
   </appender>
 
   <!-- INFO -->
@@ -97,19 +82,15 @@
     </filter>
   </appender>
 
-  <logger level="info" name="io.deeplay.qchess.game.Selfplay">
-    <appender-ref ref="GAME-STATISTICS"/>
-  </logger>
-
   <logger level="info" name="io.deeplay.qchess.server.service.StatisticService">
     <appender-ref ref="SIFTER"/>
   </logger>
 
-  <root level="debug">
+  <logger level="off" name="game.src.test.java.io.deeplay.qchess.game">
+    <appender-ref ref="GAME-STATISTICS"/>
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
-    <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
     <appender-ref ref="FILE-LAST-SESSION-INFO"/>
-  </root>
+  </logger>
 
 </configuration>

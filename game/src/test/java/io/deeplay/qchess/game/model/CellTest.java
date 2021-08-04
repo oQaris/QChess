@@ -10,7 +10,7 @@ public class CellTest {
     @ParameterizedTest
     @ValueSource(strings = {"a0", "j1", /* это русская буква: */ "а1", "a11", "", "-"})
     public void testIncorrectParse(String cellStr) {
-        Assertions.assertThrows(ChessException.class, () -> Cell.parse(cellStr));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Cell.parse(cellStr));
     }
 
     @ParameterizedTest

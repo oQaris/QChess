@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PEACE_MOVE_COUNT;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.GAME_RESULT_ERROR;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -57,10 +58,6 @@ public class Selfplay {
         return true;
     }
 
-    public static Move createMove(String from, String to, String type) {
-        return new Move(MoveType.valueOf(type), Cell.parse(from), Cell.parse(to));
-    }
-
     /**
      * Обновляется после каждого хода
      *
@@ -105,24 +102,18 @@ public class Selfplay {
                 // TODO: отправлять ответ GameResponse, что ход некорректный
             }
         }
-        if (roomSettings.endGameDetector.isCheckmate(currentPlayerToMove.getColor()))
-            logger.info(
-                    "Мат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        else if (roomSettings.endGameDetector.isStalemate(currentPlayerToMove.getColor()))
-            logger.info(
-                    "Пат: {}", currentPlayerToMove.getColor() == Color.WHITE ? "белым" : "черным");
-        else if (isDraw) {
-            logger.info("Игра окончена: ничья");
-            if (roomSettings.endGameDetector.isDrawWithPeaceMoves())
-                logger.info(
-                        "Ничья: {} ходов без взятия и хода пешки",
-                        EndGameDetector.END_PEACE_MOVE_COUNT);
-            if (roomSettings.endGameDetector.isDrawWithRepetitions())
-                logger.info(
-                        "Ничья: {} повторений позиций доски",
-                        EndGameDetector.END_REPETITIONS_COUNT);
-            if (roomSettings.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate())
-                logger.info("Ничья: недостаточно фигур, чтобы поставить мат");
+        Color endColor = currentPlayerToMove.getColor();
+        switch (roomSettings.endGameDetector.updateGameResult(endColor)) {
+            case NOTHING -> throw new ChessError(GAME_RESULT_ERROR);
+            case CHECKMATE -> logger.info("Мат: {}", endColor == Color.WHITE ? "белым" : "черным");
+            case STALEMATE -> logger.info("Пат: {}", endColor == Color.WHITE ? "белым" : "черным");
+            case DRAW_WITH_REPETITIONS -> logger.info(
+                    "Ничья: {} повторений позиций доски", EndGameDetector.END_REPETITIONS_COUNT);
+            case DRAW_WITH_NOT_ENOUGH_MATERIAL -> logger.info(
+                    "Ничья: недостаточно фигур, чтобы поставить мат");
+            case DRAW_WITH_PEACE_MOVE_COUNT -> logger.info(
+                    "Ничья: {} ходов без взятия и хода пешки",
+                    EndGameDetector.END_PEACE_MOVE_COUNT);
         }
 
         // TODO: конец игры, отправлять GameResponse
@@ -131,6 +122,7 @@ public class Selfplay {
     /** @return удаленная фигура или null, если клетка была пуста */
     private Figure tryMove(Move move) throws ChessError {
         try {
+            roomSettings.endGameDetector.resetGameResult();
             Figure removedFigure = roomSettings.moveSystem.move(move);
             if (logger.isDebugEnabled()) {
                 logger.debug(
