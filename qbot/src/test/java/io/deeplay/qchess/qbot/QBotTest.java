@@ -21,9 +21,8 @@ import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.qbot.strategy.IStrategy;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
-import java.util.List;
-
 import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class QBotTest {
@@ -153,7 +152,7 @@ class QBotTest {
         QBot bot = new QBot(roomSettings, Color.WHITE, 5, new SimpleStrategy());
 
         List<Move> moves1 = bot.getTopMoves();
-        //assertEquals(1, moves1.size());
+        // assertEquals(1, moves1.size());
 
         Move expected = new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("f6"));
         assertTrue(moves1.contains(expected));
