@@ -5,8 +5,8 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Pawn extends Figure {
 
@@ -15,8 +15,8 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public Set<Move> getAllMoves(GameSettings settings) {
-        Set<Move> result = new HashSet<>();
+    public List<Move> getAllMoves(GameSettings settings) {
+        List<Move> result = new ArrayList<>(4);
 
         Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
         addShortAndLongMove(settings, forwardShift, result);
@@ -38,7 +38,7 @@ public class Pawn extends Figure {
         return shifted.equals(cell) || shifted.shift(new Cell(2, 0)).equals(cell);
     }
 
-    private void addShortAndLongMove(GameSettings settings, Cell forwardShift, Set<Move> result) {
+    private void addShortAndLongMove(GameSettings settings, Cell forwardShift, List<Move> result) {
         Cell move = position.createAdd(forwardShift);
         if (settings.board.isEmptyCell(move)) {
             result.add(

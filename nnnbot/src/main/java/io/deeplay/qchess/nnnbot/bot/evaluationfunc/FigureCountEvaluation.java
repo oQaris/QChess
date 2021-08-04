@@ -5,18 +5,30 @@ import io.deeplay.qchess.game.model.Color;
 
 public class FigureCountEvaluation {
 
-    /** Оценка с нулевой суммой для укрепления защиты */
-    public static double defenseWithZeroSum(GameSettings gs, Color color) {
-        return gs.board.getFigureCount(color);
+    /**
+     * Эвристика защиты
+     *
+     * @param myColor цвет игрока, который укрепляет свою позицию
+     */
+    public static double defenseHeuristics(GameSettings gs, Color myColor) {
+        return gs.board.getFigureCount(myColor);
     }
 
-    /** Оценка с нулевой суммой для атаки */
-    public static double attackWithZeroSum(GameSettings gs, Color color) {
-        return -gs.board.getFigureCount(color.inverse());
+    /**
+     * Эвристика атаки
+     *
+     * @param myColor цвет игрока, который атакует соперника
+     */
+    public static double attackHeuristics(GameSettings gs, Color myColor) {
+        return -gs.board.getFigureCount(myColor.inverse());
     }
 
-    /** Оценка с нулевой суммой для атаки и защиты */
-    public static double attackDefenseZeroSum(GameSettings gs, Color color) {
-        return gs.board.getFigureCount(color) - gs.board.getFigureCount(color.inverse());
+    /**
+     * Эвристика атаки и защиты
+     *
+     * @param myColor цвет игрока, который укрепляет свою позицию и пытается атаковать противника
+     */
+    public static double attackDefenseHeuristics(GameSettings gs, Color myColor) {
+        return defenseHeuristics(gs, myColor) + 0.5 * attackHeuristics(gs, myColor);
     }
 }

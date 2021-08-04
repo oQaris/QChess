@@ -3,18 +3,23 @@ package io.deeplay.qchess.nnnbot.bot;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.King;
+import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
+import io.deeplay.qchess.qbot.QBot;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -25,7 +30,7 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 10;
+    private static final int COUNT = 1;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -49,27 +54,43 @@ public class NNNBotTest {
 
     @Ignore
     @Test
-    public void speedTest() {
-        Board board = new Board(BoardFilling.STANDARD);
+    public void speedTest() throws ChessError {
+        GameSettings gs = new GameSettings(BoardFilling.STANDARD);
         Random rand = new Random();
         int count = 1000000;
         int i = count;
         double time = 0;
+        double time2 = 0;
+        double time3 = 0;
         while (--i >= 0) {
             try {
-                board.moveFigureUgly(
+                gs.moveSystem.move(
                         new Move(
                                 MoveType.QUIET_MOVE,
                                 new Cell(rand.nextInt(8), rand.nextInt(8)),
                                 new Cell(rand.nextInt(8), rand.nextInt(8))));
-            } catch (NullPointerException ignore) {
+            } catch (ChessError e) {
+                // e.printStackTrace();
             }
 
             long startTime = System.nanoTime();
-            board.hashCode();
+            gs.moveSystem.getAllPreparedMoves(Color.WHITE);
+            gs.moveSystem.getAllPreparedMoves(Color.BLACK);
             time += (double) (System.nanoTime() - startTime) / count;
+
+            startTime = System.nanoTime();
+            gs.board.getAllPreparedMoves(gs, Color.WHITE);
+            gs.board.getAllPreparedMoves(gs, Color.BLACK);
+            time2 += (double) (System.nanoTime() - startTime) / count;
+
+            startTime = System.nanoTime();
+            gs.moveSystem.getAllCorrectMovesSilence(Color.WHITE);
+            gs.moveSystem.getAllCorrectMovesSilence(Color.BLACK);
+            time3 += (double) (System.nanoTime() - startTime) / count;
         }
-        System.out.println(time);
+        System.out.println("fast: " + time);
+        System.out.println("simple: " + time2);
+        System.out.println("silence: " + time3);
     }
 
     @Ignore
@@ -85,9 +106,9 @@ public class NNNBotTest {
         long startTime;
         if (COUNT == 1) {
             startTime = System.currentTimeMillis();
-            new Game(0).run();
+            new Game(COUNT & 1).run();
 
-        } else if (COUNT > 1) {
+        } else {
             ExecutorService executor =
                     Executors.newFixedThreadPool(Math.min(availableProcessorsCount, COUNT));
             startTime = System.currentTimeMillis();
@@ -128,6 +149,27 @@ public class NNNBotTest {
         logger.info("Draw rate: {}%", drawCount * 100 / COUNT);
     }
 
+    /** Мат ладьёй за 1 ход */
+    @Ignore
+    @Test
+    public void testCheckmate() throws ChessError, ChessException {
+        GameSettings gs = new GameSettings(BoardFilling.EMPTY);
+        gs.board.setFigure(new King(Color.BLACK, Cell.parse("a8")));
+        gs.board.setFigure(new King(Color.WHITE, Cell.parse("h8")));
+        gs.board.setFigure(new Rook(Color.WHITE, Cell.parse("c7")));
+        gs.board.setFigure(new Rook(Color.WHITE, Cell.parse("d5")));
+        System.out.println(gs.board);
+
+        NNNBot bot = NNNBotFactory.getNNNBot(gs, Color.WHITE);
+        Selfplay game = new Selfplay(gs, bot, bot);
+
+        Move move = bot.getNextMove();
+        game.move(move);
+        System.err.println(move);
+
+        Assert.assertTrue(gs.endGameDetector.isCheckmate(Color.BLACK));
+    }
+
     private static class Game implements Runnable {
 
         private final int id;
@@ -150,8 +192,10 @@ public class NNNBotTest {
             if (NNNBotColor == Color.WHITE) {
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.WHITE);
                 firstPlayer = nnnBot;
+                //secondPlayer = new QBot(gs, Color.BLACK, 2);
                 secondPlayer = new RandomBot(gs, Color.BLACK);
             } else {
+                //firstPlayer = new QBot(gs, Color.WHITE, 2);
                 firstPlayer = new RandomBot(gs, Color.WHITE);
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.BLACK);
                 secondPlayer = nnnBot;
