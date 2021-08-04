@@ -106,7 +106,7 @@ public class NNNBotTest {
         long startTime;
         if (COUNT == 1) {
             startTime = System.currentTimeMillis();
-            new Game(COUNT & 1).run();
+            new Game(0).run();
 
         } else {
             ExecutorService executor =
@@ -192,11 +192,11 @@ public class NNNBotTest {
             if (NNNBotColor == Color.WHITE) {
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.WHITE);
                 firstPlayer = nnnBot;
-                //secondPlayer = new QBot(gs, Color.BLACK, 2);
-                secondPlayer = new RandomBot(gs, Color.BLACK);
+                secondPlayer = new QBot(gs, Color.BLACK, 2);
+                //secondPlayer = new RandomBot(gs, Color.BLACK);
             } else {
-                //firstPlayer = new QBot(gs, Color.WHITE, 2);
-                firstPlayer = new RandomBot(gs, Color.WHITE);
+                firstPlayer = new QBot(gs, Color.WHITE, 2);
+                //firstPlayer = new RandomBot(gs, Color.WHITE);
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.BLACK);
                 secondPlayer = nnnBot;
             }
