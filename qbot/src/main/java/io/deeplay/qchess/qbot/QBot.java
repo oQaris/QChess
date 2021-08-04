@@ -110,18 +110,18 @@ public class QBot extends RemotePlayer {
         final Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
         final List<Move> allMoves = ms.getAllCorrectMoves(curColor);
         // Если терминальный узел
-        if (allMoves.isEmpty()) return IStrategy.gradeIfTerminalNode(roomSettings, curColor);
+        if (allMoves.isEmpty()) return IStrategy.gradeIfTerminalNode(roomSettings);
 
+        setTurnIntoAllAndSort(allMoves);
         int value;
         if (isMaximisingPlayer) {
             value = Integer.MIN_VALUE;
-            setTurnIntoAllAndSort(allMoves);
             for (Move move : allMoves) {
                 ms.move(move);
                 value = Math.max(value, minimax(depth - 1, alpha, beta, false));
                 ms.undoMove();
                 alpha = Math.max(alpha, value);
-                // if (value >= beta) break;
+                if (value >= beta) break;
             }
         } else {
             value = Integer.MAX_VALUE;
@@ -130,13 +130,12 @@ public class QBot extends RemotePlayer {
                 value = Math.min(value, minimax(depth - 1, alpha, beta, true));
                 ms.undoMove();
                 beta = Math.min(beta, value);
-                // if (value <= alpha) break;
+                if (value <= alpha) break;
             }
         }
-        // отнимаем грубину, чтоб из ходов с одинаковыми оценками выбирался тот, который достигается
-        // за
-        // меньшее число ходов
-        return value - depth;
+        // отнимаем/прибавляем грубину, чтоб из ходов с одинаковыми оценками выбирался тот,
+        // который достигается за меньшее число ходов
+        return value + (isMaximisingPlayer ? 1 : -1) * depth;
     }
 
     /**

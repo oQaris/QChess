@@ -222,7 +222,7 @@ public class MoveSystem {
      * @param func Функция, выполняемая после виртуального хода.
      * @return Результат функции func.
      * @throws ChessException Если выбрасывается в функции func.
-     * @throws ChessError     Если выбрасывается в функции func.
+     * @throws ChessError Если выбрасывается в функции func.
      */
     @Deprecated
     public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
@@ -237,7 +237,7 @@ public class MoveSystem {
     /**
      * @param color цвет фигур
      * @return все возможные ходы
-     * @deprecated использовать только внутри движка. Для своих целей лучше использовать {@link
+     * @deprecated Использовать только внутри движка. Для своих целей лучше использовать  {@link
      *     #getAllPreparedMoves(Color color)}
      */
     @Deprecated

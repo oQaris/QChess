@@ -68,7 +68,7 @@ class QBotTest {
         Move bestMove = bot.getNextMove();
 
         // -102
-        assertEquals(-93, grade);
+        assertEquals(-89, grade);
         assertEquals(new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }
 
@@ -84,23 +84,23 @@ class QBotTest {
 
         roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(2, 3)));
         int grade = bot.minimaxRoot(1, true);
-        assertEquals(-91, grade);
+        assertEquals(-89, grade);
 
         roomSettings.board.moveFigure(
                 new Move(MoveType.QUIET_MOVE, new Cell(2, 3), new Cell(0, 3)));
         grade = bot.minimaxRoot(1, true);
-        assertEquals(-81, grade);
+        assertEquals(-79, grade);
 
         roomSettings.board.moveFigure(
                 new Move(MoveType.QUIET_MOVE, new Cell(0, 3), new Cell(0, 1)));
         grade = bot.minimaxRoot(1, true);
-        assertEquals(-87, grade);
+        assertEquals(-85, grade);
 
         // таким образом, это лучший ход
         roomSettings.board.moveFigure(
                 new Move(MoveType.QUIET_MOVE, new Cell(0, 1), new Cell(2, 1)));
         grade = bot.minimaxRoot(1, true);
-        assertEquals(-27, grade);
+        assertEquals(-25, grade);
     }
 
     @Test
@@ -116,7 +116,7 @@ class QBotTest {
         int grade = bot.minimaxRoot(1, true);
         Move bestMove = bot.getNextMove();
 
-        assertEquals(-81, grade);
+        assertEquals(-79, grade);
         assertEquals(new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }
 
@@ -149,12 +149,11 @@ class QBotTest {
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
 
-        QBot bot = new QBot(roomSettings, Color.WHITE, 5, new SimpleStrategy());
+        QBot bot = new QBot(roomSettings, Color.WHITE, 4, new SimpleStrategy());
 
         List<Move> moves1 = bot.getTopMoves();
-        // assertEquals(1, moves1.size());
 
-        Move expected = new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("f6"));
+        Move expected = new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("h6"));
         assertTrue(moves1.contains(expected));
 
         roomSettings.board.moveFigure(expected);
@@ -165,7 +164,7 @@ class QBotTest {
         assertEquals(1, moves2.size());
 
         assertEquals(
-                new Move(MoveType.QUIET_MOVE, Cell.parse("f6"), Cell.parse("f8")), moves2.get(0));
+                new Move(MoveType.QUIET_MOVE, Cell.parse("h6"), Cell.parse("h8")), moves2.get(0));
     }
 
     @Test
