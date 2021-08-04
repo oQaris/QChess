@@ -104,58 +104,10 @@ public class QBot extends RemotePlayer {
 
     private int minimax(final int depth, int alpha, int beta, final boolean isMaximisingPlayer)
             throws ChessError {
-        /*logger.trace("Глубина поиска: {}", depth);
-        countNode++;
+        logger.trace("Глубина поиска: {}", depth);
         if (depth == 0) return strategy.evaluateBoard(board);
 
-        int bestGrade = isMaximisingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-        Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
-        final List<Move> allMoves = ms.getAllCorrectMoves(curColor);
-        // Если терминальный узел
-        if (allMoves.isEmpty()) return IStrategy.gradeIfTerminalNode(roomSettings, curColor);
-
-        setTurnIntoAllAndSort(allMoves);
-        for (Move move : allMoves) {
-            ms.move(move);
-            int curGrade = minimax(depth - 1, alpha, beta, !isMaximisingPlayer);
-            ms.undoMove();
-
-            if (isMaximisingPlayer) {
-                bestGrade = Math.max(bestGrade, curGrade);
-                alpha = Math.max(alpha, bestGrade);
-            } else {
-                bestGrade = Math.min(bestGrade, curGrade);
-                beta = Math.min(beta, bestGrade);
-            }
-            if (beta <= alpha) {
-                countAB++;
-                return bestGrade;
-            }
-        }*/
-        /* if depth = 0 or node is a terminal node then
-            return the heuristic value of node
-
-            if maximizingPlayer then
-            value := −∞
-            for each child of node do
-                value := max(value, alphabeta(child, depth − 1, α, β, FALSE))
-            α := max(α, value)
-            if value ≥ β then
-            break (* β cutoff *)
-
-            return value
-        else
-            value := +∞
-            for each child of node do
-                value := min(value, alphabeta(child, depth − 1, α, β, TRUE))
-            β := min(β, value)
-            if value ≤ α then
-            break (* α cutoff *)
-            return value*/
-
-        if (depth == 0) return strategy.evaluateBoard(board);
-
-        Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
+        final Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
         final List<Move> allMoves = ms.getAllCorrectMoves(curColor);
         // Если терминальный узел
         if (allMoves.isEmpty()) return IStrategy.gradeIfTerminalNode(roomSettings, curColor);
@@ -186,7 +138,7 @@ public class QBot extends RemotePlayer {
 
     /**
      * Заменяет в списке все ходы типа TURN_INTO на такие же ходы, но с добавленными фигурами для
-     * превращения. Исходный порядок не гарантируется.
+     * превращения (Ферзь и Конь). Исходный порядок не гарантируется.
      *
      * @param moves Исходный список ходов.
      */
