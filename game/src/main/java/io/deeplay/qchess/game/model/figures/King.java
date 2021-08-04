@@ -6,7 +6,7 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
@@ -20,8 +20,8 @@ public class King extends Figure {
     }
 
     @Override
-    public Set<Move> getAllMoves(GameSettings settings) {
-        Set<Move> res = getAttackedMoves(settings.board);
+    public List<Move> getAllMoves(GameSettings settings) {
+        List<Move> res = getAttackedMoves(settings.board);
         Cell newCell = new Cell(position.column, position.row);
         // рокировка
         if (isCorrectCastling(settings, true))
@@ -47,7 +47,7 @@ public class King extends Figure {
     }
 
     /** @return ходы без рокировки */
-    public Set<Move> getAttackedMoves(Board board) {
+    public List<Move> getAttackedMoves(Board board) {
         return stepForEachWithNewCell(
                 board,
                 Stream.concat(Figure.xMove.stream(), Figure.plusMove.stream())

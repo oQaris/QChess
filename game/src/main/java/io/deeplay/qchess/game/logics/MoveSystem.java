@@ -18,7 +18,6 @@ import io.deeplay.qchess.game.model.figures.Pawn;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -364,9 +363,7 @@ public class MoveSystem {
     /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move)
             throws ChessException, ArrayIndexOutOfBoundsException {
-        Figure figure = board.getFigureUgly(move.getFrom());
-        Set<Move> allMoves = figure.getAllMoves(gs);
-        return allMoves.contains(move);
+        return board.getFigureUgly(move.getFrom()).getAllMoves(gs).contains(move);
     }
 
     @FunctionalInterface

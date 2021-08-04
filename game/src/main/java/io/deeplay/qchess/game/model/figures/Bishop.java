@@ -4,7 +4,7 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import java.util.Set;
+import java.util.List;
 
 public class Bishop extends Figure {
 
@@ -26,7 +26,7 @@ public class Bishop extends Figure {
     }
 
     @Override
-    public Set<Move> getAllMoves(GameSettings settings) {
+    public List<Move> getAllMoves(GameSettings settings) {
         return rayTrace(settings.board, Figure.xMove);
     }
 
