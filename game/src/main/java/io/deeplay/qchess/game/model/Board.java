@@ -215,7 +215,7 @@ public class Board {
         }
         cells[position.row][position.column] = figure;
 
-        int i = position.row * 8 + position.column;
+        int i = position.row * STD_BOARD_SIZE + position.column;
         cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
         cellsType[i] = figure.figureType.type;
 
