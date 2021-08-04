@@ -16,14 +16,15 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class QBot extends RemotePlayer {
-    private static final Logger logger = LoggerFactory.getLogger(QBot.class);
+public class QMinimaxBot extends RemotePlayer {
+    private static final Logger logger = LoggerFactory.getLogger(QMinimaxBot.class);
     private final IStrategy strategy;
     private final int depth;
+    public static final int MAX_DEPTH = 100;
     public int countNode = 0;
     public int countAB = 0;
 
-    public QBot(
+    public QMinimaxBot(
             final GameSettings roomSettings,
             final Color color,
             final int searchDepth,
@@ -31,14 +32,15 @@ public class QBot extends RemotePlayer {
         super(roomSettings, color, "minimax-bot-" + UUID.randomUUID());
         this.strategy = strategy;
         this.depth = searchDepth;
-        if (depth < 0) throw new IllegalArgumentException("Глубина не должна быть отрицательная!");
+        if (depth < 0 || depth > MAX_DEPTH)
+            throw new IllegalArgumentException("Некорректная глубина поиска!");
     }
 
-    public QBot(final GameSettings roomSettings, final Color color) {
+    public QMinimaxBot(final GameSettings roomSettings, final Color color) {
         this(roomSettings, color, 1, new MatrixStrategy());
     }
 
-    public QBot(GameSettings roomSettings, Color color, int searchDepth) {
+    public QMinimaxBot(GameSettings roomSettings, Color color, int searchDepth) {
         this(roomSettings, color, searchDepth, new MatrixStrategy());
     }
 

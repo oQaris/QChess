@@ -40,7 +40,7 @@ class QBotTest {
         Color myColor = Color.WHITE;
         for (int i = 0; i < 1; i++) {
             GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
-            QBot firstPlayer = new QBot(gs, myColor, 1, new PestoStrategy());
+            QMinimaxBot firstPlayer = new QMinimaxBot(gs, myColor, 1, new PestoStrategy());
             Player secondPlayer = new RandomBot(gs, myColor.inverse());
             try {
                 System.out.println();
@@ -63,7 +63,7 @@ class QBotTest {
         roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(1, 2)));
         setKings(new Cell(7, 7), new Cell(5, 5), roomSettings);
 
-        QBot bot = new QBot(roomSettings, Color.WHITE, 2, new MatrixStrategy());
+        QMinimaxBot bot = new QMinimaxBot(roomSettings, Color.WHITE, 2, new MatrixStrategy());
         int grade = bot.minimaxRoot(2, true);
         Move bestMove = bot.getNextMove();
 
@@ -80,7 +80,7 @@ class QBotTest {
         roomSettings.board.setFigure(new Bishop(Color.BLACK, new Cell(2, 1)));
         setKings(new Cell(7, 7), new Cell(5, 5), roomSettings);
 
-        QBot bot = new QBot(roomSettings, Color.WHITE, 1);
+        QMinimaxBot bot = new QMinimaxBot(roomSettings, Color.WHITE, 1);
 
         roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(2, 3)));
         int grade = bot.minimaxRoot(1, true);
@@ -112,7 +112,7 @@ class QBotTest {
         roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(1, 2)));
         setKings(new Cell(7, 7), new Cell(5, 5), roomSettings);
 
-        QBot bot = new QBot(roomSettings, Color.WHITE, 1);
+        QMinimaxBot bot = new QMinimaxBot(roomSettings, Color.WHITE, 1);
         int grade = bot.minimaxRoot(1, true);
         Move bestMove = bot.getNextMove();
 
@@ -130,7 +130,7 @@ class QBotTest {
         roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("d5")));
         System.out.println(roomSettings.board);
 
-        QBot bot = new QBot(roomSettings, Color.BLACK, 3);
+        QMinimaxBot bot = new QMinimaxBot(roomSettings, Color.BLACK, 4);
         List<Move> moves = bot.getTopMoves();
 
         assertEquals(1, moves.size());
@@ -149,7 +149,7 @@ class QBotTest {
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
 
-        QBot bot = new QBot(roomSettings, Color.WHITE, 4, new SimpleStrategy());
+        QMinimaxBot bot = new QMinimaxBot(roomSettings, Color.WHITE, 4, new SimpleStrategy());
 
         List<Move> moves1 = bot.getTopMoves();
 

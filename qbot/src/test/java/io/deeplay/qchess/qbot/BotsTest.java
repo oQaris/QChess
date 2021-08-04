@@ -118,7 +118,7 @@ class BotsTest {
         public void run() {
             GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
             TimeWrapper firstPlayer =
-                    new TimeWrapper(new QBot(gs, myColor, 3, new PestoStrategy()));
+                    new TimeWrapper(new QMinimaxBot(gs, myColor, 5, new PestoStrategy()));
             TimeWrapper secondPlayer = new TimeWrapper(new RandomBot(gs, myColor.inverse()));
             // Player secondPlayer = NNNBotFactory.getNNNBot(gs, myColor.inverse());
             try {
@@ -139,13 +139,13 @@ class BotsTest {
             logger.info("Mode: " + firstPlayer.getMode());
             logger.info("Max: " + firstPlayer.getMax());
             logger.info("Min: " + firstPlayer.getMin());
-            // firstPlayer.printGraph();
-            logger.info("== Second ==");
+            firstPlayer.printGraph();
+            /*logger.info("== Second ==");
             logger.info("Mean: " + secondPlayer.getMean());
             logger.info("Median: " + secondPlayer.getMedian());
             logger.info("Mode: " + secondPlayer.getMode());
             logger.info("Max: " + secondPlayer.getMax());
-            logger.info("Min: " + secondPlayer.getMin());
+            logger.info("Min: " + secondPlayer.getMin());*/
         }
     }
 }
