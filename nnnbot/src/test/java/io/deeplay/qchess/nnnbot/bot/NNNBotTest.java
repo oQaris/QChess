@@ -13,8 +13,6 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.player.Player;
-import io.deeplay.qchess.game.player.RandomBot;
-import io.deeplay.qchess.qbot.QBot;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -30,7 +28,7 @@ public class NNNBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NNNBotTest.class);
 
-    private static final int COUNT = 1;
+    private static final int COUNT = 1000;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -192,11 +190,11 @@ public class NNNBotTest {
             if (NNNBotColor == Color.WHITE) {
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.WHITE);
                 firstPlayer = nnnBot;
-                secondPlayer = new QBot(gs, Color.BLACK, 2);
-                //secondPlayer = new RandomBot(gs, Color.BLACK);
+                // secondPlayer = new QBot(gs, Color.BLACK, 2);
+                secondPlayer = NNNBotFactory.getNNNBot(gs, Color.BLACK);
             } else {
-                firstPlayer = new QBot(gs, Color.WHITE, 2);
-                //firstPlayer = new RandomBot(gs, Color.WHITE);
+                // firstPlayer = new QBot(gs, Color.WHITE, 2);
+                firstPlayer = NNNBotFactory.getNNNBot(gs, Color.WHITE);
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.BLACK);
                 secondPlayer = nnnBot;
             }
