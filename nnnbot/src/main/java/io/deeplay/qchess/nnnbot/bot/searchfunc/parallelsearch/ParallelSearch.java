@@ -43,7 +43,7 @@ public abstract class ParallelSearch implements SearchFunc {
 
     @Override
     public Move findBest() throws ChessError {
-        List<Move> allMoves = gs.moveSystem.getAllCorrectMovesSilence(myColor);
+        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
         Move theBest = null;
         double optEstimation = EvaluationFunc.MIN_ESTIMATION;
 

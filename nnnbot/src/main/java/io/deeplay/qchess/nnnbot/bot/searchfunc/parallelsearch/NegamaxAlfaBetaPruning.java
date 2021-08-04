@@ -40,7 +40,7 @@ public class NegamaxAlfaBetaPruning extends ParallelSearch {
         if (depth <= 0 || isTerminalNode(allMoves))
             return isMyMove
                     ? getEvaluation(allMoves, true, depth)
-                    : -getEvaluation(allMoves, false, depth);
+                    : getEvaluation(allMoves, false, depth);
 
         double optEstimation = EvaluationFunc.MIN_ESTIMATION;
         double estimation;
