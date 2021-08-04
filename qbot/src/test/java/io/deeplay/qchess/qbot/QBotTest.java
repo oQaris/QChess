@@ -150,12 +150,6 @@ class QBotTest {
     void testQBotCheckMate2Step() throws ChessError, ChessException {
         // тут можно поставить пат в 1 ход, или мат в 2 хода
         // todo
-        /*GameSettings roomSettings = new GameSettings(BoardFilling.EMPTY);
-        roomSettings.board.setFigure(new King(Color.WHITE, Cell.parse("c4")));
-        roomSettings.board.setFigure(new King(Color.BLACK, Cell.parse("b8")));
-        roomSettings.board.setFigure(new Pawn(Color.BLACK, Cell.parse("h5")));
-        roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
-        roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));*/
     }
 
     @Test

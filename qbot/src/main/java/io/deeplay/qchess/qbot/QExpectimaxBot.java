@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.player.RemotePlayer;
 
 public class QExpectimaxBot extends RemotePlayer {
 
+    // todo  В разработке
     public QExpectimaxBot(GameSettings roomSettings, Color color, String sessionToken) {
         super(roomSettings, color, sessionToken);
     }
