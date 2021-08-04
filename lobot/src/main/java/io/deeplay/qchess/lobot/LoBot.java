@@ -135,7 +135,7 @@ public class LoBot extends RemotePlayer {
         if (moves.isEmpty() && egd.isCheck(curColor)) return color == curColor? MIN_INT : MAX_INT;
         setTurnIntoAll(moves);
 
-        int bestMove = color == curColor? MIN_INT : MAX_INT;
+        int bestMove = color == curColor? MIN_INT / 2 : MAX_INT / 2;
         for (Move move : moves) {
             int alphaForLambda = alpha;
             int betaForLambda = beta;

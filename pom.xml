@@ -18,6 +18,7 @@
     <module>core</module>
     <module>nnnbot</module>
     <module>qbot</module>
+    <module>lobot</module>
   </modules>
 
   <properties>
