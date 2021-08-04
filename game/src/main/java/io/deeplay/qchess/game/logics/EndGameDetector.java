@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
