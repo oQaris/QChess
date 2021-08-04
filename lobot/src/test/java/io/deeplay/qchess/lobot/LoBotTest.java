@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 public class LoBotTest {
     private static final Logger logger = LoggerFactory.getLogger(LoBotTest.class);
-    private static final int GAME_COUNT = 50;
+    private static final int GAME_COUNT = 10;
 
     @Test
     public void testGame() {
@@ -30,7 +30,7 @@ public class LoBotTest {
             // executor.execute(
             //        () -> {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 2);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 2, TraversalAlgorithm.NEGASCOUT);
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -43,6 +43,34 @@ public class LoBotTest {
         }
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
         executor.shutdown();
+    }
+
+    @Test
+    public void testGameNegascout() {
+        final int[] results = new int[3];
+        Arrays.fill(results, 0);
+        long startTime = System.currentTimeMillis();
+
+        for (int i = 1; i <= GAME_COUNT; i++) {
+            GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 4, TraversalAlgorithm.NEGASCOUT);
+            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+            try {
+                Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
+                game.run();
+                int index = getEndGameType(roomSettings.endGameDetector.getGameResult());
+                if (index < 3) {
+                    results[index]++;
+                } else {
+                    logger.info("{} WTF?!", i);
+                }
+            } catch (ChessError e) {
+                e.printStackTrace();
+            }
+            logger.info("Game {} complete", i);
+        }
+        logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
+        logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
     }
 
     @Test
