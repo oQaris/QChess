@@ -7,7 +7,7 @@
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>WARN</level>
+      <level>INFO</level>
     </filter>
 
     <target>System.out</target>
@@ -39,24 +39,13 @@
     <append>false</append>
 
     <encoder>
-      <pattern>[%thread] %msg%n</pattern>
+      <pattern>%msg%n</pattern>
     </encoder>
 
     <file>logs/qchess-statistics.log</file>
-  </appender>
-
-  <!-- DEBUG -->
-  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-DEBUG">
-    <append>false</append>
-
-    <encoder>
-      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
-    </encoder>
-
-    <file>logs/qchess-last-session-debug.log</file>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>DEBUG</level>
+      <level>INFO</level>
     </filter>
   </appender>
 
@@ -75,14 +64,10 @@
     </filter>
   </appender>
 
-  <logger level="debug" name="io.deeplay.qchess.game.Selfplay">
+  <logger level="off" name="game.src.test.java.io.deeplay.qchess.game">
     <appender-ref ref="GAME-STATISTICS"/>
-  </logger>
-
-  <logger level="debug" name="io.deeplay.qchess.qbot.BotsTest">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
-    <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
     <appender-ref ref="FILE-LAST-SESSION-INFO"/>
   </logger>
 

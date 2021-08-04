@@ -1,12 +1,14 @@
 package io.deeplay.qchess.game;
 
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PEACE_MOVE_COUNT;
+import static io.deeplay.qchess.game.exceptions.ChessErrorCode.GAME_RESULT_ERROR;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
@@ -100,13 +102,27 @@ public class Selfplay {
             }
             roomSettings.endGameDetector.updateEndGameStatus();
         }
-        logger.info("Результат игры: {}\n", roomSettings.endGameDetector.getGameResult());
+        Color endColor = currentPlayerToMove.getColor();
+        switch (roomSettings.endGameDetector.updateGameResult(endColor)) {
+            case NOTHING -> throw new ChessError(GAME_RESULT_ERROR);
+            case CHECKMATE -> logger.info("Мат: {}", endColor == Color.WHITE ? "белым" : "черным");
+            case STALEMATE -> logger.info("Пат: {}", endColor == Color.WHITE ? "белым" : "черным");
+            case DRAW_WITH_REPETITIONS -> logger.info(
+                    "Ничья: {} повторений позиций доски", EndGameDetector.END_REPETITIONS_COUNT);
+            case DRAW_WITH_NOT_ENOUGH_MATERIAL -> logger.info(
+                    "Ничья: недостаточно фигур, чтобы поставить мат");
+            case DRAW_WITH_PEACE_MOVE_COUNT -> logger.info(
+                    "Ничья: {} ходов без взятия и хода пешки",
+                    EndGameDetector.END_PEACE_MOVE_COUNT);
+        }
+
         // TODO: конец игры, отправлять GameResponse
     }
 
     /** @return удаленная фигура или null, если клетка была пуста */
     private Figure tryMove(Move move) throws ChessError {
         try {
+            roomSettings.endGameDetector.resetGameResult();
             Figure removedFigure = roomSettings.moveSystem.move(move);
             if (logger.isDebugEnabled()) {
                 logger.debug(
