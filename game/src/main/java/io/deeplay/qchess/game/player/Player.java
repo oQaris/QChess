@@ -39,6 +39,10 @@ public abstract class Player {
         return color;
     }
 
+    public GameSettings getRoomSettings() {
+        return roomSettings;
+    }
+
     /** @return возвращает проверенный ход */
     public abstract Move getNextMove() throws ChessError;
 

@@ -29,13 +29,16 @@ public class GameMath {
      * Возвращает хеши для массива с размером 64, равные {@link java.util.Arrays#hashCode(byte[]
      * array)}. Есть возможность пересчитать хеш, не пересчитывая весь массив при его изменении:
      *
-     * <p>{@code hash64 = hashCode64(array);}
+     * <pre>{@code
+     * hash64 = hashCode64(array);
+     * }</pre>
      *
-     * <p>Пересчитывание хеша при изменении массива:
+     * Пересчитывание хеша при изменении массива:
      *
-     * <p>{@code hash64 += GameMath.hash64Coeff[i] * (newValue - array[i]);}
-     *
-     * <p>{@code array[i] = newValue;}
+     * <pre>{@code
+     * hash64 += GameMath.hash64Coeff[i] * (newValue - array[i]);
+     * array[i] = newValue;
+     * }</pre>
      *
      * @param array array.length == 64
      * @return хеш array

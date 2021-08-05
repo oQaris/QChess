@@ -129,8 +129,8 @@ public class Board {
 
     /**
      * @param gs нужен для получения ходов пешек и проверки на шах после хода
-     * @return список ходов для цвета color, включая превращения пешек ТОЛЬКО в ферзя и коня *
-     *     (создает 2 отдельных хода). Все ходы гарантированно корректные и проверены на шах
+     * @return список ходов для цвета color, включая превращения пешек в ферзя, слона, ладью и коня
+     *     (создает 4 отдельных хода). Все ходы гарантированно корректные и проверены на шах
      */
     public List<Move> getAllPreparedMoves(GameSettings gs, Color color) throws ChessError {
         List<Move> allMoves = new LinkedList<>();
@@ -143,13 +143,18 @@ public class Board {
                                 if (move.getMoveType() == MoveType.TURN_INTO
                                         || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
                                     move.setTurnInto(FigureType.QUEEN); // 1 тип превращения
-                                    // проверка на шах 1 превращения:
-                                    if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
+                                    // проверка на шах превращения (проверка для других типов
+                                    // превращения эквивалентна):
+                                    if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) {
                                         allMoves.add(move);
-                                    move = new Move(move, FigureType.KNIGHT); // 2 тип превращения
+                                        // 2, 3, 4 типы превращения:
+                                        allMoves.add(new Move(move, FigureType.KNIGHT));
+                                        allMoves.add(new Move(move, FigureType.ROOK));
+                                        allMoves.add(new Move(move, FigureType.BISHOP));
+                                    }
                                 }
-                                // проверка на шах 2 превращения либо другого хода пешки:
-                                if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
+                                // проверка на шах другого типа хода пешки:
+                                else if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
                                     allMoves.add(move);
                             }
                         } else // обычное заполнение
@@ -215,7 +220,7 @@ public class Board {
         }
         cells[position.row][position.column] = figure;
 
-        int i = position.row * 8 + position.column;
+        int i = position.row * STD_BOARD_SIZE + position.column;
         cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
         cellsType[i] = figure.figureType.type;
 
@@ -434,11 +439,11 @@ public class Board {
 
     /** @return true, если клетка лежит на доске и она пустая, иначе false */
     public boolean isEmptyCell(Cell cell) {
-        try {
-            return cells[cell.row][cell.column] == null;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return false;
-        }
+        int column = cell.column;
+        int row = cell.row;
+        if (column >= 0 && row >= 0 && column < boardSize && row < boardSize)
+            return cells[row][column] == null;
+        return false;
     }
 
     /**

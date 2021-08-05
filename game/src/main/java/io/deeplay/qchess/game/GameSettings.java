@@ -13,52 +13,40 @@ public class GameSettings {
     public final History history;
     public final int boardSize;
     public final Board.BoardFilling boardType;
-    public final String boardFillingForsythEdwards;
-
-    public GameSettings(int boardSize, Board.BoardFilling boardType) {
-        this.boardSize = boardSize;
-        this.boardType = boardType;
-        this.boardFillingForsythEdwards = null;
-        board = new Board(boardSize, boardType);
-        history = new History(this);
-        endGameDetector = new EndGameDetector(this);
-        moveSystem = new MoveSystem(this);
-    }
+    public final String fen;
 
     public GameSettings(Board.BoardFilling boardType) {
         this.boardSize = Board.STD_BOARD_SIZE;
         this.boardType = boardType;
-        this.boardFillingForsythEdwards = null;
-        board = new Board(boardType);
-        history = new History(this);
-        endGameDetector = new EndGameDetector(this);
-        moveSystem = new MoveSystem(this);
+        this.fen = null;
+        this.board = new Board(boardType);
+        this.history = new History(this);
+        this.endGameDetector = new EndGameDetector(this);
+        this.moveSystem = new MoveSystem(this);
     }
 
-    public GameSettings(String boardFillingForsythEdwards) throws ChessError {
+    public GameSettings(String fen) throws ChessError {
         this.boardSize = 0;
         this.boardType = null;
-        this.boardFillingForsythEdwards = boardFillingForsythEdwards;
-        board = new Board(boardFillingForsythEdwards);
-        history = new History(this);
-        endGameDetector = new EndGameDetector(this);
-        moveSystem = new MoveSystem(this);
+        this.fen = fen;
+        this.board = new Board(fen);
+        this.history = new History(this);
+        this.endGameDetector = new EndGameDetector(this);
+        this.moveSystem = new MoveSystem(this);
     }
 
     /** Копирует gs */
     public GameSettings(GameSettings gs) {
-        this.board = new Board(gs.board);
-        this.moveSystem = new MoveSystem(this);
-        this.endGameDetector = new EndGameDetector(this);
-        this.history = new History(gs.history, this);
         this.boardSize = gs.boardSize;
         this.boardType = gs.boardType;
-        this.boardFillingForsythEdwards = gs.boardFillingForsythEdwards;
+        this.fen = gs.fen;
+        this.board = new Board(gs.board);
+        this.history = new History(gs.history, this);
+        this.endGameDetector = new EndGameDetector(this);
+        this.moveSystem = new MoveSystem(this);
     }
 
     public GameSettings newWithTheSameSettings() throws ChessError {
-        return boardType != null
-                ? new GameSettings(boardSize, boardType)
-                : new GameSettings(boardFillingForsythEdwards);
+        return boardType != null ? new GameSettings(boardType) : new GameSettings(fen);
     }
 }

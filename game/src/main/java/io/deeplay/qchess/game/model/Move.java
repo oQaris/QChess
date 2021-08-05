@@ -6,18 +6,25 @@ import java.util.Objects;
 
 public class Move {
     @SerializedName("type")
-    private MoveType moveType;
+    private final MoveType moveType;
 
     @SerializedName("from")
-    private Cell from;
+    private final Cell from;
 
     @SerializedName("to")
-    private Cell to;
+    private final Cell to;
 
     /**
      * Не должно влиять на equals и hashCode, чтобы, проверяя корректность ходов, у пешек не
      * возникали дополнительные условия, т.к. пешки на доске не знают во что превратиться без
-     * запроса игрока. Проверка вынесена в MoveSystem
+     * запроса игрока, смотреть {@link
+     * io.deeplay.qchess.game.logics.MoveSystem#inAvailableMoves(Move move)}.
+     *
+     * <p>Он использует {@link java.util.List#contains(Object o)}, поэтому turnInto должно быть
+     * {@code null}. Проверка пешки на превращение вынесена в {@link
+     * io.deeplay.qchess.game.logics.MoveSystem#checkCorrectnessIfSpecificMove(Move move)}.
+     *
+     * <p>Также превращение проверяется в проверке виртуального хода
      */
     @SerializedName("turnInto")
     private FigureType turnInto;
