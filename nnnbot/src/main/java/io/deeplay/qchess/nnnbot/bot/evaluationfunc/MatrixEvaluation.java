@@ -94,14 +94,14 @@ public class MatrixEvaluation {
         for (Figure figure : gs.board.getAllFigures()) {
             int column = figure.getCurrentPosition().column;
             int tempRow = figure.getCurrentPosition().row;
-            // Разворачиваем массив ценностей для черных
+            // Разворачиваем массив ценностей для текущего цвета (чем выше в матрице, тем ценнее)
             int row = figure.getColor() == Color.BLACK ? 7 - tempRow : tempRow;
 
             int eval = evaluations.get(figure.figureType)[row][column];
             if (figure.getColor() == myColor) myEstimation += eval;
             else enemyEstimation += eval;
         }
-        return 5 * myEstimation - 4 * enemyEstimation;
+        return myEstimation - enemyEstimation;
     }
 
     /**

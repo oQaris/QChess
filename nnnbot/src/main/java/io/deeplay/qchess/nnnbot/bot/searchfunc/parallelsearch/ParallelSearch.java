@@ -19,10 +19,6 @@ public abstract class ParallelSearch implements SearchFunc {
     public final Color myColor;
     public final Color enemyColor;
 
-    protected volatile Move theBestMove;
-    protected volatile double theBestEvaluation = Double.MIN_VALUE;
-    protected volatile double theBestDepth;
-
     protected ParallelSearch(
             GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
         this.gs = gs;
@@ -30,16 +26,6 @@ public abstract class ParallelSearch implements SearchFunc {
         this.myColor = color;
         this.enemyColor = color.inverse();
         this.maxDepth = maxDepth;
-        this.theBestDepth = maxDepth;
-    }
-
-    protected synchronized void tryUpdateTheBestEvaluation(
-            Move move, double evaluation, int depth) {
-        if (depth <= theBestDepth && evaluation > theBestEvaluation) {
-            theBestEvaluation = evaluation;
-            theBestMove = move;
-            // TODO: top moves
-        }
     }
 
     @Override
@@ -63,9 +49,12 @@ public abstract class ParallelSearch implements SearchFunc {
 
         return theBest;
     }
-
     /** @return лучшая оценка для текущего цвета myColor */
     public abstract int run(int depth) throws ChessError;
+
+    protected boolean timesUp() {
+        return false; // TODO
+    }
 
     protected boolean isTerminalNode(List<Move> allMoves) {
         return allMoves.isEmpty() || gs.endGameDetector.isDraw();

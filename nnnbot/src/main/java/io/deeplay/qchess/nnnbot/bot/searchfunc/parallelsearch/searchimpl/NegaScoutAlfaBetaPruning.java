@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch;
+package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -6,6 +6,8 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.ParallelSearch;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -34,22 +36,23 @@ public class NegaScoutAlfaBetaPruning extends ParallelSearch {
 
         SearchImprovements.prioritySort(allMoves);
 
-        int estimation;
-        boolean isFirst = true;
+        Iterator<Move> it = allMoves.iterator();
+        Move move = it.next();
+        // first move:
+        gs.moveSystem.move(move);
+        int estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1);
+        if (estimation > alfa) alfa = estimation;
+        gs.moveSystem.undoMove();
 
-        for (Move move : allMoves) {
+        while (beta > alfa && it.hasNext()) {
+            move = it.next();
             gs.moveSystem.move(move);
-            if (isFirst) {
-                estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1);
-                isFirst = false;
-            } else {
-                estimation = -pvs(!isMyMove, -alfa - 1, -alfa, depth - 1);
-                if (alfa < estimation && estimation < beta)
-                    estimation = -pvs(!isMyMove, -beta, -estimation, depth - 1);
-            }
+            // null-window search:
+            estimation = -pvs(!isMyMove, -alfa - 1, -alfa, depth - 1);
+            if (alfa < estimation && estimation < beta)
+                estimation = -pvs(!isMyMove, -beta, -estimation, depth - 1);
             gs.moveSystem.undoMove();
             if (estimation > alfa) alfa = estimation;
-            if (beta <= alfa) break;
         }
 
         return alfa;
