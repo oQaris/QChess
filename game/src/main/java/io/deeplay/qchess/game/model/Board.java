@@ -471,11 +471,11 @@ public class Board {
 
     /** @return true, если клетка лежит на доске и она пустая, иначе false */
     public boolean isEmptyCell(Cell cell) {
-        int column = cell.column;
-        int row = cell.row;
-        if (column >= 0 && row >= 0 && column < boardSize && row < boardSize)
-            return cells[row][column] == null;
-        return false;
+        try {
+            return cells[cell.row][cell.column] == null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     /**
