@@ -295,7 +295,7 @@ public class MoveSystem {
             for (Figure f : board.getFigures(color))
                 for (Move m : f.getAllMoves(gs)) {
                     if (m.getMoveType() == MoveType.TURN_INTO
-                        || m.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+                            || m.getMoveType() == MoveType.TURN_INTO_ATTACK) {
                         m.setTurnInto(FigureType.QUEEN); // только для проверки виртуального хода
                     }
                     if (isCorrectVirtualMoveSilence(m)) count++;

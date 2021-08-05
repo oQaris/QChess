@@ -28,14 +28,14 @@ public class GameDAO {
         Database.getInstance().setEnemyType(playerType);
     }
 
-    /** @return тип игрока клиента */
-    public static PlayerType getMyType() {
-        return Database.getInstance().getMyType();
-    }
-
     /** Устанавливает тип игрока клиента */
     public static void setMyType(PlayerType playerType) {
         Database.getInstance().setMyType(playerType);
+    }
+
+    /** @return тип игрока клиента */
+    public static PlayerType getMyType() {
+        return Database.getInstance().getMyType();
     }
 
     /** @return настройки текущей игры */

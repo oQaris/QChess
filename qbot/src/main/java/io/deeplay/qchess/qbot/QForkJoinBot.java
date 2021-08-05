@@ -58,7 +58,13 @@ public class QForkJoinBot extends RemotePlayer {
     public int minimaxRoot(final Move move) throws ChessError {
         ms.move(move);
         final int res =
-                minimax(new GameSettings(roomSettings), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, color, null);
+                minimax(
+                        new GameSettings(roomSettings),
+                        depth,
+                        Integer.MIN_VALUE,
+                        Integer.MAX_VALUE,
+                        color,
+                        null);
         ms.undoMove();
         return res;
     }

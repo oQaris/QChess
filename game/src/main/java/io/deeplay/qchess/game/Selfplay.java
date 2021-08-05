@@ -99,7 +99,7 @@ public class Selfplay {
                 // TODO: отправлять ответ GameResponse, что ход некорректный
                 throw new IllegalArgumentException("некорректный ход");
             }
-            egd.updateEndGameStatus();
+            egd.updateEndGameStatus(currentPlayerToMove.getColor());
         }
         switch (egd.getGameResult()) {
             case NOTHING -> throw new ChessError(GAME_RESULT_ERROR);

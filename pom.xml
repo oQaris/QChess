@@ -2,10 +2,14 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>QChess</artifactId>
+  <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.deeplay</groupId>
-  <modelVersion>4.0.0</modelVersion>
+  <artifactId>QChess</artifactId>
+  <version>0.0.1</version>
+
+  <packaging>pom</packaging>
+
   <modules>
     <module>client</module>
     <module>server</module>
@@ -16,14 +20,10 @@
     <module>qbot</module>
   </modules>
 
-  <packaging>pom</packaging>
-
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <version>0.0.1</version>
 
 </project>

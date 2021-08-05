@@ -50,19 +50,19 @@
   </appender>
 
   <!-- Для вывода результатов игр с сервера -->
-  <appender class="ch.qos.logback.classic.sift.SiftingAppender" name="SIFTER">
+  <appender name="SIFTER" class="ch.qos.logback.classic.sift.SiftingAppender">
     <discriminator>
-      <defaultValue>ALL</defaultValue>
       <key>path</key>
+      <defaultValue>ALL</defaultValue>
     </discriminator>
 
     <sift>
-      <appender class="ch.qos.logback.core.FileAppender" name="FILE-${path}">
+      <appender name="FILE-${path}" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/rooms/${path}.log</file>
+
         <encoder>
           <pattern>%msg%n</pattern>
         </encoder>
-
-        <file>target/logs/rooms/${path}.log</file>
       </appender>
     </sift>
   </appender>

@@ -297,8 +297,7 @@ public class Board {
     /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
     public int isCastlingPossible(Color color) throws ChessError {
         Figure king = findKing(color);
-        if (king == null)
-            throw new ChessError(KING_NOT_FOUND);
+        if (king == null) throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return 0;
         return (isNotLeftRookStandardMoved(color) ? 1 : 0)
                 + (isNotRightRookStandardMoved(color) ? 2 : 0);
@@ -442,7 +441,7 @@ public class Board {
     public boolean isEmptyCell(Cell cell) {
         int column = cell.column;
         int row = cell.row;
-        if(column >= 0 && row >= 0 && column < boardSize && row < boardSize)
+        if (column >= 0 && row >= 0 && column < boardSize && row < boardSize)
             return cells[row][column] == null;
         return false;
     }

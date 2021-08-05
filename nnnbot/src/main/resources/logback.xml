@@ -14,40 +14,40 @@
   </appender>
 
   <!-- Для вывода результатов игр локально -->
-  <appender class="ch.qos.logback.classic.sift.SiftingAppender" name="GAME-STATISTICS">
+  <appender name="GAME-STATISTICS" class="ch.qos.logback.classic.sift.SiftingAppender">
     <discriminator>
-      <defaultValue>TIME</defaultValue>
       <key>time</key>
+      <defaultValue>TIME</defaultValue>
     </discriminator>
 
     <sift>
-      <appender class="ch.qos.logback.core.FileAppender" name="FILE-${time}">
+      <appender name="FILE-${time}" class="ch.qos.logback.core.FileAppender">
         <append>false</append>
+
+        <file>logs/${time}-qchess-statistics.log</file>
 
         <encoder>
           <pattern>%msg%n</pattern>
         </encoder>
-
-        <file>logs/${time}-qchess-statistics.log</file>
       </appender>
     </sift>
   </appender>
 
-  <appender class="ch.qos.logback.classic.sift.SiftingAppender" name="GAME-MOVES">
+  <appender name="GAME-MOVES" class="ch.qos.logback.classic.sift.SiftingAppender">
     <discriminator>
-      <defaultValue>GAME</defaultValue>
       <key>game</key>
+      <defaultValue>GAME</defaultValue>
     </discriminator>
 
     <sift>
-      <appender class="ch.qos.logback.core.FileAppender" name="FILE-${game}">
+      <appender name="FILE-${game}" class="ch.qos.logback.core.FileAppender">
         <append>false</append>
+
+        <file>logs/${game}-qchess-statistics.log</file>
 
         <encoder>
           <pattern>%msg%n</pattern>
         </encoder>
-
-        <file>logs/${game}-qchess-statistics.log</file>
       </appender>
     </sift>
   </appender>
