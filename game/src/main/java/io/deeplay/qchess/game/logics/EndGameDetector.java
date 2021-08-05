@@ -1,7 +1,6 @@
 package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.GameSettings;
-import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
@@ -49,8 +48,7 @@ public class EndGameDetector {
      * @return результат игры для цвета color, у которого все доступные ходы в allMoves
      */
     public EndGameType updateGameResult(List<Move> allMoves, Color color) {
-        boolean isStalemate = allMoves.isEmpty();
-        if (isStalemate) {
+        if (isStalemate(allMoves)) {
             gameResult = isCheck(color) ? EndGameType.CHECKMATE : EndGameType.STALEMATE;
         } else {
             isDraw();
@@ -170,9 +168,19 @@ public class EndGameDetector {
         return isStalemate(color) && isCheck(color);
     }
 
+    /** @return true, если установленному цвету поставили мат */
+    public boolean isCheckmate(List<Move> allMoves, Color color) {
+        return isStalemate(allMoves) && isCheck(color);
+    }
+
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(Color color) {
         return gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
+    }
+
+    /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
+    public boolean isStalemate(List<Move> allMoves) {
+        return allMoves.isEmpty();
     }
 
     /** @return true если игроку с указанным цветом ставят шах */

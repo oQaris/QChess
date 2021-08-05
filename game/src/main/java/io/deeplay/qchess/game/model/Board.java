@@ -129,8 +129,8 @@ public class Board {
 
     /**
      * @param gs нужен для получения ходов пешек и проверки на шах после хода
-     * @return список ходов для цвета color, включая превращения пешек ТОЛЬКО в ферзя и коня *
-     *     (создает 2 отдельных хода). Все ходы гарантированно корректные и проверены на шах
+     * @return список ходов для цвета color, включая превращения пешек в ферзя, слона, ладью и коня
+     *     (создает 4 отдельных хода). Все ходы гарантированно корректные и проверены на шах
      */
     public List<Move> getAllPreparedMoves(GameSettings gs, Color color) throws ChessError {
         List<Move> allMoves = new LinkedList<>();
@@ -143,13 +143,18 @@ public class Board {
                                 if (move.getMoveType() == MoveType.TURN_INTO
                                         || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
                                     move.setTurnInto(FigureType.QUEEN); // 1 тип превращения
-                                    // проверка на шах 1 превращения:
-                                    if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
+                                    // проверка на шах превращения (проверка для других типов
+                                    // превращения эквивалентна):
+                                    if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) {
                                         allMoves.add(move);
-                                    move = new Move(move, FigureType.KNIGHT); // 2 тип превращения
+                                        // 2, 3, 4 типы превращения:
+                                        allMoves.add(new Move(move, FigureType.KNIGHT));
+                                        allMoves.add(new Move(move, FigureType.ROOK));
+                                        allMoves.add(new Move(move, FigureType.BISHOP));
+                                    }
                                 }
-                                // проверка на шах 2 превращения либо другого хода пешки:
-                                if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
+                                // проверка на шах другого типа хода пешки:
+                                else if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
                                     allMoves.add(move);
                             }
                         } else // обычное заполнение

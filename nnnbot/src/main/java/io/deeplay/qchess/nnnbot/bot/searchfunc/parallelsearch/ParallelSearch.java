@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.SearchFunc;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
 import java.util.List;
 
 /** Поиск с альфа-бета отсечением на заданную глубину */
@@ -45,12 +46,14 @@ public abstract class ParallelSearch implements SearchFunc {
     public Move findBest() throws ChessError {
         List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
         Move theBest = null;
-        double optEstimation = EvaluationFunc.MIN_ESTIMATION;
+        int optEstimation = EvaluationFunc.MIN_ESTIMATION;
+
+        SearchImprovements.prioritySort(allMoves);
 
         // TODO: запуск нескольких потоков для начальной глубины
         for (Move move : allMoves) {
             gs.moveSystem.move(move);
-            double estimation = run(false, maxDepth);
+            int estimation = run(maxDepth);
             gs.moveSystem.undoMove();
             if (estimation > optEstimation || theBest == null) {
                 optEstimation = estimation;
@@ -62,30 +65,26 @@ public abstract class ParallelSearch implements SearchFunc {
     }
 
     /** @return лучшая оценка для текущего цвета myColor */
-    public abstract double run(boolean isMyMove, int depth) throws ChessError;
+    public abstract int run(int depth) throws ChessError;
 
     protected boolean isTerminalNode(List<Move> allMoves) {
         return allMoves.isEmpty() || gs.endGameDetector.isDraw();
     }
 
-    protected double getEvaluation(List<Move> allMoves, boolean isMyMove, int depth)
-            throws ChessError {
+    protected int getEvaluation(List<Move> allMoves, boolean isMyMove) throws ChessError {
         List<Move> allEnemyMoves;
         List<Move> allMyMoves;
         if (isMyMove) {
             allMyMoves = allMoves;
-            if (allMyMoves.isEmpty()) return EvaluationFunc.MIN_ESTIMATION;
+            if (gs.endGameDetector.isStalemate(allMyMoves)) return EvaluationFunc.MIN_ESTIMATION;
 
-            allEnemyMoves = gs.moveSystem.getAllCorrectMovesSilence(enemyColor);
-            if (allEnemyMoves.isEmpty() && gs.endGameDetector.isCheck(enemyColor))
-                return EvaluationFunc.MAX_ESTIMATION;
+            if (gs.endGameDetector.isCheckmate(enemyColor)) return EvaluationFunc.MAX_ESTIMATION;
         } else {
             allEnemyMoves = allMoves;
-            if (allEnemyMoves.isEmpty() && gs.endGameDetector.isCheck(enemyColor))
+            if (gs.endGameDetector.isCheckmate(allEnemyMoves, enemyColor))
                 return EvaluationFunc.MAX_ESTIMATION;
 
-            allMyMoves = gs.moveSystem.getAllCorrectMovesSilence(myColor);
-            if (allMyMoves.isEmpty()) return EvaluationFunc.MIN_ESTIMATION;
+            if (gs.endGameDetector.isStalemate(myColor)) return EvaluationFunc.MIN_ESTIMATION;
         }
 
         if (gs.endGameDetector.isDraw()) return EvaluationFunc.MIN_ESTIMATION;

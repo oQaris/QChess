@@ -88,8 +88,9 @@ public class MatrixEvaluation {
      *
      * @param myColor цвет игрока, который укрепляет свою позицию
      */
-    public static double defenseHeuristics(GameSettings gs, Color myColor) {
-        int estimation = 0;
+    public static int defenseHeuristics(GameSettings gs, Color myColor) {
+        int enemyEstimation = 0;
+        int myEstimation = 0;
         for (Figure figure : gs.board.getAllFigures()) {
             int column = figure.getCurrentPosition().column;
             int tempRow = figure.getCurrentPosition().row;
@@ -97,10 +98,10 @@ public class MatrixEvaluation {
             int row = figure.getColor() == Color.BLACK ? 7 - tempRow : tempRow;
 
             int eval = evaluations.get(figure.figureType)[row][column];
-            if (figure.getColor() != myColor) eval = -eval;
-            estimation += eval;
+            if (figure.getColor() == myColor) myEstimation += eval;
+            else enemyEstimation += eval;
         }
-        return estimation;
+        return 5 * myEstimation - 4 * enemyEstimation;
     }
 
     /**
@@ -108,28 +109,7 @@ public class MatrixEvaluation {
      *
      * @param myColor цвет игрока, который атакует соперника
      */
-    public static double attackHeuristics(GameSettings gs, Color myColor) {
-        Color enemyColor = myColor.inverse();
-        int estimation = 0;
-        for (Figure figure : gs.board.getAllFigures()) {
-            int column = figure.getCurrentPosition().column;
-            int tempRow = figure.getCurrentPosition().row;
-            // Разворачиваем массив ценностей для черных
-            int row = figure.getColor() == Color.BLACK ? 7 - tempRow : tempRow;
-
-            int eval = evaluations.get(figure.figureType)[row][column];
-            if (figure.getColor() != enemyColor) eval = -eval;
-            estimation += eval;
-        }
-        return estimation;
-    }
-
-    /**
-     * Эвристика атаки и защиты
-     *
-     * @param myColor цвет игрока, который укрепляет свою позицию и пытается атаковать противника
-     */
-    public static double attackDefenseHeuristics(GameSettings gs, Color myColor) {
-        return defenseHeuristics(gs, myColor) + 0.5 * attackHeuristics(gs, myColor);
+    public static int attackHeuristics(GameSettings gs, Color myColor) {
+        return -defenseHeuristics(gs, myColor.inverse());
     }
 }

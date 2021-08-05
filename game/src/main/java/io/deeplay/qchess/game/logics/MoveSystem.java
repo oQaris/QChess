@@ -292,8 +292,8 @@ public class MoveSystem {
      * Использует реализацию низкого уровня из доски {@link Board#getAllPreparedMoves(GameSettings
      * gs, Color color)}
      *
-     * @return список ходов для цвета color, включая превращения пешек ТОЛЬКО в ферзя и коня
-     *     (создает 2 отдельных хода). Все ходы гарантированно корректные и проверены на шах
+     * @return список ходов для цвета color, включая превращения пешек в ферзя, слона, ладью и коня
+     *     (создает 4 отдельных хода). Все ходы гарантированно корректные и проверены на шах
      */
     public List<Move> getAllPreparedMoves(Color color) throws ChessError {
         return board.getAllPreparedMoves(gs, color);
