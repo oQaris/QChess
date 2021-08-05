@@ -71,23 +71,27 @@ public abstract class ParallelSearch implements SearchFunc {
         return allMoves.isEmpty() || gs.endGameDetector.isDraw();
     }
 
-    protected int getEvaluation(List<Move> allMoves, boolean isMyMove) throws ChessError {
+    protected int getEvaluation(List<Move> allMoves, boolean isMyMove, int depth)
+            throws ChessError {
         List<Move> allEnemyMoves;
         List<Move> allMyMoves;
         if (isMyMove) {
             allMyMoves = allMoves;
-            if (gs.endGameDetector.isStalemate(allMyMoves)) return EvaluationFunc.MIN_ESTIMATION;
+            if (gs.endGameDetector.isStalemate(allMyMoves))
+                return EvaluationFunc.MIN_ESTIMATION - depth;
 
-            if (gs.endGameDetector.isCheckmate(enemyColor)) return EvaluationFunc.MAX_ESTIMATION;
+            if (gs.endGameDetector.isCheckmate(enemyColor))
+                return EvaluationFunc.MAX_ESTIMATION + depth;
         } else {
             allEnemyMoves = allMoves;
             if (gs.endGameDetector.isCheckmate(allEnemyMoves, enemyColor))
-                return EvaluationFunc.MAX_ESTIMATION;
+                return EvaluationFunc.MAX_ESTIMATION + depth;
 
-            if (gs.endGameDetector.isStalemate(myColor)) return EvaluationFunc.MIN_ESTIMATION;
+            if (gs.endGameDetector.isStalemate(myColor))
+                return EvaluationFunc.MIN_ESTIMATION - depth;
         }
 
-        if (gs.endGameDetector.isDraw()) return EvaluationFunc.MIN_ESTIMATION;
+        if (gs.endGameDetector.isDraw()) return EvaluationFunc.MIN_ESTIMATION - depth;
 
         return evaluationFunc.getHeuristics(gs, myColor);
     }

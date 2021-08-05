@@ -7,8 +7,8 @@ import io.deeplay.qchess.game.model.Color;
 @FunctionalInterface
 public interface EvaluationFunc {
 
-    int MAX_ESTIMATION = Integer.MAX_VALUE;
-    int MIN_ESTIMATION = -Integer.MAX_VALUE;
+    int MAX_ESTIMATION = Integer.MAX_VALUE - 100;
+    int MIN_ESTIMATION = 100 - Integer.MAX_VALUE;
 
     /** @return значение, которое необходимо увеличивать игроку с цветом color */
     int getHeuristics(GameSettings gs, Color myColor) throws ChessError;

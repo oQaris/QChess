@@ -33,7 +33,7 @@ public class MinimaxAlfaBetaPruning extends ParallelSearch {
      */
     private int minimax(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
         List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
-        if (depth <= 0 || isTerminalNode(allMoves)) return getEvaluation(allMoves, isMyMove);
+        if (depth <= 0 || isTerminalNode(allMoves)) return getEvaluation(allMoves, isMyMove, depth);
 
         int optEstimation =
                 isMyMove ? EvaluationFunc.MIN_ESTIMATION : EvaluationFunc.MAX_ESTIMATION;

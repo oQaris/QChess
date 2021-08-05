@@ -34,7 +34,9 @@ public class NegamaxAlfaBetaPruning extends ParallelSearch {
     public int negamax(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
         List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
         if (depth <= 0 || isTerminalNode(allMoves))
-            return isMyMove ? getEvaluation(allMoves, true) : -getEvaluation(allMoves, false);
+            return isMyMove
+                    ? getEvaluation(allMoves, true, depth)
+                    : -getEvaluation(allMoves, false, depth);
 
         int optEstimation = EvaluationFunc.MIN_ESTIMATION;
         int estimation;
