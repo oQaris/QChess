@@ -1,5 +1,5 @@
 package io.deeplay.qchess.lobot;
 
 public enum TraversalAlgorithm {
-    MINIMAX, EXPECTIMAX, NEGASCOUT
+    MINIMAX, EXPECTIMAX, NEGAMAX, NEGAMAXALPHABETA, NEGASCOUT
 }
