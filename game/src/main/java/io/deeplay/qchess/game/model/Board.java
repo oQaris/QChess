@@ -220,7 +220,7 @@ public class Board {
         }
         cells[position.row][position.column] = figure;
 
-        int i = position.row * 8 + position.column;
+        int i = position.row * STD_BOARD_SIZE + position.column;
         cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
         cellsType[i] = figure.figureType.type;
 
@@ -297,7 +297,8 @@ public class Board {
     /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
     public int isCastlingPossible(Color color) throws ChessError {
         Figure king = findKing(color);
-        if (king == null) throw new ChessError(KING_NOT_FOUND);
+        if (king == null)
+            throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved()) return 0;
         return (isNotLeftRookStandardMoved(color) ? 1 : 0)
                 + (isNotRightRookStandardMoved(color) ? 2 : 0);
@@ -439,11 +440,11 @@ public class Board {
 
     /** @return true, если клетка лежит на доске и она пустая, иначе false */
     public boolean isEmptyCell(Cell cell) {
-        try {
-            return cells[cell.row][cell.column] == null;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return false;
-        }
+        int column = cell.column;
+        int row = cell.row;
+        if(column >= 0 && row >= 0 && column < boardSize && row < boardSize)
+            return cells[row][column] == null;
+        return false;
     }
 
     /**

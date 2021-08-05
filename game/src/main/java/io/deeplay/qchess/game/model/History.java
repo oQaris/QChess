@@ -251,6 +251,8 @@ public class History {
      *     было меньше
      */
     public boolean checkRepetitions(int repetition) {
+        final BoardState lastState = recordsList.peek();
+        if (lastState == null) return false;
         return repetitionsMap.get(recordsList.peek()) >= repetition;
     }
 

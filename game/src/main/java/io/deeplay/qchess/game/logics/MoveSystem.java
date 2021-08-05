@@ -224,6 +224,7 @@ public class MoveSystem {
      * @throws ChessException Если выбрасывается в функции func.
      * @throws ChessError Если выбрасывается в функции func.
      */
+    @Deprecated
     public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
         logger.trace("Виртуальный ход {}", move);
         Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
@@ -236,7 +237,7 @@ public class MoveSystem {
     /**
      * @param color цвет фигур
      * @return все возможные ходы
-     * @deprecated использовать только внутри движка. Для своих целей лучше использовать {@link
+     * @deprecated Использовать только внутри движка. Для своих целей лучше использовать {@link
      *     #getAllPreparedMoves(Color color)}
      */
     @Deprecated
@@ -286,6 +287,22 @@ public class MoveSystem {
         } catch (ChessError ignore) {
         }
         return res;
+    }
+
+    public int getMoveCounts(Color color) {
+        int count = 0;
+        try {
+            for (Figure f : board.getFigures(color))
+                for (Move m : f.getAllMoves(gs)) {
+                    if (m.getMoveType() == MoveType.TURN_INTO
+                        || m.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+                        m.setTurnInto(FigureType.QUEEN); // только для проверки виртуального хода
+                    }
+                    if (isCorrectVirtualMoveSilence(m)) count++;
+                }
+        } catch (ChessError ignore) {
+        }
+        return count;
     }
 
     /**
