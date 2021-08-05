@@ -39,11 +39,9 @@ public class MonteCarloStrategy extends Strategy {
                         }
                         wins.addAndGet(
                                 switch (gs.endGameDetector.getGameResult()) {
-                                    case CHECKMATE_TO_BLACK -> 2;
-                                    case CHECKMATE_TO_WHITE -> -2;
-                                    case STALEMATE_TO_BLACK -> 1;
-                                    case STALEMATE_TO_WHITE -> -1;
-                                    default -> 0; // ничьи
+                                    case CHECKMATE_TO_BLACK -> 1;
+                                    case CHECKMATE_TO_WHITE -> -1;
+                                    default -> 0; // ничьи и паты
                                 });
                     });
         }

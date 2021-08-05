@@ -155,7 +155,7 @@ public class EndGameDetector {
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(Color color) {
-        boolean res = gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
+        boolean res = gs.moveSystem.getMoveCounts(color) == 0;
         if (res && gameResult == EndGameType.NOTHING)
             gameResult =
                     (color == Color.WHITE

@@ -289,11 +289,27 @@ public class MoveSystem {
         return res;
     }
 
+    public int getMoveCounts(Color color) {
+        int count = 0;
+        try {
+            for (Figure f : board.getFigures(color))
+                for (Move m : f.getAllMoves(gs)) {
+                    if (m.getMoveType() == MoveType.TURN_INTO
+                        || m.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+                        m.setTurnInto(FigureType.QUEEN); // только для проверки виртуального хода
+                    }
+                    if (isCorrectVirtualMoveSilence(m)) count++;
+                }
+        } catch (ChessError ignore) {
+        }
+        return count;
+    }
+
     /**
      * Использует реализацию низкого уровня из доски {@link Board#getAllPreparedMoves(GameSettings
      * gs, Color color)}
      *
-     * @return список ходов для цвета color, включая превращения пешек ТОЛЬКО в ферзя и коня
+     * @return Список ходов для цвета color, включая превращения пешек ТОЛЬКО в ферзя и коня
      *     (создает 2 отдельных хода). Все ходы гарантированно корректные и проверены на шах
      */
     public List<Move> getAllPreparedMoves(Color color) throws ChessError {

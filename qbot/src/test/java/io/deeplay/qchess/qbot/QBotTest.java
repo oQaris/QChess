@@ -47,7 +47,7 @@ class QBotTest {
 
         // -89
         assertEquals(-79, grade);
-        //assertEquals(new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
+        // assertEquals(new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }
 
     @Test
@@ -96,7 +96,7 @@ class QBotTest {
         Move bestMove = bot.getNextMove();
 
         assertEquals(-79, grade);
-        //assertEquals(new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
+        // assertEquals(new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
     }
 
     @Test

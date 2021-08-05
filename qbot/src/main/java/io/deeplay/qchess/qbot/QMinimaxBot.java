@@ -50,7 +50,7 @@ public class QMinimaxBot extends RemotePlayer {
         final List<Move> allMoves = ms.getAllPreparedMoves(color);
         sortMoves(allMoves);
         for (Move move : allMoves) {
-            int curGrade = minimaxRootWithVirtualMove(move);
+            final int curGrade = minimaxRootWithVirtualMove(move);
             if (color == Color.WHITE) {
                 if (curGrade > maxGrade) {
                     maxGrade = curGrade;
@@ -74,8 +74,9 @@ public class QMinimaxBot extends RemotePlayer {
     public int minimaxRootWithVirtualMove(final Move move) throws ChessError {
         logger.debug("Минимакс с виртуальным {} ходом стартовал", move);
         ms.move(move);
-        int res =
+        final int res =
                 minimax(
+                        roomSettings,
                         depth,
                         Integer.MIN_VALUE,
                         Integer.MAX_VALUE,
@@ -93,7 +94,13 @@ public class QMinimaxBot extends RemotePlayer {
                 "Минимакс стартовал с глубиной поиска: {}. Максимизирует? {}",
                 depth,
                 isMaximisingPlayer);
-        int res = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isMaximisingPlayer);
+        final int res =
+                minimax(
+                        roomSettings,
+                        depth,
+                        Integer.MIN_VALUE,
+                        Integer.MAX_VALUE,
+                        isMaximisingPlayer);
         logger.debug("Оценка хода: {}", res);
         return res;
     }
@@ -108,17 +115,22 @@ public class QMinimaxBot extends RemotePlayer {
      * @return Оценку позиции на доске
      * @throws ChessError При выполнении некорректного хода (при нормальной работе невозможно)
      */
-    private int minimax(final int depth, int alpha, int beta, final boolean isMaximisingPlayer)
+    private int minimax(
+            final GameSettings node,
+            final int depth,
+            int alpha,
+            int beta,
+            final boolean isMaximisingPlayer)
             throws ChessError {
         logger.trace("Глубина поиска: {}", depth);
-        if (depth == 0) return strategy.evaluateBoard(board);
+        if (depth == 0) return strategy.evaluateBoard(node.board);
 
         final Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
-        final List<Move> allMoves = ms.getAllPreparedMoves(curColor);
+        final List<Move> allMoves = node.moveSystem.getAllPreparedMoves(curColor);
         // Если терминальный узел
         // todo Оптимизировать, чтоб два раза не вызывать ms.getAllMoves
-        final EndGameType gameResult = egd.updateEndGameStatus();
-        egd.revertEndGameStatus();
+        final EndGameType gameResult = node.endGameDetector.updateEndGameStatus();
+        node.endGameDetector.revertEndGameStatus();
         if (gameResult != EndGameType.NOTHING) return strategy.gradeIfTerminalNode(gameResult);
 
         sortMoves(allMoves);
@@ -127,18 +139,20 @@ public class QMinimaxBot extends RemotePlayer {
         if (isMaximisingPlayer) {
             value = Integer.MIN_VALUE;
             for (Move move : allMoves) {
-                ms.move(move);
-                value = Math.max(value, minimax(depth - 1, alpha, beta, false));
-                ms.undoMove();
+                GameSettings newNode = new GameSettings(node);
+                newNode.moveSystem.move(move);
+                value = Math.max(value, minimax(newNode, depth - 1, alpha, beta, false));
+                // ms.undoMove();
                 alpha = Math.max(alpha, value);
                 if (value >= beta) break;
             }
         } else {
             value = Integer.MAX_VALUE;
             for (Move move : allMoves) {
-                ms.move(move);
-                value = Math.min(value, minimax(depth - 1, alpha, beta, true));
-                ms.undoMove();
+                GameSettings newNode = new GameSettings(node);
+                newNode.moveSystem.move(move);
+                value = Math.min(value, minimax(newNode, depth - 1, alpha, beta, true));
+                // ms.undoMove();
                 beta = Math.min(beta, value);
                 if (value <= alpha) break;
             }
