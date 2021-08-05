@@ -139,10 +139,8 @@ public class LoBot extends RemotePlayer {
         return -bestMoveValue;
     }
 
-    @Deprecated
     private int negascout(int depth, int alpha, int beta, Color currentColor)
         throws ChessError, ChessException {
-        int b, t;
         if (depth == 0) {
             return -evaluateStrategy.evaluateBoard(roomSettings.board, color);
         }
@@ -151,21 +149,28 @@ public class LoBot extends RemotePlayer {
 
         if (moves.isEmpty() && egd.isCheck(currentColor)) return (currentColor == color? Integer.MIN_VALUE : Integer.MAX_VALUE);
 
-        b = beta;
-        for (Move move : moves) {
-            final int bb = b;
-            final int aa = alpha;
-            t = roomSettings.moveSystem.virtualMove(move, (from, to) ->
-                -negascout (depth - 1, -bb, -aa, currentColor.inverse()));
-            if ((t > alpha) && (t < beta))
-                t = roomSettings.moveSystem.virtualMove(move, (from, to) ->
-                -negascout (depth - 1, -beta, -aa, currentColor.inverse()));
-            alpha = Math.max(alpha, t);
-            if (alpha >= beta)
-                return alpha;
-            b = alpha + 1;
+        for (int i = 0; i < moves.size(); i++) {
+            final int alphaForLambda = alpha;
+            final int betaForLambda = beta;
+            int currentValue;
+            if (i == 0)
+                currentValue = roomSettings.moveSystem.virtualMove(moves.get(i), (from, to) ->
+                    negamaxWithAlphaBeta(depth - 1, -betaForLambda, -alphaForLambda, currentColor.inverse()));
+            else
+                currentValue = roomSettings.moveSystem.virtualMove(moves.get(i), (from, to) ->
+                    negamaxWithAlphaBeta(depth - 1, -alphaForLambda - 1, -alphaForLambda, currentColor.inverse()));
+            if (alpha < currentValue && currentValue < beta) {
+                final int currentValueForLambda = currentValue;
+                currentValue = roomSettings.moveSystem.virtualMove(moves.get(i), (from, to) ->
+                    negamaxWithAlphaBeta(depth - 1, -betaForLambda, -currentValueForLambda,
+                        currentColor.inverse()));
+            }
+            alpha = Math.max(alpha, currentValue);
+            if (alpha >= beta) {
+                break;
+            }
         }
-        return alpha;
+        return -alpha;
     }
 
     private int expectimax(int depth, Color currentColor) throws ChessError, ChessException {

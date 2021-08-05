@@ -19,22 +19,30 @@ import org.slf4j.LoggerFactory;
 
 public class LoBotTest {
     private static final Logger logger = LoggerFactory.getLogger(LoBotTest.class);
-    private static final int GAME_COUNT = 50;
+    private static final int GAME_COUNT = 1000;
 
     @Test
     public void testGame() {
         ExecutorService executor = Executors.newCachedThreadPool();
+        final int[] results = new int[3];
+        Arrays.fill(results, 0);
         long startTime = System.currentTimeMillis();
 
         for (int i = 1; i <= GAME_COUNT; i++) {
             // executor.execute(
             //        () -> {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 2, TraversalAlgorithm.NEGASCOUT);
-            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 2, TraversalAlgorithm.NEGASCOUT);
+            Player secondPlayer = new LoBot(roomSettings, Color.BLACK, new StaticPositionMatrixEvaluateStrategy(), 2, TraversalAlgorithm.MINIMAX);
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
                 game.run();
+                int index = getEndGameType(roomSettings.endGameDetector.getGameResult());
+                if (index < 3) {
+                    results[index]++;
+                } else {
+                    logger.info("{} WTF?!", i);
+                }
             } catch (ChessError e) {
                 e.printStackTrace();
             }
@@ -42,6 +50,7 @@ public class LoBotTest {
             logger.info("Game {} complete", i);
         }
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
+        logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
         executor.shutdown();
     }
 
@@ -120,15 +129,16 @@ public class LoBotTest {
     }
 
     @Test
-    @Deprecated
     public void testGameNegascout() {
         final int[] results = new int[3];
         Arrays.fill(results, 0);
         long startTime = System.currentTimeMillis();
+        int avr = 0;
+        int max = 0;
 
         for (int i = 1; i <= GAME_COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 2, TraversalAlgorithm.NEGASCOUT);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 4, TraversalAlgorithm.NEGASCOUT);
             Player secondPlayer = new LoBot(roomSettings, Color.BLACK, new FiguresCostSumEvaluateStrategy());
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -143,9 +153,16 @@ public class LoBotTest {
                 e.printStackTrace();
             }
             logger.info("Game {} complete", i);
+            max += LoBot.MAX_TIME;
+            avr += ((LoBot.FULL_TIME * 1.0) / LoBot.STEP_COUNT);
+            LoBot.MAX_TIME = 0;
+            LoBot.FULL_TIME = 0;
+            LoBot.STEP_COUNT = 0;
         }
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
         logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
+        logger.info("AVR MAX: {}", (max * 1.0 / GAME_COUNT));
+        logger.info("AVR AVR: {}", (avr * 1.0 / GAME_COUNT));
     }
 
     @Test
@@ -214,7 +231,7 @@ public class LoBotTest {
 
         for (int i = 1; i <= GAME_COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy(), 2);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new StaticPositionMatrixEvaluateStrategy(), 4);
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
