@@ -427,6 +427,15 @@ public class Board {
     }
 
     /**
+     * Опасно! Проверки не выполняются.
+     *
+     * @return фигура или null, если клетка пуста.
+     */
+    public Figure getFigureUgly(int row, int column) throws ArrayIndexOutOfBoundsException {
+        return cells[row][column];
+    }
+
+    /**
      * Убирает фигуру с доски
      *
      * @return удаленную фигуру или null, если клетка была пуста
