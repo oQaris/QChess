@@ -268,25 +268,17 @@ public class MoveSystem {
     }
 
     /**
-     * @deprecated TODO: заменить реализацией в доске (просто проверить на наличие ходов)
-     *     <p>Используйте {@link #getAllPreparedMoves(Color color)}
+     * Использует реализацию низкого уровня из доски {@link Board#isHasAnyCorrectMove(GameSettings
+     * gs, Color color)}
+     *
+     * @return true, если у игрока цвета color нет корректных ходов (поставлен пат)
      */
-    @Deprecated(forRemoval = true)
-    public List<Move> getAllCorrectMovesSilence(Color color) {
-        List<Move> res = new LinkedList<>();
+    public boolean isHasAnyCorrectMoveSilence(Color color) {
         try {
-            for (Figure f : board.getFigures(color))
-                for (Move m : f.getAllMoves(gs)) {
-                    if (m.getMoveType() == MoveType.TURN_INTO
-                            || m.getMoveType() == MoveType.TURN_INTO_ATTACK) {
-                        m.setTurnInto(FigureType.QUEEN); // только для проверки виртуального хода
-                        if (isCorrectVirtualMoveSilence(m)) res.add(m);
-                        m.setTurnInto(null);
-                    } else if (isCorrectVirtualMoveSilence(m)) res.add(m);
-                }
-        } catch (ChessError ignore) {
+            return board.isHasAnyCorrectMove(gs, color);
+        } catch (ChessError e) {
+            return false;
         }
-        return res;
     }
 
     public int getMoveCounts(Color color) {

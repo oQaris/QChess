@@ -15,7 +15,7 @@ public class GameSettings {
     public final Board.BoardFilling boardType;
     public final String fen;
 
-    public GameSettings(Board.BoardFilling boardType) {
+    public GameSettings(final Board.BoardFilling boardType) {
         this.boardSize = Board.STD_BOARD_SIZE;
         this.boardType = boardType;
         this.fen = null;
@@ -25,7 +25,7 @@ public class GameSettings {
         this.moveSystem = new MoveSystem(this);
     }
 
-    public GameSettings(String fen) throws ChessError {
+    public GameSettings(final String fen) throws ChessError {
         this.boardSize = 0;
         this.boardType = null;
         this.fen = fen;
@@ -36,7 +36,7 @@ public class GameSettings {
     }
 
     /** Копирует gs */
-    public GameSettings(GameSettings gs) {
+    public GameSettings(final GameSettings gs) {
         this.boardSize = gs.boardSize;
         this.boardType = gs.boardType;
         this.fen = gs.fen;
@@ -46,6 +46,10 @@ public class GameSettings {
         this.moveSystem = new MoveSystem(this);
     }
 
+    /**
+     * Используется для сброса игры на кастомную первоначальную расстановку после смены сторон
+     * игроков
+     */
     public GameSettings newWithTheSameSettings() throws ChessError {
         return boardType != null ? new GameSettings(boardType) : new GameSettings(fen);
     }

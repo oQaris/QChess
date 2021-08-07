@@ -67,7 +67,7 @@ public class EndGameDetector {
 
     /** @return результат игры для цвета color */
     public EndGameType updateEndGameStatus(Color color) {
-        return updateEndGameStatus(gs.moveSystem.getAllCorrectMovesSilence(color), color);
+        return updateEndGameStatus(!isStalemate(color), color);
     }
 
     /**
@@ -75,8 +75,12 @@ public class EndGameDetector {
      * @return результат игры для цвета color, у которого все доступные ходы в allMoves
      */
     public EndGameType updateEndGameStatus(List<Move> allMoves, Color color) {
+        return updateEndGameStatus(!allMoves.isEmpty(), color);
+    }
+
+    public EndGameType updateEndGameStatus(boolean isHasAnyCorrectMove, Color color) {
         gameResult = EndGameType.NOTHING;
-        if (isStalemate(allMoves)) {
+        if (!isHasAnyCorrectMove) {
             gameResult =
                     isCheck(color)
                             ? color == Color.WHITE
@@ -204,7 +208,7 @@ public class EndGameDetector {
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(Color color) {
-        return gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
+        return !gs.moveSystem.isHasAnyCorrectMoveSilence(color);
     }
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */

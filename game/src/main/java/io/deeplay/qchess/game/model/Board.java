@@ -169,6 +169,38 @@ public class Board {
         return allMoves;
     }
 
+    /**
+     * @param gs нужен для получения ходов пешек и проверки на шах после хода
+     * @return true, если у игрока цвета color нет корректных ходов (поставлен пат)
+     */
+    public boolean isHasAnyCorrectMove(GameSettings gs, Color color) throws ChessError {
+        for (int i = 0; i < 8; ++i) {
+            if (i == 1 || i == 6) { // на диагоналях 2 и 7 - кандидаты (пешки) на превращение
+                for (Figure figure : cells[i])
+                    if (figure != null && figure.getColor() == color)
+                        if (figure.figureType == FigureType.PAWN) { // у пешки смотрим превращения
+                            for (Move move : figure.getAllMoves(gs)) {
+                                if (move.getMoveType() == MoveType.TURN_INTO
+                                        || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+                                    // только для проверки виртуального хода:
+                                    move.setTurnInto(FigureType.QUEEN);
+                                    // убирать фигуру не нужно, т.к. это копия хода
+                                }
+                                // проверка на шах хода пешки:
+                                if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) return true;
+                            }
+                        } else // любая другая фигура
+                        for (Move move : figure.getAllMoves(gs)) // проверка на шах:
+                            if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) return true;
+            } else // остальные диагонали
+            for (Figure figure : cells[i])
+                    if (figure != null && figure.getColor() == color)
+                        for (Move move : figure.getAllMoves(gs)) // проверка на шах:
+                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) return true;
+        }
+        return false;
+    }
+
     private void fill(BoardFilling fillingType) throws ChessException {
         logger.debug("Начато заполнение {} доски", fillingType);
         switch (fillingType) {
