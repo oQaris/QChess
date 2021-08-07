@@ -13,7 +13,7 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.player.Player;
-import io.deeplay.qchess.game.player.RandomBot;
+import io.deeplay.qchess.qbot.QMinimaxBot;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -98,7 +98,7 @@ public class NNNBotTest {
         long startTime;
         if (COUNT == 1) {
             startTime = System.currentTimeMillis();
-            new Game(1).run();
+            new Game(0).run();
 
         } else {
             ExecutorService executor =
@@ -185,11 +185,11 @@ public class NNNBotTest {
             if (NNNBotColor == Color.WHITE) {
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.WHITE);
                 firstPlayer = nnnBot;
-                // secondPlayer = new QMinimaxBot(gs, Color.BLACK, 2);
-                secondPlayer = new RandomBot(gs, Color.BLACK);
+                secondPlayer = new QMinimaxBot(gs, Color.BLACK, 2);
+                // secondPlayer = new RandomBot(gs, Color.BLACK);
             } else {
-                // firstPlayer = new QMinimaxBot(gs, Color.WHITE, 2);
-                firstPlayer = new RandomBot(gs, Color.WHITE);
+                firstPlayer = new QMinimaxBot(gs, Color.WHITE, 2);
+                // firstPlayer = new RandomBot(gs, Color.WHITE);
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.BLACK);
                 secondPlayer = nnnBot;
             }

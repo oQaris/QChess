@@ -52,8 +52,8 @@ public abstract class ParallelSearch implements SearchFunc {
     /** @return лучшая оценка для текущего цвета myColor */
     public abstract int run(int depth) throws ChessError;
 
-    protected boolean timesUp() {
-        return false; // TODO
+    protected boolean timesUp(long startTimeMillis, long maxTimeMillis) {
+        return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
     }
 
     protected boolean isTerminalNode(List<Move> allMoves) {
@@ -66,21 +66,31 @@ public abstract class ParallelSearch implements SearchFunc {
         List<Move> allMyMoves;
         if (isMyMove) {
             allMyMoves = allMoves;
+
             if (gs.endGameDetector.isStalemate(allMyMoves))
                 return EvaluationFunc.MIN_ESTIMATION - depth;
 
-            if (gs.endGameDetector.isCheckmate(enemyColor))
-                return EvaluationFunc.MAX_ESTIMATION + depth;
+            if (gs.endGameDetector.isStalemate(enemyColor)) {
+                if (gs.endGameDetector.isCheck(enemyColor)) {
+                    return EvaluationFunc.MAX_ESTIMATION + depth;
+                }
+                return 0;
+            }
         } else {
             allEnemyMoves = allMoves;
-            if (gs.endGameDetector.isCheckmate(allEnemyMoves, enemyColor))
-                return EvaluationFunc.MAX_ESTIMATION + depth;
+
+            if (gs.endGameDetector.isStalemate(allEnemyMoves)) {
+                if (gs.endGameDetector.isCheck(enemyColor)) {
+                    return EvaluationFunc.MAX_ESTIMATION + depth;
+                }
+                return 0;
+            }
 
             if (gs.endGameDetector.isStalemate(myColor))
                 return EvaluationFunc.MIN_ESTIMATION - depth;
         }
 
-        if (gs.endGameDetector.isDraw()) return EvaluationFunc.MIN_ESTIMATION - depth;
+        if (gs.endGameDetector.isDraw()) return 0;
 
         return evaluationFunc.getHeuristics(gs, myColor);
     }

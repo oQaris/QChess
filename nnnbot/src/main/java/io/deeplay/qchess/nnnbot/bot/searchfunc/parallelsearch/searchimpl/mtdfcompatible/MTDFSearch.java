@@ -13,10 +13,10 @@ public abstract class MTDFSearch extends ParallelSearch {
     }
 
     public int MTDFStart(boolean isMyMove, int firstGuess, int depth) throws ChessError {
-        // firstGuess = 0;
+        long startTimeMillis = System.currentTimeMillis();
         for (int d = 1; d <= depth; ++d) {
             firstGuess = MTDF(isMyMove, firstGuess, d);
-            // if (timesUp()) break;
+            if (timesUp(startTimeMillis, 5000)) break;
         }
         return firstGuess;
     }

@@ -139,20 +139,20 @@ public class QMinimaxBot extends RemotePlayer {
         if (isMaximisingPlayer) {
             value = Integer.MIN_VALUE;
             for (Move move : allMoves) {
-                GameSettings newNode = new GameSettings(node);
-                newNode.moveSystem.move(move);
-                value = Math.max(value, minimax(newNode, depth - 1, alpha, beta, false));
-                // ms.undoMove();
+                // GameSettings newNode = new GameSettings(node);
+                roomSettings.moveSystem.move(move);
+                value = Math.max(value, minimax(roomSettings, depth - 1, alpha, beta, false));
+                roomSettings.moveSystem.undoMove();
                 alpha = Math.max(alpha, value);
                 if (value >= beta) break;
             }
         } else {
             value = Integer.MAX_VALUE;
             for (Move move : allMoves) {
-                GameSettings newNode = new GameSettings(node);
-                newNode.moveSystem.move(move);
-                value = Math.min(value, minimax(newNode, depth - 1, alpha, beta, true));
-                // ms.undoMove();
+                // GameSettings newNode = new GameSettings(node);
+                roomSettings.moveSystem.move(move);
+                value = Math.min(value, minimax(roomSettings, depth - 1, alpha, beta, true));
+                roomSettings.moveSystem.undoMove();
                 beta = Math.min(beta, value);
                 if (value <= alpha) break;
             }

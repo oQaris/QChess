@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl.mtdfcompatible;
+package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl.mtdfcompatible.nullmoveimpl;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -7,17 +7,14 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.Iterator;
 import java.util.List;
 
-public class NegaScoutWithTT extends MTDFSearch {
+public class PVSNullMoveWithTT extends NullMoveWithTT {
 
-    private final TranspositionTableWithFlag table = new TranspositionTableWithFlag();
-
-    public NegaScoutWithTT(
+    public PVSNullMoveWithTT(
             GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
         super(gs, color, evaluationFunc, maxDepth);
     }
@@ -26,19 +23,16 @@ public class NegaScoutWithTT extends MTDFSearch {
     public int alfaBetaWithMemory(boolean isMyMove, int alfa, int beta, int depth)
             throws ChessError {
         return isMyMove
-                ? negascout(
-                        true, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth)
-                : -negascout(
-                        false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
+                ? pvs(true, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth)
+                : -pvs(false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
     }
 
     @Override
     public int run(int depth) throws ChessError {
-        return -negascout(
-                false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
+        return -pvs(false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
     }
 
-    public int negascout(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
+    public int pvs(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
         int alfaOrigin = alfa;
         List<Move> allMoves = null;
 
@@ -67,9 +61,23 @@ public class NegaScoutWithTT extends MTDFSearch {
 
         Iterator<Move> it = allMoves.iterator();
         Move move = it.next();
+        int estimation;
+
+        boolean isAllowNullMove = isAllowNullMove(isMyMove ? myColor : enemyColor);
+        if (isAllowNullMove) {
+            isPrevNullMove = true;
+            // null-move:
+            gs.moveSystem.move(move);
+            estimation = -pvs(!isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1);
+            if (estimation >= beta) {
+                gs.moveSystem.undoMove();
+                return estimation;
+            }
+        } else isPrevNullMove = false;
+
         // first move:
-        gs.moveSystem.move(move);
-        int estimation = -negascout(!isMyMove, -beta, -alfa, depth - 1);
+        if (!isAllowNullMove) gs.moveSystem.move(move);
+        estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1);
         if (estimation > alfa) alfa = estimation;
         gs.moveSystem.undoMove();
 
@@ -77,11 +85,9 @@ public class NegaScoutWithTT extends MTDFSearch {
             move = it.next();
             gs.moveSystem.move(move);
             // null-window search:
-            estimation = -negascout(!isMyMove, -alfa - 1, -alfa, depth - 1);
-            if (alfa < estimation && estimation < beta && depth > 1) {
-                int est = -negascout(!isMyMove, -beta, -estimation, depth - 1);
-                if (est > estimation) estimation = est;
-            }
+            estimation = -pvs(!isMyMove, -alfa - 1, -alfa, depth - 1);
+            if (alfa < estimation && estimation < beta)
+                estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1);
             gs.moveSystem.undoMove();
             if (estimation > alfa) alfa = estimation;
         }

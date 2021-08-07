@@ -24,10 +24,11 @@ public class NegaScoutAlfaBetaPruning extends ParallelSearch {
 
     @Override
     public int run(int depth) throws ChessError {
-        return -pvs(false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
+        return -negascout(
+                false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
     }
 
-    private int pvs(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
+    private int negascout(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
         List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
         if (depth <= 0 || isTerminalNode(allMoves))
             return isMyMove
@@ -40,7 +41,7 @@ public class NegaScoutAlfaBetaPruning extends ParallelSearch {
         Move move = it.next();
         // first move:
         gs.moveSystem.move(move);
-        int estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1);
+        int estimation = -negascout(!isMyMove, -beta, -alfa, depth - 1);
         if (estimation > alfa) alfa = estimation;
         gs.moveSystem.undoMove();
 
@@ -48,9 +49,11 @@ public class NegaScoutAlfaBetaPruning extends ParallelSearch {
             move = it.next();
             gs.moveSystem.move(move);
             // null-window search:
-            estimation = -pvs(!isMyMove, -alfa - 1, -alfa, depth - 1);
-            if (alfa < estimation && estimation < beta)
-                estimation = -pvs(!isMyMove, -beta, -estimation, depth - 1);
+            estimation = -negascout(!isMyMove, -alfa - 1, -alfa, depth - 1);
+            if (alfa < estimation && estimation < beta && depth > 1) {
+                int est = -negascout(!isMyMove, -beta, -estimation, depth - 1);
+                if (est > estimation) estimation = est;
+            }
             gs.moveSystem.undoMove();
             if (estimation > alfa) alfa = estimation;
         }

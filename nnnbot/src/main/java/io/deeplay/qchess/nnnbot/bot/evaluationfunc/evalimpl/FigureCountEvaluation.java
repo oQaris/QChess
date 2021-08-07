@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nnnbot.bot.evaluationfunc;
+package io.deeplay.qchess.nnnbot.bot.evaluationfunc.evalimpl;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
