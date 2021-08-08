@@ -1,8 +1,10 @@
 package io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt;
 
 import io.deeplay.qchess.game.model.BoardState;
+import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TranspositionTableWithFlag {
@@ -26,13 +28,20 @@ public class TranspositionTableWithFlag {
      * @param depth текущая глубина
      */
     public void store(
-            TTEntry entry, int result, BoardState boardState, int alfaOrigin, int beta, int depth) {
+            TTEntry entry,
+            List<Move> allMoves,
+            int result,
+            BoardState boardState,
+            int alfaOrigin,
+            int beta,
+            int depth) {
         if (entry == null) {
-            entry = new TTEntry(result, depth);
+            entry = new TTEntry(allMoves, result, depth);
             entries.put(boardState, entry);
         } else {
             entry.depth = depth;
             entry.estimation = result;
+            entry.allMoves = allMoves;
         }
 
         if (result <= alfaOrigin) entry.flag = TTEntryFlag.UPPERBOUND;
@@ -42,11 +51,13 @@ public class TranspositionTableWithFlag {
 
     public static class TTEntry {
 
+        public List<Move> allMoves;
         public int estimation;
         public int depth;
         public TTEntryFlag flag = TTEntryFlag.EXACT;
 
-        public TTEntry(int estimation, int depth) {
+        public TTEntry(List<Move> allMoves, int estimation, int depth) {
+            this.allMoves = allMoves;
             this.estimation = estimation;
             this.depth = depth;
         }

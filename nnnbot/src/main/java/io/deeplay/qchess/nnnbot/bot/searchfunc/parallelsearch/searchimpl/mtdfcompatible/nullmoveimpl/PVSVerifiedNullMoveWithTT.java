@@ -7,12 +7,15 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.Iterator;
 import java.util.List;
 
-public class PVSVerifiedNullMoveWithTT extends NullMoveWithTT {
+public class PVSVerifiedNullMoveWithTT extends NullMove {
+
+    private final TranspositionTableWithFlag table = new TranspositionTableWithFlag();
 
     public PVSVerifiedNullMoveWithTT(
             GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
@@ -58,14 +61,16 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveWithTT {
             if (beta <= alfa) return entry.estimation;
         }
 
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+        final List<Move> allMoves;
+        if (entry != null) allMoves = entry.allMoves;
+        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
         if (depth <= 0 || isTerminalNode(allMoves))
             return isMyMove
                     ? quiesce(true, alfa, beta, depth)
                     : -quiesce(false, -beta, -alfa, depth);
 
-        SearchImprovements.prioritySort(allMoves);
+        if (entry == null) SearchImprovements.prioritySort(allMoves);
 
         Iterator<Move> it = allMoves.iterator();
         Move move = it.next();
@@ -126,7 +131,7 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveWithTT {
             } else break;
         } while (true);
 
-        table.store(entry, alfa, boardState, alfaOrigin, beta, depth);
+        table.store(entry, allMoves, alfa, boardState, alfaOrigin, beta, depth);
 
         return alfa;
     }

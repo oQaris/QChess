@@ -10,6 +10,9 @@ public interface EvaluationFunc {
     int MAX_ESTIMATION = Integer.MAX_VALUE - 100;
     int MIN_ESTIMATION = 100 - Integer.MAX_VALUE;
 
+    int PAWN_COST = 100;
+    int QUARTER_PAWN_COST = PAWN_COST / 4;
+
     /** @return значение, которое необходимо увеличивать игроку с цветом color */
     int getHeuristics(GameSettings gs, Color myColor) throws ChessError;
 }

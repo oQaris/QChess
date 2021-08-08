@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 class QBotTest {
     private void setKings(Cell whitePos, Cell blackPos, GameSettings gs) throws ChessException {
         final King kingB = new King(Color.BLACK, blackPos);
-        kingB.setWasMoved(true);
+        kingB.wasMoved = true;
         gs.board.setFigure(kingB);
         final King kingW = new King(Color.WHITE, whitePos);
-        kingW.setWasMoved(true);
+        kingW.wasMoved = true;
         gs.board.setFigure(kingW);
     }
 

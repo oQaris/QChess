@@ -30,14 +30,14 @@ public abstract class ParallelSearch implements SearchFunc {
 
     @Override
     public Move findBest() throws ChessError {
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
+        final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
         Move theBest = null;
         int optEstimation = EvaluationFunc.MIN_ESTIMATION;
 
         SearchImprovements.prioritySort(allMoves);
 
         // TODO: запуск нескольких потоков для начальной глубины
-        for (Move move : allMoves) {
+        for (final Move move : allMoves) {
             gs.moveSystem.move(move);
             int estimation = run(maxDepth);
             gs.moveSystem.undoMove();
@@ -49,25 +49,22 @@ public abstract class ParallelSearch implements SearchFunc {
 
         return theBest;
     }
+
     /** @return лучшая оценка для текущего цвета myColor */
     public abstract int run(int depth) throws ChessError;
 
-    protected boolean timesUp(long startTimeMillis, long maxTimeMillis) {
+    protected boolean timesUp(final long startTimeMillis, final long maxTimeMillis) {
         return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
     }
 
-    protected boolean isTerminalNode(List<Move> allMoves) {
+    protected boolean isTerminalNode(final List<Move> allMoves) {
         return allMoves.isEmpty() || gs.endGameDetector.isDraw();
     }
 
-    protected int getEvaluation(List<Move> allMoves, boolean isMyMove, int depth)
+    protected int getEvaluation(final List<Move> allMoves, final boolean isMyMove, final int depth)
             throws ChessError {
-        List<Move> allEnemyMoves;
-        List<Move> allMyMoves;
-        if (isMyMove) {
-            allMyMoves = allMoves;
-
-            if (gs.endGameDetector.isStalemate(allMyMoves))
+        if (isMyMove) { // allMoves are mine
+            if (gs.endGameDetector.isStalemate(allMoves))
                 return EvaluationFunc.MIN_ESTIMATION - depth;
 
             if (gs.endGameDetector.isStalemate(enemyColor)) {
@@ -76,10 +73,8 @@ public abstract class ParallelSearch implements SearchFunc {
                 }
                 return 0;
             }
-        } else {
-            allEnemyMoves = allMoves;
-
-            if (gs.endGameDetector.isStalemate(allEnemyMoves)) {
+        } else { // allMoves are enemy's
+            if (gs.endGameDetector.isStalemate(allMoves)) {
                 if (gs.endGameDetector.isCheck(enemyColor)) {
                     return EvaluationFunc.MAX_ESTIMATION + depth;
                 }
@@ -90,6 +85,7 @@ public abstract class ParallelSearch implements SearchFunc {
                 return EvaluationFunc.MIN_ESTIMATION - depth;
         }
 
+        // Проверка на ничью должна быть после проверок на пат и мат
         if (gs.endGameDetector.isDraw()) return 0;
 
         return evaluationFunc.getHeuristics(gs, myColor);

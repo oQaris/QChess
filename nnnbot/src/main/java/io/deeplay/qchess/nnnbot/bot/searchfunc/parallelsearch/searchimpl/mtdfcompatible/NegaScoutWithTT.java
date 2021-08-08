@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
@@ -51,12 +52,16 @@ public class NegaScoutWithTT extends MTDFSearch {
             if (beta <= alfa) return entry.estimation;
         }
 
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+        final List<Move> allMoves;
+        if (entry != null) allMoves = entry.allMoves;
+        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
         if (depth <= 0 || isTerminalNode(allMoves))
             return isMyMove
                     ? getEvaluation(allMoves, true, depth)
                     : -getEvaluation(allMoves, false, depth);
+
+        if (entry == null) SearchImprovements.prioritySort(allMoves);
 
         Iterator<Move> it = allMoves.iterator();
         Move move = it.next();
@@ -79,7 +84,7 @@ public class NegaScoutWithTT extends MTDFSearch {
             if (estimation > alfa) alfa = estimation;
         }
 
-        table.store(entry, alfa, boardState, alfaOrigin, beta, depth);
+        table.store(entry, allMoves, alfa, boardState, alfaOrigin, beta, depth);
 
         return alfa;
     }

@@ -6,7 +6,7 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
+import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class QMinimaxBot extends RemotePlayer {
     }
 
     public QMinimaxBot(GameSettings roomSettings, Color color, int searchDepth) {
-        this(roomSettings, color, searchDepth, new MatrixStrategy());
+        this(roomSettings, color, searchDepth, new PestoStrategy());
     }
 
     @Override

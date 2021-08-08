@@ -3,17 +3,15 @@ package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl.mtdfco
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl.mtdfcompatible.MTDFSearch;
 
-public abstract class NullMoveWithTT extends MTDFSearch {
+public abstract class NullMove extends MTDFSearch {
 
     public static final int DEPTH_REDUCTION = 2;
 
-    protected final TranspositionTableWithFlag table = new TranspositionTableWithFlag();
     protected boolean isPrevNullMove;
 
-    protected NullMoveWithTT(
+    protected NullMove(
             GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
         super(gs, color, evaluationFunc, maxDepth);
     }
