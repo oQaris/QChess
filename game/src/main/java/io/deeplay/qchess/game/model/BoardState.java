@@ -7,9 +7,8 @@ import java.util.Arrays;
 public class BoardState {
     public final byte[] boardSnapshot;
     public final int boardSnapshotHash;
-    /** Учитывать в equals и hashCode только LONG_MOVE */
-    public final Move lastMove;
 
+    public final boolean isPawnEnPassantPossible;
     public final boolean isWhiteMove;
 
     /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
@@ -17,6 +16,8 @@ public class BoardState {
     /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
     public final int isBlackCastlingPossibility;
 
+    /** Не нужно учитывать в equals и hashCode */
+    public final Move lastMove;
     /** Не нужно учитывать в equals и hashCode */
     public final boolean hasMovedBeforeLastMove;
     /** Не нужно учитывать в equals и hashCode */
@@ -43,6 +44,8 @@ public class BoardState {
         this.isWhiteMove = isWhiteMove;
         this.isWhiteCastlingPossibility = isWhiteCastlingPossibility;
         this.isBlackCastlingPossibility = isBlackCastlingPossibility;
+        this.isPawnEnPassantPossible =
+                lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE;
     }
 
     /** Используется только для нахождения повторений доски */
@@ -56,10 +59,7 @@ public class BoardState {
                     && boardSnapshotHash == that.boardSnapshotHash
                     && isWhiteCastlingPossibility == that.isWhiteCastlingPossibility
                     && isBlackCastlingPossibility == that.isBlackCastlingPossibility
-                    && (lastMove.getMoveType() == MoveType.LONG_MOVE
-                                    && that.lastMove.getMoveType() == MoveType.LONG_MOVE
-                            || lastMove.getMoveType() != MoveType.LONG_MOVE
-                                    && that.lastMove.getMoveType() != MoveType.LONG_MOVE)
+                    && isPawnEnPassantPossible == that.isPawnEnPassantPossible
                     && Arrays.equals(boardSnapshot, that.boardSnapshot);
         } catch (NullPointerException e) {
             return false;
@@ -69,10 +69,12 @@ public class BoardState {
     /** Используется только для нахождения повторений доски */
     @Override
     public int hashCode() {
-        final int h1 = lastMove == null ? 0 : lastMove.getMoveType() == MoveType.LONG_MOVE ? 1 : 2;
-        int result = 31 * h1 + isWhiteCastlingPossibility;
-        result = 31 * result + isBlackCastlingPossibility;
+        int result = 31;
         result = 31 * result + (isWhiteMove ? 1 : 0);
-        return 31 * result + boardSnapshotHash;
+        result = 31 * result + boardSnapshotHash;
+        result = 31 * result + isWhiteCastlingPossibility;
+        result = 31 * result + isBlackCastlingPossibility;
+        result = 31 * result + (isPawnEnPassantPossible ? 1 : 0);
+        return result;
     }
 }
