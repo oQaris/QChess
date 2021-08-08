@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.Iterator;
@@ -52,6 +53,8 @@ public class PVSNullMoveWithTT extends NullMoveWithTT {
                     ? getEvaluation(allMoves, true, depth)
                     : -getEvaluation(allMoves, false, depth);
 
+        SearchImprovements.prioritySort(allMoves);
+
         Iterator<Move> it = allMoves.iterator();
         Move move = it.next();
         int estimation;
@@ -59,17 +62,20 @@ public class PVSNullMoveWithTT extends NullMoveWithTT {
         boolean isAllowNullMove = isAllowNullMove(isMyMove ? myColor : enemyColor);
         if (isAllowNullMove) {
             isPrevNullMove = true;
+            // TODO: слишком медленно
+            List<Move> enemyMoves =
+                    gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
+            SearchImprovements.prioritySort(enemyMoves);
+            Move nullMove = enemyMoves.get(0);
             // null-move:
-            gs.moveSystem.move(move);
-            estimation = -pvs(!isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1);
-            if (estimation >= beta) {
-                gs.moveSystem.undoMove();
-                return estimation;
-            }
+            gs.moveSystem.move(nullMove);
+            estimation = -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1);
+            gs.moveSystem.undoMove();
+            if (estimation >= beta) return beta;
         } else isPrevNullMove = false;
 
         // first move:
-        if (!isAllowNullMove) gs.moveSystem.move(move);
+        gs.moveSystem.move(move);
         estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1);
         if (estimation > alfa) alfa = estimation;
         gs.moveSystem.undoMove();

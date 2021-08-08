@@ -19,13 +19,18 @@ public abstract class NullMoveWithTT extends MTDFSearch {
     }
 
     protected boolean isAllowNullMove(Color color) {
+        Color enemyColor = color.inverse();
         return !isPrevNullMove
-                && gs.board.getFigureCount(color) > 5
-                && !gs.endGameDetector.isCheck(color);
+                && !gs.endGameDetector.isStalemate(enemyColor)
+                && gs.board.getFigureCount(enemyColor) > 9
+                && !gs.endGameDetector.isCheck(color)
+                && !gs.endGameDetector.isCheck(enemyColor);
         /*
          * TODO: (улучшить) null-move запрещен, если выполнено одно из следующих условий:
-         *  1. Текущий игрок имеет только короля и пешки
-         *  2. У текущего игрока осталось мало материала
+         *  1. Противник имеет только короля и пешки
+         *  2. У противника осталось мало материала
+         *  3. Осталось мало материала на доске
+         *  4. Число ходов превышает.
          */
     }
 }

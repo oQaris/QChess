@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.Iterator;
@@ -60,7 +61,11 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveWithTT {
         List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
         if (depth <= 0 || isTerminalNode(allMoves))
-            return isMyMove ? quiesce(true, alfa, beta, depth) : -quiesce(false, alfa, beta, depth);
+            return isMyMove
+                    ? quiesce(true, alfa, beta, depth)
+                    : -quiesce(false, -beta, -alfa, depth);
+
+        SearchImprovements.prioritySort(allMoves);
 
         Iterator<Move> it = allMoves.iterator();
         Move move = it.next();
@@ -72,23 +77,26 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveWithTT {
 
         if (isAllowNullMove) {
             isPrevNullMove = true;
+            // TODO: слишком медленно
+            List<Move> enemyMoves =
+                    gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
+            SearchImprovements.prioritySort(enemyMoves);
+            Move nullMove = enemyMoves.get(0);
             // null-move:
-            gs.moveSystem.move(move);
-            estimation = -pvs(!isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify);
+            gs.moveSystem.move(nullMove);
+            estimation = -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify);
+            gs.moveSystem.undoMove();
             if (estimation >= beta) {
                 if (verify) {
                     --depth;
                     verify = false;
                     failHigh = true;
-                } else {
-                    gs.moveSystem.undoMove();
-                    return estimation;
-                }
+                } else return beta;
             }
         } else isPrevNullMove = false;
 
         // for first move:
-        if (!isAllowNullMove) gs.moveSystem.move(move);
+        gs.moveSystem.move(move);
         // Если будет обнаружена позиция Цугцванга, повторить поиск с начальной глубиной:
         do {
             // first move:
