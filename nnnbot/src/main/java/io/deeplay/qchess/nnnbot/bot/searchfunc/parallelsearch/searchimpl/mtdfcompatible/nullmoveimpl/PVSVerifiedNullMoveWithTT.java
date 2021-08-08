@@ -6,7 +6,6 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.Iterator;
@@ -46,7 +45,6 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveWithTT {
     public int pvs(boolean isMyMove, int alfa, int beta, int depth, boolean verify)
             throws ChessError {
         int alfaOrigin = alfa;
-        List<Move> allMoves = null;
 
         BoardState boardState = gs.history.getLastBoardState();
         TTEntry entry = table.find(boardState);
@@ -57,14 +55,9 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveWithTT {
             } else if (entry.estimation > alfa) alfa = entry.estimation;
 
             if (beta <= alfa) return entry.estimation;
-
-            allMoves = entry.allMoves;
         }
 
-        if (allMoves == null) {
-            allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
-            SearchImprovements.prioritySort(allMoves);
-        }
+        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
         if (depth <= 0 || isTerminalNode(allMoves))
             return isMyMove ? quiesce(true, alfa, beta, depth) : -quiesce(false, alfa, beta, depth);
@@ -125,7 +118,7 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveWithTT {
             } else break;
         } while (true);
 
-        table.store(allMoves, entry, alfa, boardState, alfaOrigin, beta, depth);
+        table.store(entry, alfa, boardState, alfaOrigin, beta, depth);
 
         return alfa;
     }

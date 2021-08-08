@@ -14,7 +14,7 @@ import java.util.List;
 /** Минимакс с транспозиционной таблицей */
 public class MinimaxWithTT extends MTDFSearch {
 
-    private final TranspositionTable table = new TranspositionTable(100000);
+    private final TranspositionTable table = new TranspositionTable();
 
     public MinimaxWithTT(
             GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
@@ -30,16 +30,16 @@ public class MinimaxWithTT extends MTDFSearch {
     @Override
     public int alfaBetaWithMemory(boolean isMyMove, int alfa, int beta, int depth)
             throws ChessError {
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
-
         BoardState boardState = gs.history.getLastBoardState();
         TTEntry entry = table.find(boardState);
-        if (entry != null) {
+        if (entry != null && entry.depth >= depth) {
             if (entry.lowerBound >= beta) return entry.lowerBound;
             if (entry.upperBound <= alfa) return entry.upperBound;
             if (entry.lowerBound > alfa) alfa = entry.lowerBound;
             if (entry.upperBound < beta) beta = entry.upperBound;
         }
+
+        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
         if (depth <= 0 || isTerminalNode(allMoves)) return getEvaluation(allMoves, isMyMove, depth);
 
@@ -57,8 +57,7 @@ public class MinimaxWithTT extends MTDFSearch {
                 // null-window search:
                 // int est = alfaBetaWithMemory(false, beta - 1, beta, depth - 1);
                 // std search:
-                // if (a < est && est < beta) est = alfaBetaWithMemory(false, a, est, depth -
-                // 1);
+                // if (a < est && est < beta) est = alfaBetaWithMemory(false, a, est, depth - 1);
                 gs.moveSystem.undoMove();
                 if (est > optEstimation) optEstimation = est;
                 if (optEstimation > a) a = optEstimation;
@@ -73,8 +72,7 @@ public class MinimaxWithTT extends MTDFSearch {
                 // null-window search:
                 // int est = alfaBetaWithMemory(true, b - 1, b, depth - 1);
                 // std search:
-                // if (alfa < est && est < b) est = alfaBetaWithMemory(true, alfa, est, depth -
-                // 1);
+                // if (alfa < est && est < b) est = alfaBetaWithMemory(true, alfa, est, depth - 1);
                 gs.moveSystem.undoMove();
                 if (est < optEstimation) optEstimation = est;
                 if (optEstimation < b) b = optEstimation;
@@ -82,9 +80,9 @@ public class MinimaxWithTT extends MTDFSearch {
         }
 
         if (entry == null) {
-            entry = new TTEntry();
+            entry = new TTEntry(depth);
             table.store(boardState, entry);
-        }
+        } else entry.depth = depth;
         if (optEstimation <= alfa) entry.upperBound = optEstimation;
         if (optEstimation >= beta) entry.lowerBound = optEstimation;
         if (alfa < optEstimation && optEstimation < beta)

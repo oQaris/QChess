@@ -7,11 +7,8 @@ import java.util.Map;
 
 public class TranspositionTable {
 
-    private final Map<BoardState, TTEntry> entries;
-
-    public TranspositionTable(int size) {
-        entries = new HashMap<>(size); // TODO: use ConcurrentMap
-    }
+    // TODO: use ConcurrentMap
+    private final Map<BoardState, TTEntry> entries = new HashMap<>(500000);
 
     /** @return вхождение состояния игры или null, если такое состояние еще не встречалось */
     public TTEntry find(BoardState boardState) {
@@ -25,5 +22,10 @@ public class TranspositionTable {
     public static class TTEntry {
         public int lowerBound = EvaluationFunc.MIN_ESTIMATION;
         public int upperBound = EvaluationFunc.MAX_ESTIMATION;
+        public int depth;
+
+        public TTEntry(int depth) {
+            this.depth = depth;
+        }
     }
 }
