@@ -214,7 +214,7 @@ public class History {
 
         Figure king = gameSettings.board.findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
-        if (king.wasMoved()) return res;
+        if (king.wasMoved) return res;
         if (gameSettings.board.isNotRightRookStandardMoved(color)) res += "k";
         if (gameSettings.board.isNotLeftRookStandardMoved(color)) res += "q";
 

@@ -112,7 +112,7 @@ public class GameService {
                 dto.move.getFrom().column,
                 dto.move.getTo().row,
                 dto.move.getTo().column,
-                dto.move.getTurnInto());
+                dto.move.turnInto);
 
         ClientController.drawBoard();
         return null;
@@ -137,7 +137,7 @@ public class GameService {
         for (Move move : set) {
             if (to.equals(move.getTo())) {
                 try {
-                    move.setTurnInto(figureType);
+                    move.turnInto = figureType;
                     GameDAO.getGame().move(move);
                 } catch (ChessError e) {
                     e.printStackTrace();

@@ -330,7 +330,7 @@ public class Board {
     public int isCastlingPossible(Color color) throws ChessError {
         Figure king = findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
-        if (king.wasMoved()) return 0;
+        if (king.wasMoved) return 0;
         return (isNotLeftRookStandardMoved(color) ? 1 : 0)
                 + (isNotRightRookStandardMoved(color) ? 2 : 0);
     }
@@ -344,7 +344,7 @@ public class Board {
         return rook != null
                 && rook.figureType == FigureType.ROOK
                 && rook.getColor() == color
-                && !rook.wasMoved();
+                && !rook.wasMoved;
     }
 
     /**
@@ -356,7 +356,7 @@ public class Board {
         return rook != null
                 && rook.figureType == FigureType.ROOK
                 && rook.getColor() == color
-                && !rook.wasMoved();
+                && !rook.wasMoved;
     }
 
     /**
@@ -372,7 +372,7 @@ public class Board {
         Figure figureFrom = getFigure(move.getFrom());
         Figure figureTo = getFigure(move.getTo());
         figureFrom.setCurrentPosition(move.getTo());
-        figureFrom.setWasMoved(true);
+        figureFrom.wasMoved = true;
         setFigure(figureFrom);
         removeFigure(move.getFrom());
         logger.trace("Фигура была перемещена: {}", move);

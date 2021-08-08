@@ -484,7 +484,7 @@ public class MoveSystemTest {
     public void testMove_EN_PASSANT_illegal() throws ChessException, ChessError {
         Figure king = new King(Color.BLACK, Cell.parse("a4"));
         Figure pawn = new Pawn(Color.BLACK, Cell.parse("d4"));
-        pawn.setWasMoved(true);
+        pawn.wasMoved = true;
         Figure king2 = new King(Color.WHITE, Cell.parse("h8"));
         Figure pawn2 = new Pawn(Color.WHITE, Cell.parse("e4"));
         Figure rook = new Rook(Color.WHITE, Cell.parse("h4"));
