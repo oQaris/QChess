@@ -135,7 +135,7 @@ public class Board {
     public List<Move> getAllPreparedMoves(GameSettings gs, Color color) throws ChessError {
         List<Move> allMoves = new LinkedList<>();
         for (int i = 0; i < 8; ++i) {
-            if (i == 1 || i == 6) { // на диагоналях 2 и 7 - кандидаты (пешки) на превращение
+            if (i == 1 || i == 6) { // на линиях 2 и 7 - кандидаты (пешки) на превращение
                 for (Figure figure : cells[i])
                     if (figure != null && figure.getColor() == color)
                         if (figure.figureType == FigureType.PAWN) { // у пешки смотрим превращения
@@ -160,7 +160,7 @@ public class Board {
                         } else // обычное заполнение
                         for (Move move : figure.getAllMoves(gs)) // проверка на шах:
                             if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) allMoves.add(move);
-            } else // остальные диагонали
+            } else // остальные линии
             for (Figure figure : cells[i])
                     if (figure != null && figure.getColor() == color) // обычное заполнение
                     for (Move move : figure.getAllMoves(gs)) // проверка на шах:
@@ -175,7 +175,7 @@ public class Board {
      */
     public boolean isHasAnyCorrectMove(GameSettings gs, Color color) throws ChessError {
         for (int i = 0; i < 8; ++i) {
-            if (i == 1 || i == 6) { // на диагоналях 2 и 7 - кандидаты (пешки) на превращение
+            if (i == 1 || i == 6) { // на линиях 2 и 7 - кандидаты (пешки) на превращение
                 for (Figure figure : cells[i])
                     if (figure != null && figure.getColor() == color)
                         if (figure.figureType == FigureType.PAWN) { // у пешки смотрим превращения
@@ -192,7 +192,7 @@ public class Board {
                         } else // любая другая фигура
                         for (Move move : figure.getAllMoves(gs)) // проверка на шах:
                             if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) return true;
-            } else // остальные диагонали
+            } else // остальные линии
             for (Figure figure : cells[i])
                     if (figure != null && figure.getColor() == color)
                         for (Move move : figure.getAllMoves(gs)) // проверка на шах:

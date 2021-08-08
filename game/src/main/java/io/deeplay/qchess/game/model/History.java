@@ -155,7 +155,11 @@ public class History {
         }
     }
 
-    /** @return текущая доска в записи FEN */
+    /**
+     * @return текущая доска в записи FEN
+     * @deprecated TODO: неправильно работает и не используется
+     */
+    @Deprecated
     public String getBoardToStringForsythEdwards() throws ChessError {
         StringBuilder rec = new StringBuilder(70);
 
@@ -269,6 +273,9 @@ public class History {
         removedFigure = prevLastBoardState.removedFigure;
         lastMove = prevLastBoardState.lastMove;
         peaceMoveCount = prevLastBoardState.peaceMoveCount;
+        isWhiteMove = prevLastBoardState.isWhiteMove;
+        isWhiteCastlingPossibility = prevLastBoardState.isWhiteCastlingPossibility;
+        isBlackCastlingPossibility = prevLastBoardState.isBlackCastlingPossibility;
         int boardStateCount = repetitionsMap.remove(lastBoardState);
         if (boardStateCount > 1) repetitionsMap.put(lastBoardState, boardStateCount - 1);
     }
@@ -279,6 +286,11 @@ public class History {
         if (lastBoardState == null) return;
         hasMovedBeforeLastMove = lastBoardState.hasMovedBeforeLastMove;
         removedFigure = lastBoardState.removedFigure;
+        lastMove = lastBoardState.lastMove;
+        peaceMoveCount = lastBoardState.peaceMoveCount;
+        isWhiteMove = lastBoardState.isWhiteMove;
+        isWhiteCastlingPossibility = lastBoardState.isWhiteCastlingPossibility;
+        isBlackCastlingPossibility = lastBoardState.isBlackCastlingPossibility;
     }
 
     /**
@@ -291,6 +303,9 @@ public class History {
         removedFigure = boardState.removedFigure;
         lastMove = boardState.lastMove;
         peaceMoveCount = boardState.peaceMoveCount;
+        isWhiteMove = boardState.isWhiteMove;
+        isWhiteCastlingPossibility = boardState.isWhiteCastlingPossibility;
+        isBlackCastlingPossibility = boardState.isBlackCastlingPossibility;
         recordsList.push(boardState);
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
     }
