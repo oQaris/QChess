@@ -1,21 +1,28 @@
 package io.deeplay.qchess.game.model.figures;
 
+import io.deeplay.qchess.game.model.Color;
+
 public enum FigureType {
-    BISHOP((byte) 1),
-    KING((byte) 2),
-    KNIGHT((byte) 3),
-    PAWN((byte) 4),
-    QUEEN((byte) 5),
-    ROOK((byte) 6);
+    BISHOP(1),
+    KING(2),
+    KNIGHT(3),
+    PAWN(4),
+    QUEEN(5),
+    ROOK(6);
 
     public static final String[] nameOfTypeNumber = {
         "NULL", "BISHOP", "KING", "KNIGHT", "PAWN", "QUEEN", "ROOK"
     };
 
     /** Нужен для быстрого вычисления состояния доски */
-    public final byte type;
+    public final int type;
 
-    FigureType(byte type) {
+    FigureType(int type) {
         this.type = type;
+    }
+
+    /** Фигуры будут записываться в доску как их тип + этот коэффициент */
+    public static int getColorCoeff(Color color) {
+        return color == Color.WHITE ? 0 : 100;
     }
 }

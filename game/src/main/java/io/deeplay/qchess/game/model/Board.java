@@ -27,7 +27,7 @@ public class Board {
 
     public final int boardSize;
     private final Figure[][] cells;
-    private final byte[] cellsType;
+    private final int[] cellsType;
     public Cell blackKing;
     public Cell whiteKing;
     private int cellsTypeHash;
@@ -35,7 +35,7 @@ public class Board {
     public Board(int size, BoardFilling fillingType) {
         boardSize = size;
         cells = new Figure[boardSize][boardSize];
-        cellsType = new byte[boardSize * boardSize];
+        cellsType = new int[boardSize * boardSize];
         try {
             fill(fillingType);
         } catch (ChessException e) {
@@ -253,8 +253,9 @@ public class Board {
         cells[position.row][position.column] = figure;
 
         int i = position.row * STD_BOARD_SIZE + position.column;
-        cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
-        cellsType[i] = figure.figureType.type;
+        int newValue = figure.figureType.type + FigureType.getColorCoeff(figure.getColor());
+        cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
+        cellsType[i] = newValue;
 
         if (figure.figureType == FigureType.KING) {
             if (figure.getColor() == Color.WHITE) whiteKing = figure.getCurrentPosition();
@@ -269,8 +270,9 @@ public class Board {
         cells[position.row][position.column] = figure;
 
         int i = position.row * 8 + position.column;
-        cellsTypeHash += GameMath.hash64Coeff[i] * (figure.figureType.type - cellsType[i]);
-        cellsType[i] = figure.figureType.type;
+        int newValue = figure.figureType.type + FigureType.getColorCoeff(figure.getColor());
+        cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
+        cellsType[i] = newValue;
     }
 
     public void setFigureUglyWithoutRecalcHash(Figure figure)
@@ -529,7 +531,7 @@ public class Board {
     }
 
     /** @return копия состояния типов фигур на доске */
-    public byte[] fastSnapshot() {
+    public int[] fastSnapshot() {
         return cellsType.clone();
     }
 
