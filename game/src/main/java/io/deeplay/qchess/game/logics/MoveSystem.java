@@ -66,9 +66,9 @@ public class MoveSystem {
                         }
                             // превращение пешки
                         case TURN_INTO, TURN_INTO_ATTACK -> {
-                            FigureType turnIntoType = move.getTurnInto();
                             Figure turnIntoFigure =
-                                    Figure.build(turnIntoType, moveFigure.getColor(), move.getTo());
+                                    Figure.build(
+                                            move.turnInto, moveFigure.getColor(), move.getTo());
                             Figure removed;
                             if (useHistoryRecord) {
                                 removed = board.moveFigureUgly(move);
@@ -252,11 +252,12 @@ public class MoveSystem {
     /** @return true если ход корректный */
     private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move) throws ChessError {
         try {
+            FigureType prevTurnInto = move.turnInto;
             if (move.getMoveType() == MoveType.TURN_INTO
                     || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
-                move.setTurnInto(FigureType.QUEEN); // только для проверки виртуального хода
+                move.turnInto = FigureType.QUEEN; // только для проверки виртуального хода
             boolean isCorrect = isCorrectVirtualMove(move);
-            move.setTurnInto(null);
+            move.turnInto = prevTurnInto;
             return isCorrect;
         } catch (ChessException | NullPointerException e) {
             logger.warn(
@@ -345,18 +346,18 @@ public class MoveSystem {
         // превращение пешки
         if (move.getMoveType() == MoveType.TURN_INTO
                 || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
-            return move.getTurnInto() != null
-                    && (move.getTurnInto() == FigureType.BISHOP
-                            || move.getTurnInto() == FigureType.KNIGHT
-                            || move.getTurnInto() == FigureType.QUEEN
-                            || move.getTurnInto() == FigureType.ROOK);
+            return move.turnInto != null
+                    && move.turnInto != FigureType.KING
+                    && move.turnInto != FigureType.PAWN;
         return true;
     }
 
     /** @return true если ход лежит в доступных */
     private boolean inAvailableMoves(Move move)
             throws ChessException, ArrayIndexOutOfBoundsException {
-        return board.getFigureUgly(move.getFrom()).getAllMoves(gs).contains(move);
+        for (Move m : board.getFigureUgly(move.getFrom()).getAllMoves(gs))
+            if (m.equalsWithoutTurnInto(move)) return true;
+        return false;
     }
 
     @FunctionalInterface

@@ -14,20 +14,8 @@ public class Move {
     @SerializedName("to")
     private final Cell to;
 
-    /**
-     * Не должно влиять на equals и hashCode, чтобы, проверяя корректность ходов, у пешек не
-     * возникали дополнительные условия, т.к. пешки на доске не знают во что превратиться без
-     * запроса игрока, смотреть {@link
-     * io.deeplay.qchess.game.logics.MoveSystem#inAvailableMoves(Move move)}.
-     *
-     * <p>Он использует {@link java.util.List#contains(Object o)}, поэтому turnInto должно быть
-     * {@code null}. Проверка пешки на превращение вынесена в {@link
-     * io.deeplay.qchess.game.logics.MoveSystem#checkCorrectnessIfSpecificMove(Move move)}.
-     *
-     * <p>Также превращение проверяется в проверке виртуального хода
-     */
     @SerializedName("turnInto")
-    private FigureType turnInto;
+    public FigureType turnInto;
 
     public Move(final MoveType moveType, final Cell from, final Cell to) {
         this.moveType = moveType;
@@ -42,16 +30,6 @@ public class Move {
         this.turnInto = turnInto;
     }
 
-    public FigureType getTurnInto() {
-        return turnInto;
-    }
-
-    // TODO: удалить
-    public void setTurnInto(final FigureType turnInto) {
-        this.turnInto = turnInto;
-    }
-
-    // TODO: удалить
     public MoveType getMoveType() {
         return moveType;
     }
@@ -64,11 +42,33 @@ public class Move {
         return to;
     }
 
-    /** Не хеширует фигуру для превращения, читать подробнее: {@link #turnInto} */
+    /**
+     * Не использует {@code move.turnInto}, т.к. пешки на доске не знают во что превратиться без
+     * запроса игрока, смотреть {@link
+     * io.deeplay.qchess.game.logics.MoveSystem#inAvailableMoves(Move move)}.
+     *
+     * <p>Проверка пешки на превращение вынесена в {@link
+     * io.deeplay.qchess.game.logics.MoveSystem#checkCorrectnessIfSpecificMove(Move move)}.
+     *
+     * <p>Также превращение проверяется в проверке виртуального хода {@link
+     * io.deeplay.qchess.game.logics.MoveSystem#isCorrectMoveWithoutCheckAvailableMoves(Move move)}
+     */
+    public boolean equalsWithoutTurnInto(Move move) {
+        return this == move
+                || move != null
+                        && moveType == move.moveType
+                        && Objects.equals(from, move.from)
+                        && Objects.equals(to, move.to);
+    }
+
     @Override
     public int hashCode() {
-        return (Cell.hashCodes[from.column][from.row] * 31 + Cell.hashCodes[to.column][to.row]) * 10
-                + moveType.ordinal();
+        int result = 31;
+        result = 31 * result + Cell.hashCodes[from.column][from.row];
+        result = 31 * result + Cell.hashCodes[to.column][to.row];
+        result = 31 * result + moveType.ordinal();
+        result = 31 * result + (turnInto == null ? 0 : turnInto.type);
+        return result;
     }
 
     @Override
@@ -78,7 +78,8 @@ public class Move {
         Move move = (Move) o;
         return moveType == move.moveType
                 && Objects.equals(from, move.from)
-                && Objects.equals(to, move.to);
+                && Objects.equals(to, move.to)
+                && Objects.equals(turnInto, move.turnInto);
     }
 
     @Override

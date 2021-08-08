@@ -142,7 +142,7 @@ public class Board {
                             for (Move move : figure.getAllMoves(gs)) {
                                 if (move.getMoveType() == MoveType.TURN_INTO
                                         || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
-                                    move.setTurnInto(FigureType.QUEEN); // 1 тип превращения
+                                    move.turnInto = FigureType.QUEEN; // 1 тип превращения
                                     // проверка на шах превращения (проверка для других типов
                                     // превращения эквивалентна):
                                     if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) {
@@ -183,7 +183,7 @@ public class Board {
                                 if (move.getMoveType() == MoveType.TURN_INTO
                                         || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
                                     // только для проверки виртуального хода:
-                                    move.setTurnInto(FigureType.QUEEN);
+                                    move.turnInto = FigureType.QUEEN;
                                     // убирать фигуру не нужно, т.к. это копия хода
                                 }
                                 // проверка на шах хода пешки:
