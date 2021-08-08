@@ -43,7 +43,9 @@ public abstract class Figure {
 
     public final FigureType figureType;
     protected final Color color;
-    protected boolean wasMoved = false;
+    /** Двигалась ли фигура на доске */
+    public boolean wasMoved;
+
     protected Cell position;
 
     protected Figure(Color color, Cell position, FigureType figureType) {
@@ -70,16 +72,6 @@ public abstract class Figure {
 
     public void setCurrentPosition(Cell position) {
         this.position = position;
-    }
-
-    /** Устанавливает, делала ли фигура хотя бы один ход */
-    public void setWasMoved(boolean wasMoved) {
-        this.wasMoved = wasMoved;
-    }
-
-    /** @return true, если фигура делала ход */
-    public boolean wasMoved() {
-        return wasMoved;
     }
 
     /** @return все возможные ходы фигуры, не учитывая шаха */

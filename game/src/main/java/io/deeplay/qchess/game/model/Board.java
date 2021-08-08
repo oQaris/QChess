@@ -142,7 +142,7 @@ public class Board {
                             for (Move move : figure.getAllMoves(gs)) {
                                 if (move.getMoveType() == MoveType.TURN_INTO
                                         || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
-                                    move.setTurnInto(FigureType.QUEEN); // 1 тип превращения
+                                    move.turnInto = FigureType.QUEEN; // 1 тип превращения
                                     // проверка на шах превращения (проверка для других типов
                                     // превращения эквивалентна):
                                     if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) {
@@ -183,7 +183,7 @@ public class Board {
                                 if (move.getMoveType() == MoveType.TURN_INTO
                                         || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
                                     // только для проверки виртуального хода:
-                                    move.setTurnInto(FigureType.QUEEN);
+                                    move.turnInto = FigureType.QUEEN;
                                     // убирать фигуру не нужно, т.к. это копия хода
                                 }
                                 // проверка на шах хода пешки:
@@ -330,7 +330,7 @@ public class Board {
     public int isCastlingPossible(Color color) throws ChessError {
         Figure king = findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
-        if (king.wasMoved()) return 0;
+        if (king.wasMoved) return 0;
         return (isNotLeftRookStandardMoved(color) ? 1 : 0)
                 + (isNotRightRookStandardMoved(color) ? 2 : 0);
     }
@@ -344,7 +344,7 @@ public class Board {
         return rook != null
                 && rook.figureType == FigureType.ROOK
                 && rook.getColor() == color
-                && !rook.wasMoved();
+                && !rook.wasMoved;
     }
 
     /**
@@ -356,7 +356,7 @@ public class Board {
         return rook != null
                 && rook.figureType == FigureType.ROOK
                 && rook.getColor() == color
-                && !rook.wasMoved();
+                && !rook.wasMoved;
     }
 
     /**
@@ -372,7 +372,7 @@ public class Board {
         Figure figureFrom = getFigure(move.getFrom());
         Figure figureTo = getFigure(move.getTo());
         figureFrom.setCurrentPosition(move.getTo());
-        figureFrom.setWasMoved(true);
+        figureFrom.wasMoved = true;
         setFigure(figureFrom);
         removeFigure(move.getFrom());
         logger.trace("Фигура была перемещена: {}", move);
@@ -480,11 +480,11 @@ public class Board {
 
     /** @return true, если клетка лежит на доске и она пустая, иначе false */
     public boolean isEmptyCell(Cell cell) {
-        int column = cell.column;
-        int row = cell.row;
-        if (column >= 0 && row >= 0 && column < boardSize && row < boardSize)
-            return cells[row][column] == null;
-        return false;
+        try {
+            return cells[cell.row][cell.column] == null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     /**

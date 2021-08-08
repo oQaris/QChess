@@ -86,7 +86,7 @@ public class ConsolePlayer extends RemotePlayer {
         if (chosenMove.getMoveType() == MoveType.TURN_INTO
                 || chosenMove.getMoveType() == MoveType.TURN_INTO_ATTACK) {
             System.out.println(TURN_INTO_INVITE);
-            chosenMove.setTurnInto(readTurnInto());
+            chosenMove.turnInto = readTurnInto();
         }
     }
 
