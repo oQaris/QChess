@@ -82,7 +82,7 @@ public class History {
         this.lastMove = lastMove;
         isWhiteMove = !isWhiteMove;
 
-        byte[] boardSnapshot = gameSettings.board.fastSnapshot();
+        int[] boardSnapshot = gameSettings.board.fastSnapshot();
 
         isWhiteCastlingPossibility = gameSettings.board.isCastlingPossible(Color.WHITE);
         isBlackCastlingPossibility = gameSettings.board.isCastlingPossible(Color.BLACK);

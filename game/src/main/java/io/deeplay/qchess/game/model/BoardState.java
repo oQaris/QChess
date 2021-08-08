@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 /** Описывает состояние доски */
 public class BoardState {
-    public final byte[] boardSnapshot;
+    public final int[] boardSnapshot;
     public final int boardSnapshotHash;
 
     public final boolean isPawnEnPassantPossible;
@@ -26,7 +26,7 @@ public class BoardState {
     public final int peaceMoveCount;
 
     public BoardState(
-            byte[] boardSnapshot,
+            int[] boardSnapshot,
             int boardSnapshotHash,
             Move lastMove,
             int peaceMoveCount,
