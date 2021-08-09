@@ -119,6 +119,8 @@ public class ClientConfig {
             return Color.WHITE;
         } else if(property.equals("BLACK")) {
             return Color.BLACK;
+        } else if(property.equals("RANDOM")) {
+            return null;
         }
         throw new ConfigException("Validate color from config error");
     }
