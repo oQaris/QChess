@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Стратегия оценки доски методом Монте-Карло. */
-public class MonteCarloStrategy extends Strategy {
+public class MonteCarloStrategy implements Strategy {
     public static final int COUNT_GAMES = 100;
     private static final Logger logger = LoggerFactory.getLogger(MonteCarloStrategy.class);
 

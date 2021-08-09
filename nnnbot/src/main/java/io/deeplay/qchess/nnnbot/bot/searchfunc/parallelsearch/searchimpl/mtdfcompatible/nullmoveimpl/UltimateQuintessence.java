@@ -77,7 +77,7 @@ public class UltimateQuintessence extends NullMove {
         // --------------- Условие выхода из рекурсии --------------- //
 
         if (depth <= 0 || isTerminalNode(allMoves))
-            // return quiesce(isMyMove, alfa, beta, depth, false);
+            //return quiesce(isMyMove, alfa, beta, depth, false);
             return isMyMove
                     ? getEvaluation(allMoves, true, depth)
                     : -getEvaluation(allMoves, false, depth);
@@ -228,7 +228,7 @@ public class UltimateQuintessence extends NullMove {
                         .iterator();
 
         if (!attackMoves.hasNext()) { // попытка избавиться от Horizon effect
-            /*for (final Move move : allMoves) {
+            for (final Move move : allMoves) {
                 gs.moveSystem.move(move);
                 final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1, true);
                 gs.moveSystem.undoMove();
@@ -238,7 +238,7 @@ public class UltimateQuintessence extends NullMove {
                     break;
                 }
                 if (score > alfa) alfa = score;
-            }*/
+            }
         } else { // проведение взятий
             do {
                 gs.moveSystem.move(attackMoves.next());

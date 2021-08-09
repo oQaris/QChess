@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Простая стратегия оценки доски, учитывающая количество и ценность фигур. */
-public class SimpleStrategy extends Strategy {
+public class SimpleStrategy implements Strategy {
     private static final Logger logger = LoggerFactory.getLogger(SimpleStrategy.class);
     private static final Map<FigureType, Integer> grades;
 

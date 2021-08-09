@@ -11,7 +11,7 @@ import io.deeplay.qchess.game.model.figures.Figure;
  * @see <a href="https://www.chessprogramming.org/PeSTO%27s_Evaluation_Function">PeSTO's Evaluation
  *     Function</a>
  */
-public class PestoStrategy extends Strategy {
+public class PestoStrategy implements Strategy {
     int[] mgValue = {82, 337, 365, 477, 1025, 0};
     int[] egValue = {94, 281, 297, 512, 936, 0};
     int[] mgPawnTable = {
