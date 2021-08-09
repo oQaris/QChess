@@ -53,7 +53,7 @@ public class Move {
      * <p>Также превращение проверяется в проверке виртуального хода {@link
      * io.deeplay.qchess.game.logics.MoveSystem#isCorrectMoveWithoutCheckAvailableMoves(Move move)}
      */
-    public boolean equalsWithoutTurnInto(Move move) {
+    public boolean equalsWithoutTurnInto(final Move move) {
         return this == move
                 || move != null
                         && moveType == move.moveType

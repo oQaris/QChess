@@ -173,7 +173,7 @@ public class Board {
      * @param gs нужен для получения ходов пешек и проверки на шах после хода
      * @return true, если у игрока цвета color нет корректных ходов (поставлен пат)
      */
-    public boolean isHasAnyCorrectMove(GameSettings gs, Color color) throws ChessError {
+    public boolean isHasAnyCorrectMove(final GameSettings gs, final Color color) throws ChessError {
         for (int i = 0; i < 8; ++i) {
             if (i == 1 || i == 6) { // на линиях 2 и 7 - кандидаты (пешки) на превращение
                 for (Figure figure : cells[i])
@@ -201,7 +201,7 @@ public class Board {
         return false;
     }
 
-    private void fill(BoardFilling fillingType) throws ChessException {
+    private void fill(final BoardFilling fillingType) throws ChessException {
         logger.debug("Начато заполнение {} доски", fillingType);
         switch (fillingType) {
             case STANDARD -> fillBoardForFirstLine(
@@ -275,7 +275,7 @@ public class Board {
         cellsType[i] = newValue;
     }
 
-    public void setFigureUglyWithoutRecalcHash(Figure figure)
+    public void setFigureUglyWithoutRecalcHash(final Figure figure)
             throws ArrayIndexOutOfBoundsException {
         Cell position = figure.getCurrentPosition();
         cells[position.row][position.column] = figure;
@@ -329,7 +329,7 @@ public class Board {
     }
 
     /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
-    public int isCastlingPossible(Color color) throws ChessError {
+    public int isCastlingPossible(final Color color) throws ChessError {
         Figure king = findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved) return 0;
@@ -433,7 +433,8 @@ public class Board {
      *
      * @return фигура или null, если клетка пуста.
      */
-    public Figure getFigureUgly(int row, int column) throws ArrayIndexOutOfBoundsException {
+    public Figure getFigureUgly(final int row, final int column)
+            throws ArrayIndexOutOfBoundsException {
         return cells[row][column];
     }
 

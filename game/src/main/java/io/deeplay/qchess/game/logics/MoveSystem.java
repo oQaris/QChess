@@ -276,7 +276,7 @@ public class MoveSystem {
      *
      * @return true, если у игрока цвета color нет корректных ходов (поставлен пат)
      */
-    public boolean isHasAnyCorrectMoveSilence(Color color) {
+    public boolean isHasAnyCorrectMoveSilence(final Color color) {
         try {
             return board.isHasAnyCorrectMove(gs, color);
         } catch (ChessError e) {

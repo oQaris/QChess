@@ -25,7 +25,8 @@ public class Selfplay {
     private Player currentPlayerToMove;
 
     /** @throws ChessError если заполнение доски некорректное */
-    public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer)
+    public Selfplay(
+            final GameSettings roomSettings, final Player firstPlayer, final Player secondPlayer)
             throws ChessError {
         if (firstPlayer.getColor() == secondPlayer.getColor())
             throw new IllegalArgumentException("Должны быть разные цвета!");
