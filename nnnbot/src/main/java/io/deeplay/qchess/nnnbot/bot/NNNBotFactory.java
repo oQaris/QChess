@@ -5,7 +5,6 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.evalimpl.MatrixEvaluation;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.ParallelSearch;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl.mtdfcompatible.nullmoveimpl.PVSVerifiedNullMoveWithTT;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl.mtdfcompatible.nullmoveimpl.UltimateQuintessence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

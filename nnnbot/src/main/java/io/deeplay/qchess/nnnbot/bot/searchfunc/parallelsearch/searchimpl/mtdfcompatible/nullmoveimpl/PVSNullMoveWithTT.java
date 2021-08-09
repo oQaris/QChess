@@ -53,10 +53,7 @@ public class PVSNullMoveWithTT extends NullMove {
         if (entry != null) allMoves = entry.allMoves;
         else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
-        if (depth <= 0 || isTerminalNode(allMoves))
-            return isMyMove
-                    ? getEvaluation(allMoves, true, depth)
-                    : -getEvaluation(allMoves, false, depth);
+        if (depth <= 0 || isTerminalNode(allMoves)) return quiesce(isMyMove, alfa, beta, depth);
 
         if (entry == null) SearchImprovements.prioritySort(allMoves);
 
@@ -97,6 +94,51 @@ public class PVSNullMoveWithTT extends NullMove {
         }
 
         table.store(entry, allMoves, alfa, boardState, alfaOrigin, beta, depth);
+
+        return alfa;
+    }
+
+    /**
+     * Симулирует все атакующие ходы и считает оценку доски
+     *
+     * @return лучшая оценка доски
+     */
+    private int quiesce(final boolean isMyMove, int alfa, final int beta, final int depth)
+            throws ChessError {
+        final BoardState boardState = gs.history.getLastBoardState();
+        final TTEntry entry = table.find(boardState);
+
+        final List<Move> allMoves;
+        if (entry != null) allMoves = entry.allMoves;
+        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+
+        final int standPat =
+                isMyMove
+                        ? getEvaluation(allMoves, true, depth)
+                        : -getEvaluation(allMoves, false, depth);
+        if (standPat >= beta) return beta;
+        if (alfa < standPat) alfa = standPat;
+
+        if (isTerminalNode(allMoves)) return alfa;
+
+        final Iterator<Move> attackMoves =
+                allMoves.stream()
+                        .filter(
+                                move ->
+                                        switch (move.getMoveType()) {
+                                            case ATTACK, EN_PASSANT, TURN_INTO_ATTACK -> true;
+                                            default -> false;
+                                        })
+                        .iterator();
+
+        while (attackMoves.hasNext()) {
+            gs.moveSystem.move(attackMoves.next());
+            final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1);
+            gs.moveSystem.undoMove();
+
+            if (score >= beta) return beta;
+            if (score > alfa) alfa = score;
+        }
 
         return alfa;
     }
