@@ -17,12 +17,12 @@ public enum FigureType {
     /** Нужен для быстрого вычисления состояния доски */
     public final int type;
 
-    FigureType(int type) {
+    FigureType(final int type) {
         this.type = type;
     }
 
     /** Фигуры будут записываться в доску как их тип + этот коэффициент */
-    public static int getColorCoeff(Color color) {
+    public static int getColorCoeff(final Color color) {
         return color == Color.WHITE ? 0 : 100;
     }
 }

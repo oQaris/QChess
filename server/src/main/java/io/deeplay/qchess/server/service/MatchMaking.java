@@ -9,10 +9,10 @@ import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
 import io.deeplay.qchess.server.controller.ServerController;
 import io.deeplay.qchess.server.dao.GameDAO;
 import io.deeplay.qchess.server.database.Room;
@@ -53,7 +53,7 @@ public class MatchMaking {
                         switch (dto.enemyType) {
                             case CONSOLE_PLAYER, GUI_PLAYER -> null;
                             case RANDOM_BOT -> new RandomBot(gs, Color.BLACK);
-                            case ATTACK_BOT -> new AttackBot(gs, Color.BLACK);
+                            case ATTACK_BOT -> NNNBotFactory.getNNNBot(gs, Color.BLACK);
                         };
 
                 if (enemyBot == null && dto.enemyType != PlayerType.GUI_PLAYER) {
