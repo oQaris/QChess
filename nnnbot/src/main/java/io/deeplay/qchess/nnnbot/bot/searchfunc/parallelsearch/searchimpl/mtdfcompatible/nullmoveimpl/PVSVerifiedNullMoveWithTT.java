@@ -65,10 +65,7 @@ public class PVSVerifiedNullMoveWithTT extends NullMove {
         if (entry != null) allMoves = entry.allMoves;
         else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
-        if (depth <= 0 || isTerminalNode(allMoves))
-            return isMyMove
-                    ? quiesce(true, alfa, beta, depth)
-                    : -quiesce(false, -beta, -alfa, depth);
+        if (depth <= 0 || isTerminalNode(allMoves)) return quiesce(true, alfa, beta, depth);
 
         if (entry == null) SearchImprovements.prioritySort(allMoves);
 
@@ -144,7 +141,10 @@ public class PVSVerifiedNullMoveWithTT extends NullMove {
     private int quiesce(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
         List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
-        int standPat = getEvaluation(allMoves, isMyMove, depth);
+        int standPat =
+                isMyMove
+                        ? getEvaluation(allMoves, true, depth)
+                        : -getEvaluation(allMoves, false, depth);
         if (standPat >= beta) return beta;
         if (alfa < standPat) alfa = standPat;
 

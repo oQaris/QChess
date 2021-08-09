@@ -126,7 +126,9 @@ public class MatrixEvaluation {
      * Эвристика потенциальной атаки на фигуры
      *
      * @param myColor цвет игрока, который атакует соперника
+     * @deprecated Не является потокобезопасной
      */
+    @Deprecated
     public static int figureAttackHeuristics(GameSettings gs, Color myColor) throws ChessError {
         int myMoveCount = gs.board.getAllPreparedMoves(gs, myColor).size();
         int enemyMoveCount = gs.board.getAllPreparedMoves(gs, myColor.inverse()).size();
@@ -137,8 +139,11 @@ public class MatrixEvaluation {
      * Эвристика подсчета стоимости фигур и возможность потенциальной атаки на них
      *
      * @param myColor цвет игрока, который атакует соперника
+     * @deprecated Не является потокобезопасной
      */
+    @Deprecated
     public static int ultimateHeuristics(GameSettings gs, Color myColor) throws ChessError {
+        // TODO: use Lazy Evaluation
         return figurePositionHeuristics(gs, myColor) + 20 * figureAttackHeuristics(gs, myColor);
     }
 }
