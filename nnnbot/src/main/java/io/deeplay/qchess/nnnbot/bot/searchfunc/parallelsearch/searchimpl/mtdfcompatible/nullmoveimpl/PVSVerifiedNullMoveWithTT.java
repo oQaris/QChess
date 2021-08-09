@@ -65,7 +65,8 @@ public class PVSVerifiedNullMoveWithTT extends NullMove {
         if (entry != null) allMoves = entry.allMoves;
         else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
-        if (depth <= 0 || isTerminalNode(allMoves)) return quiesce(true, alfa, beta, depth);
+        if (depth <= 0 || isTerminalNode(allMoves))
+            return quiesce(isMyMove, alfa, beta, depth, false);
 
         if (entry == null) SearchImprovements.prioritySort(allMoves);
 
@@ -85,7 +86,7 @@ public class PVSVerifiedNullMoveWithTT extends NullMove {
             SearchImprovements.prioritySort(enemyMoves);
             Move nullMove = enemyMoves.get(0);
             // null-move:
-            gs.moveSystem.move(nullMove);
+            gs.moveSystem.move(nullMove, true, false);
             estimation = -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify);
             gs.moveSystem.undoMove();
             if (estimation >= beta) {
@@ -138,35 +139,58 @@ public class PVSVerifiedNullMoveWithTT extends NullMove {
      *
      * @return лучшая оценка доски
      */
-    private int quiesce(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+    private int quiesce(
+            final boolean isMyMove,
+            int alfa,
+            final int beta,
+            final int depth,
+            final boolean theLast)
+            throws ChessError {
+        final BoardState boardState = gs.history.getLastBoardState();
+        final TTEntry entry = table.find(boardState);
 
-        int standPat =
+        final List<Move> allMoves;
+        if (entry != null) allMoves = entry.allMoves;
+        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+
+        final int standPat =
                 isMyMove
                         ? getEvaluation(allMoves, true, depth)
                         : -getEvaluation(allMoves, false, depth);
         if (standPat >= beta) return beta;
         if (alfa < standPat) alfa = standPat;
 
-        if (isTerminalNode(allMoves)) return alfa;
+        if (theLast || isTerminalNode(allMoves)) return alfa;
 
-        Iterator<Move> attackMoves =
-                allMoves.parallelStream()
+        final Iterator<Move> attackMoves =
+                allMoves.parallelStream() // TODO: test simple stream
                         .filter(
                                 move ->
                                         switch (move.getMoveType()) {
                                             case ATTACK, EN_PASSANT, TURN_INTO_ATTACK -> true;
                                             default -> false;
                                         })
+                        .sorted(SearchImprovements.movesPriority) // TODO: заменить
                         .iterator();
 
-        while (attackMoves.hasNext()) {
-            gs.moveSystem.move(attackMoves.next());
-            int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1);
-            gs.moveSystem.undoMove();
+        if (!attackMoves.hasNext()) {
+            for (final Move move : allMoves) {
+                gs.moveSystem.move(move);
+                final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1, true);
+                gs.moveSystem.undoMove();
 
-            if (score >= beta) return beta;
-            if (score > alfa) alfa = score;
+                if (score >= beta) return beta;
+                if (score > alfa) alfa = score;
+            }
+        } else {
+            do {
+                gs.moveSystem.move(attackMoves.next());
+                final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1, false);
+                gs.moveSystem.undoMove();
+
+                if (score >= beta) return beta;
+                if (score > alfa) alfa = score;
+            } while (attackMoves.hasNext());
         }
 
         return alfa;

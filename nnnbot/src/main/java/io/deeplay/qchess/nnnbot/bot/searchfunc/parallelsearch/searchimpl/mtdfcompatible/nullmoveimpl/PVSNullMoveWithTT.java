@@ -73,7 +73,7 @@ public class PVSNullMoveWithTT extends NullMove {
             SearchImprovements.prioritySort(enemyMoves);
             Move nullMove = enemyMoves.get(0);
             // null-move:
-            gs.moveSystem.move(nullMove);
+            gs.moveSystem.move(nullMove, true, false);
             estimation = -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1);
             gs.moveSystem.undoMove();
             if (estimation >= beta) return beta;

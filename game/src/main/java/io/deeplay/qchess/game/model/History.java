@@ -103,6 +103,12 @@ public class History {
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
     }
 
+    /** Добавляет запись в историю, но не меняет цвет игрока, который будет делать следующий ход */
+    public void addRecordButNotChangeMoveSide(Move lastMove) throws ChessError {
+        isWhiteMove = !isWhiteMove;
+        addRecord(lastMove);
+    }
+
     public boolean isHasMovedBeforeLastMove() {
         return hasMovedBeforeLastMove;
     }
