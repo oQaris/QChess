@@ -7,7 +7,7 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.SearchAlgorithm;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable;
 
 public abstract class MTDFSearch extends SearchAlgorithm {
 
@@ -25,11 +25,12 @@ public abstract class MTDFSearch extends SearchAlgorithm {
         this.table = table;
     }
 
-    public int MTDFStart(boolean isMyMove, int firstGuess, int depth) throws ChessError {
+    public int MTDFStart(boolean isMyMove, int firstGuess, int depth, long maxTimeMillis)
+            throws ChessError {
         long startTimeMillis = System.currentTimeMillis();
         for (int d = 1; d <= depth; ++d) {
             firstGuess = MTDF(isMyMove, firstGuess, d);
-            if (timesUp(startTimeMillis, 5000)) break;
+            if (timesUp(startTimeMillis, maxTimeMillis)) break;
         }
         return firstGuess;
     }

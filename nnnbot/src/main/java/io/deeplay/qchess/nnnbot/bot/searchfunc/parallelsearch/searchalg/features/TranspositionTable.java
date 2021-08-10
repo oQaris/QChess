@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt;
+package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features;
 
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Move;

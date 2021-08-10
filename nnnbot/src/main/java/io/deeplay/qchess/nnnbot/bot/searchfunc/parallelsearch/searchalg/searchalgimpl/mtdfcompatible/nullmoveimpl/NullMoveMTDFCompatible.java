@@ -5,7 +5,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
 
 public abstract class NullMoveMTDFCompatible extends MTDFSearch {

@@ -10,17 +10,13 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable.TTEntry;
 import java.util.Iterator;
 import java.util.List;
 
 /** Лучший из лучших */
 public class UltimateQuintessence extends NullMoveMTDFCompatible {
-
-    private final TranspositionTableWithFlag table = new TranspositionTableWithFlag();
 
     public UltimateQuintessence(
             final TranspositionTable table,
@@ -72,17 +68,16 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Поиск в ТТ --------------- //
 
-        final int alfaOrigin = alfa;
         final BoardState boardState = gs.history.getLastBoardState();
-        TTEntry entry = table.find(boardState);
+        final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
-            if (entry.flag == TTEntryFlag.EXACT) return entry.estimation;
-            if (entry.flag == TTEntryFlag.UPPERBOUND) {
-                if (entry.estimation < beta) beta = entry.estimation;
-            } else if (entry.estimation > alfa) alfa = entry.estimation;
-
-            if (beta <= alfa) return entry.estimation;
+            if (entry.lowerBound >= beta) return entry.lowerBound;
+            if (entry.upperBound <= alfa) return entry.upperBound;
+            if (entry.lowerBound > alfa) alfa = entry.lowerBound;
+            if (entry.upperBound < beta) beta = entry.upperBound;
         }
+        final int alfaOrigin = alfa;
+        final int betaOrigin = beta;
 
         // --------------- Получение всех ходов из ТТ или создание новых --------------- //
 
@@ -185,7 +180,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Кеширование результата в ТТ --------------- //
 
-        table.store(entry, allMoves, alfa, boardState, alfaOrigin, beta, depth);
+        table.store(entry, allMoves, alfa, boardState, alfaOrigin, betaOrigin, depth);
 
         return alfa;
     }
@@ -201,17 +196,16 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Поиск в ТТ --------------- //
 
-        final int alfaOrigin = alfa;
         final BoardState boardState = gs.history.getLastBoardState();
-        TTEntry entry = table.find(boardState);
+        final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
-            if (entry.flag == TTEntryFlag.EXACT) return entry.estimation;
-            if (entry.flag == TTEntryFlag.UPPERBOUND) {
-                if (entry.estimation < beta) beta = entry.estimation;
-            } else if (entry.estimation > alfa) alfa = entry.estimation;
-
-            if (beta <= alfa) return entry.estimation;
+            if (entry.lowerBound >= beta) return entry.lowerBound;
+            if (entry.upperBound <= alfa) return entry.upperBound;
+            if (entry.lowerBound > alfa) alfa = entry.lowerBound;
+            if (entry.upperBound < beta) beta = entry.upperBound;
         }
+        final int alfaOrigin = alfa;
+        final int betaOrigin = beta;
 
         // --------------- Получение всех ходов из ТТ или создание новых --------------- //
 
@@ -271,7 +265,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Кеширование результата в ТТ --------------- //
 
-        table.store(entry, allMoves, alfa, boardState, alfaOrigin, beta, depth);
+        table.store(entry, allMoves, alfa, boardState, alfaOrigin, betaOrigin, depth);
 
         return alfa;
     }

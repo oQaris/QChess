@@ -8,16 +8,12 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable.TTEntry;
 import java.util.Iterator;
 import java.util.List;
 
 public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
-
-    private final TranspositionTableWithFlag table = new TranspositionTableWithFlag();
 
     public PVSVerifiedNullMoveWithTT(
             final TranspositionTable table,
@@ -66,18 +62,16 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
 
     public int pvs(boolean isMyMove, int alfa, int beta, int depth, boolean verify)
             throws ChessError {
-        int alfaOrigin = alfa;
-
-        BoardState boardState = gs.history.getLastBoardState();
-        TTEntry entry = table.find(boardState);
+        final BoardState boardState = gs.history.getLastBoardState();
+        final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
-            if (entry.flag == TTEntryFlag.EXACT) return entry.estimation;
-            if (entry.flag == TTEntryFlag.UPPERBOUND) {
-                if (entry.estimation < beta) beta = entry.estimation;
-            } else if (entry.estimation > alfa) alfa = entry.estimation;
-
-            if (beta <= alfa) return entry.estimation;
+            if (entry.lowerBound >= beta) return entry.lowerBound;
+            if (entry.upperBound <= alfa) return entry.upperBound;
+            if (entry.lowerBound > alfa) alfa = entry.lowerBound;
+            if (entry.upperBound < beta) beta = entry.upperBound;
         }
+        final int alfaOrigin = alfa;
+        final int betaOrigin = beta;
 
         final List<Move> allMoves;
         if (entry != null) allMoves = entry.allMoves;
@@ -146,7 +140,7 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
             } else break;
         } while (true);
 
-        table.store(entry, allMoves, alfa, boardState, alfaOrigin, beta, depth);
+        table.store(entry, allMoves, alfa, boardState, alfaOrigin, betaOrigin, depth);
 
         return alfa;
     }
