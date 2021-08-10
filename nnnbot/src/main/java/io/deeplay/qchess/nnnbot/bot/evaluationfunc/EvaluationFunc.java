@@ -7,12 +7,9 @@ import io.deeplay.qchess.game.model.Color;
 @FunctionalInterface
 public interface EvaluationFunc {
 
-    int MAX_ESTIMATION = Integer.MAX_VALUE - 100;
-    int MIN_ESTIMATION = 100 - Integer.MAX_VALUE;
-
-    int PAWN_COST = 100;
-    int QUARTER_PAWN_COST = PAWN_COST / 4;
+    double MAX_ESTIMATION = Double.MAX_VALUE;
+    double MIN_ESTIMATION = -Double.MAX_VALUE;
 
     /** @return значение, которое необходимо увеличивать игроку с цветом color */
-    int getHeuristics(GameSettings gs, Color myColor) throws ChessError;
+    double getHeuristics(GameSettings gs, Color myColor) throws ChessError;
 }

@@ -13,7 +13,8 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.player.Player;
-import io.deeplay.qchess.qbot.QMinimaxBot;
+import io.deeplay.qchess.game.player.RandomBot;
+import io.deeplay.qchess.qbot.QBot;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -60,6 +61,7 @@ public class NNNBotTest {
         int i = count;
         double time = 0;
         double time2 = 0;
+        double time3 = 0;
         while (--i >= 0) {
             try {
                 gs.moveSystem.move(
@@ -80,9 +82,15 @@ public class NNNBotTest {
             gs.board.getAllPreparedMoves(gs, Color.WHITE);
             gs.board.getAllPreparedMoves(gs, Color.BLACK);
             time2 += (double) (System.nanoTime() - startTime) / count;
+
+            startTime = System.nanoTime();
+            gs.moveSystem.getAllCorrectMovesSilence(Color.WHITE);
+            gs.moveSystem.getAllCorrectMovesSilence(Color.BLACK);
+            time3 += (double) (System.nanoTime() - startTime) / count;
         }
         System.out.println("fast: " + time);
         System.out.println("simple: " + time2);
+        System.out.println("silence: " + time3);
     }
 
     @Ignore
@@ -98,7 +106,7 @@ public class NNNBotTest {
         long startTime;
         if (COUNT == 1) {
             startTime = System.currentTimeMillis();
-            new Game(0).run();
+            new Game(COUNT & 1).run();
 
         } else {
             ExecutorService executor =
@@ -141,7 +149,7 @@ public class NNNBotTest {
         logger.info("Draw rate: {}%", drawCount * 100 / COUNT);
     }
 
-    /** Мат ладьей за 1 ход */
+    /** Мат ладьёй за 1 ход */
     @Ignore
     @Test
     public void testCheckmate() throws ChessError, ChessException {
@@ -153,8 +161,7 @@ public class NNNBotTest {
         System.out.println(gs.board);
 
         NNNBot bot = NNNBotFactory.getNNNBot(gs, Color.WHITE);
-        NNNBot bot2 = NNNBotFactory.getNNNBot(gs, Color.BLACK);
-        Selfplay game = new Selfplay(gs, bot, bot2);
+        Selfplay game = new Selfplay(gs, bot, bot);
 
         Move move = bot.getNextMove();
         game.move(move);
@@ -185,11 +192,11 @@ public class NNNBotTest {
             if (NNNBotColor == Color.WHITE) {
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.WHITE);
                 firstPlayer = nnnBot;
-                secondPlayer = new QMinimaxBot(gs, Color.BLACK, 2);
-                // secondPlayer = new RandomBot(gs, Color.BLACK);
+                //secondPlayer = new QBot(gs, Color.BLACK, 2);
+                secondPlayer = new RandomBot(gs, Color.BLACK);
             } else {
-                firstPlayer = new QMinimaxBot(gs, Color.WHITE, 2);
-                // firstPlayer = new RandomBot(gs, Color.WHITE);
+                //firstPlayer = new QBot(gs, Color.WHITE, 2);
+                firstPlayer = new RandomBot(gs, Color.WHITE);
                 nnnBot = NNNBotFactory.getNNNBot(gs, Color.BLACK);
                 secondPlayer = nnnBot;
             }
