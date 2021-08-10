@@ -7,7 +7,7 @@ import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.Arrays;
 import java.util.List;
 
-public class PestoEvaluationFunction implements Evaluation {
+public class PestoEvaluation implements Evaluation {
 
     private final int[] mg_value = {2, 337, 365, 477, 1025, 0};
     private final int[] eg_value = {94, 281, 297, 512, 936, 0};
@@ -161,7 +161,7 @@ public class PestoEvaluationFunction implements Evaluation {
     int[][] mg_table = new int[12][64];
     int[][] eg_table = new int[12][64];
 
-    public PestoEvaluationFunction() {
+    public PestoEvaluation() {
         init();
     }
 

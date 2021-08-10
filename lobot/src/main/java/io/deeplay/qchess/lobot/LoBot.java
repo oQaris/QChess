@@ -25,23 +25,14 @@ public class LoBot extends RemotePlayer {
     private final ChessMoveFunc<Integer> algorithm;
 
     public LoBot(GameSettings roomSettings, Color color) {
-        this(roomSettings, color, new FiguresCostSumEvaluation(), 2, TraversalAlgorithm.MINIMAX);
+        this(roomSettings, color, new Strategy());
     }
 
-    public LoBot(GameSettings roomSettings, Color color, Evaluation evaluation) {
-        this(roomSettings, color, evaluation, 2, TraversalAlgorithm.MINIMAX);
-    }
-
-    public LoBot(GameSettings roomSettings, Color color, Evaluation evaluation, int depth) {
-        this(roomSettings, color, evaluation, depth, TraversalAlgorithm.MINIMAX);
-    }
-
-    public LoBot(GameSettings roomSettings, Color color, Evaluation evaluation, int depth,
-        TraversalAlgorithm traversal) {
+    public LoBot(GameSettings roomSettings, Color color, Strategy strategy) {
         super(roomSettings, color, "lobot-" + UUID.randomUUID());
-        this.evaluation = evaluation;
-        this.depth = depth;
-        algorithm = getAlgorithm(traversal);
+        this.evaluation = strategy.getEvaluation();
+        this.depth = strategy.getDepth();
+        algorithm = getAlgorithm(strategy.getAlgorithm());
     }
 
     private ChessMoveFunc<Integer> getAlgorithm(TraversalAlgorithm traversal) {
