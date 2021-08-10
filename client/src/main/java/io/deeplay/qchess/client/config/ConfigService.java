@@ -123,8 +123,8 @@ public class ConfigService {
             throw new ConfigException(
                 ConfigExceptionEnum.ABSENT_PATH);
         }
-        String pattern = "/([\\w]+/)*";
-        if (Pattern.matches(pattern, property)) {
+        String pattern = "/([\\w\\s]+/)*";
+        if (!Pattern.matches(pattern, property)) {
             throw new ConfigException(
                 ConfigExceptionEnum.INCORRECT_PATH);
         }

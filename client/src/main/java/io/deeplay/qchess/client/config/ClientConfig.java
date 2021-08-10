@@ -4,11 +4,12 @@ import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.game.model.Color;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 public class ClientConfig {
 
-    private final static String configPath = "client/src/main/resources/client_configuration.conf";
+    private final static String configPath = "/client_configuration.conf";
 
     private final String ip;
     private final int port;
@@ -23,7 +24,7 @@ public class ClientConfig {
         FileInputStream fis;
         Properties property = new Properties();
         try {
-            fis = new FileInputStream(configPath);
+            fis = new FileInputStream(Objects.requireNonNull(getClass().getResource(configPath)).getFile());
             property.load(fis);
             ip = ConfigService.validateIp(property.getProperty("client.ip"));
             port = ConfigService.validatePort(property.getProperty("client.port"));
@@ -32,7 +33,7 @@ public class ClientConfig {
             logPath = ConfigService.validatePath(property.getProperty("client.logPath"));
             logBack = ConfigService.validatePath(property.getProperty("client.logBack"));
             color = ConfigService.validateColor(property.getProperty("client.color"));
-            isTournament = ConfigService.validateBoolean(property.getProperty("isTournament"));
+            isTournament = ConfigService.validateBoolean(property.getProperty("client.isTournament"));
 
         } catch (IOException e) {
             throw new ConfigException(ConfigExceptionEnum.READ_CONFIG_FILE);
@@ -73,6 +74,12 @@ public class ClientConfig {
         return logBack;
     }
 
+    /**
+     * Возвращает экземпляр Color или null
+     *
+     * @return Экземпляр Color если в конфигах было одно из значений
+     * WHITE или BLACK. null - если в конфигах было RANDOM
+     */
     public Color getColor() {
         return color;
     }
