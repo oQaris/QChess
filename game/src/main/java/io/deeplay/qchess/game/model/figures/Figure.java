@@ -15,12 +15,21 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Figure {
     public static final int[][][][] hashCodes = new int[2][2][8][8];
-    private static final Logger logger = LoggerFactory.getLogger(Figure.class);
-    protected static List<Cell> xMove =
+    protected static final List<Cell> xMove =
             Arrays.asList(new Cell(-1, -1), new Cell(-1, 1), new Cell(1, -1), new Cell(1, 1));
-    protected static List<Cell> plusMove =
+    protected static final List<Cell> plusMove =
             Arrays.asList(new Cell(-1, 0), new Cell(0, -1), new Cell(0, 1), new Cell(1, 0));
-    protected static List<Cell> knightMove =
+    protected static final List<Cell> xPlusMove =
+            Arrays.asList(
+                    new Cell(-1, -1),
+                    new Cell(-1, 1),
+                    new Cell(1, -1),
+                    new Cell(1, 1),
+                    new Cell(-1, 0),
+                    new Cell(0, -1),
+                    new Cell(0, 1),
+                    new Cell(1, 0));
+    protected static final List<Cell> knightMove =
             Arrays.asList(
                     new Cell(-2, -1),
                     new Cell(-2, 1),
@@ -30,6 +39,8 @@ public abstract class Figure {
                     new Cell(1, 2),
                     new Cell(2, -1),
                     new Cell(2, 1));
+
+    private static final transient Logger logger = LoggerFactory.getLogger(Figure.class);
 
     static {
         for (int i = 0; i < 8; ++i)
@@ -48,14 +59,14 @@ public abstract class Figure {
 
     protected Cell position;
 
-    protected Figure(Color color, Cell position, FigureType figureType) {
+    protected Figure(final Color color, final Cell position, final FigureType figureType) {
         this.color = color;
         this.position = position;
         this.figureType = figureType;
         logger.trace("Фигура {} была создана", this);
     }
 
-    public static Figure build(FigureType type, Color color, Cell position) {
+    public static Figure build(final FigureType type, final Color color, final Cell position) {
         return switch (type) {
             case BISHOP -> new Bishop(color, position);
             case KING -> new King(color, position);
@@ -70,20 +81,20 @@ public abstract class Figure {
         return position;
     }
 
-    public void setCurrentPosition(Cell position) {
+    public void setCurrentPosition(final Cell position) {
         this.position = position;
     }
 
     /** @return все возможные ходы фигуры, не учитывая шаха */
-    public abstract List<Move> getAllMoves(GameSettings settings);
+    public abstract List<Move> getAllMoves(final GameSettings settings);
 
-    protected List<Move> rayTrace(Board board, List<Cell> directions) {
-        List<Move> result = new LinkedList<>();
-        for (Cell shift : directions) {
-            Cell cord = position.createAdd(shift);
+    protected List<Move> rayTrace(final Board board, final List<Cell> directions) {
+        final List<Move> result = new LinkedList<>();
+        for (final Cell shift : directions) {
+            final Cell cord = position.createAdd(shift);
             while (board.isEmptyCell(cord)) {
-                result.add(new Move(MoveType.QUIET_MOVE, position, cord));
-                cord = cord.createAdd(shift);
+                result.add(new Move(MoveType.QUIET_MOVE, position, new Cell(cord)));
+                cord.shift(shift);
             }
             if (board.isEnemyFigureOn(color, cord))
                 result.add(new Move(MoveType.ATTACK, position, cord));
@@ -96,16 +107,12 @@ public abstract class Figure {
         return color;
     }
 
-    protected List<Move> stepForEach(Board board, List<Cell> moves) {
-        return stepForEachWithNewCell(board, moves, false);
-    }
-
-    protected List<Move> stepForEachWithNewCell(
-            Board board, List<Cell> moves, boolean withNewCell) {
-        Cell newCell = withNewCell ? new Cell(position.column, position.row) : position;
-        List<Move> result = new LinkedList<>();
-        for (Cell shift : moves) {
-            Cell cord = position.createAdd(shift);
+    protected List<Move> stepForEach(
+            final Board board, final List<Cell> moves, final boolean withNewCell) {
+        final Cell newCell = withNewCell ? new Cell(position.column, position.row) : position;
+        final List<Move> result = new LinkedList<>();
+        for (final Cell shift : moves) {
+            final Cell cord = position.createAdd(shift);
             if (board.isEmptyCell(cord)) result.add(new Move(MoveType.QUIET_MOVE, newCell, cord));
             else if (board.isEnemyFigureOn(color, cord))
                 result.add(new Move(MoveType.ATTACK, newCell, cord));
@@ -113,7 +120,7 @@ public abstract class Figure {
         return result;
     }
 
-    public abstract boolean isAttackedCell(GameSettings settings, Cell cell);
+    public abstract boolean isAttackedCell(final GameSettings settings, final Cell cell);
 
     @Override
     public int hashCode() {
@@ -122,10 +129,10 @@ public abstract class Figure {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Figure figure = (Figure) o;
+        final Figure figure = (Figure) o;
         return wasMoved == figure.wasMoved
                 && color == figure.color
                 && Objects.equals(position, figure.position);
