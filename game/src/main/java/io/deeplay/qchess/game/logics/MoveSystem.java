@@ -39,7 +39,7 @@ public class MoveSystem {
     }
 
     public Figure move(final Move move) throws ChessError {
-        return move(move, true);
+        return move(move, true, true);
     }
 
     /**
@@ -47,7 +47,9 @@ public class MoveSystem {
      *
      * @return удаленная фигура или null, если ни одну фигуру не взяли
      */
-    public Figure move(final Move move, final boolean useHistoryRecord) throws ChessError {
+    public Figure move(
+            final Move move, final boolean useHistoryRecord, final boolean changeMoveSideInRecord)
+            throws ChessError {
         try {
             final Figure moveFigure = board.getFigureUgly(move.getFrom());
 
@@ -116,7 +118,8 @@ public class MoveSystem {
             history.setRemovedFigure(removedFigure);
             if (useHistoryRecord) {
                 history.checkAndAddPeaceMoveCount(move);
-                history.addRecord(move);
+                if (changeMoveSideInRecord) history.addRecord(move);
+                else history.addRecordButNotChangeMoveSide(move);
             } else prevMoveIfRecordNotUse = move;
 
             return removedFigure;
@@ -203,7 +206,7 @@ public class MoveSystem {
     private boolean isCorrectVirtualMove(final Move move) throws ChessError, ChessException {
         logger.trace("Начата проверка виртуального хода {}", move);
         final Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
-        final Figure virtualKilled = move(move, false);
+        final Figure virtualKilled = move(move, false, true);
 
         if (virtualKilled != null && virtualKilled.figureType == FigureType.KING) {
             logger.error("Срубили короля при проверке виртуального хода {}", move);
@@ -300,7 +303,7 @@ public class MoveSystem {
      */
     public boolean isCorrectVirtualMoveSilence(final Move move) throws ChessError {
         final Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
-        move(move, false);
+        move(move, false, true);
         final boolean isCheck = egd.isCheck(figureToMove);
         undoMove(false);
         return !isCheck;
@@ -363,6 +366,7 @@ public class MoveSystem {
 
     @FunctionalInterface
     public interface ChessMoveFunc<T> {
-        T apply(Color figureToMove, Figure virtualKilled) throws ChessException, ChessError;
+        T apply(final Color figureToMove, final Figure virtualKilled)
+                throws ChessException, ChessError;
     }
 }

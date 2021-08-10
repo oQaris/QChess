@@ -87,10 +87,16 @@ public class Selfplay {
     /** @deprecated Можно запускать только один раз. Используется только для проверки игры */
     @Deprecated
     public void run() throws ChessError {
+        long startTime = 0;
         final EndGameDetector egd = roomSettings.endGameDetector;
         while (egd.getGameResult() == EndGameDetector.EndGameType.NOTHING) {
             // TODO: получать Action, сделать предложение ничьи и возможность сдаться
+            if (logger.isDebugEnabled()) startTime = System.currentTimeMillis();
             final Move move = currentPlayerToMove.getNextMove();
+            if (logger.isDebugEnabled()) {
+                final long time = System.currentTimeMillis() - startTime;
+                logger.debug("Время на ход: {} sec", time / 1000.);
+            }
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 tryMove(move);
@@ -125,7 +131,6 @@ public class Selfplay {
         try {
             final Figure removedFigure = roomSettings.moveSystem.move(move);
             if (logger.isDebugEnabled()) {
-                logger.debug("<---------------------------------------------------------------->");
                 logger.debug(
                         "{} сделал ход: {} фигурой: {}",
                         currentPlayerToMove,
