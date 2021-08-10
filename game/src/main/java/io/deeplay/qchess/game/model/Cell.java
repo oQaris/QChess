@@ -29,13 +29,18 @@ public class Cell {
         this.row = row;
     }
 
+    public Cell(final Cell cell) {
+        this.column = cell.column;
+        this.row = cell.row;
+    }
+
     /** @deprecated Использует стандартный размер доски - плохо для гибкости */
     @Deprecated(since = "only for tests")
-    public static Cell parse(String pos) {
+    public static Cell parse(final String pos) {
         if (pos.length() == 2) {
-            char letter = Character.toLowerCase(pos.charAt(0));
+            final char letter = Character.toLowerCase(pos.charAt(0));
             if (letter >= 'a' && letter <= 'h') {
-                int digit = pos.charAt(1) - '0';
+                final int digit = pos.charAt(1) - '0';
                 if (digit >= 1 && digit <= STD_BOARD_SIZE)
                     return new Cell(letter - 'a', STD_BOARD_SIZE - digit);
             }
@@ -45,12 +50,12 @@ public class Cell {
     }
 
     /** @return создает новую клетку, суммируя с текущей */
-    public Cell createAdd(Cell shiftCell) {
+    public Cell createAdd(final Cell shiftCell) {
         return new Cell(column + shiftCell.column, row + shiftCell.row);
     }
 
     /** Сдвигает текущую клетку на указанный вектор */
-    public Cell shift(Cell shiftCell) {
+    public Cell shift(final Cell shiftCell) {
         column += shiftCell.column;
         row += shiftCell.row;
         return this;
@@ -64,10 +69,10 @@ public class Cell {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Cell cell = (Cell) o;
+        final Cell cell = (Cell) o;
         return column == cell.column && row == cell.row;
     }
 

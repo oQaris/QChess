@@ -23,7 +23,7 @@ public class Move {
         this.to = to;
     }
 
-    public Move(Move move, FigureType turnInto) {
+    public Move(final Move move, final FigureType turnInto) {
         this.moveType = move.moveType;
         this.from = move.from;
         this.to = move.to;
@@ -72,10 +72,10 @@ public class Move {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Move move = (Move) o;
+        final Move move = (Move) o;
         return moveType == move.moveType
                 && Objects.equals(from, move.from)
                 && Objects.equals(to, move.to)
@@ -84,7 +84,7 @@ public class Move {
 
     @Override
     public String toString() {
-        StringBuilder sb =
+        final StringBuilder sb =
                 new StringBuilder()
                         .append(from)
                         .append("-")
@@ -92,8 +92,11 @@ public class Move {
                         .append(" (")
                         .append(moveType)
                         .append(")");
-        if (moveType == MoveType.TURN_INTO || moveType == MoveType.TURN_INTO_ATTACK)
-            sb.append(" turn into ").append(turnInto);
-        return sb.toString();
+        return switch (moveType) {
+            case TURN_INTO, TURN_INTO_ATTACK -> sb.append(" turn into ")
+                    .append(turnInto)
+                    .toString();
+            default -> sb.toString();
+        };
     }
 }

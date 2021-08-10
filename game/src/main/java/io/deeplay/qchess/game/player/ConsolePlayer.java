@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConsolePlayer extends RemotePlayer {
-    private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
+    private static final transient Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
     private static final String TURN_INTO_INVITE =
             "Выберите фигуру для превращения:"
                     + System.lineSeparator()
@@ -31,7 +31,8 @@ public class ConsolePlayer extends RemotePlayer {
 
     private final BufferedReader in;
 
-    public ConsolePlayer(GameSettings roomSettings, Color color, BufferedReader in) {
+    public ConsolePlayer(
+            final GameSettings roomSettings, final Color color, final BufferedReader in) {
         super(roomSettings, color, "console-player");
         this.in = in;
     }
@@ -39,10 +40,10 @@ public class ConsolePlayer extends RemotePlayer {
     @Override
     public Move getNextMove() throws ChessError {
         try {
-            List<Move> allMoves = ms.getAllCorrectMoves(color);
+            final List<Move> allMoves = ms.getAllCorrectMoves(color);
             System.out.println(board);
             printMoves(allMoves);
-            Move chosenMove = inputMoveNumber(allMoves);
+            final Move chosenMove = inputMoveNumber(allMoves);
             specificMoveModification(chosenMove);
             return chosenMove;
         } catch (ChessError e) {
@@ -56,7 +57,7 @@ public class ConsolePlayer extends RemotePlayer {
         return PlayerType.CONSOLE_PLAYER;
     }
 
-    private void printMoves(List<Move> allMoves) {
+    private void printMoves(final List<Move> allMoves) {
         System.out.println("Выберите ход:");
         allMoves.sort(Comparator.comparing(Move::toString));
         int number = 1;
@@ -66,13 +67,13 @@ public class ConsolePlayer extends RemotePlayer {
         }
     }
 
-    private Move inputMoveNumber(List<Move> allMoves) {
+    private Move inputMoveNumber(final List<Move> allMoves) {
         Move move = null;
         while (move == null) {
             try {
-                String input = in.readLine();
+                final String input = in.readLine();
                 logger.info("Игрок ввел: {}", input);
-                int numMove = Integer.parseInt(input);
+                final int numMove = Integer.parseInt(input);
                 move = allMoves.get(numMove - 1);
             } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
                 logger.info("Игрок ввел неправильный ход");
@@ -82,7 +83,7 @@ public class ConsolePlayer extends RemotePlayer {
         return move;
     }
 
-    private void specificMoveModification(Move chosenMove) throws ChessError {
+    private void specificMoveModification(final Move chosenMove) throws ChessError {
         if (chosenMove.getMoveType() == MoveType.TURN_INTO
                 || chosenMove.getMoveType() == MoveType.TURN_INTO_ATTACK) {
             System.out.println(TURN_INTO_INVITE);
@@ -95,7 +96,7 @@ public class ConsolePlayer extends RemotePlayer {
         final int maxCountFigures = 4;
         while (numTurnIntoFigure == 0) {
             try {
-                String input = in.readLine();
+                final String input = in.readLine();
                 logger.info("Игрок ввел: {}", input);
                 numTurnIntoFigure = Integer.parseInt(input);
                 if (numTurnIntoFigure < 0 || numTurnIntoFigure > maxCountFigures) {

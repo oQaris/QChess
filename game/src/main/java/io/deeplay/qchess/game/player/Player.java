@@ -17,7 +17,7 @@ public abstract class Player {
     protected EndGameDetector egd;
     protected History history;
 
-    protected Player(GameSettings roomSettings, Color color) {
+    protected Player(final GameSettings roomSettings, final Color color) {
         this.roomSettings = roomSettings;
         ms = roomSettings.moveSystem;
         board = roomSettings.board;
@@ -26,7 +26,7 @@ public abstract class Player {
         this.color = color;
     }
 
-    public void setGameSettings(GameSettings gs, Color color) {
+    public void setGameSettings(final GameSettings gs, final Color color) {
         this.roomSettings = gs;
         ms = gs.moveSystem;
         board = gs.board;
