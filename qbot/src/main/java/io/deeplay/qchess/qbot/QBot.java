@@ -151,7 +151,7 @@ public class QBot extends RemotePlayer {
             final Move move = moves.get(i);
             final MoveType type = move.getMoveType();
             if (type == MoveType.TURN_INTO || type == MoveType.TURN_INTO_ATTACK) {
-                moves.get(i).setTurnInto(FigureType.QUEEN);
+                moves.get(i).turnInto = FigureType.QUEEN;
                 moves.add(new Move(move, FigureType.KNIGHT));
             }
         }

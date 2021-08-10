@@ -9,7 +9,8 @@ public class RemotePlayer extends Player {
 
     private final String sessionToken;
 
-    public RemotePlayer(GameSettings roomSettings, Color color, String sessionToken) {
+    public RemotePlayer(
+            final GameSettings roomSettings, final Color color, final String sessionToken) {
         super(roomSettings, color);
         this.sessionToken = sessionToken;
     }

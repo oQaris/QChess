@@ -8,37 +8,38 @@ import java.util.List;
 
 public class Rook extends Figure {
 
-    public Rook(Color color, Cell position) {
+    public Rook(final Color color, final Cell position) {
         super(color, position, FigureType.ROOK);
     }
 
-    public static boolean isAttackedCell(GameSettings settings, Cell fromPos, Cell cell) {
-        int x = cell.column;
-        int y = cell.row;
-        int myX = fromPos.column;
-        int myY = fromPos.row;
+    public static boolean isAttackedCell(
+            final GameSettings settings, final Cell fromPos, final Cell cell) {
+        final int x = cell.column;
+        final int y = cell.row;
+        final int myX = fromPos.column;
+        final int myY = fromPos.row;
         if (x == myX && y == myY) return false;
         if (x != myX && y != myY) return false;
         if (x == myX) {
-            Cell attackVector = new Cell(0, Integer.compare(y, myY));
-            Cell pos = fromPos.createAdd(attackVector);
+            final Cell attackVector = new Cell(0, Integer.compare(y, myY));
+            final Cell pos = fromPos.createAdd(attackVector);
             while (pos.row != y && settings.board.isEmptyCell(pos)) pos.shift(attackVector);
             return pos.row == y;
         } else {
-            Cell attackVector = new Cell(Integer.compare(x, myX), 0);
-            Cell pos = fromPos.createAdd(attackVector);
+            final Cell attackVector = new Cell(Integer.compare(x, myX), 0);
+            final Cell pos = fromPos.createAdd(attackVector);
             while (pos.column != x && settings.board.isEmptyCell(pos)) pos.shift(attackVector);
             return pos.column == x;
         }
     }
 
     @Override
-    public List<Move> getAllMoves(GameSettings settings) {
+    public List<Move> getAllMoves(final GameSettings settings) {
         return rayTrace(settings.board, Figure.plusMove);
     }
 
     @Override
-    public boolean isAttackedCell(GameSettings settings, Cell cell) {
+    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
         return isAttackedCell(settings, position, cell);
     }
 }

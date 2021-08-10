@@ -350,10 +350,10 @@ public class FigureTest {
                 new Move(MoveType.SHORT_CASTLING, king2.getCurrentPosition(), Cell.parse("G8")));
         Assert.assertEquals(sort(expected2), sort(king2.getAllMoves(gameSettings)));
 
-        rookW1.setWasMoved(true);
-        rookW2.setWasMoved(true);
-        rookB1.setWasMoved(true);
-        rookB2.setWasMoved(true);
+        rookW1.wasMoved = true;
+        rookW2.wasMoved = true;
+        rookB1.wasMoved = true;
+        rookB2.wasMoved = true;
 
         Assert.assertEquals(
                 toMoveList(
@@ -393,8 +393,8 @@ public class FigureTest {
         board.setFigure(rookB1);
         board.setFigure(rookB2);
 
-        king1.setWasMoved(true);
-        king2.setWasMoved(true);
+        king1.wasMoved = true;
+        king2.wasMoved = true;
 
         Assert.assertEquals(
                 toMoveList(
@@ -649,7 +649,7 @@ public class FigureTest {
         Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("d6"));
         Figure pawn3 = new Pawn(Color.BLACK, Cell.parse("b4"));
         Figure pawn4 = new Pawn(Color.BLACK, Cell.parse("d4"));
-        pawn.setWasMoved(true);
+        pawn.wasMoved = true;
         board.setFigure(pawn);
         board.setFigure(pawn1);
         board.setFigure(pawn2);
@@ -670,8 +670,8 @@ public class FigureTest {
         Figure pawn2 = new Pawn(Color.BLACK, Cell.parse("h4"));
         Figure pawn3 = new Pawn(Color.WHITE, Cell.parse("b4"));
         Figure pawn4 = new Pawn(Color.WHITE, Cell.parse("g4"));
-        pawn1.setWasMoved(true);
-        pawn2.setWasMoved(true);
+        pawn1.wasMoved = true;
+        pawn2.wasMoved = true;
         board.setFigure(pawn1);
         board.setFigure(pawn2);
         board.setFigure(pawn3);

@@ -8,7 +8,6 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Cell;
-import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
@@ -17,16 +16,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Selfplay {
-    private static final Logger logger = LoggerFactory.getLogger(Selfplay.class);
+    private static final transient Logger logger = LoggerFactory.getLogger(Selfplay.class);
     private final Player secondPlayer;
     private final Player firstPlayer;
     private final GameSettings roomSettings;
     private Player currentPlayerToMove;
 
-    /**
-     * @throws ChessError если заполнение доски некорректное
-     */
-    public Selfplay(GameSettings roomSettings, Player firstPlayer, Player secondPlayer)
+    /** @throws ChessError если заполнение доски некорректное */
+    public Selfplay(
+            final GameSettings roomSettings, final Player firstPlayer, final Player secondPlayer)
             throws ChessError {
         if (firstPlayer.getColor() == secondPlayer.getColor())
             throw new IllegalArgumentException("Должны быть разные цвета!");
@@ -42,7 +40,7 @@ public class Selfplay {
         }
     }
 
-    public static Move createMove(String from, String to, String type) {
+    public static Move createMove(final String from, final String to, final String type) {
         return new Move(MoveType.valueOf(type), Cell.parse(from), Cell.parse(to));
     }
 
@@ -50,7 +48,7 @@ public class Selfplay {
      * @return true, если ход корректный, иначе false
      * @throws ChessError если во время игры случилась критическая ошибка
      */
-    public boolean move(Move move) throws ChessError {
+    public boolean move(final Move move) throws ChessError {
         if (isCorrectPlayerColor(move) && roomSettings.moveSystem.isCorrectMove(move)) {
             tryMove(move);
             currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
@@ -77,7 +75,7 @@ public class Selfplay {
         return secondPlayer;
     }
 
-    private boolean isCorrectPlayerColor(Move move) {
+    private boolean isCorrectPlayerColor(final Move move) {
         try {
             return roomSettings.board.getFigure(move.getFrom()).getColor()
                     == currentPlayerToMove.getColor();
@@ -86,28 +84,31 @@ public class Selfplay {
         }
     }
 
-    /**
-     * @deprecated Можно запускать только один раз. Используется только для проверки игры
-     */
+    /** @deprecated Можно запускать только один раз. Используется только для проверки игры */
     @Deprecated
     public void run() throws ChessError {
-        while (roomSettings.endGameDetector.getGameResult()
-                == EndGameDetector.EndGameType.NOTHING) {
+        long startTime = 0;
+        final EndGameDetector egd = roomSettings.endGameDetector;
+        while (egd.getGameResult() == EndGameDetector.EndGameType.NOTHING) {
             // TODO: получать Action, сделать предложение ничьи и возможность сдаться
-            Move move = currentPlayerToMove.getNextMove();
+            if (logger.isDebugEnabled()) startTime = System.currentTimeMillis();
+            final Move move = currentPlayerToMove.getNextMove();
+            if (logger.isDebugEnabled()) {
+                final long time = System.currentTimeMillis() - startTime;
+                logger.debug("Время на ход: {} sec", time / 1000.);
+            }
 
             if (roomSettings.moveSystem.isCorrectMove(move)) {
                 tryMove(move);
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
-                // TODO: отправлять ответ GameResponse, что ход некорректный
+                // TODO: отправлять ответ GameResponse, что ход некорректный (эхх вечная тудушка)
                 throw new IllegalArgumentException("некорректный ход");
             }
-            roomSettings.endGameDetector.updateEndGameStatus();
+            egd.updateEndGameStatus(currentPlayerToMove.getColor());
         }
-        Color endColor = currentPlayerToMove.getColor();
-        switch (roomSettings.endGameDetector.getGameResult()) {
+        switch (egd.getGameResult()) {
             case NOTHING -> throw new ChessError(GAME_RESULT_ERROR);
             case CHECKMATE_TO_WHITE -> logger.info("Мат белым");
             case CHECKMATE_TO_BLACK -> logger.info("Мат черным");
@@ -125,12 +126,10 @@ public class Selfplay {
         // TODO: конец игры, отправлять GameResponse
     }
 
-    /**
-     * @return удаленная фигура или null, если клетка была пуста
-     */
-    private Figure tryMove(Move move) throws ChessError {
+    /** @return удаленная фигура или null, если клетка была пуста */
+    private Figure tryMove(final Move move) throws ChessError {
         try {
-            Figure removedFigure = roomSettings.moveSystem.move(move);
+            final Figure removedFigure = roomSettings.moveSystem.move(move);
             if (logger.isDebugEnabled()) {
                 logger.debug(
                         "{} сделал ход: {} фигурой: {}",
@@ -138,6 +137,14 @@ public class Selfplay {
                         move,
                         roomSettings.board.getFigureUgly(move.getTo()));
                 logger.debug(roomSettings.board.toString());
+                logger.debug("FEN: {}", roomSettings.history.getBoardToStringForsythEdwards());
+                logger.debug(
+                        "board hash: {}",
+                        roomSettings.history.getLastBoardState().boardSnapshotHash);
+                logger.debug(
+                        "board snapshot: {}",
+                        roomSettings.history.getLastBoardState().boardSnapshot);
+                logger.debug("<---------------------------------------------------------------->");
             }
             return removedFigure;
         } catch (NullPointerException e) {

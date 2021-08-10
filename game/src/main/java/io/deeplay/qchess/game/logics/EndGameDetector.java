@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.ArrayList;
@@ -23,11 +24,10 @@ public class EndGameDetector {
                     Arrays.asList(FigureType.KING, FigureType.KNIGHT, FigureType.KNIGHT));
 
     private final GameSettings gs;
-
     private EndGameType prevGameResult = EndGameType.NOTHING;
     private EndGameType gameResult = EndGameType.NOTHING;
 
-    public EndGameDetector(GameSettings gs) {
+    public EndGameDetector(final GameSettings gs) {
         this.gs = gs;
     }
 
@@ -35,42 +35,74 @@ public class EndGameDetector {
         return gameResult;
     }
 
-    public void resetGameResult() {
+    public void resetEndGameStatus() {
         gameResult = EndGameType.NOTHING;
     }
 
-    //    * @return результат игры для цвета color
-    //    public EndGameType updateGameResult(Color color) {
-    //        return updateGameResult(gs.moveSystem.getAllCorrectMovesSilence(color), color);
-    //    }
+    public void revertEndGameStatus() {
+        gameResult = prevGameResult;
+    }
 
-    //    /**
-    //     * @param allMoves все доступные ходы цвета color
-    //     * @return результат игры для цвета color, у которого все доступные ходы в allMoves
-    //    public EndGameType updateGameResult(List<Move> allMoves, Color color) {
-    //        boolean isStalemate = allMoves.isEmpty();
-    //        if (isStalemate) {
-    //            gameResult = isCheck(color) ? EndGameType.CHECKMATE : EndGameType.STALEMATE;
-    //        } else {
-    //            isDraw();
-    //        }
-    //        return gameResult;
-    //    }*/
+    public EndGameType updateEndGameStatus() {
+        prevGameResult = gameResult;
+        gameResult = EndGameType.NOTHING;
+        if (isStalemate(Color.WHITE)) {
+            gameResult =
+                    isCheck(Color.WHITE)
+                            ? EndGameType.CHECKMATE_TO_WHITE
+                            : EndGameType.STALEMATE_TO_WHITE;
+        } else if (isStalemate(Color.BLACK)) {
+            gameResult =
+                    isCheck(Color.BLACK)
+                            ? EndGameType.CHECKMATE_TO_BLACK
+                            : EndGameType.STALEMATE_TO_BLACK;
+        } else {
+            if (isDrawWithRepetitions()) gameResult = EndGameType.DRAW_WITH_REPETITIONS;
+            else if (isDrawWithNotEnoughMaterialForCheckmate())
+                gameResult = EndGameType.DRAW_WITH_NOT_ENOUGH_MATERIAL;
+            else if (isDrawWithPeaceMoves()) gameResult = EndGameType.DRAW_WITH_PEACE_MOVE_COUNT;
+        }
+        return gameResult;
+    }
+
+    /** @return результат игры для цвета color */
+    public EndGameType updateEndGameStatus(final Color color) {
+        return updateEndGameStatus(!isStalemate(color), color);
+    }
+
+    /**
+     * @param allMoves все доступные ходы цвета color
+     * @return результат игры для цвета color, у которого все доступные ходы в allMoves
+     */
+    public EndGameType updateEndGameStatus(final List<Move> allMoves, final Color color) {
+        return updateEndGameStatus(!allMoves.isEmpty(), color);
+    }
+
+    public EndGameType updateEndGameStatus(final boolean isHasAnyCorrectMove, final Color color) {
+        gameResult = EndGameType.NOTHING;
+        if (!isHasAnyCorrectMove) {
+            gameResult =
+                    isCheck(color)
+                            ? color == Color.WHITE
+                                    ? EndGameType.CHECKMATE_TO_WHITE
+                                    : EndGameType.CHECKMATE_TO_BLACK
+                            : color == Color.WHITE
+                                    ? EndGameType.STALEMATE_TO_WHITE
+                                    : EndGameType.STALEMATE_TO_BLACK;
+        } else {
+            if (isDrawWithRepetitions()) gameResult = EndGameType.DRAW_WITH_REPETITIONS;
+            else if (isDrawWithNotEnoughMaterialForCheckmate())
+                gameResult = EndGameType.DRAW_WITH_NOT_ENOUGH_MATERIAL;
+            else if (isDrawWithPeaceMoves()) gameResult = EndGameType.DRAW_WITH_PEACE_MOVE_COUNT;
+        }
+        return gameResult;
+    }
 
     /** @return true, если это не ничья */
     public boolean isDraw() {
-        boolean isDraw = false;
-        if (isDrawWithPeaceMoves()) {
-            gameResult = EndGameType.DRAW_WITH_PEACE_MOVE_COUNT;
-            isDraw = true;
-        } else if (isDrawWithRepetitions()) {
-            gameResult = EndGameType.DRAW_WITH_REPETITIONS;
-            isDraw = true;
-        } else if (isDrawWithNotEnoughMaterialForCheckmate()) {
-            gameResult = EndGameType.DRAW_WITH_NOT_ENOUGH_MATERIAL;
-            isDraw = true;
-        }
-        return isDraw;
+        return isDrawWithRepetitions()
+                || isDrawWithNotEnoughMaterialForCheckmate()
+                || isDrawWithPeaceMoves();
     }
 
     /**
@@ -97,16 +129,16 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithNotEnoughMaterialForCheckmate() {
-        List<Figure> whiteFigures = gs.board.getFigures(Color.WHITE);
-        List<Figure> blackFigures = gs.board.getFigures(Color.BLACK);
+        final List<Figure> whiteFigures = gs.board.getFigures(Color.WHITE);
+        final List<Figure> blackFigures = gs.board.getFigures(Color.BLACK);
 
         if (isKingsWithSameBishop(whiteFigures, blackFigures)) return true;
 
-        List<FigureType> oneKing = Collections.singletonList(FigureType.KING);
-        boolean isOneKingWhite = isAllFiguresSame(whiteFigures, oneKing);
-        boolean isOneKingBlack = isAllFiguresSame(blackFigures, oneKing);
+        final List<FigureType> oneKing = Collections.singletonList(FigureType.KING);
+        final boolean isOneKingWhite = isAllFiguresSame(whiteFigures, oneKing);
+        final boolean isOneKingBlack = isAllFiguresSame(blackFigures, oneKing);
 
-        for (List<FigureType> figureTypes : MATERIAL) {
+        for (final List<FigureType> figureTypes : MATERIAL) {
             if (isOneKingWhite && isAllFiguresSame(blackFigures, figureTypes)) return true;
             if (isOneKingBlack && isAllFiguresSame(whiteFigures, figureTypes)) return true;
         }
@@ -121,10 +153,12 @@ public class EndGameDetector {
      * @return true - если списки равны и фигуры из первого списка соответствуют типам из второго
      *     (без учёта порядка)
      */
-    private boolean isAllFiguresSame(List<Figure> figures, List<FigureType> figureTypes) {
-        List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
+    private boolean isAllFiguresSame(
+            final List<Figure> figures, final List<FigureType> figureTypes) {
+        final List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
         if (figures.size() != figureTypes.size()) return false;
-        for (Figure figure : figures) if (!figuresCopyType.remove(figure.figureType)) return false;
+        for (final Figure figure : figures)
+            if (!figuresCopyType.remove(figure.figureType)) return false;
         return true;
     }
 
@@ -136,18 +170,19 @@ public class EndGameDetector {
      * @param blackFigures Список чёрных фигур
      * @return true - если списки удовлетворяют условию
      */
-    private boolean isKingsWithSameBishop(List<Figure> whiteFigures, List<Figure> blackFigures) {
-        List<FigureType> kingWithBishop = Arrays.asList(FigureType.KING, FigureType.BISHOP);
+    private boolean isKingsWithSameBishop(
+            final List<Figure> whiteFigures, final List<Figure> blackFigures) {
+        final List<FigureType> kingWithBishop = Arrays.asList(FigureType.KING, FigureType.BISHOP);
         if (!isAllFiguresSame(whiteFigures, kingWithBishop)
                 || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
 
-        Figure whiteBishop = getBishop(whiteFigures);
-        Figure blackBishop = getBishop(blackFigures);
+        final Figure whiteBishop = getBishop(whiteFigures);
+        final Figure blackBishop = getBishop(blackFigures);
 
         if (whiteBishop == null || blackBishop == null) return false;
 
-        Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
-        Cell blackBishopPosition = blackBishop.getCurrentPosition();
+        final Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
+        final Cell blackBishopPosition = blackBishop.getCurrentPosition();
 
         return (whiteBishopPosition.column + whiteBishopPosition.row) % 2
                 == (blackBishopPosition.column + blackBishopPosition.row) % 2;
@@ -159,50 +194,37 @@ public class EndGameDetector {
      * @param figures Список фигур для поиска
      * @return найденного слона, или null - иначе
      */
-    private Figure getBishop(List<Figure> figures) {
-        for (Figure figure : figures) if (figure.figureType == FigureType.BISHOP) return figure;
+    private Figure getBishop(final List<Figure> figures) {
+        for (final Figure figure : figures)
+            if (figure.figureType == FigureType.BISHOP) return figure;
         return null;
     }
 
     /** @return true, если установленному цвету поставили мат */
-    public boolean isCheckmate(Color color) {
-        boolean res = isStalemate(color) && isCheck(color);
-        if (res)
-            gameResult =
-                    (color == Color.WHITE
-                            ? EndGameType.CHECKMATE_TO_WHITE
-                            : EndGameType.CHECKMATE_TO_BLACK);
-        return res;
+    public boolean isCheckmate(final Color color) {
+        return isStalemate(color) && isCheck(color);
+    }
+
+    /** @return true, если установленному цвету поставили мат */
+    public boolean isCheckmate(final List<Move> allMoves, final Color color) {
+        return isStalemate(allMoves) && isCheck(color);
     }
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
-    public boolean isStalemate(Color color) {
-        boolean res = gs.moveSystem.getAllCorrectMovesSilence(color).isEmpty();
-        if (res && gameResult == EndGameType.NOTHING)
-            gameResult =
-                    (color == Color.WHITE
-                            ? EndGameType.STALEMATE_TO_WHITE
-                            : EndGameType.STALEMATE_TO_BLACK);
-        return res;
+    public boolean isStalemate(final Color color) {
+        return !gs.moveSystem.isHasAnyCorrectMoveSilence(color);
+    }
+
+    /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
+    public boolean isStalemate(final List<Move> allMoves) {
+        return allMoves.isEmpty();
     }
 
     /** @return true если игроку с указанным цветом ставят шах */
-    public boolean isCheck(Color color) {
-        Cell kingCell = gs.board.findKingCell(color);
+    public boolean isCheck(final Color color) {
+        final Cell kingCell = gs.board.findKingCell(color);
         if (kingCell == null) return false;
         return Board.isAttackedCell(gs, kingCell, color.inverse());
-    }
-
-    public EndGameType updateEndGameStatus() {
-        prevGameResult = gameResult;
-        isCheckmate(Color.WHITE);
-        isCheckmate(Color.BLACK);
-        isDraw();
-        return gameResult;
-    }
-
-    public void revertEndGameStatus() {
-        gameResult = prevGameResult;
     }
 
     public enum EndGameType {
@@ -210,15 +232,9 @@ public class EndGameDetector {
         DRAW_WITH_PEACE_MOVE_COUNT,
         DRAW_WITH_REPETITIONS,
         DRAW_WITH_NOT_ENOUGH_MATERIAL,
-        CHECKMATE_TO_WHITE,
         CHECKMATE_TO_BLACK,
-        STALEMATE_TO_WHITE,
-        STALEMATE_TO_BLACK;
-
-        public boolean isDraw() {
-            return this == DRAW_WITH_PEACE_MOVE_COUNT
-                    || this == DRAW_WITH_REPETITIONS
-                    || this == DRAW_WITH_NOT_ENOUGH_MATERIAL;
-        }
+        CHECKMATE_TO_WHITE,
+        STALEMATE_TO_BLACK,
+        STALEMATE_TO_WHITE
     }
 }

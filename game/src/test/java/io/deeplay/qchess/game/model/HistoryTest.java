@@ -495,7 +495,8 @@ public class HistoryTest {
             "QUIET_MOVE",
             "END"
         };
-        while (gs.endGameDetector.updateEndGameStatus() == EndGameType.NOTHING) {
+        while (gs.endGameDetector.updateEndGameStatus(game.getCurrentPlayerToMove().getColor())
+                == EndGameType.NOTHING) {
             if (!strs[i].equals("END")) {
                 Move move = Selfplay.createMove(strs[i++], strs[i++], strs[i++]);
                 boolean moveT = game.move(move);

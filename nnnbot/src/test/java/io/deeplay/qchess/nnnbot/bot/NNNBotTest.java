@@ -60,7 +60,6 @@ public class NNNBotTest {
         int i = count;
         double time = 0;
         double time2 = 0;
-        double time3 = 0;
         while (--i >= 0) {
             try {
                 gs.moveSystem.move(
@@ -81,15 +80,9 @@ public class NNNBotTest {
             gs.board.getAllPreparedMoves(gs, Color.WHITE);
             gs.board.getAllPreparedMoves(gs, Color.BLACK);
             time2 += (double) (System.nanoTime() - startTime) / count;
-
-            startTime = System.nanoTime();
-            gs.moveSystem.getAllCorrectMovesSilence(Color.WHITE);
-            gs.moveSystem.getAllCorrectMovesSilence(Color.BLACK);
-            time3 += (double) (System.nanoTime() - startTime) / count;
         }
         System.out.println("fast: " + time);
         System.out.println("simple: " + time2);
-        System.out.println("silence: " + time3);
     }
 
     @Ignore
