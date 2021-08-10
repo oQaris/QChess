@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(final String[] args) throws IOException {
         System.out.println(
                 "Введите \"s\", чтобы запустить сервер или \"c\", чтобы запустить клиент\n"
                         + "Ещё можно ввести \"a\", чтобы лицезреть бесконечную мощь Qbot'a");
@@ -33,7 +33,11 @@ public class Main {
                 // Орена
             case "a", "-a", "arena" -> {
                 Arena arena = new Arena();
-                arena.battle();
+                try {
+                    arena.battle();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             default -> System.out.println("Некорректная команда");
         }
