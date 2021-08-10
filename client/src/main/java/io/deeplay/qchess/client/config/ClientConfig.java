@@ -20,7 +20,7 @@ public class ClientConfig {
     private final Color color;
     private final boolean isTournament;
 
-    public ClientConfig() throws ConfigException {
+    public ClientConfig(final String configPath) throws ConfigException {
         FileInputStream fis;
         Properties property = new Properties();
         try {
@@ -36,10 +36,14 @@ public class ClientConfig {
             isTournament = validateBoolean(property.getProperty("isTournament"));
 
         } catch (IOException e) {
-            throw new ConfigException("Read config file error");
+            throw new ConfigException(ConfigExceptionEnum.READ_CONFIG_FILE);
         } catch (ConfigException e) {
             throw e;
         }
+    }
+
+    public ClientConfig() throws ConfigException {
+        this(configPath);
     }
 
     /**
@@ -56,22 +60,22 @@ public class ClientConfig {
     private String validateIp(String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
-                "Validate ip from config error (ip field is absent or ip is empty)");
+                ConfigExceptionEnum.ABSENT_IP);
         }
         String[] octets = property.split("\\.");
         if (octets.length != 4) {
-            throw new ConfigException("Validate ip from config error (ip is not 4 octets)");
+            throw new ConfigException(ConfigExceptionEnum.INCORRECT_IP_OCTETS_NUMBER);
         }
         for (int i = 0; i < 4; i++) {
             try {
                 int intOctet = Integer.parseInt(octets[i]);
                 if (intOctet < 0 || intOctet > 255) {
                     throw new ConfigException(
-                        String.format("Validate ip from config error (octet #%d out of bound)", i));
+                       ConfigExceptionEnum.RANGE_OUT_IP_OCTET);
                 }
             } catch (NumberFormatException e) {
                 throw new ConfigException(
-                    String.format("Validate ip from config error (octet #%d parse error)", i));
+                    ConfigExceptionEnum.INCORRECT_IP_OCTET_VALUE);
             }
         }
         return property;
@@ -90,16 +94,16 @@ public class ClientConfig {
     private int validatePort(String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
-                "Validate port from config error (port field is absent or port is empty)");
+                ConfigExceptionEnum.ABSENT_PORT);
         }
         try {
             int port = Integer.parseInt(property);
             if (port <= 0) {
-                throw new ConfigException("Validate port from config error (non-positive value)");
+                throw new ConfigException(ConfigExceptionEnum.NON_POSITIVE_PORT_VALUE);
             }
             return port;
         } catch (NumberFormatException e) {
-            throw new ConfigException("Validate port from config error (parse error)");
+            throw new ConfigException(ConfigExceptionEnum.INCORRECT_PORT_VALUE);
         }
     }
 
@@ -115,14 +119,14 @@ public class ClientConfig {
     private boolean validateBoolean(String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
-                "Validate boolean from config error (boolean field is absent or boolean is empty)");
+                ConfigExceptionEnum.ABSENT_BOOLEAN);
         }
         if (property.equals("true")) {
             return true;
         } else if (property.equals("false")) {
             return false;
         }
-        throw new ConfigException("Validate boolean config parameter error (parse error)");
+        throw new ConfigException(ConfigExceptionEnum.INCORRECT_BOOLEAN_VALUE);
     }
 
     /**
@@ -137,12 +141,12 @@ public class ClientConfig {
     private PlayerType validatePlayerType(String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
-                "Validate player type config error (player type field is absent or player type is empty)");
+                ConfigExceptionEnum.ABSENT_PLAYER_TYPE);
         }
         try {
             return PlayerType.valueOf(property);
         } catch (IllegalArgumentException e) {
-            throw new ConfigException("Validate player type from config error (parse error)");
+            throw new ConfigException(ConfigExceptionEnum.INCORRECT_PLAYER_TYPE_VALUE);
         }
     }
 
@@ -158,12 +162,12 @@ public class ClientConfig {
     private String validatePath(String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
-                "Validate path from config error (path field is absent or path is empty)");
+               ConfigExceptionEnum.ABSENT_PATH);
         }
         String pattern = "/([\\w]+/)*";
         if (Pattern.matches(pattern, property)) {
             throw new ConfigException(
-                "Validate path from config error (the path is written incorrectly)");
+                ConfigExceptionEnum.INCORRECT_PATH);
         }
         return property;
     }
@@ -180,7 +184,7 @@ public class ClientConfig {
     private Color validateColor(String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
-                "Validate color from config error (color field is absent or color is empty)");
+                ConfigExceptionEnum.ABSENT_COLOR);
         }
         if (property.equals("WHITE")) {
             return Color.WHITE;
@@ -189,7 +193,7 @@ public class ClientConfig {
         } else if (property.equals("RANDOM")) {
             return null;
         }
-        throw new ConfigException("Validate color from config error");
+        throw new ConfigException(ConfigExceptionEnum.INCORRECT_COLOR);
     }
 
     public static String getConfigPath() {
