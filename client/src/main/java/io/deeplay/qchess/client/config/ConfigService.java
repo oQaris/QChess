@@ -16,7 +16,7 @@ public class ConfigService {
      *  - один из октетов не int;
      *  - один из октетов выходит за диапазон [0..255].
      */
-    public static String validateIp(String property) throws ConfigException {
+    public static String validateIp(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
                 ConfigExceptionEnum.ABSENT_IP);
@@ -27,7 +27,7 @@ public class ConfigService {
         }
         for (int i = 0; i < 4; i++) {
             try {
-                int intOctet = Integer.parseInt(octets[i]);
+                final int intOctet = Integer.parseInt(octets[i]);
                 if (intOctet < 0 || intOctet > 255) {
                     throw new ConfigException(
                         ConfigExceptionEnum.RANGE_OUT_IP_OCTET);
@@ -50,7 +50,7 @@ public class ConfigService {
      *  - port не int;
      *  - port является неположительным числом.
      */
-    public static int validatePort(String property) throws ConfigException {
+    public static int validatePort(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
                 ConfigExceptionEnum.ABSENT_PORT);
@@ -75,7 +75,7 @@ public class ConfigService {
      *  - значение было пустым или null;
      *  - property не явлеяется строкой "true" или "false".
      */
-    public static boolean validateBoolean(String property) throws ConfigException {
+    public static boolean validateBoolean(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
                 ConfigExceptionEnum.ABSENT_BOOLEAN);
@@ -97,7 +97,7 @@ public class ConfigService {
      *  - значение поля было пустым или playerType вообще не было в config файле;
      *  - неудалось распарсить значение в элемент enum client.view.gui.PlayerType.
      */
-    public static PlayerType validatePlayerType(String property) throws ConfigException {
+    public static PlayerType validatePlayerType(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
                 ConfigExceptionEnum.ABSENT_PLAYER_TYPE);
@@ -118,12 +118,12 @@ public class ConfigService {
      *  - значение было пустым или null;
      *  - путь не соответствует шаблону представления пути;
      */
-    public static String validatePath(String property) throws ConfigException {
+    public static String validatePath(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
                 ConfigExceptionEnum.ABSENT_PATH);
         }
-        String pattern = "/([\\w\\s]+/)*";
+        final String pattern = "/([\\w\\s]+/)*";
         if (!Pattern.matches(pattern, property)) {
             throw new ConfigException(
                 ConfigExceptionEnum.INCORRECT_PATH);
@@ -140,7 +140,7 @@ public class ConfigService {
      *  - значение поля было пустым или color вообще не было в config файле;
      *  - property не парсится ни в один из цветов, а также не является строкой "RANDOM".
      */
-    public static Color validateColor(String property) throws ConfigException {
+    public static Color validateColor(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(
                 ConfigExceptionEnum.ABSENT_COLOR);
