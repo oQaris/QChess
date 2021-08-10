@@ -11,10 +11,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println(
                 "Введите \"s\", чтобы запустить сервер или \"c\", чтобы запустить клиент\n"
-                    + "Ещё можно ввести \"a\", чтобы лицезреть бесконечную мощь Qbot'a");
+                        + "Ещё можно ввести \"a\", чтобы лицезреть бесконечную мощь Qbot'a");
 
         String input;
-        if(args.length!=0) input = args[0];
+        if (args.length != 0) input = args[0];
         else input = new Scanner(System.in).nextLine().strip();
 
         switch (input) {

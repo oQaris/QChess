@@ -34,10 +34,16 @@ public class Selfplay {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         currentPlayerToMove = firstPlayer.getColor() == Color.WHITE ? firstPlayer : secondPlayer;
-        if(firstPlayer instanceof RemotePlayer && secondPlayer instanceof RemotePlayer){
-            logger.debug("За белых играет:  {}", ((RemotePlayer) currentPlayerToMove).getSessionToken());
-            logger.debug("За чёрных играет: {}", ((RemotePlayer) (currentPlayerToMove == firstPlayer ?
-                secondPlayer : firstPlayer)).getSessionToken());
+        if (firstPlayer instanceof RemotePlayer && secondPlayer instanceof RemotePlayer) {
+            logger.debug(
+                    "За белых играет:  {}", ((RemotePlayer) currentPlayerToMove).getSessionToken());
+            logger.debug(
+                    "За чёрных играет: {}",
+                    ((RemotePlayer)
+                                    (currentPlayerToMove == firstPlayer
+                                            ? secondPlayer
+                                            : firstPlayer))
+                            .getSessionToken());
         }
         try {
             roomSettings.history.addRecord(null);
