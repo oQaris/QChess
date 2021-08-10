@@ -23,7 +23,7 @@ public enum MoveType {
 
     public final int importantLevel;
 
-    MoveType(int importantLevel) {
+    MoveType(final int importantLevel) {
         this.importantLevel = importantLevel;
     }
 }

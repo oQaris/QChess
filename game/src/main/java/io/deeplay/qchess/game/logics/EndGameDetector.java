@@ -27,7 +27,7 @@ public class EndGameDetector {
     private EndGameType prevGameResult = EndGameType.NOTHING;
     private EndGameType gameResult = EndGameType.NOTHING;
 
-    public EndGameDetector(GameSettings gs) {
+    public EndGameDetector(final GameSettings gs) {
         this.gs = gs;
     }
 
@@ -78,7 +78,7 @@ public class EndGameDetector {
         return updateEndGameStatus(!allMoves.isEmpty(), color);
     }
 
-    public EndGameType updateEndGameStatus(boolean isHasAnyCorrectMove, Color color) {
+    public EndGameType updateEndGameStatus(final boolean isHasAnyCorrectMove, final Color color) {
         gameResult = EndGameType.NOTHING;
         if (!isHasAnyCorrectMove) {
             gameResult =
@@ -129,16 +129,16 @@ public class EndGameDetector {
      * @return true, если ничья
      */
     public boolean isDrawWithNotEnoughMaterialForCheckmate() {
-        List<Figure> whiteFigures = gs.board.getFigures(Color.WHITE);
-        List<Figure> blackFigures = gs.board.getFigures(Color.BLACK);
+        final List<Figure> whiteFigures = gs.board.getFigures(Color.WHITE);
+        final List<Figure> blackFigures = gs.board.getFigures(Color.BLACK);
 
         if (isKingsWithSameBishop(whiteFigures, blackFigures)) return true;
 
-        List<FigureType> oneKing = Collections.singletonList(FigureType.KING);
-        boolean isOneKingWhite = isAllFiguresSame(whiteFigures, oneKing);
-        boolean isOneKingBlack = isAllFiguresSame(blackFigures, oneKing);
+        final List<FigureType> oneKing = Collections.singletonList(FigureType.KING);
+        final boolean isOneKingWhite = isAllFiguresSame(whiteFigures, oneKing);
+        final boolean isOneKingBlack = isAllFiguresSame(blackFigures, oneKing);
 
-        for (List<FigureType> figureTypes : MATERIAL) {
+        for (final List<FigureType> figureTypes : MATERIAL) {
             if (isOneKingWhite && isAllFiguresSame(blackFigures, figureTypes)) return true;
             if (isOneKingBlack && isAllFiguresSame(whiteFigures, figureTypes)) return true;
         }
@@ -153,10 +153,12 @@ public class EndGameDetector {
      * @return true - если списки равны и фигуры из первого списка соответствуют типам из второго
      *     (без учёта порядка)
      */
-    private boolean isAllFiguresSame(List<Figure> figures, List<FigureType> figureTypes) {
-        List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
+    private boolean isAllFiguresSame(
+            final List<Figure> figures, final List<FigureType> figureTypes) {
+        final List<FigureType> figuresCopyType = new ArrayList<>(figureTypes);
         if (figures.size() != figureTypes.size()) return false;
-        for (Figure figure : figures) if (!figuresCopyType.remove(figure.figureType)) return false;
+        for (final Figure figure : figures)
+            if (!figuresCopyType.remove(figure.figureType)) return false;
         return true;
     }
 
@@ -168,18 +170,19 @@ public class EndGameDetector {
      * @param blackFigures Список чёрных фигур
      * @return true - если списки удовлетворяют условию
      */
-    private boolean isKingsWithSameBishop(List<Figure> whiteFigures, List<Figure> blackFigures) {
-        List<FigureType> kingWithBishop = Arrays.asList(FigureType.KING, FigureType.BISHOP);
+    private boolean isKingsWithSameBishop(
+            final List<Figure> whiteFigures, final List<Figure> blackFigures) {
+        final List<FigureType> kingWithBishop = Arrays.asList(FigureType.KING, FigureType.BISHOP);
         if (!isAllFiguresSame(whiteFigures, kingWithBishop)
                 || !isAllFiguresSame(blackFigures, kingWithBishop)) return false;
 
-        Figure whiteBishop = getBishop(whiteFigures);
-        Figure blackBishop = getBishop(blackFigures);
+        final Figure whiteBishop = getBishop(whiteFigures);
+        final Figure blackBishop = getBishop(blackFigures);
 
         if (whiteBishop == null || blackBishop == null) return false;
 
-        Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
-        Cell blackBishopPosition = blackBishop.getCurrentPosition();
+        final Cell whiteBishopPosition = whiteBishop.getCurrentPosition();
+        final Cell blackBishopPosition = blackBishop.getCurrentPosition();
 
         return (whiteBishopPosition.column + whiteBishopPosition.row) % 2
                 == (blackBishopPosition.column + blackBishopPosition.row) % 2;
@@ -191,13 +194,14 @@ public class EndGameDetector {
      * @param figures Список фигур для поиска
      * @return найденного слона, или null - иначе
      */
-    private Figure getBishop(List<Figure> figures) {
-        for (Figure figure : figures) if (figure.figureType == FigureType.BISHOP) return figure;
+    private Figure getBishop(final List<Figure> figures) {
+        for (final Figure figure : figures)
+            if (figure.figureType == FigureType.BISHOP) return figure;
         return null;
     }
 
     /** @return true, если установленному цвету поставили мат */
-    public boolean isCheckmate(Color color) {
+    public boolean isCheckmate(final Color color) {
         return isStalemate(color) && isCheck(color);
     }
 
@@ -212,13 +216,13 @@ public class EndGameDetector {
     }
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
-    public boolean isStalemate(List<Move> allMoves) {
+    public boolean isStalemate(final List<Move> allMoves) {
         return allMoves.isEmpty();
     }
 
     /** @return true если игроку с указанным цветом ставят шах */
-    public boolean isCheck(Color color) {
-        Cell kingCell = gs.board.findKingCell(color);
+    public boolean isCheck(final Color color) {
+        final Cell kingCell = gs.board.findKingCell(color);
         if (kingCell == null) return false;
         return Board.isAttackedCell(gs, kingCell, color.inverse());
     }

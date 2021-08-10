@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Selfplay {
-    private static final Logger logger = LoggerFactory.getLogger(Selfplay.class);
+    private static final transient Logger logger = LoggerFactory.getLogger(Selfplay.class);
     private final Player secondPlayer;
     private final Player firstPlayer;
     private final GameSettings roomSettings;
@@ -40,7 +40,7 @@ public class Selfplay {
         }
     }
 
-    public static Move createMove(String from, String to, String type) {
+    public static Move createMove(final String from, final String to, final String type) {
         return new Move(MoveType.valueOf(type), Cell.parse(from), Cell.parse(to));
     }
 
@@ -48,7 +48,7 @@ public class Selfplay {
      * @return true, если ход корректный, иначе false
      * @throws ChessError если во время игры случилась критическая ошибка
      */
-    public boolean move(Move move) throws ChessError {
+    public boolean move(final Move move) throws ChessError {
         if (isCorrectPlayerColor(move) && roomSettings.moveSystem.isCorrectMove(move)) {
             tryMove(move);
             currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
@@ -75,7 +75,7 @@ public class Selfplay {
         return secondPlayer;
     }
 
-    private boolean isCorrectPlayerColor(Move move) {
+    private boolean isCorrectPlayerColor(final Move move) {
         try {
             return roomSettings.board.getFigure(move.getFrom()).getColor()
                     == currentPlayerToMove.getColor();
@@ -88,13 +88,13 @@ public class Selfplay {
     @Deprecated
     public void run() throws ChessError {
         long startTime = 0;
-        EndGameDetector egd = roomSettings.endGameDetector;
+        final EndGameDetector egd = roomSettings.endGameDetector;
         while (egd.getGameResult() == EndGameDetector.EndGameType.NOTHING) {
             // TODO: получать Action, сделать предложение ничьи и возможность сдаться
             if (logger.isDebugEnabled()) startTime = System.currentTimeMillis();
-            Move move = currentPlayerToMove.getNextMove();
+            final Move move = currentPlayerToMove.getNextMove();
             if (logger.isDebugEnabled()) {
-                long time = System.currentTimeMillis() - startTime;
+                final long time = System.currentTimeMillis() - startTime;
                 logger.debug("Время на ход: {} sec", time / 1000.);
             }
 
@@ -103,7 +103,7 @@ public class Selfplay {
                 currentPlayerToMove =
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
-                // TODO: отправлять ответ GameResponse, что ход некорректный
+                // TODO: отправлять ответ GameResponse, что ход некорректный (эхх вечная тудушка)
                 throw new IllegalArgumentException("некорректный ход");
             }
             egd.updateEndGameStatus(currentPlayerToMove.getColor());
@@ -127,9 +127,9 @@ public class Selfplay {
     }
 
     /** @return удаленная фигура или null, если клетка была пуста */
-    private Figure tryMove(Move move) throws ChessError {
+    private Figure tryMove(final Move move) throws ChessError {
         try {
-            Figure removedFigure = roomSettings.moveSystem.move(move);
+            final Figure removedFigure = roomSettings.moveSystem.move(move);
             if (logger.isDebugEnabled()) {
                 logger.debug(
                         "{} сделал ход: {} фигурой: {}",

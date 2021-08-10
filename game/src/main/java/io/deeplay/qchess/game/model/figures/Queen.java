@@ -5,25 +5,20 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Queen extends Figure {
 
-    public Queen(Color color, Cell position) {
+    public Queen(final Color color, final Cell position) {
         super(color, position, FigureType.QUEEN);
     }
 
     @Override
-    public List<Move> getAllMoves(GameSettings settings) {
-        return rayTrace(
-                settings.board,
-                Stream.concat(Figure.xMove.stream(), Figure.plusMove.stream())
-                        .collect(Collectors.toList()));
+    public List<Move> getAllMoves(final GameSettings settings) {
+        return rayTrace(settings.board, xPlusMove);
     }
 
     @Override
-    public boolean isAttackedCell(GameSettings settings, Cell cell) {
+    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
         return Rook.isAttackedCell(settings, position, cell)
                 || Bishop.isAttackedCell(settings, position, cell);
     }

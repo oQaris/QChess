@@ -26,15 +26,15 @@ public class BoardState {
     public final int peaceMoveCount;
 
     public BoardState(
-            int[] boardSnapshot,
-            int boardSnapshotHash,
-            Move lastMove,
-            int peaceMoveCount,
-            boolean hasMovedBeforeLastMove,
-            Figure removedFigure,
-            boolean isWhiteMove,
-            int isWhiteCastlingPossibility,
-            int isBlackCastlingPossibility) {
+            final int[] boardSnapshot,
+            final int boardSnapshotHash,
+            final Move lastMove,
+            final int peaceMoveCount,
+            final boolean hasMovedBeforeLastMove,
+            final Figure removedFigure,
+            final boolean isWhiteMove,
+            final int isWhiteCastlingPossibility,
+            final int isBlackCastlingPossibility) {
         this.boardSnapshot = boardSnapshot;
         this.boardSnapshotHash = boardSnapshotHash;
         this.lastMove = lastMove;
@@ -50,10 +50,10 @@ public class BoardState {
 
     /** Используется только для нахождения повторений доски */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || BoardState.class != o.getClass()) return false;
-        BoardState that = (BoardState) o;
+        final BoardState that = (BoardState) o;
         try {
             return isWhiteMove == that.isWhiteMove
                     && boardSnapshotHash == that.boardSnapshotHash

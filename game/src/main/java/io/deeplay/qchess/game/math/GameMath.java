@@ -43,7 +43,7 @@ public class GameMath {
      * @param array array.length == 64
      * @return хеш array
      */
-    public static int hashCode64(int[] array) {
+    public static int hashCode64(final int[] array) {
         return pow31in64
                 + array[0] * hash64Coeff[0]
                 + array[1] * hash64Coeff[1]
