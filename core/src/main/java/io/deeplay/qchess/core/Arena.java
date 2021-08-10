@@ -17,9 +17,7 @@ import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
-import io.deeplay.qchess.qbot.QMinimaxBot;
-import io.deeplay.qchess.qbot.TimeWrapper;
-import io.deeplay.qchess.qbot.strategy.PestoStrategy;
+import io.deeplay.qchess.qbot.QBot;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -43,7 +41,7 @@ public class Arena {
 
     // Тут задаётся Первый игрок
     public static RemotePlayer newFirstPlayer(GameSettings gs, Color myColor) {
-        return new QMinimaxBot(gs, myColor, 3, new PestoStrategy());
+        return new QBot(gs, myColor, 3);
     }
 
     // Тут задаётся Второй игрок
