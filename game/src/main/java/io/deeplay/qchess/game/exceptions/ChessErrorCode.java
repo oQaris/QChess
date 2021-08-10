@@ -16,7 +16,7 @@ public enum ChessErrorCode {
 
     private final String message;
 
-    ChessErrorCode(String message) {
+    ChessErrorCode(final String message) {
         this.message = message;
     }
 

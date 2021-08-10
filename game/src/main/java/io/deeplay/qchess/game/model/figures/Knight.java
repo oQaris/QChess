@@ -8,18 +8,18 @@ import java.util.List;
 
 public class Knight extends Figure {
 
-    public Knight(Color color, Cell position) {
+    public Knight(final Color color, final Cell position) {
         super(color, position, FigureType.KNIGHT);
     }
 
     @Override
-    public List<Move> getAllMoves(GameSettings settings) {
-        return stepForEach(settings.board, Figure.knightMove);
+    public List<Move> getAllMoves(final GameSettings settings) {
+        return stepForEach(settings.board, Figure.knightMove, false);
     }
 
     @Override
-    public boolean isAttackedCell(GameSettings settings, Cell cell) {
-        for (Cell c : Figure.knightMove) if (position.createAdd(c).equals(cell)) return true;
+    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
+        for (final Cell c : Figure.knightMove) if (position.createAdd(c).equals(cell)) return true;
         return false;
     }
 }

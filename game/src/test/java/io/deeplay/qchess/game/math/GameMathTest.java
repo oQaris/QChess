@@ -29,8 +29,8 @@ public class GameMathTest {
 
     @Test
     public void testHashCode64_STD() {
-        byte[] array = new byte[64];
-        for (int i = 0; i < 64; ++i) array[i] = (byte) (i * 11 % 37);
+        int[] array = new int[64];
+        for (int i = 0; i < 64; ++i) array[i] = i * 11 % 37;
 
         final int stdHash = Arrays.hashCode(array);
 
@@ -43,11 +43,11 @@ public class GameMathTest {
 
     @Test
     public void testRecalcHash() {
-        byte[] array = new byte[64];
-        byte[] toSet = new byte[64];
+        int[] array = new int[64];
+        int[] toSet = new int[64];
         for (int i = 0; i < 64; ++i) {
-            array[i] = (byte) (i * 11 % 37);
-            toSet[i] = (byte) (i * 31 % 29);
+            array[i] = i * 11 % 37;
+            toSet[i] = i * 31 % 29;
         }
 
         int hash64 = GameMath.hashCode64(array);
@@ -79,8 +79,8 @@ public class GameMathTest {
     @Ignore
     @Test
     public void speedTest() {
-        byte[] array = new byte[64];
-        for (int i = 0; i < 64; ++i) array[i] = (byte) (i * 11 % 37);
+        int[] array = new int[64];
+        for (int i = 0; i < 64; ++i) array[i] = i * 11 % 37;
 
         double maxTime = Double.MIN_VALUE;
         double minTime = Double.MAX_VALUE;
