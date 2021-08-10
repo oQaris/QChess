@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** @deprecated Не совместим с MTDF */
+@Deprecated
 public class TranspositionTableWithFlag {
 
     // TODO: use ConcurrentMap

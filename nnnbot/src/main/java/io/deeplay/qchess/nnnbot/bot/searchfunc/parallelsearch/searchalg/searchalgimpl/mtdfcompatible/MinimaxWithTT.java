@@ -6,6 +6,7 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable.TTEntry;
@@ -14,30 +15,45 @@ import java.util.List;
 /** Минимакс с транспозиционной таблицей */
 public class MinimaxWithTT extends MTDFSearch {
 
-    private final TranspositionTable table = new TranspositionTable();
-
     public MinimaxWithTT(
-            GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
-        super(gs, color, evaluationFunc, maxDepth);
+            final TranspositionTable table,
+            final Updater updater,
+            final Move mainMove,
+            final GameSettings gs,
+            final Color color,
+            final EvaluationFunc evaluationFunc,
+            final int maxDepth) {
+        super(table, updater, mainMove, gs, color, evaluationFunc, maxDepth);
     }
 
     @Override
-    public int run(int depth) throws ChessError {
-        return alfaBetaWithMemory(
-                false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
+    public void run() {
+        try {
+            gs.moveSystem.move(mainMove);
+            final int est =
+                    alfaBetaWithTT(
+                            false,
+                            EvaluationFunc.MIN_ESTIMATION,
+                            EvaluationFunc.MAX_ESTIMATION,
+                            maxDepth);
+            updater.updateResult(mainMove, est);
+            gs.moveSystem.undoMove();
+        } catch (ChessError ignore) {
+        }
     }
 
     @Override
-    public int alfaBetaWithMemory(boolean isMyMove, int alfa, int beta, int depth)
-            throws ChessError {
-        BoardState boardState = gs.history.getLastBoardState();
-        TTEntry entry = table.find(boardState);
+    public int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
+        final BoardState boardState = gs.history.getLastBoardState();
+        final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
             if (entry.lowerBound >= beta) return entry.lowerBound;
             if (entry.upperBound <= alfa) return entry.upperBound;
             if (entry.lowerBound > alfa) alfa = entry.lowerBound;
             if (entry.upperBound < beta) beta = entry.upperBound;
         }
+        final int alfaOrigin = alfa;
+        final int betaOrigin = beta;
 
         List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
@@ -53,7 +69,7 @@ public class MinimaxWithTT extends MTDFSearch {
             for (Move move : allMoves) {
                 if (optEstimation >= beta) break;
                 gs.moveSystem.move(move);
-                int est = alfaBetaWithMemory(false, a, beta, depth - 1);
+                int est = alfaBetaWithTT(false, a, beta, depth - 1);
                 // null-window search:
                 // int est = alfaBetaWithMemory(false, beta - 1, beta, depth - 1);
                 // std search:
@@ -68,7 +84,7 @@ public class MinimaxWithTT extends MTDFSearch {
             for (Move move : allMoves) {
                 if (optEstimation <= alfa) break;
                 gs.moveSystem.move(move);
-                int est = alfaBetaWithMemory(true, alfa, b, depth - 1);
+                int est = alfaBetaWithTT(true, alfa, b, depth - 1);
                 // null-window search:
                 // int est = alfaBetaWithMemory(true, b - 1, b, depth - 1);
                 // std search:
@@ -79,14 +95,7 @@ public class MinimaxWithTT extends MTDFSearch {
             }
         }
 
-        if (entry == null) {
-            entry = new TTEntry(depth);
-            table.store(boardState, entry);
-        } else entry.depth = depth;
-        if (optEstimation <= alfa) entry.upperBound = optEstimation;
-        if (optEstimation >= beta) entry.lowerBound = optEstimation;
-        if (alfa < optEstimation && optEstimation < beta)
-            entry.lowerBound = entry.upperBound = optEstimation;
+        table.store(entry, allMoves, optEstimation, boardState, alfaOrigin, betaOrigin, depth);
 
         return optEstimation;
     }

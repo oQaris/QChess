@@ -75,7 +75,7 @@ public class ParallelSearch extends SearchFunc implements Updater {
         }
     }
 
-    protected boolean timesUp(final long startTimeMillis, final long maxTimeMillis) {
+    private boolean timesUp(final long startTimeMillis, final long maxTimeMillis) {
         return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
     }
 }

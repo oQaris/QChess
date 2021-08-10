@@ -3,13 +3,26 @@ package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.searcha
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.ParallelSearch;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.SearchAlgorithm;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
 
-public abstract class MTDFSearch extends ParallelSearch {
+public abstract class MTDFSearch extends SearchAlgorithm {
 
-    public MTDFSearch(GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
-        super(gs, color, evaluationFunc, maxDepth);
+    protected final TranspositionTable table;
+
+    public MTDFSearch(
+            final TranspositionTable table,
+            final Updater updater,
+            final Move mainMove,
+            final GameSettings gs,
+            final Color color,
+            final EvaluationFunc evaluationFunc,
+            final int maxDepth) {
+        super(updater, mainMove, gs, color, evaluationFunc, maxDepth);
+        this.table = table;
     }
 
     public int MTDFStart(boolean isMyMove, int firstGuess, int depth) throws ChessError {
@@ -21,21 +34,25 @@ public abstract class MTDFSearch extends ParallelSearch {
         return firstGuess;
     }
 
+    private boolean timesUp(final long startTimeMillis, final long maxTimeMillis) {
+        return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
+    }
+
     private int MTDF(boolean isMyMove, int firstGuess, int depth) throws ChessError {
-        int estimation = firstGuess;
+        int est = firstGuess;
         int lowerBound = EvaluationFunc.MIN_ESTIMATION;
         int upperBound = EvaluationFunc.MAX_ESTIMATION;
         int beta;
-        while (lowerBound < upperBound) {
-            if (estimation == lowerBound) beta = estimation + 1;
-            else beta = estimation;
-            estimation = alfaBetaWithMemory(isMyMove, beta - 1, beta, depth);
-            if (estimation < beta) upperBound = estimation;
-            else lowerBound = estimation;
-        }
-        return estimation;
+        do {
+            if (est == lowerBound) beta = est + 1;
+            else beta = est;
+            est = alfaBetaWithTT(isMyMove, beta - 1, beta, depth);
+            if (est < beta) upperBound = est;
+            else lowerBound = est;
+        } while (lowerBound < upperBound);
+        return est;
     }
 
-    public abstract int alfaBetaWithMemory(boolean isMyMove, int alfa, int beta, int depth)
+    public abstract int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth)
             throws ChessError;
 }

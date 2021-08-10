@@ -6,25 +6,28 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable.TTEntry;
 import java.util.Iterator;
 import java.util.List;
 
 public class NegaScoutWithTT extends MTDFSearch {
 
-    private final TranspositionTableWithFlag table = new TranspositionTableWithFlag();
-
     public NegaScoutWithTT(
-            GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
-        super(gs, color, evaluationFunc, maxDepth);
+            final TranspositionTable table,
+            final Updater updater,
+            final Move mainMove,
+            final GameSettings gs,
+            final Color color,
+            final EvaluationFunc evaluationFunc,
+            final int maxDepth) {
+        super(table, updater, mainMove, gs, color, evaluationFunc, maxDepth);
     }
 
     @Override
-    public int alfaBetaWithMemory(boolean isMyMove, int alfa, int beta, int depth)
-            throws ChessError {
+    public int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
         return isMyMove
                 ? negascout(
                         true, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth)
@@ -33,24 +36,32 @@ public class NegaScoutWithTT extends MTDFSearch {
     }
 
     @Override
-    public int run(int depth) throws ChessError {
-        return -negascout(
-                false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
+    public void run() {
+        try {
+            gs.moveSystem.move(mainMove);
+            final int est =
+                    -negascout(
+                            false,
+                            EvaluationFunc.MIN_ESTIMATION,
+                            EvaluationFunc.MAX_ESTIMATION,
+                            maxDepth);
+            updater.updateResult(mainMove, est);
+            gs.moveSystem.undoMove();
+        } catch (ChessError ignore) {
+        }
     }
 
     public int negascout(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
-        int alfaOrigin = alfa;
-
-        BoardState boardState = gs.history.getLastBoardState();
-        TTEntry entry = table.find(boardState);
+        final BoardState boardState = gs.history.getLastBoardState();
+        final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
-            if (entry.flag == TTEntryFlag.EXACT) return entry.estimation;
-            if (entry.flag == TTEntryFlag.UPPERBOUND) {
-                if (entry.estimation < beta) beta = entry.estimation;
-            } else if (entry.estimation > alfa) alfa = entry.estimation;
-
-            if (beta <= alfa) return entry.estimation;
+            if (entry.lowerBound >= beta) return entry.lowerBound;
+            if (entry.upperBound <= alfa) return entry.upperBound;
+            if (entry.lowerBound > alfa) alfa = entry.lowerBound;
+            if (entry.upperBound < beta) beta = entry.upperBound;
         }
+        final int alfaOrigin = alfa;
+        final int betaOrigin = beta;
 
         final List<Move> allMoves;
         if (entry != null) allMoves = entry.allMoves;
@@ -84,7 +95,7 @@ public class NegaScoutWithTT extends MTDFSearch {
             if (estimation > alfa) alfa = estimation;
         }
 
-        table.store(entry, allMoves, alfa, boardState, alfaOrigin, beta, depth);
+        table.store(entry, allMoves, alfa, boardState, alfaOrigin, betaOrigin, depth);
 
         return alfa;
     }

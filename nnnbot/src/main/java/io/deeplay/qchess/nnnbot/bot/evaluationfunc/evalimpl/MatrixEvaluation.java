@@ -109,15 +109,16 @@ public class MatrixEvaluation {
         int myEstimation = 0;
         for (int row = 0; row < 8; ++row)
             for (int column = 0; column < 8; ++column) {
-                Figure figure = gs.board.getFigureUgly(row, column);
-                if (figure == null) continue;
-                int r = figure.getColor() == Color.BLACK ? 7 - row : row;
+                final Figure figure = gs.board.getFigureUgly(row, column);
+                if (figure != null) {
+                    int r = figure.getColor() == Color.BLACK ? 7 - row : row;
 
-                int eval =
-                        evaluations.get(figure.figureType)[r][column]
-                                + costInPawns.get(figure.figureType);
-                if (figure.getColor() == myColor) myEstimation += eval;
-                else enemyEstimation += eval;
+                    int eval =
+                            evaluations.get(figure.figureType)[r][column]
+                                    + costInPawns.get(figure.figureType);
+                    if (figure.getColor() == myColor) myEstimation += eval;
+                    else enemyEstimation += eval;
+                }
             }
         return 5 * myEstimation - 4 * enemyEstimation;
     }

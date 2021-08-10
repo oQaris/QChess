@@ -6,25 +6,32 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.Iterator;
 import java.util.List;
 
-public class PVSVerifiedNullMoveWithTT extends NullMove {
+public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
 
     private final TranspositionTableWithFlag table = new TranspositionTableWithFlag();
 
     public PVSVerifiedNullMoveWithTT(
-            GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
-        super(gs, color, evaluationFunc, maxDepth);
+            final TranspositionTable table,
+            final Updater updater,
+            final Move mainMove,
+            final GameSettings gs,
+            final Color color,
+            final EvaluationFunc evaluationFunc,
+            final int maxDepth) {
+        super(table, updater, mainMove, gs, color, evaluationFunc, maxDepth);
     }
 
     @Override
-    public int alfaBetaWithMemory(boolean isMyMove, int alfa, int beta, int depth)
-            throws ChessError {
+    public int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
         return isMyMove
                 ? pvs(
                         true,
@@ -41,9 +48,20 @@ public class PVSVerifiedNullMoveWithTT extends NullMove {
     }
 
     @Override
-    public int run(int depth) throws ChessError {
-        return -pvs(
-                false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth, true);
+    public void run() {
+        try {
+            gs.moveSystem.move(mainMove);
+            final int est =
+                    -pvs(
+                            false,
+                            EvaluationFunc.MIN_ESTIMATION,
+                            EvaluationFunc.MAX_ESTIMATION,
+                            maxDepth,
+                            true);
+            updater.updateResult(mainMove, est);
+            gs.moveSystem.undoMove();
+        } catch (ChessError ignore) {
+        }
     }
 
     public int pvs(boolean isMyMove, int alfa, int beta, int depth, boolean verify)
