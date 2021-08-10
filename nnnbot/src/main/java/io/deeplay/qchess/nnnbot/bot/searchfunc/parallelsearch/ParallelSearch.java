@@ -6,88 +6,76 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.SearchFunc;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.SearchAlgorithm;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.SearchAlgorithmFactory;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-/** Поиск с альфа-бета отсечением на заданную глубину */
-public abstract class ParallelSearch implements SearchFunc {
+/** Параллельный поиск с заданной функцией оценки и одной из реализаций конкретного алгоритма */
+public class ParallelSearch extends SearchFunc implements Updater {
 
-    public final int maxDepth;
+    private final ExecutorService executor;
+    private final Object mutexTheBest = new Object();
+    /** Лучшая оценка для текущего цвета myColor */
+    private volatile int theBestEstimation;
+    /** Лучший ход для текущего цвета myColor */
+    private volatile Move theBestMove;
 
-    public final GameSettings gs;
-    public final EvaluationFunc evaluationFunc;
-    public final Color myColor;
-    public final Color enemyColor;
+    public ParallelSearch(
+            final GameSettings gs,
+            final Color color,
+            final EvaluationFunc evaluationFunc,
+            final int maxDepth) {
+        super(gs, color, evaluationFunc, maxDepth);
 
-    protected ParallelSearch(
-            GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
-        this.gs = gs;
-        this.evaluationFunc = evaluationFunc;
-        this.myColor = color;
-        this.enemyColor = color.inverse();
-        this.maxDepth = maxDepth;
+        final int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
+        this.executor = Executors.newFixedThreadPool(availableProcessorsCount);
     }
 
     @Override
     public Move findBest() throws ChessError {
-        final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
-        Move theBest = null;
-        int optEstimation = EvaluationFunc.MIN_ESTIMATION;
+        long startTime = System.currentTimeMillis();
 
+        final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
         SearchImprovements.prioritySort(allMoves);
 
-        // TODO: запуск нескольких потоков для начальной глубины
         for (final Move move : allMoves) {
-            gs.moveSystem.move(move);
-            int estimation = run(maxDepth);
-            gs.moveSystem.undoMove();
-            if (estimation > optEstimation || theBest == null) {
-                optEstimation = estimation;
-                theBest = move;
-            }
+            final GameSettings gsParallel = new GameSettings(gs);
+            SearchAlgorithm searchAlgorithm =
+                    SearchAlgorithmFactory.getSearchAlgorithm(
+                            this, move, gsParallel, myColor, evaluationFunc, maxDepth);
+
+            executor.execute(searchAlgorithm);
         }
 
-        return theBest;
+        while (theBestMove == null) Thread.onSpinWait();
+        long time = System.currentTimeMillis() - startTime;
+        try {
+            executor.awaitTermination(TIME_TO_MOVE - time, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        executor.shutdown();
+
+        return theBestMove;
     }
 
-    /** @return лучшая оценка для текущего цвета myColor */
-    public abstract int run(int depth) throws ChessError;
+    @Override
+    public void updateResult(Move move, int estimation) {
+        if (estimation > theBestEstimation) {
+            synchronized (mutexTheBest) {
+                if (estimation > theBestEstimation) {
+                    theBestEstimation = estimation;
+                    theBestMove = move;
+                }
+            }
+        }
+    }
 
     protected boolean timesUp(final long startTimeMillis, final long maxTimeMillis) {
         return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
-    }
-
-    protected boolean isTerminalNode(final List<Move> allMoves) {
-        return allMoves.isEmpty() || gs.endGameDetector.isDraw();
-    }
-
-    protected int getEvaluation(final List<Move> allMoves, final boolean isMyMove, final int depth)
-            throws ChessError {
-        if (isMyMove) { // allMoves are mine
-            if (gs.endGameDetector.isStalemate(allMoves))
-                return EvaluationFunc.MIN_ESTIMATION - depth;
-
-            if (gs.endGameDetector.isStalemate(enemyColor)) {
-                if (gs.endGameDetector.isCheck(enemyColor)) {
-                    return EvaluationFunc.MAX_ESTIMATION + depth;
-                }
-                return 0;
-            }
-        } else { // allMoves are enemy's
-            if (gs.endGameDetector.isStalemate(allMoves)) {
-                if (gs.endGameDetector.isCheck(enemyColor)) {
-                    return EvaluationFunc.MAX_ESTIMATION + depth;
-                }
-                return 0;
-            }
-
-            if (gs.endGameDetector.isStalemate(myColor))
-                return EvaluationFunc.MIN_ESTIMATION - depth;
-        }
-
-        // Проверка на ничью должна быть после проверок на пат и мат
-        if (gs.endGameDetector.isDraw()) return 0;
-
-        return evaluationFunc.getHeuristics(gs, myColor);
     }
 }

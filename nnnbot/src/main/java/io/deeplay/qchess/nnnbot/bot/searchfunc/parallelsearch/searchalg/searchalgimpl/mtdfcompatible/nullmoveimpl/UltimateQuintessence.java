@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl.mtdfcompatible.nullmoveimpl;
+package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl;
 
 import static io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc.QUARTER_PAWN_COST;
 
@@ -8,10 +8,10 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.Iterator;
 import java.util.List;
 

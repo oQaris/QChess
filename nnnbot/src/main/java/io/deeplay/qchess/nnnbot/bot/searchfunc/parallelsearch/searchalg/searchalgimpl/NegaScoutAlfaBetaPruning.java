@@ -1,12 +1,13 @@
-package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl;
+package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.searchalgimpl;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.ParallelSearch;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.Updater;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.SearchAlgorithm;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,17 +16,32 @@ import java.util.List;
  * оценки не зависящую от цвета игрока (должна быть с нулевой суммой, т.е. для текущего игрока
  * возвращать максимум, а для противника минимум)
  */
-public class NegaScoutAlfaBetaPruning extends ParallelSearch {
+public class NegaScoutAlfaBetaPruning extends SearchAlgorithm {
 
     public NegaScoutAlfaBetaPruning(
-            GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth) {
-        super(gs, color, evaluationFunc, maxDepth);
+            final Updater updater,
+            final Move mainMove,
+            final GameSettings gs,
+            final Color color,
+            final EvaluationFunc evaluationFunc,
+            final int maxDepth) {
+        super(updater, mainMove, gs, color, evaluationFunc, maxDepth);
     }
 
     @Override
-    public int run(int depth) throws ChessError {
-        return -negascout(
-                false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
+    public void run() {
+        try {
+            gs.moveSystem.move(mainMove);
+            final int est =
+                    -negascout(
+                            false,
+                            EvaluationFunc.MIN_ESTIMATION,
+                            EvaluationFunc.MAX_ESTIMATION,
+                            maxDepth);
+            updater.updateResult(mainMove, est);
+            gs.moveSystem.undoMove();
+        } catch (ChessError ignore) {
+        }
     }
 
     private int negascout(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {

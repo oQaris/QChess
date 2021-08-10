@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchimpl.mtdfcompatible;
+package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.searchalgimpl.mtdfcompatible;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -6,9 +6,9 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.SearchImprovements;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTable;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTable.TTEntry;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTable.TTEntry;
 import java.util.List;
 
 /** Минимакс с транспозиционной таблицей */

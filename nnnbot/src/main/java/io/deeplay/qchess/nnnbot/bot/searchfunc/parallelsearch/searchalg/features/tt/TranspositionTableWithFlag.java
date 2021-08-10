@@ -1,8 +1,8 @@
-package io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt;
+package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt;
 
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
+import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.tt.TranspositionTableWithFlag.TTEntry.TTEntryFlag;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
