@@ -7,22 +7,20 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class King extends Figure {
-    private static final Logger logger = LoggerFactory.getLogger(King.class);
+    private static final transient Logger logger = LoggerFactory.getLogger(King.class);
 
-    public King(Color color, Cell position) {
+    public King(final Color color, final Cell position) {
         super(color, position, FigureType.KING);
     }
 
     @Override
-    public List<Move> getAllMoves(GameSettings settings) {
-        List<Move> res = getAttackedMoves(settings.board);
-        Cell newCell = new Cell(position.column, position.row);
+    public List<Move> getAllMoves(final GameSettings settings) {
+        final List<Move> res = getAttackedMoves(settings.board);
+        final Cell newCell = new Cell(position.column, position.row);
         // рокировка
         if (isCorrectCastling(settings, true))
             res.add(new Move(MoveType.SHORT_CASTLING, newCell, position.createAdd(new Cell(2, 0))));
@@ -32,31 +30,27 @@ public class King extends Figure {
     }
 
     @Override
-    public boolean isAttackedCell(GameSettings settings, Cell cell) {
-        int x = cell.column;
-        int y = cell.row;
-        int myX = position.column;
-        int myY = position.row;
+    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
+        final int x = cell.column;
+        final int y = cell.row;
+        final int myX = position.column;
+        final int myY = position.row;
         return (x != myX || y != myY) && Math.abs(myX - x) <= 1 && Math.abs(myY - y) <= 1;
     }
 
     @Override
-    public void setCurrentPosition(Cell position) {
+    public void setCurrentPosition(final Cell position) {
         this.position.column = position.column;
         this.position.row = position.row;
     }
 
     /** @return ходы без рокировки */
-    public List<Move> getAttackedMoves(Board board) {
-        return stepForEachWithNewCell(
-                board,
-                Stream.concat(Figure.xMove.stream(), Figure.plusMove.stream())
-                        .collect(Collectors.toList()),
-                true);
+    public List<Move> getAttackedMoves(final Board board) {
+        return stepForEach(board, xPlusMove, true);
     }
 
     /** @return true, если рокировка возможна */
-    private boolean isCorrectCastling(GameSettings settings, boolean shortCastling) {
+    private boolean isCorrectCastling(final GameSettings settings, final boolean shortCastling) {
         logger.trace("Запущена проверка на возможность рокировки для {}", this);
         if (wasMoved
                 || !settings.board.isEmptyCell(

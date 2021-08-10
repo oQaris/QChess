@@ -32,9 +32,9 @@ public class NotationService {
     private static final int RNB_COUNT = 2;
 
     /** @return true если строка с расстаовкой является корректной, false - некорректной */
-    public static boolean checkValidityPlacement(String placement) {
-        String[] placementRows = placement.split("/");
-        for (String placementRow : placementRows) {
+    public static boolean checkValidityPlacement(final String placement) {
+        final String[] placementRows = placement.split("/");
+        for (final String placementRow : placementRows) {
             if (!checkInappropriateCharacters(placementRow) || !checkSumInRows(placementRow)) {
                 return false;
             }
@@ -46,10 +46,11 @@ public class NotationService {
     }
 
     /** @return возвращает конкретную фигуру по входному символу, в позиции x,y */
-    public static Figure getFigureByChar(Character symbol, int x, int y) throws ChessException {
-        char lowerSymbol = Character.toLowerCase(symbol);
-        Color figureColor = Character.isLowerCase(symbol) ? Color.BLACK : Color.WHITE;
-        Cell figureCell = new Cell(x, y);
+    public static Figure getFigureByChar(final Character symbol, final int x, final int y)
+            throws ChessException {
+        final char lowerSymbol = Character.toLowerCase(symbol);
+        final Color figureColor = Character.isLowerCase(symbol) ? Color.BLACK : Color.WHITE;
+        final Cell figureCell = new Cell(x, y);
 
         return switch (lowerSymbol) {
             case 'k' -> new King(figureColor, figureCell);
@@ -62,8 +63,8 @@ public class NotationService {
         };
     }
 
-    private static boolean checkInappropriateCharacters(String placementRow) {
-        for (Character c : placementRow.toCharArray()) {
+    private static boolean checkInappropriateCharacters(final String placementRow) {
+        for (final Character c : placementRow.toCharArray()) {
             if (!appropriateCharacters.contains(c)) {
                 return false;
             }
@@ -71,43 +72,43 @@ public class NotationService {
         return true;
     }
 
-    private static boolean checkRowsNumber(String[] placementRows) {
+    private static boolean checkRowsNumber(final String[] placementRows) {
         return placementRows.length == 8;
     }
 
-    private static boolean checkSumInRows(String placementRow) {
+    private static boolean checkSumInRows(final String placementRow) {
         int place = 0;
-        for (Character c : placementRow.toCharArray()) {
+        for (final Character c : placementRow.toCharArray()) {
             if (Character.isDigit(c)) {
                 place += Integer.parseInt(String.valueOf(c));
             } else {
-                place++;
+                ++place;
             }
         }
         return place == 8;
     }
 
-    private static char[][] getPlacementTable(String[] placementRows) {
-        char[][] placementTable = new char[STD_BOARD_SIZE + 2][STD_BOARD_SIZE + 2];
-        for (char[] row : placementTable) {
+    private static char[][] getPlacementTable(final String[] placementRows) {
+        final char[][] placementTable = new char[STD_BOARD_SIZE + 2][STD_BOARD_SIZE + 2];
+        for (final char[] row : placementTable) {
             Arrays.fill(row, 'e');
         }
 
         for (int y = 1; y < STD_BOARD_SIZE + 1; y++) {
             int x = 1;
-            for (Character c : placementRows[y - 1].toCharArray()) {
+            for (final Character c : placementRows[y - 1].toCharArray()) {
                 if (Character.isDigit(c)) {
                     x += Integer.parseInt(String.valueOf(c));
                 } else {
                     placementTable[y][x] = Character.toLowerCase(c);
-                    x++;
+                    ++x;
                 }
             }
         }
         return placementTable;
     }
 
-    private static boolean checkTwoKings(char[][] placementTable) {
+    private static boolean checkTwoKings(final char[][] placementTable) {
         for (int y = 1; y < STD_BOARD_SIZE + 2; y++) {
             for (int x = 1; x < STD_BOARD_SIZE + 2; x++) {
                 if (placementTable[y][x] == 'k') {
@@ -125,9 +126,9 @@ public class NotationService {
         return true;
     }
 
-    private static List<Character> getAllFigureSymbols(String placement, Color color) {
-        List<Character> result = new ArrayList<>(16);
-        for (Character c : placement.toCharArray()) {
+    private static List<Character> getAllFigureSymbols(final String placement, final Color color) {
+        final List<Character> result = new ArrayList<>(16);
+        for (final Character c : placement.toCharArray()) {
             if (!Character.isDigit(c) && !c.equals('/')) {
                 if ((Character.isLowerCase(c) && (color == Color.BLACK))
                         || (Character.isUpperCase(c) && (color == Color.WHITE))) {
@@ -138,9 +139,9 @@ public class NotationService {
         return result;
     }
 
-    private static boolean checkFigureTypes(List<Character> figureList) {
-        Map<Character, Integer> figureMap = new HashMap<>();
-        for (Character c : figureList) {
+    private static boolean checkFigureTypes(final List<Character> figureList) {
+        final Map<Character, Integer> figureMap = new HashMap<>();
+        for (final Character c : figureList) {
             figureMap.put(
                     Character.toLowerCase(c),
                     figureMap.getOrDefault(Character.toLowerCase(c), 0) + 1);
@@ -150,7 +151,7 @@ public class NotationService {
             return false;
         }
 
-        int[] figureOverflow = {
+        final int[] figureOverflow = {
             PAWN_COUNT - figureMap.getOrDefault('p', 0),
             figureMap.getOrDefault('b', 0) - RNB_COUNT,
             figureMap.getOrDefault('r', 0) - RNB_COUNT,

@@ -57,14 +57,12 @@ public class MoveSystemTest {
                 List.of(new Move(MoveType.TURN_INTO, Cell.parse("a7"), Cell.parse("a8")));
 
         Assert.assertEquals(expectedForWhite, ms.getAllCorrectMoves(Color.WHITE));
-        Assert.assertEquals(expectedForWhite, ms.getAllCorrectMovesSilence(Color.WHITE));
         Assert.assertEquals(expectedForWhite, ms.getAllCorrectMoves(Cell.parse("a7")));
 
         List<Move> expectedForBlack =
                 List.of(new Move(MoveType.TURN_INTO, Cell.parse("a2"), Cell.parse("a1")));
 
         Assert.assertEquals(expectedForBlack, ms.getAllCorrectMoves(Color.BLACK));
-        Assert.assertEquals(expectedForBlack, ms.getAllCorrectMovesSilence(Color.BLACK));
         Assert.assertEquals(expectedForBlack, ms.getAllCorrectMoves(Cell.parse("a2")));
     }
 
@@ -307,22 +305,22 @@ public class MoveSystemTest {
         Move move1 = new Move(MoveType.TURN_INTO, Cell.parse("c7"), Cell.parse("c8"));
 
         // в разные фигуры
-        move1.setTurnInto(FigureType.BISHOP);
+        move1.turnInto = FigureType.BISHOP;
         Assert.assertTrue(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(FigureType.KING);
+        move1.turnInto = FigureType.KING;
         Assert.assertFalse(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(FigureType.KNIGHT);
+        move1.turnInto = FigureType.KNIGHT;
         Assert.assertTrue(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(FigureType.PAWN);
+        move1.turnInto = FigureType.PAWN;
         Assert.assertFalse(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(FigureType.QUEEN);
+        move1.turnInto = FigureType.QUEEN;
         Assert.assertTrue(ms.isCorrectMove(move1));
 
-        move1.setTurnInto(FigureType.ROOK);
+        move1.turnInto = FigureType.ROOK;
         Assert.assertTrue(ms.isCorrectMove(move1));
     }
 
@@ -334,7 +332,7 @@ public class MoveSystemTest {
         // из другой фигуры
         board.setFigure(new Rook(Color.WHITE, Cell.parse("g7")));
         Move move3 = new Move(MoveType.TURN_INTO, Cell.parse("g7"), Cell.parse("g8"));
-        move3.setTurnInto(FigureType.QUEEN);
+        move3.turnInto = FigureType.QUEEN;
         Assert.assertFalse(ms.isCorrectMove(move3));
     }
 
@@ -346,7 +344,7 @@ public class MoveSystemTest {
 
         // атакующим перемещением
         Move move4 = new Move(MoveType.TURN_INTO_ATTACK, Cell.parse("c7"), Cell.parse("d8"));
-        move4.setTurnInto(FigureType.QUEEN);
+        move4.turnInto = FigureType.QUEEN;
         Assert.assertFalse(ms.isCorrectMove(move4));
 
         board.setFigure(new Rook(Color.BLACK, Cell.parse("d8")));
@@ -430,7 +428,7 @@ public class MoveSystemTest {
         board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
 
         Move move = new Move(MoveType.TURN_INTO, Cell.parse("d7"), Cell.parse("d8"));
-        move.setTurnInto(FigureType.QUEEN);
+        move.turnInto = FigureType.QUEEN;
         Figure removed = ms.move(move);
 
         Assert.assertNull(removed);
@@ -438,7 +436,7 @@ public class MoveSystemTest {
         Assert.assertEquals(whiteQueen, board.getFigure(Cell.parse("d8")));
 
         move = new Move(MoveType.TURN_INTO, Cell.parse("c2"), Cell.parse("c1"));
-        move.setTurnInto(FigureType.QUEEN);
+        move.turnInto = FigureType.QUEEN;
         removed = ms.move(move);
 
         Assert.assertNull(removed);
@@ -486,7 +484,7 @@ public class MoveSystemTest {
     public void testMove_EN_PASSANT_illegal() throws ChessException, ChessError {
         Figure king = new King(Color.BLACK, Cell.parse("a4"));
         Figure pawn = new Pawn(Color.BLACK, Cell.parse("d4"));
-        pawn.setWasMoved(true);
+        pawn.wasMoved = true;
         Figure king2 = new King(Color.WHITE, Cell.parse("h8"));
         Figure pawn2 = new Pawn(Color.WHITE, Cell.parse("e4"));
         Figure rook = new Rook(Color.WHITE, Cell.parse("h4"));

@@ -76,7 +76,7 @@ public abstract class ParallelSearch implements SearchFunc {
             allMyMoves = allMoves;
             if (allMyMoves.isEmpty()) return EvaluationFunc.MIN_ESTIMATION;
 
-            allEnemyMoves = gs.moveSystem.getAllCorrectMovesSilence(enemyColor);
+            allEnemyMoves = gs.moveSystem.getAllPreparedMoves(enemyColor);
             if (allEnemyMoves.isEmpty() && gs.endGameDetector.isCheck(enemyColor))
                 return EvaluationFunc.MAX_ESTIMATION;
         } else {
@@ -84,7 +84,7 @@ public abstract class ParallelSearch implements SearchFunc {
             if (allEnemyMoves.isEmpty() && gs.endGameDetector.isCheck(enemyColor))
                 return EvaluationFunc.MAX_ESTIMATION;
 
-            allMyMoves = gs.moveSystem.getAllCorrectMovesSilence(myColor);
+            allMyMoves = gs.moveSystem.getAllPreparedMoves(myColor);
             if (allMyMoves.isEmpty()) return EvaluationFunc.MIN_ESTIMATION;
         }
 
