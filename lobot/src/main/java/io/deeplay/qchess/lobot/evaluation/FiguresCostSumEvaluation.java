@@ -1,11 +1,11 @@
-package io.deeplay.qchess.lobot.strategy;
+package io.deeplay.qchess.lobot.evaluation;
 
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.lobot.FigureService;
 
-public class FiguresCostSumEvaluateStrategy implements EvaluateStrategy {
+public class FiguresCostSumEvaluation implements Evaluation {
 
     @Override
     public int evaluateBoard(Board board, Color color) {

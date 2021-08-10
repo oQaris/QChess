@@ -1,4 +1,4 @@
-package io.deeplay.qchess.lobot.strategy;
+package io.deeplay.qchess.lobot.evaluation;
 
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
@@ -7,7 +7,7 @@ import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.Arrays;
 import java.util.List;
 
-public class PestoEvaluationFunction implements EvaluateStrategy {
+public class PestoEvaluationFunction implements Evaluation {
 
     private final int[] mg_value = {2, 337, 365, 477, 1025, 0};
     private final int[] eg_value = {94, 281, 297, 512, 936, 0};
@@ -149,9 +149,6 @@ public class PestoEvaluationFunction implements EvaluateStrategy {
             eg_queen_table,
             eg_king_table
         };
-    int[] gamephaseInc = {0, 0, 1, 1, 1, 1, 2, 2, 4, 4, 0, 0};
-    int[][] mg_table = new int[12][64];
-    int[][] eg_table = new int[12][64];
     private final List<FigureType> figureTypeList = Arrays.asList(
         FigureType.PAWN,
         FigureType.KNIGHT,
@@ -160,6 +157,9 @@ public class PestoEvaluationFunction implements EvaluateStrategy {
         FigureType.QUEEN,
         FigureType.KING
     );
+    int[] gamephaseInc = {0, 0, 1, 1, 1, 1, 2, 2, 4, 4, 0, 0};
+    int[][] mg_table = new int[12][64];
+    int[][] eg_table = new int[12][64];
 
     public PestoEvaluationFunction() {
         init();
@@ -171,8 +171,8 @@ public class PestoEvaluationFunction implements EvaluateStrategy {
             for (sq = 0; sq < 64; sq++) {
                 mg_table[pc][sq] = mg_value[p] + mg_pesto_table[p][sq];
                 eg_table[pc][sq] = eg_value[p] + eg_pesto_table[p][sq];
-                mg_table[pc+1][sq] = mg_value[p] + mg_pesto_table[p][sq ^ 56];
-                eg_table[pc+1][sq] = eg_value[p] + eg_pesto_table[p][sq ^ 56];
+                mg_table[pc + 1][sq] = mg_value[p] + mg_pesto_table[p][sq ^ 56];
+                eg_table[pc + 1][sq] = eg_value[p] + eg_pesto_table[p][sq ^ 56];
             }
         }
     }
@@ -184,18 +184,22 @@ public class PestoEvaluationFunction implements EvaluateStrategy {
         int gamePhase = 0;
 
         for (Figure figure : board.getAllFigures()) {
-            int coef = figure.getColor() == Color.WHITE? 0 : 1;
+            int coef = figure.getColor() == Color.WHITE ? 0 : 1;
             int index = 2 * figureTypeList.indexOf(figure.figureType) + coef;
-            mg[coef] += mg_table[index][figure.getCurrentPosition().row * Board.STD_BOARD_SIZE + figure.getCurrentPosition().column];
-            eg[coef] += mg_table[index][figure.getCurrentPosition().row * Board.STD_BOARD_SIZE + figure.getCurrentPosition().column];
+            mg[coef] += mg_table[index][figure.getCurrentPosition().row * Board.STD_BOARD_SIZE
+                + figure.getCurrentPosition().column];
+            eg[coef] += mg_table[index][figure.getCurrentPosition().row * Board.STD_BOARD_SIZE
+                + figure.getCurrentPosition().column];
             gamePhase += gamephaseInc[index];
         }
 
-        int coef = color == Color.WHITE? 0 : 1;
+        int coef = color == Color.WHITE ? 0 : 1;
         int mgScore = mg[coef] - mg[coef ^ 1];
         int egScore = eg[coef] - eg[coef ^ 1];
         int mgPhase = gamePhase;
-        if (mgPhase > 24) mgPhase = 24;
+        if (mgPhase > 24) {
+            mgPhase = 24;
+        }
         int egPhase = 24 - mgPhase;
         return (mgScore * mgPhase + egScore * egPhase) / 24;
     }

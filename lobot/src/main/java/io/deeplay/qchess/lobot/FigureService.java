@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FigureService {
+
     private final static Map<FigureType, Character> charFigureMap = new HashMap<>();
     private final static Map<Character, Integer> intCharMap = new HashMap<>();
     private final static Map<FigureType, Integer> figureValMap = new HashMap<>();
+
     static {
         charFigureMap.put(FigureType.PAWN, 'p');
         charFigureMap.put(FigureType.ROOK, 'r');

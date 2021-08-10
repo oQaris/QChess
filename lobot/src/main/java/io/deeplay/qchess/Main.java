@@ -8,13 +8,13 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.lobot.LoBot;
-import io.deeplay.qchess.lobot.strategy.FiguresCostSumEvaluateStrategy;
+import io.deeplay.qchess.lobot.evaluation.FiguresCostSumEvaluation;
 
 public class Main {
     public static void main(String[] args) throws ChessError {
         GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
 
-        Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluateStrategy());
+        Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new FiguresCostSumEvaluation());
         Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
 
         Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
