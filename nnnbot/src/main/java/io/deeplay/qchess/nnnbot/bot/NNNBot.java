@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.SearchFunc;
 import java.util.UUID;
@@ -66,5 +67,10 @@ public class NNNBot extends RemotePlayer {
         if (time < minTimeToThink) minTimeToThink = time;
         if (time > maxTimeToThink) maxTimeToThink = time;
         return move;
+    }
+
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.SUPER_BOT;
     }
 }

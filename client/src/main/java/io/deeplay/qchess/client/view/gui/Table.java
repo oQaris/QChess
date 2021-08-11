@@ -46,7 +46,24 @@ public class Table extends Frame {
     private static final Color attackCellColor = Color.decode("#B22222");
     private static final Color attackHoverCellColor = Color.decode("#8B0000");
     private static final Color hoverCellColor = Color.CYAN;
+
+    /**
+     * Этот путь указывает на файлы в .jar, и используется, если файлы по обычным путям не были
+     * найдены или повреждены
+     */
     private static final String defaultFigureImagesPath = "/art/figures";
+    /**
+     * Этот путь указывает на файлы в .jar, и используется, если файлы по обычным путям не были
+     * найдены или повреждены
+     */
+    private static final String defaultIconPath = "/art/other/icon.png";
+
+    // TODO: использовать эти пути вместо default
+    /** Обычный путь на файлы, лежащие рядом с .jar */
+    private static final String figureImagesPath = "./art/figures";
+    /** Обычный путь на файлы, лежащие рядом с .jar */
+    private static final String iconPath = "./art/other/icon.png";
+
     private static final String[] figures = {"Ферзь", "Ладья", "Конь", "Слон"};
     private final String figureStyle;
     private final Set<Integer> taggedCells = new HashSet<>();
@@ -64,7 +81,7 @@ public class Table extends Frame {
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.frame.setResizable(false);
         this.frame.setLocationRelativeTo(null);
-        try (InputStream png = getClass().getResourceAsStream("/art/other/icon.png")) {
+        try (InputStream png = getClass().getResourceAsStream(defaultIconPath)) {
             assert png != null;
             final BufferedImage image = ImageIO.read(png);
             this.frame.setIconImage(image);
