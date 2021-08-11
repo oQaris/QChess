@@ -1,7 +1,7 @@
 package io.deeplay.qchess.client.view.gui;
 
 import io.deeplay.qchess.client.controller.ClientController;
-import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.client.view.model.ViewColor;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -23,7 +23,7 @@ public class ChooseMyColorFrame extends Frame {
     private final JPanel panel;
     private final ButtonGroup buttonGroup;
     private final GridBagConstraints gbc;
-    private final Map<JRadioButton, Color> rbs = new HashMap<>();
+    private final Map<JRadioButton, ViewColor> rbs = new HashMap<>();
 
     public ChooseMyColorFrame(MainFrame mf) {
         this.mf = mf;
@@ -45,9 +45,9 @@ public class ChooseMyColorFrame extends Frame {
 
         panel.add(new JLabel("Я буду играть за: "), gbc);
 
-        addRadioButton("Белый", true, Color.WHITE);
-        addRadioButton("Чёрных", false, Color.BLACK);
-        addRadioButton("Любым", false, null);
+        addRadioButton("Белый цвет", true, ViewColor.WHITE);
+        addRadioButton("Чёрный цвет", false, ViewColor.BLACK);
+        addRadioButton("Любой цвет", false, null);
 
         panel.add(addButtonConnect(), gbc);
         frame.add(panel, BorderLayout.CENTER);
@@ -62,7 +62,7 @@ public class ChooseMyColorFrame extends Frame {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     super.mousePressed(e);
-                    Color myColor = null;
+                    ViewColor myColor = null;
                     for (JRadioButton rb : rbs.keySet()) {
                         if (rb.isSelected()) {
                             myColor = rbs.get(rb);
@@ -78,7 +78,7 @@ public class ChooseMyColorFrame extends Frame {
         return continueButton;
     }
 
-    public void addRadioButton(String name, boolean pressed, Color myColor) {
+    public void addRadioButton(String name, boolean pressed, ViewColor myColor) {
         JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);

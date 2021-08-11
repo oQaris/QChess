@@ -1,6 +1,6 @@
 package io.deeplay.qchess.client.view.gui;
 
-import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.client.view.model.ViewColor;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
@@ -18,7 +18,7 @@ public class MainFrame {
     private PlayerType myPlayerType;
     private PlayerType enemyPlayerType;
     private String style;
-    private Color myColor;
+    private ViewColor myColor;
 
     public void createStartFrame() {
         JFrame frame = new JFrame("Начало");
@@ -47,7 +47,7 @@ public class MainFrame {
         chooseMyColorFrame = new ChooseMyColorFrame(this);
     }
 
-    public void createChooseMyPlayerFrame(Color myColor) {
+    public void createChooseMyPlayerFrame(ViewColor myColor) {
         this.myColor = myColor;
         chooseMyPlayerFrame = new ChooseMyPlayerFrame(this);
     }
@@ -117,7 +117,7 @@ public class MainFrame {
         return style;
     }
 
-    public Color getColor() {
+    public ViewColor getColor() {
         return myColor;
     }
 }
