@@ -12,7 +12,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_IP) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_IP) {
                 Assert.fail();
             }
         }
@@ -25,7 +25,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.INCORRECT_IP_OCTETS_NUMBER) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_IP_OCTETS_NUMBER) {
                 Assert.fail();
             }
         }
@@ -38,7 +38,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.INCORRECT_IP_OCTET_VALUE) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_IP_OCTET_VALUE) {
                 Assert.fail();
             }
         }
@@ -51,7 +51,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.RANGE_OUT_IP_OCTET) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.RANGE_OUT_IP_OCTET) {
                 Assert.fail();
             }
         }
@@ -64,7 +64,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_PORT) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PORT) {
                 Assert.fail();
             }
         }
@@ -77,7 +77,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.NON_POSITIVE_PORT_VALUE) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.NON_POSITIVE_PORT_VALUE) {
                 Assert.fail();
             }
         }
@@ -90,7 +90,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.INCORRECT_PORT_VALUE) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PORT_VALUE) {
                 Assert.fail();
             }
         }
@@ -103,7 +103,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_BOOLEAN) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_BOOLEAN) {
                 Assert.fail();
             }
         }
@@ -116,7 +116,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.INCORRECT_BOOLEAN_VALUE) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_BOOLEAN_VALUE) {
                 Assert.fail();
             }
         }
@@ -129,7 +129,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_PLAYER_TYPE) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PLAYER_TYPE) {
                 Assert.fail();
             }
         }
@@ -142,7 +142,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.INCORRECT_PLAYER_TYPE_VALUE) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PLAYER_TYPE_VALUE) {
                 Assert.fail();
             }
         }
@@ -155,7 +155,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_PATH) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PATH) {
                 Assert.fail();
             }
         }
@@ -168,7 +168,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.INCORRECT_PATH) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PATH) {
                 Assert.fail();
             }
         }
@@ -181,7 +181,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_COLOR) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_COLOR) {
                 Assert.fail();
             }
         }
@@ -194,7 +194,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.INCORRECT_COLOR) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_COLOR) {
                 Assert.fail();
             }
         }
@@ -207,7 +207,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_IP) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_IP) {
                 Assert.fail();
             }
         }
@@ -220,7 +220,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_PORT) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PORT) {
                 Assert.fail();
             }
         }
@@ -233,7 +233,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_BOOLEAN) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_BOOLEAN) {
                 Assert.fail();
             }
         }
@@ -246,7 +246,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_PLAYER_TYPE) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PLAYER_TYPE) {
                 Assert.fail();
             }
         }
@@ -259,7 +259,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_PATH) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PATH) {
                 Assert.fail();
             }
         }
@@ -272,7 +272,7 @@ public class ClientSettingsTest {
             new ClientSettings(configPath);
             Assert.fail();
         } catch (ConfigException e) {
-            if (e.getExceptionType() != ConfigExceptionEnum.ABSENT_COLOR) {
+            if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_COLOR) {
                 Assert.fail();
             }
         }

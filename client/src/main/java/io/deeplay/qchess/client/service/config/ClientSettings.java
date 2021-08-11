@@ -16,11 +16,11 @@ public class ClientSettings {
     private final boolean isGui;
     private final PlayerType playerType;
     /**
-     * Строковое представление пути до папки где хранятся логи
+     * Строковое представление пути до папки, где хранятся логи
      */
     private final String logPath;
     /**
-     * Строковое представление пути до папки где хранится файл с логбэком
+     * Строковое представление пути до папки, где хранится файл с логбэком
      */
     private final String logBack;
     private final Color color;
@@ -45,7 +45,7 @@ public class ClientSettings {
                 .validateBoolean(property.getProperty("client.isTournament"));
 
         } catch (IOException | NullPointerException e) {
-            throw new ConfigException(ConfigExceptionEnum.READ_CONFIG_FILE);
+            throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
         } catch (ConfigException e) {
             throw e;
         }

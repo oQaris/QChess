@@ -1,6 +1,6 @@
 package io.deeplay.qchess.client.service.config;
 
-public enum ConfigExceptionEnum {
+public enum ConfigExceptionErrorCode {
     READ_CONFIG_FILE("Ошибка чтения конфигурационного файла"),
 
     ABSENT_IP("Ошибка валидации ip (поле ip отсутствует или пусто)"),
@@ -24,7 +24,7 @@ public enum ConfigExceptionEnum {
 
     private final String message;
 
-    ConfigExceptionEnum(final String message) {
+    ConfigExceptionErrorCode(final String message) {
         this.message = message;
     }
 

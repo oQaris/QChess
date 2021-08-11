@@ -2,13 +2,14 @@ package io.deeplay.qchess.client.service.config;
 
 public class ConfigException extends Exception {
 
-    private final ConfigExceptionEnum configExceptionEnum;
+    private final ConfigExceptionErrorCode configExceptionErrorCode;
 
-    public ConfigException(final ConfigExceptionEnum configExceptionEnum) {
-        this.configExceptionEnum = configExceptionEnum;
+    public ConfigException(final ConfigExceptionErrorCode configExceptionErrorCode) {
+        super(configExceptionErrorCode.getMessage());
+        this.configExceptionErrorCode = configExceptionErrorCode;
     }
 
-    public ConfigExceptionEnum getExceptionType() {
-        return configExceptionEnum;
+    public ConfigExceptionErrorCode getExceptionType() {
+        return configExceptionErrorCode;
     }
 }
