@@ -1,4 +1,4 @@
-package io.deeplay.qchess.client.config;
+package io.deeplay.qchess.client.service.config;
 
 public class ConfigException extends Exception {
 
