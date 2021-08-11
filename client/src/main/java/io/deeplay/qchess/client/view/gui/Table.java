@@ -59,6 +59,8 @@ public class Table extends Frame {
     private static final String defaultIconPath = "/art/other/icon.png";
 
     // TODO: использовать эти пути вместо default
+    // TODO: получать путь из конфига
+    // TODO: если конфиг поврежден или пути некорректные, использовать default пути
     /** Обычный путь на файлы, лежащие рядом с .jar */
     private static final String figureImagesPath = "./art/figures";
     /** Обычный путь на файлы, лежащие рядом с .jar */
