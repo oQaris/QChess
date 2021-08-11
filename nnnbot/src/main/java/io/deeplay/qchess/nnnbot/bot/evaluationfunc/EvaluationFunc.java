@@ -7,8 +7,8 @@ import io.deeplay.qchess.game.model.Color;
 @FunctionalInterface
 public interface EvaluationFunc {
 
-    int MAX_ESTIMATION = Integer.MAX_VALUE - 100;
-    int MIN_ESTIMATION = 100 - Integer.MAX_VALUE;
+    int MAX_ESTIMATION = Integer.MAX_VALUE;
+    int MIN_ESTIMATION = -Integer.MAX_VALUE;
 
     int PAWN_COST = 100;
     int QUARTER_PAWN_COST = PAWN_COST / 4;

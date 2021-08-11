@@ -49,21 +49,22 @@ public class NegamaxAlfaBetaPruning extends SearchAlgorithm {
      * @param beta лучшая оценка из гарантированных для противника
      * @return лучшая оценка из гарантированных для текущего игрока
      */
-    public int negamax(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+    private int negamax(final boolean isMyMove, int alfa, final int beta, final int depth)
+            throws ChessError {
+        final List<Move> allMoves =
+                gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
         if (depth <= 0 || isTerminalNode(allMoves))
             return isMyMove
                     ? getEvaluation(allMoves, true, depth)
                     : -getEvaluation(allMoves, false, depth);
 
         int optEstimation = EvaluationFunc.MIN_ESTIMATION;
-        int estimation;
 
         SearchImprovements.prioritySort(allMoves);
 
-        for (Move move : allMoves) {
+        for (final Move move : allMoves) {
             gs.moveSystem.move(move);
-            estimation = -negamax(!isMyMove, -beta, -alfa, depth - 1);
+            final int estimation = -negamax(!isMyMove, -beta, -alfa, depth - 1);
             gs.moveSystem.undoMove();
 
             if (estimation > optEstimation) optEstimation = estimation;

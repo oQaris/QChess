@@ -27,20 +27,12 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
     }
 
     @Override
-    public int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
-        return isMyMove
-                ? pvs(
-                        true,
-                        EvaluationFunc.MIN_ESTIMATION,
-                        EvaluationFunc.MAX_ESTIMATION,
-                        depth,
-                        true)
-                : -pvs(
-                        false,
-                        EvaluationFunc.MIN_ESTIMATION,
-                        EvaluationFunc.MAX_ESTIMATION,
-                        depth,
-                        true);
+    public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
+        gs.moveSystem.move(mainMove);
+        final int est = -pvs(false, -beta, -alfa, maxDepth, true);
+        updater.updateResult(mainMove, est);
+        gs.moveSystem.undoMove();
+        return est;
     }
 
     @Override
@@ -60,7 +52,7 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
         }
     }
 
-    public int pvs(boolean isMyMove, int alfa, int beta, int depth, boolean verify)
+    private int pvs(final boolean isMyMove, int alfa, int beta, int depth, boolean verify)
             throws ChessError {
         final BoardState boardState = gs.history.getLastBoardState();
         final TTEntry entry = table.find(boardState);
@@ -85,17 +77,17 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
         Move move = it.next();
         int estimation;
 
-        boolean isAllowNullMove =
+        final boolean isAllowNullMove =
                 isAllowNullMove(isMyMove ? myColor : enemyColor) && (!verify || depth > 1);
         boolean failHigh = false;
 
         if (isAllowNullMove) {
             isPrevNullMove = true;
             // TODO: слишком медленно
-            List<Move> enemyMoves =
+            final List<Move> enemyMoves =
                     gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
             SearchImprovements.prioritySort(enemyMoves);
-            Move nullMove = enemyMoves.get(0);
+            final Move nullMove = enemyMoves.get(0);
             // null-move:
             gs.moveSystem.move(nullMove, true, false);
             estimation = -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify);

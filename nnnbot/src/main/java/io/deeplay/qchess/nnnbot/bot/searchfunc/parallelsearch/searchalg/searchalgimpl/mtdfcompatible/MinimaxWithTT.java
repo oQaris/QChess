@@ -27,11 +27,20 @@ public class MinimaxWithTT extends MTDFSearch {
     }
 
     @Override
+    public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
+        gs.moveSystem.move(mainMove);
+        final int est = minimax(false, alfa, beta, maxDepth);
+        updater.updateResult(mainMove, est);
+        gs.moveSystem.undoMove();
+        return est;
+    }
+
+    @Override
     public void run() {
         try {
             gs.moveSystem.move(mainMove);
             final int est =
-                    alfaBetaWithTT(
+                    minimax(
                             false,
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
@@ -42,8 +51,8 @@ public class MinimaxWithTT extends MTDFSearch {
         }
     }
 
-    @Override
-    public int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
+    private int minimax(final boolean isMyMove, int alfa, int beta, final int depth)
+            throws ChessError {
         final BoardState boardState = gs.history.getLastBoardState();
         final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
@@ -55,25 +64,23 @@ public class MinimaxWithTT extends MTDFSearch {
         final int alfaOrigin = alfa;
         final int betaOrigin = beta;
 
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+        final List<Move> allMoves;
+        if (entry != null) allMoves = entry.allMoves;
+        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
         if (depth <= 0 || isTerminalNode(allMoves)) return getEvaluation(allMoves, isMyMove, depth);
 
-        SearchImprovements.prioritySort(allMoves);
+        if (entry == null) SearchImprovements.prioritySort(allMoves);
 
         int optEstimation;
 
         if (isMyMove) {
             optEstimation = EvaluationFunc.MIN_ESTIMATION;
             int a = alfa;
-            for (Move move : allMoves) {
+            for (final Move move : allMoves) {
                 if (optEstimation >= beta) break;
                 gs.moveSystem.move(move);
-                int est = alfaBetaWithTT(false, a, beta, depth - 1);
-                // null-window search:
-                // int est = alfaBetaWithMemory(false, beta - 1, beta, depth - 1);
-                // std search:
-                // if (a < est && est < beta) est = alfaBetaWithMemory(false, a, est, depth - 1);
+                final int est = minimax(false, a, beta, depth - 1);
                 gs.moveSystem.undoMove();
                 if (est > optEstimation) optEstimation = est;
                 if (optEstimation > a) a = optEstimation;
@@ -81,14 +88,10 @@ public class MinimaxWithTT extends MTDFSearch {
         } else {
             optEstimation = EvaluationFunc.MAX_ESTIMATION;
             int b = beta;
-            for (Move move : allMoves) {
+            for (final Move move : allMoves) {
                 if (optEstimation <= alfa) break;
                 gs.moveSystem.move(move);
-                int est = alfaBetaWithTT(true, alfa, b, depth - 1);
-                // null-window search:
-                // int est = alfaBetaWithMemory(true, b - 1, b, depth - 1);
-                // std search:
-                // if (alfa < est && est < b) est = alfaBetaWithMemory(true, alfa, est, depth - 1);
+                final int est = minimax(true, alfa, b, depth - 1);
                 gs.moveSystem.undoMove();
                 if (est < optEstimation) optEstimation = est;
                 if (optEstimation < b) b = optEstimation;

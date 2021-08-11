@@ -25,8 +25,8 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
         super(table, updater, mainMove, gs, color, evaluationFunc, maxDepth);
     }
 
-    protected boolean isAllowNullMove(Color color) {
-        Color enemyColor = color.inverse();
+    protected boolean isAllowNullMove(final Color color) {
+        final Color enemyColor = color.inverse();
         return !isPrevNullMove
                 && !gs.endGameDetector.isStalemate(enemyColor)
                 && gs.board.getFigureCount(enemyColor) > 9

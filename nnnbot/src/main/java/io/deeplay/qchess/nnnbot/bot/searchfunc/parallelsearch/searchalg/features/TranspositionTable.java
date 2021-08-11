@@ -3,14 +3,13 @@ package io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.feature
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TranspositionTable {
 
-    // TODO: use ConcurrentMap
-    private final Map<BoardState, TTEntry> entries = new HashMap<>(500000);
+    private final Map<BoardState, TTEntry> entries = new ConcurrentHashMap<>(500000);
 
     /** @return вхождение состояния игры или null, если такое состояние еще не встречалось */
     public TTEntry find(BoardState boardState) {

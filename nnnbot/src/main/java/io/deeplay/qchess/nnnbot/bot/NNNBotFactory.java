@@ -3,7 +3,8 @@ package io.deeplay.qchess.nnnbot.bot;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nnnbot.bot.evaluationfunc.evalimpl.MatrixEvaluation;
+import io.deeplay.qchess.nnnbot.bot.evaluationfunc.ImprovedMatrixEvaluation;
+import io.deeplay.qchess.nnnbot.bot.evaluationfunc.MatrixEvaluation;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.SearchFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.ParallelSearch;
 import org.slf4j.Logger;
@@ -30,7 +31,10 @@ public class NNNBotFactory {
         final int maxDepth = 3;
         gs.history.setMinBoardStateToSave(maxDepth);
 
-        EvaluationFunc evaluationFunc = MatrixEvaluation::figurePositionHeuristics;
+        EvaluationFunc evaluationFunc =
+                color == Color.BLACK
+                        ? MatrixEvaluation::figurePositionHeuristics
+                        : ImprovedMatrixEvaluation::figurePositionHeuristics;
         SearchFunc deepSearch = new ParallelSearch(gs, color, evaluationFunc, maxDepth);
 
         NNNBot nnnBot = new NNNBot(gs, color, deepSearch);

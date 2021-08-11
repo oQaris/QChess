@@ -25,11 +25,11 @@ public abstract class MTDFSearch extends SearchAlgorithm {
         this.table = table;
     }
 
-    public int MTDFStart(boolean isMyMove, int firstGuess, int depth, long maxTimeMillis)
+    public int MTDFStart(int firstGuess, final int depth, final long maxTimeMillis)
             throws ChessError {
-        long startTimeMillis = System.currentTimeMillis();
+        final long startTimeMillis = System.currentTimeMillis();
         for (int d = 1; d <= depth; ++d) {
-            firstGuess = MTDF(isMyMove, firstGuess, d);
+            firstGuess = MTDF(firstGuess, d);
             if (timesUp(startTimeMillis, maxTimeMillis)) break;
         }
         return firstGuess;
@@ -39,7 +39,7 @@ public abstract class MTDFSearch extends SearchAlgorithm {
         return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
     }
 
-    private int MTDF(boolean isMyMove, int firstGuess, int depth) throws ChessError {
+    private int MTDF(final int firstGuess, final int depth) throws ChessError {
         int est = firstGuess;
         int lowerBound = EvaluationFunc.MIN_ESTIMATION;
         int upperBound = EvaluationFunc.MAX_ESTIMATION;
@@ -47,13 +47,13 @@ public abstract class MTDFSearch extends SearchAlgorithm {
         do {
             if (est == lowerBound) beta = est + 1;
             else beta = est;
-            est = alfaBetaWithTT(isMyMove, beta - 1, beta, depth);
+            est = alfaBetaWithTT(beta - 1, beta, depth);
             if (est < beta) upperBound = est;
             else lowerBound = est;
         } while (lowerBound < upperBound);
         return est;
     }
 
-    public abstract int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth)
+    public abstract int alfaBetaWithTT(final int alfa, final int beta, final int depth)
             throws ChessError;
 }

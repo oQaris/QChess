@@ -49,19 +49,20 @@ public class MinimaxAlfaBetaPruning extends SearchAlgorithm {
      * @param beta лучшая оценка из гарантированных для противника
      * @return лучшая оценка из гарантированных для максимизирующего игрока
      */
-    private int minimax(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+    private int minimax(final boolean isMyMove, int alfa, int beta, final int depth)
+            throws ChessError {
+        final List<Move> allMoves =
+                gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
         if (depth <= 0 || isTerminalNode(allMoves)) return getEvaluation(allMoves, isMyMove, depth);
 
         int optEstimation =
                 isMyMove ? EvaluationFunc.MIN_ESTIMATION : EvaluationFunc.MAX_ESTIMATION;
-        int estimation;
 
         SearchImprovements.prioritySort(allMoves);
 
-        for (Move move : allMoves) {
+        for (final Move move : allMoves) {
             gs.moveSystem.move(move);
-            estimation = minimax(!isMyMove, alfa, beta, depth - 1);
+            final int estimation = minimax(!isMyMove, alfa, beta, depth - 1);
             gs.moveSystem.undoMove();
 
             if (isMyMove) {

@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nnnbot.bot.evaluationfunc.evalimpl;
+package io.deeplay.qchess.nnnbot.bot.evaluationfunc;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -13,57 +13,57 @@ public class MatrixEvaluation {
     // ----------- Оценки позиции выбраны исходя из стоимости пешки == 100 ----------- //
     // -------------- Матрицы выбраны так, что белый игрок играет снизу -------------- //
 
-    private static final Integer[][] pawnEval = {
-        {800, 800, 800, 800, 800, 800, 800, 800},
-        {290, 285, 280, 270, 270, 280, 285, 290},
-        {12, 13, 15, 14, 14, 15, 13, 12},
-        {12, 13, 14, 15, 15, 14, 13, 12},
-        {12, 11, 15, 14, 15, 12, 11, 12},
-        {11, 12, 14, 13, 14, 11, 12, 11},
-        {10, 10, 10, 10, 10, 10, 10, 10},
-        {9, 9, 9, 9, 9, 9, 9, 9}
+    public static final int[][] pawnEval = {
+        {2, 2, 2, 2, 2, 2, 2, 2},
+        {122, 121, 120, 117, 117, 120, 121, 122},
+        {13, 13, 23, 33, 33, 23, 13, 13},
+        {8, 8, 13, 28, 28, 13, 8, 8},
+        {3, 2, 3, 23, 23, 3, 2, 3},
+        {7, -2, -7, 3, 3, -8, -2, 7},
+        {7, 12, 12, -18, -18, 12, 12, 7},
+        {2, 2, 2, 2, 2, 2, 2, 2}
     };
-    private static final Integer[][] knightEval = {
-        {40, 50, 60, 70, 70, 60, 50, 40},
-        {50, 60, 75, 70, 70, 75, 60, 50},
-        {70, 75, 80, 75, 75, 80, 75, 70},
-        {75, 80, 85, 90, 90, 85, 80, 75},
-        {75, 80, 85, 90, 90, 85, 80, 75},
-        {70, 75, 80, 75, 75, 80, 75, 70},
-        {50, 60, 75, 70, 70, 75, 60, 50},
-        {40, 50, 60, 70, 70, 60, 50, 40}
+    public static final int[][] knightEval = {
+        {-40, -28, -15, -13, -13, -15, -28, -40},
+        {-28, -5, 18, 17, 17, 18, -5, -28},
+        {-13, 18, 30, 33, 33, 30, 18, -13},
+        {-12, 25, 36, 42, 42, 36, 25, -12},
+        {-12, 20, 36, 42, 42, 36, 20, -12},
+        {-13, 23, 30, 33, 33, 30, 23, -13},
+        {-28, -5, 18, 22, 22, 18, -5, -28},
+        {-40, -28, -15, -13, -13, -15, -28, -40}
     };
-    private static final Integer[][] bishopEval = {
-        {75, 75, 85, 100, 100, 85, 75, 75},
-        {80, 85, 90, 85, 85, 90, 85, 80},
-        {80, 80, 85, 90, 90, 85, 80, 80},
-        {85, 85, 90, 95, 95, 90, 85, 85},
-        {85, 85, 90, 95, 95, 90, 85, 85},
-        {80, 80, 80, 85, 85, 80, 80, 80},
-        {80, 70, 60, 70, 70, 60, 70, 80},
-        {60, 50, 60, 50, 50, 60, 50, 60}
+    public static final int[][] bishopEval = {
+        {-2, 8, 11, 15, 15, 11, 8, -2},
+        {10, 21, 22, 21, 21, 22, 21, 10},
+        {10, 20, 26, 32, 32, 26, 20, 10},
+        {11, 26, 27, 33, 33, 27, 26, 11},
+        {11, 21, 32, 33, 33, 32, 21, 11},
+        {10, 30, 30, 31, 31, 30, 30, 10},
+        {10, 22, 15, 17, 17, 15, 22, 10},
+        {-5, 2, 5, 2, 2, 5, 2, -5}
     };
-    private static final Integer[][] rookEval = {
-        {50, 60, 65, 70, 70, 65, 60, 50},
-        {40, 50, 50, 50, 50, 50, 50, 40},
-        {50, 60, 65, 60, 60, 65, 60, 50},
-        {60, 65, 70, 70, 70, 70, 65, 60},
-        {60, 65, 70, 70, 70, 70, 65, 60},
-        {40, 60, 65, 65, 65, 65, 60, 40},
-        {40, 55, 55, 60, 60, 55, 55, 40},
-        {50, 55, 55, 60, 60, 55, 55, 50}
+    public static final int[][] rookEval = {
+        {12, 15, 16, 17, 17, 16, 15, 12},
+        {15, 22, 22, 22, 22, 22, 22, 15},
+        {7, 15, 16, 15, 15, 16, 15, 7},
+        {10, 16, 17, 17, 17, 17, 16, 10},
+        {10, 16, 17, 17, 17, 17, 16, 10},
+        {5, 15, 16, 16, 16, 16, 15, 5},
+        {5, 13, 13, 15, 15, 13, 13, 5},
+        {12, 13, 13, 20, 20, 13, 13, 12}
     };
-    private static final Integer[][] queenEval = {
-        {40, 45, 50, 50, 50, 50, 45, 40},
-        {45, 50, 55, 55, 55, 55, 50, 45},
-        {50, 60, 65, 65, 65, 65, 60, 50},
-        {60, 65, 70, 70, 70, 70, 65, 60},
-        {60, 65, 70, 70, 70, 70, 65, 60},
-        {50, 60, 65, 65, 65, 65, 60, 50},
-        {45, 50, 55, 55, 55, 55, 50, 45},
-        {40, 45, 50, 50, 50, 50, 45, 40}
+    public static final int[][] queenEval = {
+        {-10, 1, 2, 7, 7, 2, 1, -10},
+        {1, 12, 13, 13, 13, 13, 12, 1},
+        {2, 15, 21, 21, 21, 21, 15, 2},
+        {10, 16, 22, 22, 22, 22, 16, 10},
+        {15, 16, 22, 22, 22, 22, 16, 10},
+        {2, 20, 21, 21, 21, 21, 15, 2},
+        {1, 12, 18, 13, 13, 13, 12, 1},
+        {-10, 1, 2, 7, 7, 2, 1, -10}
     };
-    private static final Integer[][] kingEval = {
+    public static final int[][] kingEval = {
         {70, 70, 75, 75, 75, 75, 70, 70},
         {70, 70, 70, 70, 70, 70, 70, 70},
         {65, 60, 60, 55, 55, 60, 60, 65},
@@ -73,9 +73,19 @@ public class MatrixEvaluation {
         {99, 99, 99, 99, 99, 99, 99, 99},
         {99, 99, 99, 100, 100, 99, 99, 99}
     };
+    public static final int[][] middleGameKingEval = {
+        {-13, -23, -22, -32, -32, -22, -23, -13},
+        {-13, -23, -23, -33, -33, -23, -23, -13},
+        {-14, -25, -25, -37, -37, -25, -25, -14},
+        {-14, -25, -27, -38, -38, -27, -25, -14},
+        {0, -13, -15, -28, -28, -15, -13, 0},
+        {12, 1, 0, 0, 0, 0, 1, 12},
+        {44, 44, 24, 24, 24, 24, 44, 44},
+        {44, 54, 34, 25, 25, 34, 54, 44}
+    };
 
-    private static final Map<FigureType, Integer[][]> evaluations;
-    private static final Map<FigureType, Integer> costInPawns;
+    public static final Map<FigureType, int[][]> evaluations;
+    public static final Map<FigureType, Integer> costInPawns;
 
     static {
         costInPawns = new EnumMap<>(FigureType.class);
@@ -85,18 +95,14 @@ public class MatrixEvaluation {
         costInPawns.put(FigureType.ROOK, 500);
         costInPawns.put(FigureType.QUEEN, 900);
         costInPawns.put(FigureType.KING, 20000);
-    }
 
-    static {
         evaluations = new EnumMap<>(FigureType.class);
         evaluations.put(FigureType.PAWN, pawnEval);
         evaluations.put(FigureType.KNIGHT, knightEval);
         evaluations.put(FigureType.BISHOP, bishopEval);
         evaluations.put(FigureType.ROOK, rookEval);
         evaluations.put(FigureType.QUEEN, queenEval);
-        evaluations.put(FigureType.KING, kingEval);
-
-        // TODO: добавить проверку, что стоимости фигур пропорциональны стоимости позиции
+        evaluations.put(FigureType.KING, middleGameKingEval);
     }
 
     /**

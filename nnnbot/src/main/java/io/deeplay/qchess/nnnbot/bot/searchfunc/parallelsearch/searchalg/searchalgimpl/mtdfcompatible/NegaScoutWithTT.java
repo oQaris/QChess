@@ -27,12 +27,12 @@ public class NegaScoutWithTT extends MTDFSearch {
     }
 
     @Override
-    public int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
-        return isMyMove
-                ? negascout(
-                        true, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth)
-                : -negascout(
-                        false, EvaluationFunc.MIN_ESTIMATION, EvaluationFunc.MAX_ESTIMATION, depth);
+    public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
+        gs.moveSystem.move(mainMove);
+        final int est = -negascout(false, -beta, -alfa, depth);
+        updater.updateResult(mainMove, est);
+        gs.moveSystem.undoMove();
+        return est;
     }
 
     @Override
@@ -51,7 +51,8 @@ public class NegaScoutWithTT extends MTDFSearch {
         }
     }
 
-    public int negascout(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
+    private int negascout(final boolean isMyMove, int alfa, int beta, final int depth)
+            throws ChessError {
         final BoardState boardState = gs.history.getLastBoardState();
         final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
@@ -74,7 +75,7 @@ public class NegaScoutWithTT extends MTDFSearch {
 
         if (entry == null) SearchImprovements.prioritySort(allMoves);
 
-        Iterator<Move> it = allMoves.iterator();
+        final Iterator<Move> it = allMoves.iterator();
         Move move = it.next();
         // first move:
         gs.moveSystem.move(move);
@@ -88,7 +89,7 @@ public class NegaScoutWithTT extends MTDFSearch {
             // null-window search:
             estimation = -negascout(!isMyMove, -alfa - 1, -alfa, depth - 1);
             if (alfa < estimation && estimation < beta && depth > 1) {
-                int est = -negascout(!isMyMove, -beta, -estimation, depth - 1);
+                final int est = -negascout(!isMyMove, -beta, -estimation, depth - 1);
                 if (est > estimation) estimation = est;
             }
             gs.moveSystem.undoMove();

@@ -44,8 +44,10 @@ public class NegaScoutAlfaBetaPruning extends SearchAlgorithm {
         }
     }
 
-    private int negascout(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
-        List<Move> allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+    private int negascout(final boolean isMyMove, int alfa, final int beta, final int depth)
+            throws ChessError {
+        final List<Move> allMoves =
+                gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
         if (depth <= 0 || isTerminalNode(allMoves))
             return isMyMove
                     ? getEvaluation(allMoves, true, depth)
@@ -53,7 +55,7 @@ public class NegaScoutAlfaBetaPruning extends SearchAlgorithm {
 
         SearchImprovements.prioritySort(allMoves);
 
-        Iterator<Move> it = allMoves.iterator();
+        final Iterator<Move> it = allMoves.iterator();
         Move move = it.next();
         // first move:
         gs.moveSystem.move(move);
@@ -67,7 +69,7 @@ public class NegaScoutAlfaBetaPruning extends SearchAlgorithm {
             // null-window search:
             estimation = -negascout(!isMyMove, -alfa - 1, -alfa, depth - 1);
             if (alfa < estimation && estimation < beta && depth > 1) {
-                int est = -negascout(!isMyMove, -beta, -estimation, depth - 1);
+                final int est = -negascout(!isMyMove, -beta, -estimation, depth - 1);
                 if (est > estimation) estimation = est;
             }
             gs.moveSystem.undoMove();

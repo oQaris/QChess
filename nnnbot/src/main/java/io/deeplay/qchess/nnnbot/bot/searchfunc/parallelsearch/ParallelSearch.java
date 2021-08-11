@@ -6,19 +6,17 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nnnbot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.SearchFunc;
-import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.SearchAlgorithm;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.SearchAlgorithmFactory;
 import io.deeplay.qchess.nnnbot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /** Параллельный поиск с заданной функцией оценки и одной из реализаций конкретного алгоритма */
 public class ParallelSearch extends SearchFunc implements Updater {
 
-    private final ExecutorService executor;
     private final Object mutexTheBest = new Object();
+    private ExecutorService executor;
     /** Лучшая оценка для текущего цвета myColor */
     private volatile int theBestEstimation;
     /** Лучший ход для текущего цвета myColor */
@@ -37,34 +35,43 @@ public class ParallelSearch extends SearchFunc implements Updater {
 
     @Override
     public Move findBest() throws ChessError {
-        long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
 
         final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
         SearchImprovements.prioritySort(allMoves);
 
+        theBestEstimation = EvaluationFunc.MIN_ESTIMATION;
+
+        // TODO: а че каждый раз новый создавать надо???
+        // final int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
+        // this.executor = Executors.newFixedThreadPool(availableProcessorsCount);
+
         for (final Move move : allMoves) {
-            final GameSettings gsParallel = new GameSettings(gs);
-            SearchAlgorithm searchAlgorithm =
-                    SearchAlgorithmFactory.getSearchAlgorithm(
+            final GameSettings gsParallel = gs;
+            // final GameSettings gsParallel = new GameSettings(gs);
+            var searchAlgorithm =
+                    SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
                             this, move, gsParallel, myColor, evaluationFunc, maxDepth);
 
-            executor.execute(searchAlgorithm);
+            searchAlgorithm.run();
+            // searchAlgorithm.MTDFStart(0, maxDepth, 5000);
+            // executor.execute(searchAlgorithm);
         }
 
-        while (theBestMove == null) Thread.onSpinWait();
-        long time = System.currentTimeMillis() - startTime;
+        /*while (theBestEstimation == EvaluationFunc.MIN_ESTIMATION) Thread.onSpinWait();
+        final long time = System.currentTimeMillis() - startTime;
         try {
-            executor.awaitTermination(TIME_TO_MOVE - time, TimeUnit.MILLISECONDS);
+            executor.awaitTermination(TIME_TO_MOVE + 10000 - time, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        executor.shutdown();
+        executor.shutdown();*/
 
         return theBestMove;
     }
 
     @Override
-    public void updateResult(Move move, int estimation) {
+    public void updateResult(final Move move, final int estimation) {
         if (estimation > theBestEstimation) {
             synchronized (mutexTheBest) {
                 if (estimation > theBestEstimation) {

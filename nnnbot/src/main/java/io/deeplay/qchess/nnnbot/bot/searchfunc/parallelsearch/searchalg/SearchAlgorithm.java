@@ -44,24 +44,24 @@ public abstract class SearchAlgorithm implements Runnable {
         Color enemyColor = myColor.inverse();
         if (isMyMove) { // allMoves are mine
             if (gs.endGameDetector.isStalemate(allMoves))
-                return EvaluationFunc.MIN_ESTIMATION - depth;
+                return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
 
             if (gs.endGameDetector.isStalemate(enemyColor)) {
                 if (gs.endGameDetector.isCheck(enemyColor)) {
-                    return EvaluationFunc.MAX_ESTIMATION + depth;
+                    return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
                 }
                 return 0;
             }
         } else { // allMoves are enemy's
             if (gs.endGameDetector.isStalemate(allMoves)) {
                 if (gs.endGameDetector.isCheck(enemyColor)) {
-                    return EvaluationFunc.MAX_ESTIMATION + depth;
+                    return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
                 }
                 return 0;
             }
 
             if (gs.endGameDetector.isStalemate(myColor))
-                return EvaluationFunc.MIN_ESTIMATION - depth;
+                return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
         }
 
         // Проверка на ничью должна быть после проверок на пат и мат

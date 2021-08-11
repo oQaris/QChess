@@ -30,20 +30,12 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
     }
 
     @Override
-    public int alfaBetaWithTT(boolean isMyMove, int alfa, int beta, int depth) throws ChessError {
-        return isMyMove
-                ? uq(
-                        true,
-                        EvaluationFunc.MIN_ESTIMATION,
-                        EvaluationFunc.MAX_ESTIMATION,
-                        depth,
-                        true)
-                : -uq(
-                        false,
-                        EvaluationFunc.MIN_ESTIMATION,
-                        EvaluationFunc.MAX_ESTIMATION,
-                        depth,
-                        true);
+    public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
+        gs.moveSystem.move(mainMove);
+        final int est = -uq(false, -beta, -alfa, maxDepth, true);
+        updater.updateResult(mainMove, est);
+        gs.moveSystem.undoMove();
+        return est;
     }
 
     @Override
@@ -95,17 +87,17 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Verified Null-Move --------------- //
 
-        boolean isAllowNullMove =
+        final boolean isAllowNullMove =
                 isAllowNullMove(isMyMove ? myColor : enemyColor) && (!verify || depth > 1);
         boolean failHigh = false;
 
         if (isAllowNullMove) {
             isPrevNullMove = true;
             // TODO: слишком медленно
-            List<Move> enemyMoves =
+            final List<Move> enemyMoves =
                     gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
             SearchImprovements.prioritySort(enemyMoves);
-            Move nullMove = enemyMoves.get(0);
+            final Move nullMove = enemyMoves.get(0);
 
             // null-move:
             gs.moveSystem.move(nullMove);
@@ -113,7 +105,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             // final int est = -uq(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify);
 
             // aspiration window:
-            int est =
+            final int est =
                     -uq(
                             isMyMove,
                             -beta - QUARTER_PAWN_COST,
@@ -143,7 +135,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         do { // если будет обнаружена позиция Цугцванга, повторить поиск с начальной глубиной:
             doResearch = false;
 
-            Iterator<Move> it = allMoves.iterator();
+            final Iterator<Move> it = allMoves.iterator();
             Move move = it.next();
 
             // first move:
