@@ -16,7 +16,7 @@
     <module>clientserverconversation</module>
     <module>game</module>
     <module>core</module>
-    <module>nnnbot</module>
+    <module>nukebot</module>
     <module>qbot</module>
   </modules>
 

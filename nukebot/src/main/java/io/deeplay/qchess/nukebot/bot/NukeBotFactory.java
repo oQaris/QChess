@@ -1,0 +1,51 @@
+package io.deeplay.qchess.nukebot.bot;
+
+import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation;
+import io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation;
+import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
+import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.ParallelSearch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+public class NukeBotFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(NukeBotFactory.class);
+
+    private static String time;
+
+    private static int lastBotId;
+
+    /** Устанавливает время для записи логов */
+    public static void setTime(String time) {
+        NukeBotFactory.time = time;
+    }
+
+    public static synchronized NukeBot getNukeBot(GameSettings gs, Color color) {
+        MDC.put("time", time);
+        ++lastBotId;
+
+        final int maxDepth = 3;
+        gs.history.setMinBoardStateToSave(maxDepth);
+
+        EvaluationFunc evaluationFunc =
+                color == Color.BLACK
+                        ? MatrixEvaluation::figurePositionHeuristics
+                        : ImprovedMatrixEvaluation::figurePositionHeuristics;
+        SearchFunc deepSearch = new ParallelSearch(gs, color, evaluationFunc, maxDepth);
+
+        NukeBot nukeBot = new NukeBot(gs, color, deepSearch);
+
+        nukeBot.setId(lastBotId);
+
+        logger.info(
+                "[NukeBotFactory] Создан бот #{} цвета {} с глубиной поиска {}",
+                lastBotId,
+                color,
+                deepSearch.maxDepth);
+        return nukeBot;
+    }
+}
