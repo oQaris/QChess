@@ -22,7 +22,7 @@ public class RemotePlayer extends Player {
 
     @Override
     public PlayerType getPlayerType() {
-        return PlayerType.GUI_PLAYER;
+        return PlayerType.REMOTE_PLAYER;
     }
 
     public String getSessionToken() {

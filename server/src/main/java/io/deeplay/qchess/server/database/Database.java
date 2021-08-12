@@ -60,7 +60,7 @@ public class Database {
             synchronized (room.mutex) {
                 if (room.contains(sessionToken)) return room;
                 if (room.isEmpty()) return room;
-                if (enemyType == PlayerType.GUI_PLAYER
+                if (enemyType == PlayerType.REMOTE_PLAYER
                         && room.getMaxGames() == gameCount
                         && !room.isFull()
                         && (myPreferColor == null
