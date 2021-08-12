@@ -39,8 +39,17 @@ public class GameService {
                 if (id2 != null)
                     ServerController.send(
                             SerializationService.makeMainDTOJsonToClient(new StartGameDTO()), id2);
-            } catch (ServerException ignore) {
+
+                // Если первый игрок (белый) - это бот
+                if (id1 == null) {
+                    Move move = player.getNextMove();
+                    room.move(move);
+                    StatisticService.writeMoveStats(room.id, room.getGameCount(), move);
+                    sendMove(room.getFirstPlayerToken(), room.getSecondPlayerToken(), room, move);
+                }
+            } catch (ServerException | ChessError ignore) {
                 // Сервис вызывается при открытом сервере
+                // Ошибок в боте быть не может
             }
         }
         if (room.isError()) {

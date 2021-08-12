@@ -49,25 +49,25 @@ public class MatchMaking {
                 GameSettings gs = new GameSettings(BoardFilling.STANDARD);
                 room.setGameSettings(gs, dto.gameCount);
 
-                RemotePlayer enemyBot =
-                        switch (dto.enemyType) {
-                            case LOCAL_PLAYER, REMOTE_PLAYER -> null;
-                            case RANDOM_BOT -> new RandomBot(gs, Color.BLACK);
-                                // TODO: вставить своего бота
-                            case ATTACK_BOT -> new RandomBot(gs, Color.BLACK);
-                        };
-
-                if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {
-                    return SerializationService.makeMainDTOJsonToClient(
-                            new DisconnectedDTO("Неверный тип противника"));
-                }
-
                 final Color clientColor =
                         dto.myPreferColor == null
                                 ? room.isEmpty()
                                         ? Color.WHITE
                                         : room.getFirstPlayer().getColor().inverse()
                                 : dto.myPreferColor;
+
+                RemotePlayer enemyBot =
+                        switch (dto.enemyType) {
+                            case LOCAL_PLAYER, REMOTE_PLAYER -> null;
+                            case RANDOM_BOT -> new RandomBot(gs, clientColor.inverse());
+                                // TODO: вставить своего бота
+                            case ATTACK_BOT -> new RandomBot(gs, clientColor.inverse());
+                        };
+
+                if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {
+                    return SerializationService.makeMainDTOJsonToClient(
+                            new DisconnectedDTO("Неверный тип противника"));
+                }
 
                 try {
                     ServerController.send(
