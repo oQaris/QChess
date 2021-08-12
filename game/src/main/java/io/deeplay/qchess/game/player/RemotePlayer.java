@@ -8,16 +8,25 @@ import io.deeplay.qchess.game.model.Move;
 public class RemotePlayer extends Player {
 
     private final String sessionToken;
+    private final String name;
 
     public RemotePlayer(
-            final GameSettings roomSettings, final Color color, final String sessionToken) {
+            final GameSettings roomSettings,
+            final Color color,
+            final String sessionToken,
+            String name) {
         super(roomSettings, color);
         this.sessionToken = sessionToken;
+        this.name = name;
     }
 
     @Override
     public Move getNextMove() throws ChessError {
         throw new UnsupportedOperationException("Удаленный игрок не может ходить");
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

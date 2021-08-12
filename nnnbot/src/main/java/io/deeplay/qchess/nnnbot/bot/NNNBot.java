@@ -20,7 +20,7 @@ public class NNNBot extends RemotePlayer {
     @Deprecated private double minTimeToThink = Double.MAX_VALUE;
 
     public NNNBot(GameSettings roomSettings, Color color, SearchFunc searchFunc) {
-        super(roomSettings, color, "n-nn-bot-" + UUID.randomUUID());
+        super(roomSettings, color, "n-nn-bot-" + UUID.randomUUID(), "NoName");
         this.searchFunc = searchFunc;
     }
 

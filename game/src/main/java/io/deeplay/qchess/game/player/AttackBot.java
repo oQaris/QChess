@@ -26,7 +26,7 @@ public class AttackBot extends RemotePlayer {
     }
 
     public AttackBot(final GameSettings roomSettings, final Color color) {
-        super(roomSettings, color, "attack-bot-" + UUID.randomUUID());
+        super(roomSettings, color, "attack-bot-" + UUID.randomUUID(), "Эрен");
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.UUID;
 public class RandomBot extends RemotePlayer {
 
     public RandomBot(final GameSettings roomSettings, final Color color) {
-        super(roomSettings, color, "random-bot-" + UUID.randomUUID());
+        super(roomSettings, color, "random-bot-" + UUID.randomUUID(), "СлуЧайный");
     }
 
     @Override
