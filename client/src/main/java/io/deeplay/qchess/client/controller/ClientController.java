@@ -215,11 +215,19 @@ public class ClientController {
         GameDAO.setMyType(playerType);
     }
 
-    /** Выбирает КАКИМ ЦВЕТОМ играть
+    /**
+     * Выбирает КАКИМ ЦВЕТОМ играть
+     *
      * @param myColor - если пришёл null, значит нужно выбрать цвет рандомно
      */
     public static void chooseMyColor(ViewColor myColor) {
-
+        GameDAO.setMyPreferColor(
+                myColor == null
+                        ? null
+                        : switch (myColor) {
+                            case WHITE -> Color.WHITE;
+                            case BLACK -> Color.BLACK;
+                        });
     }
 
     /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
@@ -250,7 +258,10 @@ public class ClientController {
         client.sendIfNotNull(
                 SerializationService.makeMainDTOJsonToServer(
                         new FindGameDTO(
-                                SessionDAO.getSessionToken(), getType(GameDAO.getEnemyType()), 2)));
+                                SessionDAO.getSessionToken(),
+                                getType(GameDAO.getEnemyType()),
+                                2,
+                                GameDAO.getMyPreferColor())));
     }
 
     /**

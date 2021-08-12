@@ -14,6 +14,7 @@ public class Database {
     private PlayerType playerType;
     private PlayerType myType;
     private Color myColor;
+    private Color myPreferColor;
 
     private Database() {}
 
@@ -82,5 +83,15 @@ public class Database {
     /** @return цвет игрока клиента */
     public Color getMyColor() {
         return myColor;
+    }
+
+    /** @return предпочитаемый цвет игрока клиента */
+    public Color getMyPreferColor() {
+        return myPreferColor;
+    }
+
+    /** Устанавливает предпочитаемый цвет игрока клиента */
+    public void setMyPreferColor(Color myPreferColor) {
+        this.myPreferColor = myPreferColor;
     }
 }

@@ -30,7 +30,9 @@ public class MatchMaking {
 
         // Пока не найдется комната или свободных комнат нет
         while (true) {
-            Room room = GameDAO.findSuitableRoom(dto.sessionToken, dto.enemyType, dto.gameCount);
+            Room room =
+                    GameDAO.findSuitableRoom(
+                            dto.sessionToken, dto.enemyType, dto.gameCount, dto.myPreferColor);
             if (room == null) {
                 return SerializationService.makeMainDTOJsonToClient(
                         new DisconnectedDTO("Нет свободных комнат"));
@@ -40,7 +42,6 @@ public class MatchMaking {
                     return SerializationService.makeMainDTOJsonToClient(
                             new GameSettingsDTO(
                                     room.getPlayer(dto.sessionToken).getColor(),
-                                    // TODO: проверки на null
                                     room.getGameSettings().history.getLastMove()));
                 }
 
@@ -61,7 +62,12 @@ public class MatchMaking {
                             new DisconnectedDTO("Неверный тип противника"));
                 }
 
-                Color clientColor = room.isEmpty() ? Color.WHITE : Color.BLACK;
+                final Color clientColor =
+                        dto.myPreferColor == null
+                                ? room.isEmpty()
+                                        ? Color.WHITE
+                                        : room.getFirstPlayer().getColor().inverse()
+                                : dto.myPreferColor;
 
                 try {
                     ServerController.send(

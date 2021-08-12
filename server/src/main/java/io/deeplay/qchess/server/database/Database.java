@@ -1,5 +1,6 @@
 package io.deeplay.qchess.server.database;
 
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.server.controller.ServerController;
 import java.util.ArrayList;
@@ -52,16 +53,18 @@ public class Database {
     }
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
-    public Room findSuitableRoom(String sessionToken, PlayerType enemyType, int gameCount) {
+    public Room findSuitableRoom(
+            String sessionToken, PlayerType enemyType, int gameCount, Color myPreferColor) {
+        Color enemyColor = myPreferColor != null ? myPreferColor.inverse() : null;
         for (Room room : rooms) {
             synchronized (room.mutex) {
                 if (room.contains(sessionToken)) return room;
-
+                if (room.isEmpty()) return room;
                 if (enemyType == PlayerType.GUI_PLAYER
                         && room.getMaxGames() == gameCount
-                        && !room.isFull()) return room;
-
-                if (room.isEmpty()) return room;
+                        && !room.isFull()
+                        && (myPreferColor == null
+                                || room.getFirstPlayer().getColor() == enemyColor)) return room;
             }
         }
         return null;
