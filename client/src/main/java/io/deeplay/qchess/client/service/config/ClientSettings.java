@@ -15,14 +15,11 @@ public class ClientSettings {
     private final int port;
     private final boolean isGui;
     private final PlayerType playerType;
-    /**
-     * Строковое представление пути до папки, где хранятся логи
-     */
+    /** Строковое представление пути до папки, где хранятся логи */
     private final String logPath;
-    /**
-     * Строковое представление пути до папки, где хранится файл с логбэком
-     */
+    /** Строковое представление пути до папки, где хранится файл с логбэком */
     private final String logBack;
+
     private final Color color;
     private final boolean isTournament;
 
@@ -30,19 +27,20 @@ public class ClientSettings {
         FileInputStream fis;
         Properties property = new Properties();
         try {
-            fis = new FileInputStream(
-                Objects.requireNonNull(getClass().getResource(configPath)).getFile());
+            fis =
+                    new FileInputStream(
+                            Objects.requireNonNull(getClass().getResource(configPath)).getFile());
             property.load(fis);
             ip = ConfigService.validateIp(property.getProperty("client.ip"));
             port = ConfigService.validatePort(property.getProperty("client.port"));
             isGui = ConfigService.validateBoolean(property.getProperty("client.isGui"));
-            playerType = ConfigService
-                .validatePlayerType(property.getProperty("client.playerType"));
+            playerType =
+                    ConfigService.validatePlayerType(property.getProperty("client.playerType"));
             logPath = ConfigService.validatePath(property.getProperty("client.logPath"));
             logBack = ConfigService.validatePath(property.getProperty("client.logBack"));
             color = ConfigService.validateColor(property.getProperty("client.color"));
-            isTournament = ConfigService
-                .validateBoolean(property.getProperty("client.isTournament"));
+            isTournament =
+                    ConfigService.validateBoolean(property.getProperty("client.isTournament"));
 
         } catch (IOException | NullPointerException e) {
             throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
@@ -87,7 +85,7 @@ public class ClientSettings {
      * Возвращает экземпляр Color или null
      *
      * @return Экземпляр Color если в конфигах было одно из значений WHITE или BLACK. null - если в
-     * конфигах было RANDOM
+     *     конфигах было RANDOM
      */
     public Color getColor() {
         return color;

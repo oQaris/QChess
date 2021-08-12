@@ -133,6 +133,7 @@ public class ConfigServiceTest {
             }
         }
     }
+
     @Test
     public void testIncorrectPath4() {
         final String incorrectPath = "a/";
