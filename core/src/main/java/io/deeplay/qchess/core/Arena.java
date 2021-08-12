@@ -145,8 +145,10 @@ public class Arena {
             } catch (ChessError e) {
                 logger.error("Ошибка в игре: {}", e.getLocalizedMessage());
             }
-            resultsOutput.computeIfPresent(gs.endGameDetector.getGameResult(), (k, v) -> v + 1);
-            System.out.println("Games completed: " + (doneTasks.incrementAndGet()) + "/" + COUNT);
+            logger.info("\nGames completed: " + (doneTasks.incrementAndGet()) + "/" + COUNT);
+            EndGameType gameResult = gs.endGameDetector.getGameResult();
+            logger.info("fp: {}, {}", myColor, gameResult);
+            resultsOutput.computeIfPresent(gameResult, (k, v) -> v + 1);
 
             meanMedianFirst.addAndGet(firstPlayer.getMedian() / COUNT);
             meanMedianSecond.addAndGet(secondPlayer.getMedian() / COUNT);
