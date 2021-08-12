@@ -10,6 +10,7 @@ import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
+import io.deeplay.qchess.client.view.model.ViewColor;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.FindGameDTO;
@@ -212,6 +213,13 @@ public class ClientController {
     /** Выбирает КЕМ играть */
     public static void chooseMyType(PlayerType playerType) {
         GameDAO.setMyType(playerType);
+    }
+
+    /** Выбирает КАКИМ ЦВЕТОМ играть
+     * @param myColor - если пришёл null, значит нужно выбрать цвет рандомно
+     */
+    public static void chooseMyColor(ViewColor myColor) {
+
     }
 
     /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */

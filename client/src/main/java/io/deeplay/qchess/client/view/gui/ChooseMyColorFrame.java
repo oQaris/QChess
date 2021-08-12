@@ -1,6 +1,7 @@
 package io.deeplay.qchess.client.view.gui;
 
 import io.deeplay.qchess.client.controller.ClientController;
+import io.deeplay.qchess.client.view.model.ViewColor;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -17,14 +18,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.WindowConstants;
 
-public class ChooseMyPlayerFrame extends Frame {
+public class ChooseMyColorFrame extends Frame {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(200, 200);
     private final JPanel panel;
     private final ButtonGroup buttonGroup;
     private final GridBagConstraints gbc;
-    private final Map<JRadioButton, PlayerType> rbs = new HashMap<>();
+    private final Map<JRadioButton, ViewColor> rbs = new HashMap<>();
 
-    public ChooseMyPlayerFrame(MainFrame mf) {
+    public ChooseMyColorFrame(MainFrame mf) {
         this.mf = mf;
         frame = new JFrame("Choose my plater");
         frame.setSize(OUTER_FRAME_DIMENSION);
@@ -42,12 +43,11 @@ public class ChooseMyPlayerFrame extends Frame {
         gbc.gridy = GridBagConstraints.RELATIVE;
         gbc.anchor = GridBagConstraints.WEST;
 
-        panel.add(new JLabel("Я буду играть: "), gbc);
+        panel.add(new JLabel("Я буду играть за: "), gbc);
 
-        addRadioButton("Человеком", true, PlayerType.USER);
-        addRadioButton("Слабым ботом", false, PlayerType.EASYBOT);
-        addRadioButton("Нормальным ботом", false, PlayerType.MEDIUMBOT);
-        addRadioButton("Сильный ботом", false, PlayerType.HARDBOT);
+        addRadioButton("Белый цвет", true, ViewColor.WHITE);
+        addRadioButton("Чёрный цвет", false, ViewColor.BLACK);
+        addRadioButton("Любой цвет", false, null);
 
         panel.add(addButtonConnect(), gbc);
         frame.add(panel, BorderLayout.CENTER);
@@ -58,33 +58,32 @@ public class ChooseMyPlayerFrame extends Frame {
         JButton continueButton = new JButton("Продолжить");
 
         continueButton.addMouseListener(
-                new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        super.mousePressed(e);
-                        PlayerType myType = null;
-                        for (JRadioButton rb : rbs.keySet()) {
-                            if (rb.isSelected()) {
-                                myType = rbs.get(rb);
-                                break;
-                            }
+            new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    super.mousePressed(e);
+                    ViewColor myColor = null;
+                    for (JRadioButton rb : rbs.keySet()) {
+                        if (rb.isSelected()) {
+                            myColor = rbs.get(rb);
+                            break;
                         }
-
-                        ClientController.chooseMyType(myType);
-                        mf.createChooseEnemyPlayerFrame(myType);
-                        mf.destroyChooseMyPlayerFrame();
                     }
-                });
+                    ClientController.chooseMyColor(myColor);
+                    mf.createChooseMyPlayerFrame(myColor);
+                    mf.destroyChooseMyColorFrame();
+                }
+            });
 
         return continueButton;
     }
 
-    public void addRadioButton(String name, boolean pressed, PlayerType playerType) {
+    public void addRadioButton(String name, boolean pressed, ViewColor myColor) {
         JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
         panel.add(button, gbc);
 
-        rbs.put(button, playerType);
+        rbs.put(button, myColor);
     }
 }
