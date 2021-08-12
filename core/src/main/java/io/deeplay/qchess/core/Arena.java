@@ -66,10 +66,8 @@ public class Arena {
     public void battle() throws InterruptedException {
         logger.info(
                 "Запущена битва ботов:\n{}\n{}",
-                // todo исправить костыль
-                newFirstPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getSessionToken(),
-                newSecondPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE)
-                        .getSessionToken());
+                newFirstPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName(),
+                newSecondPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName());
 
         final int countProc = Runtime.getRuntime().availableProcessors();
         final ExecutorService executor = Executors.newFixedThreadPool(Math.min(countProc, COUNT));
@@ -138,7 +136,8 @@ public class Arena {
         public void run() {
             final GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
             final TimeWrapper firstPlayer = new TimeWrapper(newFirstPlayer(gs, myColor));
-            final TimeWrapper secondPlayer = new TimeWrapper(newSecondPlayer(gs, myColor.inverse()));
+            final TimeWrapper secondPlayer =
+                    new TimeWrapper(newSecondPlayer(gs, myColor.inverse()));
             try {
                 MDC.put("game", Integer.toString(curTask.incrementAndGet()));
                 Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);

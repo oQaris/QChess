@@ -14,7 +14,7 @@ public class Main {
                         + "Ещё можно ввести \"a\", чтобы лицезреть бесконечную мощь Qbot'a");
 
         String input;
-        if (args.length != 0) input = args[0];
+        if (args.length > 0) input = args[0];
         else input = new Scanner(System.in).nextLine().strip();
 
         switch (input) {
@@ -30,7 +30,7 @@ public class Main {
                 view.startView();
                 view.close();
             }
-                // Орена
+                // Aрена
             case "a", "-a", "arena" -> {
                 Arena arena = new Arena();
                 try {
