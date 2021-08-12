@@ -5,4 +5,5 @@ public enum PlayerType {
     REMOTE_PLAYER,
     RANDOM_BOT,
     ATTACK_BOT
+    // TODO: добавить тип своего бота
 }
