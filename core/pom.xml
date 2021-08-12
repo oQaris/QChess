@@ -2,16 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>io.deeplay</groupId>
-    <artifactId>QChess</artifactId>
-    <version>0.0.1</version>
-  </parent>
-
   <artifactId>QChess-core</artifactId>
-  <version>0.0.1</version>
 
   <build>
     <plugins>
@@ -64,12 +55,27 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
+    <!-- Боты -->
+    <dependency>
+      <artifactId>QChess-qbot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
   </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>QChess</artifactId>
+    <groupId>io.deeplay</groupId>
+    <version>0.0.1</version>
+  </parent>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <version>0.0.1</version>
 
 </project>

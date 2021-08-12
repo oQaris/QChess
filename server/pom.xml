@@ -2,16 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>io.deeplay</groupId>
-    <artifactId>QChess</artifactId>
-    <version>0.0.1</version>
-  </parent>
-
   <artifactId>QChess-server</artifactId>
-  <version>0.0.1</version>
 
   <build>
     <plugins>
@@ -47,12 +38,12 @@
     <dependency>
       <artifactId>slf4j-api</artifactId>
       <groupId>org.slf4j</groupId>
-      <version>1.7.31</version>
+      <version>1.7.32</version>
     </dependency>
     <dependency>
       <artifactId>logback-classic</artifactId>
       <groupId>ch.qos.logback</groupId>
-      <version>1.2.3</version>
+      <version>1.2.5</version>
     </dependency>
     <!-- QChess modules -->
     <dependency>
@@ -66,16 +57,26 @@
       <version>0.0.1</version>
     </dependency>
     <dependency>
-      <artifactId>QChess-n-nn-bot</artifactId>
       <groupId>io.deeplay</groupId>
+      <artifactId>QChess-qbot</artifactId>
       <version>0.0.1</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>QChess</artifactId>
+    <groupId>io.deeplay</groupId>
+    <version>0.0.1</version>
+  </parent>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <version>0.0.1</version>
 
 </project>

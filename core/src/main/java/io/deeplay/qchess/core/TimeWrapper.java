@@ -1,4 +1,4 @@
-package io.deeplay.qchess.qbot;
+package io.deeplay.qchess.core;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Move;

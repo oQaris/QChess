@@ -12,7 +12,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
+import io.deeplay.qchess.qbot.QMinimaxBot;
 import io.deeplay.qchess.server.controller.ServerController;
 import io.deeplay.qchess.server.dao.GameDAO;
 import io.deeplay.qchess.server.database.Room;
@@ -53,7 +53,7 @@ public class MatchMaking {
                         switch (dto.enemyType) {
                             case CONSOLE_PLAYER, GUI_PLAYER -> null;
                             case RANDOM_BOT -> new RandomBot(gs, Color.BLACK);
-                            case ATTACK_BOT -> NNNBotFactory.getNNNBot(gs, Color.BLACK);
+                            case ATTACK_BOT -> new QMinimaxBot(gs, Color.BLACK);
                         };
 
                 if (enemyBot == null && dto.enemyType != PlayerType.GUI_PLAYER) {
@@ -73,7 +73,7 @@ public class MatchMaking {
                 }
 
                 GameService.putPlayerToRoom(
-                        room, new RemotePlayer(gs, clientColor, dto.sessionToken));
+                        room, new RemotePlayer(gs, clientColor, dto.sessionToken, "user"));
                 if (enemyBot != null) GameService.putPlayerToRoom(room, enemyBot);
             }
             return null;

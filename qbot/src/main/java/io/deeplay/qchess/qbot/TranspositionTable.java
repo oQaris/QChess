@@ -25,20 +25,19 @@ public class TranspositionTable {
     }
 
     public static class TTEntry {
-        enum Flag {
-            EXACT,
-            LOWERBOUND,
-            UPPERBOUND
-        }
-
         public Flag flag;
         public int value;
         public int depth;
-
         public TTEntry(int value, int depth, Flag flag) {
             this.value = value;
             this.depth = depth;
             this.flag = flag;
+        }
+
+        enum Flag {
+            EXACT,
+            LOWERBOUND,
+            UPPERBOUND
         }
     }
 }

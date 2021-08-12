@@ -26,7 +26,7 @@ public class QMinimaxBot extends RemotePlayer {
             final Color color,
             final int searchDepth,
             final Strategy strategy) {
-        super(roomSettings, color, "minimax-bot-" + UUID.randomUUID());
+        super(roomSettings, color, "minimax-bot-" + UUID.randomUUID(), "Самый жёский");
         this.strategy = strategy;
         this.depth = searchDepth;
         if (depth < 0 || depth > MAX_DEPTH)
@@ -35,6 +35,10 @@ public class QMinimaxBot extends RemotePlayer {
 
     public QMinimaxBot(GameSettings roomSettings, Color color, int searchDepth) {
         this(roomSettings, color, searchDepth, new PestoStrategy());
+    }
+
+    public QMinimaxBot(GameSettings roomSettings, Color color) {
+        this(roomSettings, color, 5);
     }
 
     @Override

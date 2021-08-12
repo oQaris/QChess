@@ -33,7 +33,7 @@ public class ConsolePlayer extends RemotePlayer {
 
     public ConsolePlayer(
             final GameSettings roomSettings, final Color color, final BufferedReader in) {
-        super(roomSettings, color, "console-player");
+        super(roomSettings, color, "console-player", "PS5");
         this.in = in;
     }
 

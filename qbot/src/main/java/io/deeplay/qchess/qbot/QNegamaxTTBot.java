@@ -37,7 +37,7 @@ public class QNegamaxTTBot extends RemotePlayer {
             final Color color,
             final int searchDepth,
             final Strategy strategy) {
-        super(roomSettings, color, "negamax-bot-" + UUID.randomUUID());
+        super(roomSettings, color, "negamax-bot-" + UUID.randomUUID(), "Самый НигаЖёский");
         this.strategy = strategy;
         this.depth = searchDepth;
         if (depth < 0 || depth > MAX_DEPTH)
