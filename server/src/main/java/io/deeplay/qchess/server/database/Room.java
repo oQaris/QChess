@@ -24,8 +24,7 @@ public class Room {
      *     io.deeplay.qchess.server.service.MatchMaking#findGame там}, и {@link
      *     io.deeplay.qchess.server.service.GameService#action здесь}
      */
-    @Deprecated(forRemoval = true)
-    public final Object mutex = new Object();
+    @Deprecated public final Object mutex = new Object();
 
     private RemotePlayer player1;
     private RemotePlayer player2;
@@ -77,6 +76,11 @@ public class Room {
     public void startGame() {
         synchronized (mutex) {
             try {
+                if (player1.getColor() == Color.BLACK) {
+                    RemotePlayer temp = player1;
+                    player1 = player2;
+                    player2 = temp;
+                }
                 game = new Selfplay(gs, player1, player2);
             } catch (ChessError chessError) {
                 error = true;

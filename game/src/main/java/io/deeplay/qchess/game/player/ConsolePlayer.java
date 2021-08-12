@@ -54,7 +54,7 @@ public class ConsolePlayer extends RemotePlayer {
 
     @Override
     public PlayerType getPlayerType() {
-        return PlayerType.CONSOLE_PLAYER;
+        return PlayerType.LOCAL_PLAYER;
     }
 
     private void printMoves(final List<Move> allMoves) {
