@@ -28,9 +28,9 @@ public class SimpleStrategy extends Strategy {
     }
 
     @Override
-    public int evaluateBoard(Board board) {
+    public int evaluateBoard(final Board board) {
         int grade = 0;
-        for (Figure figure : board.getAllFigures()) {
+        for (final Figure figure : board.getAllFigures()) {
             final int coef = figure.getColor() == Color.WHITE ? 1 : -1;
             grade += coef * grades.get(figure.figureType);
         }

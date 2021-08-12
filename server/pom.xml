@@ -57,10 +57,10 @@
       <version>0.0.1</version>
     </dependency>
     <dependency>
-      <groupId>io.deeplay</groupId>
       <artifactId>QChess-qbot</artifactId>
-      <version>0.0.1</version>
+      <groupId>io.deeplay</groupId>
       <scope>compile</scope>
+      <version>0.0.1</version>
     </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>

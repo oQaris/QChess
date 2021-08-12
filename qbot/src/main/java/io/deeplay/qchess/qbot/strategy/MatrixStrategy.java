@@ -90,9 +90,9 @@ public class MatrixStrategy extends Strategy {
     }
 
     @Override
-    public int evaluateBoard(Board board) {
+    public int evaluateBoard(final Board board) {
         int grade = 0;
-        for (Figure figure : board.getAllFigures()) {
+        for (final Figure figure : board.getAllFigures()) {
             final int column = figure.getCurrentPosition().column;
             final int tempRow = figure.getCurrentPosition().row;
             // разворачиваем массив ценностей для чёрных

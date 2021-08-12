@@ -126,7 +126,7 @@ class QBotTest {
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
 
-        QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.WHITE, 4, new SimpleStrategy());
+        QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.WHITE, 5, new SimpleStrategy());
 
         List<Move> moves1 = bot.getTopMoves();
 

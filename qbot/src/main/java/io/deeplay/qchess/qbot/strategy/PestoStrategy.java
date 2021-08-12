@@ -135,34 +135,36 @@ public class PestoStrategy extends Strategy {
         -53, -34, -21, -11, -28, -14, -24, -43
     };
     int[][] mgPestoTable = {
-        mgPawnTable, mgKnightTable, mgBishopTable, mgRookTable, mgQueenTable, mgKingTable
+        this.mgPawnTable, this.mgKnightTable, this.mgBishopTable, this.mgRookTable,
+        this.mgQueenTable, this.mgKingTable
     };
     int[][] egPestoTable = {
-        egPawnTable, egKnightTable, egBishopTable, egRookTable, egQueenTable, egKingTable
+        this.egPawnTable, this.egKnightTable, this.egBishopTable, this.egRookTable,
+        this.egQueenTable, this.egKingTable
     };
     int[] gamePhaseInc = {0, 0, 1, 1, 1, 1, 2, 2, 4, 4, 0, 0};
     int[][] mgTable = new int[12][64];
     int[][] egTable = new int[12][64];
 
     public PestoStrategy() {
-        initTables();
+      this.initTables();
     }
 
-    private int figureToInt(Figure figure) {
-        int numColor = figure.getColor() == Color.WHITE ? 0 : 1;
-        int numFigure =
+    private static int figureToInt(final Figure figure) {
+        final int numColor = figure.getColor() == Color.WHITE ? 0 : 1;
+        final int numFigure =
                 switch (figure.figureType) {
-                    case PAWN -> 0;
-                    case KNIGHT -> 1;
-                    case BISHOP -> 2;
-                    case ROOK -> 3;
-                    case QUEEN -> 4;
-                    case KING -> 5;
+                    case FigureType.PAWN -> 0;
+                    case FigureType.KNIGHT -> 1;
+                    case FigureType.BISHOP -> 2;
+                    case FigureType.ROOK -> 3;
+                    case FigureType.QUEEN -> 4;
+                    case FigureType.KING -> 5;
                 };
         return 2 * numFigure + numColor;
     }
 
-    private int flip(int sq) {
+    private static int flip(final int sq) {
         return ((sq) ^ 56);
     }
 
@@ -170,37 +172,39 @@ public class PestoStrategy extends Strategy {
         int sq;
         for (int p = 0, pc = 0; p <= 5; pc += 2, p++) {
             for (sq = 0; sq < 64; sq++) {
-                mgTable[pc][sq] = mgValue[p] + mgPestoTable[p][sq];
-                egTable[pc][sq] = egValue[p] + egPestoTable[p][sq];
-                mgTable[pc + 1][sq] = mgValue[p] + mgPestoTable[p][flip(sq)];
-                egTable[pc + 1][sq] = egValue[p] + egPestoTable[p][flip(sq)];
+              this.mgTable[pc][sq] = this.mgValue[p] + this.mgPestoTable[p][sq];
+              this.egTable[pc][sq] = this.egValue[p] + this.egPestoTable[p][sq];
+              this.mgTable[pc + 1][sq] = this.mgValue[p] + this.mgPestoTable[p][PestoStrategy.flip(sq)];
+              this.egTable[pc + 1][sq] = this.egValue[p] + this.egPestoTable[p][PestoStrategy.flip(sq)];
             }
         }
     }
 
     @Override
-    public int evaluateBoard(Board board) {
-        int[] mg = new int[2];
-        int[] eg = new int[2];
+    public int evaluateBoard(final Board board) {
+        final int[] mg = new int[2];
+        final int[] eg = new int[2];
         int gamePhase = 0;
 
         /* evaluate each piece */
-        for (Figure figure : board.getAllFigures()) {
-            Cell position = figure.getCurrentPosition();
-            int sq = position.row * Board.STD_BOARD_SIZE + position.column;
-            int pc = figureToInt(figure);
-            int cl = figure.getColor() == Color.WHITE ? 0 : 1;
-            mg[cl] += mgTable[pc][sq];
-            eg[cl] += egTable[pc][sq];
-            gamePhase += gamePhaseInc[pc];
+        for (final Figure figure : board.getAllFigures()) {
+            final Cell position = figure.getCurrentPosition();
+            final int sq = position.row * Board.STD_BOARD_SIZE + position.column;
+            final int pc = PestoStrategy.figureToInt(figure);
+            final int cl = figure.getColor() == Color.WHITE ? 0 : 1;
+            mg[cl] += this.mgTable[pc][sq];
+            eg[cl] += this.egTable[pc][sq];
+            gamePhase += this.gamePhaseInc[pc];
         }
 
         /* tapered eval */
-        int mgScore = mg[0] - mg[1];
-        int egScore = eg[0] - eg[1];
+        final int mgScore = mg[0] - mg[1];
+        final int egScore = eg[0] - eg[1];
         int mgPhase = gamePhase;
-        if (mgPhase > 24) mgPhase = 24; /* in case of early promotion */
-        int egPhase = 24 - mgPhase;
+        if (mgPhase > 24) {
+          mgPhase = 24; /* in case of early promotion */
+        }
+        final int egPhase = 24 - mgPhase;
         return (mgScore * mgPhase + egScore * egPhase) / 24;
     }
 }

@@ -9,7 +9,7 @@ public class TranspositionTable {
     private final Map<BoardState, TTEntry> entries = new ConcurrentHashMap<>(500000);
 
     /** @return вхождение состояния игры или null, если такое состояние еще не встречалось */
-    public TTEntry find(BoardState boardState) {
+    public static TTEntry find(final BoardState boardState) {
         // return entries.get(boardState);
         return null;
     }
@@ -20,15 +20,16 @@ public class TranspositionTable {
      * @param entry вхождение
      * @param boardState состояние доски
      */
-    public void store(TTEntry entry, final BoardState boardState) {
-        entries.put(boardState, entry);
+    public void store(final TTEntry entry, final BoardState boardState) {
+        this.entries.put(boardState, entry);
     }
 
     public static class TTEntry {
         public Flag flag;
         public int value;
         public int depth;
-        public TTEntry(int value, int depth, Flag flag) {
+
+        public TTEntry(final int value, final int depth, final Flag flag) {
             this.value = value;
             this.depth = depth;
             this.flag = flag;

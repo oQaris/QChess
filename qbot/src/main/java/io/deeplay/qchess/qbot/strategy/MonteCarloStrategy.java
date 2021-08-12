@@ -20,27 +20,27 @@ public class MonteCarloStrategy extends Strategy {
     private static final Logger logger = LoggerFactory.getLogger(MonteCarloStrategy.class);
 
     @Override
-    public int evaluateBoard(Board board) {
+    public int evaluateBoard(final Board board) {
         final AtomicInteger wins = new AtomicInteger(0);
-        ExecutorService gamePool = Executors.newCachedThreadPool();
+        final ExecutorService gamePool = Executors.newCachedThreadPool();
         for (int i = 0; i < COUNT_GAMES; i++) {
             gamePool.execute(
                     () -> {
-                        GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
-                        Player firstPlayer = new RandomBot(gs, Color.WHITE);
-                        Player secondPlayer = new RandomBot(gs, Color.BLACK);
+                        final GameSettings gs = new GameSettings(Board.BoardFilling.STANDARD);
+                        final Player firstPlayer = new RandomBot(gs, Color.WHITE);
+                        final Player secondPlayer = new RandomBot(gs, Color.BLACK);
                         try {
-                            Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
+                            final Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
                             game.run();
-                        } catch (ChessError e) {
+                        } catch (final ChessError e) {
                             logger.error(
                                     "Ошибка при выполнении игры в стратегии Монте-Карло: {}",
                                     e.getLocalizedMessage());
                         }
                         wins.addAndGet(
                                 switch (gs.endGameDetector.getGameResult()) {
-                                    case CHECKMATE_TO_BLACK -> 1;
-                                    case CHECKMATE_TO_WHITE -> -1;
+                                    case EndGameType.CHECKMATE_TO_BLACK -> 1;
+                                    case EndGameType.CHECKMATE_TO_WHITE -> -1;
                                     default -> 0; // ничьи и паты
                                 });
                     });
@@ -48,7 +48,7 @@ public class MonteCarloStrategy extends Strategy {
         gamePool.shutdown();
         try {
             gamePool.awaitTermination(1, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             logger.error(
                     "Оценка Монте-Карло считалась больше секунды: {}", e.getLocalizedMessage());
         }

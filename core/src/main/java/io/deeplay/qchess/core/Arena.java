@@ -15,9 +15,9 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.qbot.QMinimaxBot;
+import io.deeplay.qchess.qbot.QNegamaxTTBot;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -60,7 +60,7 @@ public class Arena {
 
     /** Тут задаётся Второй игрок */
     public static RemotePlayer newSecondPlayer(final GameSettings gs, final Color myColor) {
-        return new RandomBot(gs, myColor);
+        return new QNegamaxTTBot(gs, myColor);
     }
 
     public void battle() throws InterruptedException {
