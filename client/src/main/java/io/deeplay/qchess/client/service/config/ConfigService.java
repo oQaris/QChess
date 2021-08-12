@@ -20,7 +20,7 @@ public class ConfigService {
             throw new ConfigException(
                 ConfigExceptionErrorCode.ABSENT_IP);
         }
-        String[] octets = property.split("\\.");
+        final String[] octets = property.split("\\.");
         if (octets.length != 4) {
             throw new ConfigException(ConfigExceptionErrorCode.INCORRECT_IP_OCTETS_NUMBER);
         }
@@ -121,11 +121,13 @@ public class ConfigService {
         }
         /*pattern - регулярка, по которой пройдут
          * только строки, которые:
-         * - начинаются и оканчиваются симоволом '/' (в том числе строка "/")
+         * - начинаются с подстроки "/", "./" или "../"
+         * - оканчиваются симоволом '/' (в том числе строка "/")
          * - между двумя символами '/' не пусто
-         * - между двумя символами '/' могут быть буквы, цифры, '_' и пробел
+         * - между двумя символами '/' могут быть либо буквы, цифры, '_' и пробел,
+         * либо подстроки "." или ".."
          */
-        final String pattern = "/([\\w\\s]+/)*";
+        final String pattern = "(\\.){0,2}/((([\\w\\s]+)|(\\.){1,2})/)*";
         if (!Pattern.matches(pattern, property)) {
             throw new ConfigException(
                 ConfigExceptionErrorCode.INCORRECT_PATH);
