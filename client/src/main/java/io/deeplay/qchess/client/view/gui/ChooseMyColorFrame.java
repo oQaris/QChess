@@ -58,22 +58,22 @@ public class ChooseMyColorFrame extends Frame {
         JButton continueButton = new JButton("Продолжить");
 
         continueButton.addMouseListener(
-            new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    super.mousePressed(e);
-                    ViewColor myColor = null;
-                    for (JRadioButton rb : rbs.keySet()) {
-                        if (rb.isSelected()) {
-                            myColor = rbs.get(rb);
-                            break;
+                new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        super.mousePressed(e);
+                        ViewColor myColor = null;
+                        for (JRadioButton rb : rbs.keySet()) {
+                            if (rb.isSelected()) {
+                                myColor = rbs.get(rb);
+                                break;
+                            }
                         }
+                        ClientController.chooseMyColor(myColor);
+                        mf.createChooseMyPlayerFrame(myColor);
+                        mf.destroyChooseMyColorFrame();
                     }
-                    ClientController.chooseMyColor(myColor);
-                    mf.createChooseMyPlayerFrame(myColor);
-                    mf.destroyChooseMyColorFrame();
-                }
-            });
+                });
 
         return continueButton;
     }

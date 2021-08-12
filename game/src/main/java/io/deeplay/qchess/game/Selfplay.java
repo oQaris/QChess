@@ -35,8 +35,7 @@ public class Selfplay {
         this.secondPlayer = secondPlayer;
         currentPlayerToMove = firstPlayer.getColor() == Color.WHITE ? firstPlayer : secondPlayer;
         if (firstPlayer instanceof RemotePlayer && secondPlayer instanceof RemotePlayer) {
-            logger.debug(
-                    "За белых играет:  {}", ((RemotePlayer) currentPlayerToMove).getName());
+            logger.debug("За белых играет:  {}", ((RemotePlayer) currentPlayerToMove).getName());
             logger.debug(
                     "За чёрных играет: {}",
                     ((RemotePlayer)

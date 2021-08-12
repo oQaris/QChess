@@ -215,12 +215,12 @@ public class ClientController {
         GameDAO.setMyType(playerType);
     }
 
-    /** Выбирает КАКИМ ЦВЕТОМ играть
+    /**
+     * Выбирает КАКИМ ЦВЕТОМ играть
+     *
      * @param myColor - если пришёл null, значит нужно выбрать цвет рандомно
      */
-    public static void chooseMyColor(ViewColor myColor) {
-
-    }
+    public static void chooseMyColor(ViewColor myColor) {}
 
     /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
     public static void botMove() {

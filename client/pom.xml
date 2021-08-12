@@ -65,12 +65,6 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
-    <!-- NNNBot -->
-    <dependency>
-      <artifactId>QChess-n-nn-bot</artifactId>
-      <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
-    </dependency>
     <!-- Tests -->
     <dependency>
       <groupId>junit</groupId>
