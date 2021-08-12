@@ -119,7 +119,7 @@ public class GameService {
         String sendToken = toToken;
 
         String status = room.getEndGameStatus();
-        if (status == null && player.getPlayerType() != PlayerType.GUI_PLAYER) {
+        if (status == null && player.getPlayerType() != PlayerType.REMOTE_PLAYER) {
             move = player.getNextMove();
             room.move(move);
             sendToken = fromToken;
@@ -143,11 +143,11 @@ public class GameService {
                     room.id, room.getGameCount(), room.getEndGameStatus());
 
             if (room.getGameCount() >= room.getMaxGames()) {
-                if (player1.getPlayerType() == PlayerType.GUI_PLAYER)
+                if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
                     sendEndGameAndDisconnect(
                             room.getEndGameStatus(),
                             ConnectionControlDAO.getId(player1.getSessionToken()));
-                if (player2.getPlayerType() == PlayerType.GUI_PLAYER)
+                if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
                     sendEndGameAndDisconnect(
                             room.getEndGameStatus(),
                             ConnectionControlDAO.getId(player2.getSessionToken()));
@@ -158,15 +158,15 @@ public class GameService {
 
                 room.resetGame();
 
-                if (player2.getPlayerType() != PlayerType.GUI_PLAYER) {
+                if (player2.getPlayerType() != PlayerType.REMOTE_PLAYER) {
                     move = player2.getNextMove();
                     room.move(move);
                     StatisticService.writeMoveStats(room.id, room.getGameCount(), move);
                 }
 
-                if (player1.getPlayerType() == PlayerType.GUI_PLAYER)
+                if (player1.getPlayerType() == PlayerType.REMOTE_PLAYER)
                     sendResetRoom(status, ConnectionControlDAO.getId(player1.getSessionToken()));
-                if (player2.getPlayerType() == PlayerType.GUI_PLAYER)
+                if (player2.getPlayerType() == PlayerType.REMOTE_PLAYER)
                     sendResetRoom(status, ConnectionControlDAO.getId(player2.getSessionToken()));
             }
         }

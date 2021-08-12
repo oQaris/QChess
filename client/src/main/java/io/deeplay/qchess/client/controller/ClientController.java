@@ -215,11 +215,19 @@ public class ClientController {
         GameDAO.setMyType(playerType);
     }
 
-    /** Выбирает КАКИМ ЦВЕТОМ играть
+    /**
+     * Выбирает КАКИМ ЦВЕТОМ играть
+     *
      * @param myColor - если пришёл null, значит нужно выбрать цвет рандомно
      */
     public static void chooseMyColor(ViewColor myColor) {
-
+        GameDAO.setMyPreferColor(
+                myColor == null
+                        ? null
+                        : switch (myColor) {
+                            case WHITE -> Color.WHITE;
+                            case BLACK -> Color.BLACK;
+                        });
     }
 
     /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
@@ -250,7 +258,10 @@ public class ClientController {
         client.sendIfNotNull(
                 SerializationService.makeMainDTOJsonToServer(
                         new FindGameDTO(
-                                SessionDAO.getSessionToken(), getType(GameDAO.getEnemyType()), 2)));
+                                SessionDAO.getSessionToken(),
+                                getType(GameDAO.getEnemyType()),
+                                2,
+                                GameDAO.getMyPreferColor())));
     }
 
     /**
@@ -260,9 +271,10 @@ public class ClientController {
      */
     private static io.deeplay.qchess.game.player.PlayerType getType(PlayerType pt) {
         return switch (pt) {
-            case USER -> io.deeplay.qchess.game.player.PlayerType.GUI_PLAYER;
+            case USER -> io.deeplay.qchess.game.player.PlayerType.REMOTE_PLAYER;
             case EASYBOT -> io.deeplay.qchess.game.player.PlayerType.RANDOM_BOT;
             case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
+                // TODO: заменить на своего бота
             case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
         };
     }

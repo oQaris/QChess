@@ -30,7 +30,9 @@ public class MatchMaking {
 
         // Пока не найдется комната или свободных комнат нет
         while (true) {
-            Room room = GameDAO.findSuitableRoom(dto.sessionToken, dto.enemyType, dto.gameCount);
+            Room room =
+                    GameDAO.findSuitableRoom(
+                            dto.sessionToken, dto.enemyType, dto.gameCount, dto.myPreferColor);
             if (room == null) {
                 return SerializationService.makeMainDTOJsonToClient(
                         new DisconnectedDTO("Нет свободных комнат"));
@@ -40,7 +42,6 @@ public class MatchMaking {
                     return SerializationService.makeMainDTOJsonToClient(
                             new GameSettingsDTO(
                                     room.getPlayer(dto.sessionToken).getColor(),
-                                    // TODO: проверки на null
                                     room.getGameSettings().history.getLastMove()));
                 }
 
@@ -51,17 +52,22 @@ public class MatchMaking {
 
                 RemotePlayer enemyBot =
                         switch (dto.enemyType) {
-                            case CONSOLE_PLAYER, GUI_PLAYER -> null;
+                            case LOCAL_PLAYER, REMOTE_PLAYER -> null;
                             case RANDOM_BOT -> new RandomBot(gs, Color.BLACK);
                             case ATTACK_BOT -> NNNBotFactory.getNNNBot(gs, Color.BLACK);
                         };
 
-                if (enemyBot == null && dto.enemyType != PlayerType.GUI_PLAYER) {
+                if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {
                     return SerializationService.makeMainDTOJsonToClient(
                             new DisconnectedDTO("Неверный тип противника"));
                 }
 
-                Color clientColor = room.isEmpty() ? Color.WHITE : Color.BLACK;
+                final Color clientColor =
+                        dto.myPreferColor == null
+                                ? room.isEmpty()
+                                        ? Color.WHITE
+                                        : room.getFirstPlayer().getColor().inverse()
+                                : dto.myPreferColor;
 
                 try {
                     ServerController.send(
