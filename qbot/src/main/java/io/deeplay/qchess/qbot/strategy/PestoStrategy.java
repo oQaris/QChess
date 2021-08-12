@@ -11,7 +11,7 @@ import io.deeplay.qchess.game.model.figures.Figure;
  * @see <a href="https://www.chessprogramming.org/PeSTO%27s_Evaluation_Function">PeSTO's Evaluation
  *     Function</a>
  */
-public class PestoStrategy extends Strategy {
+public class PestoStrategy implements Strategy {
     int[] mgValue = {82, 337, 365, 477, 1025, 0};
     int[] egValue = {94, 281, 297, 512, 936, 0};
     int[] mgPawnTable = {
@@ -154,12 +154,12 @@ public class PestoStrategy extends Strategy {
         final int numColor = figure.getColor() == Color.WHITE ? 0 : 1;
         final int numFigure =
                 switch (figure.figureType) {
-                    case FigureType.PAWN -> 0;
-                    case FigureType.KNIGHT -> 1;
-                    case FigureType.BISHOP -> 2;
-                    case FigureType.ROOK -> 3;
-                    case FigureType.QUEEN -> 4;
-                    case FigureType.KING -> 5;
+                    case PAWN -> 0;
+                    case KNIGHT -> 1;
+                    case BISHOP -> 2;
+                    case ROOK -> 3;
+                    case QUEEN -> 4;
+                    case KING -> 5;
                 };
         return 2 * numFigure + numColor;
     }

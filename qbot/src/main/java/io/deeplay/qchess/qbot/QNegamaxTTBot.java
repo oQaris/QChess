@@ -1,13 +1,20 @@
 package io.deeplay.qchess.qbot;
 
+import static io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag.EXACT;
+import static io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag.LOWERBOUND;
+import static io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag.UPPERBOUND;
 import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
+import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
+import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
@@ -84,7 +91,7 @@ public class QNegamaxTTBot extends RemotePlayer {
     public int root(final Move move) throws ChessError {
         logger.debug("Негамакс с виртуальным {} ходом стартовал", move);
         this.ms.move(move);
-        final int res = this.negamax(this.depth, Integer.MIN_VALUE, Integer.MAX_VALUE, this.color);
+        final int res = this.negamax(this.depth, Integer.MIN_VALUE, Integer.MAX_VALUE, this.color.inverse());
         this.ms.undoMove();
         logger.debug("Оценка хода: {}", res);
         return res;
@@ -103,10 +110,10 @@ public class QNegamaxTTBot extends RemotePlayer {
     private int negamax(final int curDepth, final int alpha, final int beta, final Color curColor)
             throws ChessError {
 
-        /*final int alphaOrig = alpha;
+        final int alphaOrig = alpha;
 
-        final BoardState boardState = roomSettings.history.getLastBoardState();
-        final TTEntry entry = table.find(boardState);*/
+        //final BoardState boardState = roomSettings.history.getLastBoardState();
+        //final TTEntry entry = table.find(boardState);
 
         /*if (entry != null && entry.depth >= curDepth) {
             if (entry.flag == EXACT) return entry.value;
@@ -116,36 +123,39 @@ public class QNegamaxTTBot extends RemotePlayer {
             if (alpha >= beta) return entry.value;
         }*/
 
-        final int coef = curColor == Color.WHITE ? 1 : -1;
+        final int coef = curColor == Color.WHITE ? -1 : 1;
         if (curDepth == 0) {
             return coef * this.strategy.evaluateBoard(this.board);
         }
+
+        final List<Move> allMoves = this.ms.getAllPreparedMoves(curColor);
         // Если терминальный узел
+        // todo Оптимизировать, чтоб два раза не вызывать ms.getAllMoves
         final EndGameType gameResult = this.egd.updateEndGameStatus();
         this.egd.revertEndGameStatus();
         if (gameResult != EndGameType.NOTHING) {
-            return coef * Strategy.gradeIfTerminalNode(gameResult);
+            return coef * this.strategy.gradeIfTerminalNode(gameResult, curDepth);
         }
 
-        final List<Move> childNodes = this.ms.getAllPreparedMoves(curColor);
-        QNegamaxTTBot.orderMoves(childNodes);
+        QNegamaxTTBot.orderMoves(allMoves);
         int value = Integer.MIN_VALUE;
 
-        for (final Move child : childNodes) {
-            // System.err.println(curDepth + " - " + child);
+        for (final Move child : allMoves) {
+            /*if (curDepth == depth)
+                System.err.println(curDepth + " - " + child + " - " + curColor);*/
             this.ms.move(child);
             value = max(value, -this.negamax(curDepth - 1, -beta, -alpha, curColor.inverse()));
             this.ms.undoMove();
-            // alpha = max(alpha, value);
-            // if (alpha >= beta) break;
+            /*alpha = max(alpha, value);
+            if (alpha >= beta) break;*/
         }
 
-        /*Flag flag;
+        /*final Flag flag;
         if (value <= alphaOrig) flag = UPPERBOUND;
         else if (value >= beta) flag = LOWERBOUND;
-        else flag = EXACT;
+        else flag = EXACT;*/
 
-        table.store(new TTEntry(value, curDepth, flag), boardState);*/
+        //table.store(new TTEntry(value, curDepth, flag), boardState);
 
         return value;
     }

@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Стратегия оценки доски методом Монте-Карло. */
-public class MonteCarloStrategy extends Strategy {
+public class MonteCarloStrategy implements Strategy {
     public static final int COUNT_GAMES = 100;
     private static final Logger logger = LoggerFactory.getLogger(MonteCarloStrategy.class);
 
@@ -39,8 +39,8 @@ public class MonteCarloStrategy extends Strategy {
                         }
                         wins.addAndGet(
                                 switch (gs.endGameDetector.getGameResult()) {
-                                    case EndGameType.CHECKMATE_TO_BLACK -> 1;
-                                    case EndGameType.CHECKMATE_TO_WHITE -> -1;
+                                    case CHECKMATE_TO_BLACK -> 1;
+                                    case CHECKMATE_TO_WHITE -> -1;
                                     default -> 0; // ничьи и паты
                                 });
                     });

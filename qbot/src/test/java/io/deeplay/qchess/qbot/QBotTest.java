@@ -21,7 +21,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class QBotTest {
-    private void setKings(Cell whitePos, Cell blackPos, GameSettings gs) throws ChessException {
+    private void setKings(final Cell whitePos, final Cell blackPos, final GameSettings gs) throws ChessException {
         final King kingB = new King(Color.BLACK, blackPos);
         kingB.wasMoved = true;
         gs.board.setFigure(kingB);
@@ -100,18 +100,18 @@ class QBotTest {
     @Test
     void testQBotStalemate1Step() throws ChessError, ChessException {
         // мат ладьёй за один ход
-        GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
+        final GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
         roomSettings.board.setFigure(new King(Color.WHITE, Cell.parse("a8")));
         roomSettings.board.setFigure(new King(Color.BLACK, Cell.parse("h8")));
         roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("c7")));
         roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("d5")));
         System.out.println(roomSettings.board);
 
-        QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.BLACK, 1);
-        List<Move> moves = bot.getTopMoves();
+        final QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.BLACK, 1);
+        final List<Move> moves = bot.getTopMoves();
 
         assertEquals(1, moves.size());
-        Move bestMove = moves.get(0);
+        final Move bestMove = moves.get(0);
 
         assertEquals(new Move(MoveType.QUIET_MOVE, Cell.parse("d5"), Cell.parse("d8")), bestMove);
     }
@@ -119,25 +119,25 @@ class QBotTest {
     @Test
     void testQBotStalemate2Step() throws ChessError, ChessException {
         // тут можно поставить мат в 2 хода
-        GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
+        final GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
         roomSettings.board.setFigure(new King(Color.WHITE, Cell.parse("c4")));
         roomSettings.board.setFigure(new King(Color.BLACK, Cell.parse("b8")));
         roomSettings.board.setFigure(new Pawn(Color.BLACK, Cell.parse("h5")));
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
 
-        QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.WHITE, 5, new SimpleStrategy());
+        final QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.WHITE, 3, new SimpleStrategy());
 
-        List<Move> moves1 = bot.getTopMoves();
+        final List<Move> moves1 = bot.getTopMoves();
 
-        Move expected = new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("h6"));
+        final Move expected = new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("h6"));
         assertTrue(moves1.contains(expected));
 
         roomSettings.board.moveFigure(expected);
         roomSettings.board.moveFigure(
                 new Move(MoveType.QUIET_MOVE, Cell.parse("b8"), Cell.parse("a8")));
 
-        List<Move> moves2 = bot.getTopMoves();
+        final List<Move> moves2 = bot.getTopMoves();
         assertEquals(1, moves2.size());
 
         assertEquals(
@@ -152,8 +152,8 @@ class QBotTest {
 
     @Test
     void testEvaluateBoard() throws ChessException, ChessError {
-        Board board = new GameSettings(Board.BoardFilling.STANDARD).board;
-        Strategy strategy = new MatrixStrategy();
+        final Board board = new GameSettings(Board.BoardFilling.STANDARD).board;
+        final Strategy strategy = new MatrixStrategy();
 
         assertEquals(0, strategy.evaluateBoard(board));
 

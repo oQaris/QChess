@@ -141,7 +141,7 @@ public class QMinimaxBot extends RemotePlayer {
         final EndGameType gameResult = this.egd.updateEndGameStatus();
         this.egd.revertEndGameStatus();
         if (gameResult != EndGameType.NOTHING) {
-            return Strategy.gradeIfTerminalNode(gameResult);
+            return this.strategy.gradeIfTerminalNode(gameResult, curDepth);
         }
 
         QMinimaxBot.sortMoves(allMoves);
@@ -163,9 +163,9 @@ public class QMinimaxBot extends RemotePlayer {
             value = Integer.MAX_VALUE;
             for (final Move move : allMoves) {
                 // GameSettings newNode = new GameSettings(node);
-                this.roomSettings.moveSystem.move(move);
+                this.ms.move(move);
                 value = Math.min(value, this.minimax(curDepth - 1, alpha, beta, true));
-                this.roomSettings.moveSystem.undoMove();
+                this.ms.undoMove();
                 beta = Math.min(beta, value);
                 if (value <= alpha) {
                     break;

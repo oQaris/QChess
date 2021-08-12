@@ -60,7 +60,7 @@ public class Arena {
 
     /** Тут задаётся Второй игрок */
     public static RemotePlayer newSecondPlayer(final GameSettings gs, final Color myColor) {
-        return new QNegamaxTTBot(gs, myColor);
+        return new QNegamaxTTBot(gs, myColor, 3);
     }
 
     public void battle() throws InterruptedException {
@@ -140,13 +140,13 @@ public class Arena {
                     new TimeWrapper(newSecondPlayer(gs, myColor.inverse()));
             try {
                 MDC.put("game", Integer.toString(curTask.incrementAndGet()));
-                Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
+                final Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();
-            } catch (ChessError e) {
+            } catch (final ChessError e) {
                 logger.error("Ошибка в игре: {}", e.getLocalizedMessage());
             }
             logger.info("\nGames completed: " + (doneTasks.incrementAndGet()) + "/" + COUNT);
-            EndGameType gameResult = gs.endGameDetector.getGameResult();
+            final EndGameType gameResult = gs.endGameDetector.getGameResult();
             logger.info("fp: {}, {}", myColor, gameResult);
             resultsOutput.computeIfPresent(gameResult, (k, v) -> v + 1);
 
