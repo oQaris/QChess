@@ -89,7 +89,7 @@ public class GameService {
 
     private static RemotePlayer getRemotePlayer(PlayerType pt, GameSettings gs, Color color) {
         return switch (pt) {
-            case USER -> new RemotePlayer(gs, color, "user");
+            case USER -> new RemotePlayer(gs, color, "user", "user");
             case EASYBOT -> new RandomBot(gs, color);
             case MEDIUMBOT -> new AttackBot(gs, color);
                 // TODO: использовать своего бота

@@ -15,7 +15,11 @@ public class TimeWrapper extends RemotePlayer {
     private final List<Long> times = new ArrayList<>(300);
 
     public TimeWrapper(RemotePlayer player) {
-        super(player.getRoomSettings(), player.getColor(), player.getSessionToken());
+        super(
+                player.getRoomSettings(),
+                player.getColor(),
+                player.getSessionToken(),
+                player.getName());
         this.player = player;
     }
 

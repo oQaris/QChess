@@ -99,13 +99,12 @@ public class QBot extends RemotePlayer {
     private final int depth;
 
     public QBot(GameSettings roomSettings, Color color, int searchDepth) {
-        super(roomSettings, color, "minimax-bot-" + UUID.randomUUID());
+        super(roomSettings, color, "Qminimax-bot-" + UUID.randomUUID(), "Самый мощный");
         depth = searchDepth;
     }
 
     public QBot(GameSettings roomSettings, Color color) {
-        super(roomSettings, color, "minimax-bot-" + UUID.randomUUID());
-        depth = 2;
+        this(roomSettings, color, 2);
     }
 
     @Override

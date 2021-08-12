@@ -73,7 +73,7 @@ public class MatchMaking {
                 }
 
                 GameService.putPlayerToRoom(
-                        room, new RemotePlayer(gs, clientColor, dto.sessionToken));
+                        room, new RemotePlayer(gs, clientColor, dto.sessionToken, "user"));
                 if (enemyBot != null) GameService.putPlayerToRoom(room, enemyBot);
             }
             return null;
