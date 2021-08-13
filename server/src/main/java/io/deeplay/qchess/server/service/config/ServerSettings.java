@@ -28,12 +28,9 @@ public class ServerSettings {
     private final int tournamentNumberGame;
 
     public ServerSettings(final String configPath) throws ConfigException {
-        FileInputStream fis;
         Properties property = new Properties();
-        try {
-            fis =
-                new FileInputStream(
-                    Objects.requireNonNull(getClass().getResource(configPath)).getFile());
+        try (FileInputStream fis = new FileInputStream(
+            Objects.requireNonNull(getClass().getResource(configPath)).getFile())) {
             property.load(fis);
             port = ConfigService.validatePort(property.getProperty("server.port"));
             maxPlayers = ConfigService

@@ -18,7 +18,7 @@ public class ConfigService {
             throw new ConfigException(ConfigExceptionErrorCode.ABSENT_PORT);
         }
         try {
-            int port = Integer.parseInt(property);
+            final int port = Integer.parseInt(property);
             if (port <= 0) {
                 throw new ConfigException(ConfigExceptionErrorCode.NON_POSITIVE_PORT_VALUE);
             }
@@ -42,7 +42,7 @@ public class ConfigService {
             throw new ConfigException(ConfigExceptionErrorCode.ABSENT_MAX_PLAYERS);
         }
         try {
-            int port = Integer.parseInt(property);
+            final int port = Integer.parseInt(property);
             if (port <= 0) {
                 throw new ConfigException(ConfigExceptionErrorCode.NON_POSITIVE_MAX_PLAYERS_VALUE);
             }
@@ -94,7 +94,7 @@ public class ConfigService {
             throw new ConfigException(ConfigExceptionErrorCode.ABSENT_TOURNAMENT);
         }
         try {
-            int number = Integer.parseInt(property);
+            final int number = Integer.parseInt(property);
             if (number <= 0) {
                 throw new ConfigException(ConfigExceptionErrorCode.NON_POSITIVE_TOURNAMENT_VALUE);
             }
