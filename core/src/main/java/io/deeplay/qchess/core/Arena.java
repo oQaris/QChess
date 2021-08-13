@@ -15,9 +15,8 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
-import io.deeplay.qchess.qbot.QBot;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -39,16 +38,6 @@ public class Arena {
     private static final AtomicLong maxFirst = new AtomicLong(0);
     private static final AtomicLong maxSecond = new AtomicLong(0);
 
-    /** Тут задаётся Первый игрок */
-    public static RemotePlayer newFirstPlayer(final GameSettings gs, final Color myColor) {
-        return new QBot(gs, myColor, 3);
-    }
-
-    /** Тут задаётся Второй игрок */
-    public static RemotePlayer newSecondPlayer(final GameSettings gs, final Color myColor) {
-        return NNNBotFactory.getNNNBot(gs, myColor);
-    }
-
     static {
         gameResultsWhite =
                 new ConcurrentHashMap<>(
@@ -61,6 +50,16 @@ public class Arena {
                                 DRAW_WITH_PEACE_MOVE_COUNT, 0,
                                 DRAW_WITH_REPETITIONS, 0));
         gameResultsBlack = new ConcurrentHashMap<>(gameResultsWhite);
+    }
+
+    /** Тут задаётся Первый игрок */
+    public static RemotePlayer newFirstPlayer(final GameSettings gs, final Color myColor) {
+        return new RandomBot(gs, myColor);
+    }
+
+    /** Тут задаётся Второй игрок */
+    public static RemotePlayer newSecondPlayer(final GameSettings gs, final Color myColor) {
+        return new RandomBot(gs, myColor);
     }
 
     public void battle() throws InterruptedException {
