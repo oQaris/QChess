@@ -31,6 +31,7 @@ public class Arena {
                     // Пример:
                     /*"Обращений к ТТ: " + ((QNegamaxTTBot) bot).countFindingTT*/ );
     private static final ArenaStats stats = new ArenaStats(logger, optionalLogs);
+    private static final RatingELO rating = new RatingELO();
 
     /** Тут задаётся Первый игрок */
     public static RemotePlayer newFirstPlayer(final GameSettings gs, final Color myColor) {
@@ -60,6 +61,8 @@ public class Arena {
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 
         stats.showResults();
+        final Map<String, Long> elo = RatingELO.elo;
+        elo.forEach((name, rt) -> System.out.println(name + " " + rt));
     }
 
     private static class Game implements Runnable {
@@ -90,7 +93,21 @@ public class Arena {
             final EndGameType gameResult = gs.endGameDetector.getGameResult();
             logger.info("fp: {}, {}", myColor, gameResult);
 
+            final double factor =
+                    gameResult
+                                    == (firstPlayer.getColor() == Color.WHITE
+                                            ? EndGameType.CHECKMATE_TO_BLACK
+                                            : EndGameType.CHECKMATE_TO_WHITE)
+                            ? 1
+                            : gameResult
+                                            == (firstPlayer.getColor() == Color.WHITE
+                                                    ? EndGameType.CHECKMATE_TO_WHITE
+                                                    : EndGameType.CHECKMATE_TO_BLACK)
+                                    ? -1
+                                    : 0.5;
+
             stats.addGameResult(firstPlayer, secondPlayer, gameResult);
+            rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), factor);
         }
     }
 }
