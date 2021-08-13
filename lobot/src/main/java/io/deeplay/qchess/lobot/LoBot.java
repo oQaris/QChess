@@ -97,7 +97,7 @@ public class LoBot extends RemotePlayer {
 
     private int negamax(int depth, Color currentColor) throws ChessError, ChessException {
         if (depth == 0) {
-            return -evaluation.evaluateBoard(roomSettings.board, color);
+            return -evaluation.evaluateBoard(roomSettings, color);
         }
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
@@ -120,7 +120,7 @@ public class LoBot extends RemotePlayer {
     private int negamaxWithAlphaBeta(int depth, int alpha, int beta, Color currentColor)
         throws ChessError, ChessException {
         if (depth == 0) {
-            return -evaluation.evaluateBoard(roomSettings.board, color);
+            return -evaluation.evaluateBoard(roomSettings, color);
         }
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
@@ -150,7 +150,7 @@ public class LoBot extends RemotePlayer {
     private int negascout(int depth, int alpha, int beta, Color currentColor)
         throws ChessError, ChessException {
         if (depth == 0) {
-            return -evaluation.evaluateBoard(roomSettings.board, color);
+            return -evaluation.evaluateBoard(roomSettings, color);
         }
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
@@ -190,7 +190,7 @@ public class LoBot extends RemotePlayer {
 
     private int expectimax(int depth, Color currentColor) throws ChessError, ChessException {
         if (depth == 0) {
-            return evaluation.evaluateBoard(roomSettings.board, color);
+            return evaluation.evaluateBoard(roomSettings, color);
         }
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
@@ -223,7 +223,7 @@ public class LoBot extends RemotePlayer {
     private int minimax(int depth, int alpha, int beta, Color currentColor)
         throws ChessError, ChessException {
         if (depth == 0) {
-            return evaluation.evaluateBoard(roomSettings.board, color);
+            return evaluation.evaluateBoard(roomSettings, color);
         }
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);

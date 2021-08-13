@@ -1,5 +1,6 @@
 package io.deeplay.qchess.lobot.evaluation;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.figures.Figure;
@@ -178,12 +179,12 @@ public class PestoEvaluation implements Evaluation {
     }
 
     @Override
-    public int evaluateBoard(Board board, Color color) {
+    public int evaluateBoard(final GameSettings gameSettings, final Color color) {
         int[] mg = {0, 0};
         int[] eg = {0, 0};
         int gamePhase = 0;
 
-        for (Figure figure : board.getAllFigures()) {
+        for (Figure figure : gameSettings.board.getAllFigures()) {
             int coef = figure.getColor() == Color.WHITE ? 0 : 1;
             int index = 2 * figureTypeList.indexOf(figure.figureType) + coef;
             mg[coef] += mg_table[index][figure.getCurrentPosition().row * Board.STD_BOARD_SIZE
