@@ -7,27 +7,27 @@
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>WARN</level>
+      <level>INFO</level>
     </filter>
 
     <target>System.out</target>
   </appender>
 
-  <appender name="GAME-MOVES" class="ch.qos.logback.classic.sift.SiftingAppender">
+  <appender class="ch.qos.logback.classic.sift.SiftingAppender" name="GAME-MOVES">
     <discriminator>
-      <key>game</key>
       <defaultValue>GAME</defaultValue>
+      <key>game</key>
     </discriminator>
 
     <sift>
-      <appender name="FILE-${game}" class="ch.qos.logback.core.FileAppender">
+      <appender class="ch.qos.logback.core.FileAppender" name="FILE-${game}">
         <append>false</append>
-
-        <file>logs/${game}-qchess-statistics.log</file>
 
         <encoder>
           <pattern>%msg%n</pattern>
         </encoder>
+
+        <file>logs/${game}-qchess-statistics.log</file>
       </appender>
     </sift>
   </appender>
