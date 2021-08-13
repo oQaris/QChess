@@ -10,6 +10,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,14 +45,14 @@ public class Arena {
         return new AttackBot(gs, myColor);
     }
 
-    public void battle() throws InterruptedException {
-        logger.info(
-                "Запущена битва ботов:\n{}\n{}",
-                newFirstPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName(),
-                newSecondPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName());
+    public void battle() throws InterruptedException, IOException {
+        logger.info("Запущена битва ботов:");
+        logger.info(newFirstPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName());
+        logger.info(newSecondPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName());
 
         final int countProc = Runtime.getRuntime().availableProcessors();
         final ExecutorService executor = Executors.newFixedThreadPool(Math.min(countProc, COUNT));
+        rating.pullELO();
 
         stats.startTracking();
         for (int i = 1; i <= COUNT; i++) {
@@ -62,8 +63,8 @@ public class Arena {
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 
         stats.showResults();
-        final Map<String, Long> elo = RatingELO.elo;
-        elo.forEach((name, rt) -> logger.info("{} = {}", name, rt));
+        logger.info("{}", rating);
+        rating.saveELO();
     }
 
     private static class Game implements Runnable {

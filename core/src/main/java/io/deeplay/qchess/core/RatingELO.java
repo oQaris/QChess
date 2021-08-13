@@ -1,11 +1,30 @@
 package io.deeplay.qchess.core;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RatingELO {
-    public static final String fileName = "elo_rating";
-    public static final Map<String, Long> elo = new ConcurrentHashMap<>();
+    private final Path toReplace = Paths.get("elo_rating.txt");
+    private final Path newContents = toReplace.resolveSibling("temp_elo.json");
+    private Map<String, Long> elo = new ConcurrentHashMap<>();
+
+    public void pullELO() throws IOException {
+        try (final BufferedReader reader =
+                Files.newBufferedReader(toReplace, StandardCharsets.UTF_8)) {
+            elo = new Gson().fromJson(reader, new TypeToken<Map<String, Long>>() {}.getType());
+        }
+    }
 
     /**
      * @param firstPlayerName Уникальное имя первого игрока
@@ -35,5 +54,30 @@ public class RatingELO {
         final long newRa = Math.round(rA + k * (sA - eA));
 
         elo.put(firstPlayerName, newRa);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        elo.forEach(
+                (name, rt) ->
+                        sb.append(name).append(" -> ").append(rt).append(System.lineSeparator()));
+        return sb.toString();
+    }
+
+    public void saveELO() throws IOException {
+        try (final BufferedWriter writer =
+                Files.newBufferedWriter(
+                        newContents,
+                        StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING)) {
+            new Gson().toJson(elo, writer);
+        }
+        Files.move(
+                newContents,
+                toReplace,
+                StandardCopyOption.REPLACE_EXISTING,
+                StandardCopyOption.ATOMIC_MOVE);
     }
 }
