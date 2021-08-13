@@ -84,7 +84,7 @@ public class Arena {
                 final Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();
             } catch (final ChessError e) {
-                logger.error("Ошибка в игре: {}", e.getLocalizedMessage());
+                logger.error("Ошибка в игре: {}", e.getMessage());
             }
             logger.info("\nGames completed: " + (doneTasks.incrementAndGet()) + "/" + COUNT);
             final EndGameType gameResult = gs.endGameDetector.getGameResult();

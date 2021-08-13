@@ -75,9 +75,9 @@ public class ArenaStats {
         maxFirst.set(Math.max(maxFirst.get(), firstPlayer.getMax()));
         maxSecond.set(Math.max(maxSecond.get(), secondPlayer.getMax()));
 
-        logger.info("===== First =====");
+        logger.info("-=+=+=+=+=- First -=+=+=+=+=+-");
         flushLogs(firstPlayer);
-        logger.info("===== Second =====");
+        logger.info("-=+=+=+=+=- Second -=+=+=+=+=-");
         flushLogs(secondPlayer);
     }
 
@@ -115,30 +115,33 @@ public class ArenaStats {
                         + gameResultsWhite.get(DRAW_WITH_NOT_ENOUGH_MATERIAL);
 
         final int passedGame = countGame.get();
-        logger.info("\n<------------------------------------------------------>");
+        logger.info("{}<---------------------------------------->", System.lineSeparator());
         logger.info(
-                "\nВремя на {} игр: {} min {} sec",
+                "Время на {} игр: {} min {} sec",
                 passedGame,
                 timeGameInSec / 60,
                 timeGameInSec % 60);
+        logger.info("Всего ничьих: {}", drawWithPMC + drawWithRep + drawWithNEM);
+        logger.info("\tПравило 50-ти ходов:      {}", drawWithPMC);
+        logger.info("\tС повторением позиций:    {}", drawWithRep);
+        logger.info("\tПри недостатке материала: {}", drawWithNEM);
         logger.info(
-                "\nВсего ничьих: {}\n"
-                        + "\tПравило 50-ти ходов:      {}\n"
-                        + "\tС повторением позиций:    {}\n"
-                        + "\tПри недостатке материала: {}\n"
-                        + "Мат первому игроку: {}\n"
-                        + "Мат второму игроку: {}\n"
-                        + "Пат первому игроку: {}\n"
-                        + "Пат второму игроку: {}",
-                drawWithPMC + drawWithRep + drawWithNEM,
-                drawWithPMC,
-                drawWithRep,
-                drawWithNEM,
-                gameResultsBlack.get(CHECKMATE_TO_BLACK) + gameResultsWhite.get(CHECKMATE_TO_WHITE),
-                gameResultsBlack.get(CHECKMATE_TO_WHITE) + gameResultsWhite.get(CHECKMATE_TO_BLACK),
-                gameResultsBlack.get(STALEMATE_TO_BLACK) + gameResultsWhite.get(STALEMATE_TO_WHITE),
+                "\tПатов первому игроку:     {}",
+                gameResultsBlack.get(STALEMATE_TO_BLACK)
+                        + gameResultsWhite.get(STALEMATE_TO_WHITE));
+        logger.info(
+                "\tПатов второму игроку:     {}",
                 gameResultsBlack.get(STALEMATE_TO_WHITE)
                         + gameResultsWhite.get(STALEMATE_TO_BLACK));
+        logger.info(
+                "Матов первому игроку: {}",
+                gameResultsBlack.get(CHECKMATE_TO_BLACK)
+                        + gameResultsWhite.get(CHECKMATE_TO_WHITE));
+        logger.info(
+                "Матов второму игроку: {}",
+                gameResultsBlack.get(CHECKMATE_TO_WHITE)
+                        + gameResultsWhite.get(CHECKMATE_TO_BLACK));
+        logger.info("");
         logger.info(
                 "Средне-медианное время хода первого игрока:\t{}",
                 meanMedianFirst.get() / passedGame);
