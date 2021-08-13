@@ -3,12 +3,12 @@ package io.deeplay.qchess.lobot;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.logics.MoveSystem.ChessMoveFunc;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.lobot.evaluation.Evaluation;
-import io.deeplay.qchess.lobot.evaluation.FiguresCostSumEvaluation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +29,7 @@ public class LoBot extends RemotePlayer {
     }
 
     public LoBot(GameSettings roomSettings, Color color, Strategy strategy) {
-        super(roomSettings, color, "lobot-" + UUID.randomUUID());
+        super(roomSettings, color, "lobot-" + UUID.randomUUID(), "lobot");
         this.evaluation = strategy.getEvaluation();
         this.depth = strategy.getDepth();
         algorithm = getAlgorithm(strategy.getAlgorithm());
@@ -102,11 +102,13 @@ public class LoBot extends RemotePlayer {
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        if (moves.isEmpty() && egd.isCheck(currentColor)) {
-            return (currentColor == color ? Integer.MIN_VALUE : Integer.MAX_VALUE);
+        EndGameType endGameType = egd.updateEndGameStatus();
+        egd.revertEndGameStatus();
+        if (endGameType != EndGameType.NOTHING) {
+            return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
 
-        int bestMoveValue = Integer.MIN_VALUE / 2;
+        int bestMoveValue = Integer.MIN_VALUE;
         for (Move move : moves) {
             int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
                 negamax(depth - 1, currentColor.inverse()));
@@ -123,11 +125,13 @@ public class LoBot extends RemotePlayer {
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        if (moves.isEmpty() && egd.isCheck(currentColor)) {
-            return (currentColor == color ? Integer.MIN_VALUE : Integer.MAX_VALUE);
+        EndGameType endGameType = egd.updateEndGameStatus();
+        egd.revertEndGameStatus();
+        if (endGameType != EndGameType.NOTHING) {
+            return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
 
-        int bestMoveValue = Integer.MIN_VALUE / 2;
+        int bestMoveValue = Integer.MIN_VALUE;
         for (Move move : moves) {
             final int alphaForLambda = alpha;
             final int betaForLambda = beta;
@@ -151,8 +155,10 @@ public class LoBot extends RemotePlayer {
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        if (moves.isEmpty() && egd.isCheck(currentColor)) {
-            return (currentColor == color ? Integer.MIN_VALUE : Integer.MAX_VALUE);
+        EndGameType endGameType = egd.updateEndGameStatus();
+        egd.revertEndGameStatus();
+        if (endGameType != EndGameType.NOTHING) {
+            return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
 
         for (int i = 0; i < moves.size(); i++) {
@@ -189,8 +195,10 @@ public class LoBot extends RemotePlayer {
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        if (moves.isEmpty() && egd.isCheck(currentColor)) {
-            return color == currentColor ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        EndGameType endGameType = egd.updateEndGameStatus();
+        egd.revertEndGameStatus();
+        if (endGameType != EndGameType.NOTHING) {
+            return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
 
         if (color == currentColor) {
@@ -220,8 +228,10 @@ public class LoBot extends RemotePlayer {
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        if (moves.isEmpty() && egd.isCheck(currentColor)) {
-            return color == currentColor ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        EndGameType endGameType = egd.updateEndGameStatus();
+        egd.revertEndGameStatus();
+        if (endGameType != EndGameType.NOTHING) {
+            return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
 
         int bestMoveValue = color == currentColor ? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;

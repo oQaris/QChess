@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 public class LoBotTest {
     private static final Logger logger = LoggerFactory.getLogger(LoBotTest.class);
-    private static final int GAME_COUNT = 1000;
+    private static final int GAME_COUNT = 10;
 
     @Test
     public void testGame() {
@@ -65,7 +65,7 @@ public class LoBotTest {
 
         for (int i = 1; i <= GAME_COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.NEGAMAXALPHABETA, 2));
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.NEGAMAXALPHABETA, 4));
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -211,7 +211,7 @@ public class LoBotTest {
 
         for (int i = 1; i <= GAME_COUNT; i++) {
             GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 2));
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 4));
             Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
