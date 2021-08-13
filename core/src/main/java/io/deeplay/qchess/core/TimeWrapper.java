@@ -23,6 +23,10 @@ public class TimeWrapper extends RemotePlayer {
         this.player = player;
     }
 
+    public RemotePlayer getPlayer() {
+        return player;
+    }
+
     @Override
     public Move getNextMove() throws ChessError {
         final long startTime = System.currentTimeMillis();

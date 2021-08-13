@@ -30,6 +30,7 @@ public class QNegamaxTTBot extends RemotePlayer {
     private final Strategy strategy;
     private final TranspositionTable table = new TranspositionTable();
     private final int depth;
+    public int countFindingTT = 0;
 
     public QNegamaxTTBot(
             final GameSettings roomSettings,
@@ -91,7 +92,7 @@ public class QNegamaxTTBot extends RemotePlayer {
     public int root(final Move move) throws ChessError {
         logger.debug("Негамакс с виртуальным {} ходом стартовал", move);
         this.ms.move(move);
-        final int res = this.negamax(this.depth, Integer.MIN_VALUE, Integer.MAX_VALUE, this.color.inverse());
+        final int res = -this.negamax(this.depth, Integer.MIN_VALUE, Integer.MAX_VALUE, this.color.inverse());
         this.ms.undoMove();
         logger.debug("Оценка хода: {}", res);
         return res;
@@ -107,30 +108,30 @@ public class QNegamaxTTBot extends RemotePlayer {
      * @return Оценку позиции на доске
      * @throws ChessError При выполнении некорректного хода (при нормальной работе невозможно)
      */
-    private int negamax(final int curDepth, final int alpha, final int beta, final Color curColor)
+    private int negamax(final int curDepth, int alpha, int beta, final Color curColor)
             throws ChessError {
 
         final int alphaOrig = alpha;
 
-        //final BoardState boardState = roomSettings.history.getLastBoardState();
-        //final TTEntry entry = table.find(boardState);
+        final BoardState boardState = roomSettings.history.getLastBoardState();
+        final TTEntry entry = table.find(boardState);
 
-        /*if (entry != null && entry.depth >= curDepth) {
+        if (entry != null && entry.depth >= curDepth) {
+            countFindingTT++;
             if (entry.flag == EXACT) return entry.value;
             else if (entry.flag == LOWERBOUND) alpha = max(alpha, entry.value);
             else if (entry.flag == UPPERBOUND) beta = min(beta, entry.value);
 
             if (alpha >= beta) return entry.value;
-        }*/
+        }
 
-        final int coef = curColor == Color.WHITE ? -1 : 1;
+        final int coef = curColor == Color.WHITE ? 1 : -1;
         if (curDepth == 0) {
             return coef * this.strategy.evaluateBoard(this.board);
         }
 
         final List<Move> allMoves = this.ms.getAllPreparedMoves(curColor);
         // Если терминальный узел
-        // todo Оптимизировать, чтоб два раза не вызывать ms.getAllMoves
         final EndGameType gameResult = this.egd.updateEndGameStatus();
         this.egd.revertEndGameStatus();
         if (gameResult != EndGameType.NOTHING) {
@@ -140,22 +141,22 @@ public class QNegamaxTTBot extends RemotePlayer {
         QNegamaxTTBot.orderMoves(allMoves);
         int value = Integer.MIN_VALUE;
 
-        for (final Move child : allMoves) {
+        for (final Move move : allMoves) {
             /*if (curDepth == depth)
                 System.err.println(curDepth + " - " + child + " - " + curColor);*/
-            this.ms.move(child);
+            this.ms.move(move);
             value = max(value, -this.negamax(curDepth - 1, -beta, -alpha, curColor.inverse()));
             this.ms.undoMove();
-            /*alpha = max(alpha, value);
-            if (alpha >= beta) break;*/
+            alpha = max(alpha, value);
+            if (alpha >= beta) break;
         }
 
-        /*final Flag flag;
+        final Flag flag;
         if (value <= alphaOrig) flag = UPPERBOUND;
         else if (value >= beta) flag = LOWERBOUND;
-        else flag = EXACT;*/
+        else flag = EXACT;
 
-        //table.store(new TTEntry(value, curDepth, flag), boardState);
+        table.store(new TTEntry(value, curDepth, flag), boardState);
 
         return value;
     }

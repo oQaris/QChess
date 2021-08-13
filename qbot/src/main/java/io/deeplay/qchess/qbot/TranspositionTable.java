@@ -9,9 +9,8 @@ public class TranspositionTable {
     private final Map<BoardState, TTEntry> entries = new ConcurrentHashMap<>(500000);
 
     /** @return вхождение состояния игры или null, если такое состояние еще не встречалось */
-    public static TTEntry find(final BoardState boardState) {
-        // return entries.get(boardState);
-        return null;
+    public TTEntry find(final BoardState boardState) {
+        return entries.get(boardState);
     }
 
     /**

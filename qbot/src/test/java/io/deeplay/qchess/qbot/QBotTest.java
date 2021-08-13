@@ -7,6 +7,7 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.model.Board;
+import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
@@ -21,7 +22,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class QBotTest {
-    private void setKings(final Cell whitePos, final Cell blackPos, final GameSettings gs) throws ChessException {
+    private void setKings(final Cell whitePos, final Cell blackPos, final GameSettings gs)
+            throws ChessException {
         final King kingB = new King(Color.BLACK, blackPos);
         kingB.wasMoved = true;
         gs.board.setFigure(kingB);
@@ -30,72 +32,17 @@ class QBotTest {
         gs.board.setFigure(kingW);
     }
 
-    /*@Test
-    void testQBotGradeNextMove() throws ChessError, ChessException {
-        GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
-        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(0, 0)));
-        roomSettings.board.setFigure(new Knight(Color.BLACK, new Cell(0, 1)));
-        roomSettings.board.setFigure(new Bishop(Color.BLACK, new Cell(2, 1)));
-        roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(1, 2)));
-        setKings(new Cell(7, 7), new Cell(5, 5), roomSettings);
-
-        QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.WHITE, 2, new MatrixStrategy());
-        int grade = bot.minimaxRoot(1, true);
-        Move bestMove = bot.getNextMove();
-
-        // -89
-        assertEquals(-79, grade);
-        // assertEquals(new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
-    }
-
     @Test
-    void testQBotMM() throws ChessError, ChessException {
-        GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
-        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(0, 0)));
-        roomSettings.board.setFigure(new Knight(Color.BLACK, new Cell(0, 1)));
-        roomSettings.board.setFigure(new Bishop(Color.BLACK, new Cell(2, 1)));
-        setKings(new Cell(7, 7), new Cell(5, 5), roomSettings);
+    void testFirstStep() throws ChessError {
+        final GameSettings game = new GameSettings(BoardFilling.STANDARD);
+        final QNegamaxTTBot bot1 = new QNegamaxTTBot(game, Color.WHITE, 3);
+        final QMinimaxBot bot2 = new QMinimaxBot(game, Color.WHITE, 3);
+        assertEquals(bot1.getTopMoves(), bot2.getTopMoves());
 
-        QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.WHITE, 1);
-
-        roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(2, 3)));
-        int grade = bot.minimaxRoot(1, true);
-        assertEquals(-89, grade);
-
-        roomSettings.board.moveFigure(
-                new Move(MoveType.QUIET_MOVE, new Cell(2, 3), new Cell(0, 3)));
-        grade = bot.minimaxRoot(1, true);
-        assertEquals(-79, grade);
-
-        roomSettings.board.moveFigure(
-                new Move(MoveType.QUIET_MOVE, new Cell(0, 3), new Cell(0, 1)));
-        grade = bot.minimaxRoot(1, true);
-        assertEquals(-85, grade);
-
-        // таким образом, это лучший ход
-        roomSettings.board.moveFigure(
-                new Move(MoveType.QUIET_MOVE, new Cell(0, 1), new Cell(0, 1)));
-        grade = bot.minimaxRoot(1, true);
-        // -25
-        assertEquals(-145, grade);
+        game.moveSystem.move(new Move(MoveType.QUIET_MOVE, Cell.parse("e2"), Cell.parse("e4")));
+        game.moveSystem.move(new Move(MoveType.QUIET_MOVE, Cell.parse("b8"), Cell.parse("c6")));
+        assertEquals(bot1.getTopMoves(), bot2.getTopMoves());
     }
-
-    @Test
-    void testQBotAttack() throws ChessError, ChessException {
-        GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
-        roomSettings.board.setFigure(new Rook(Color.BLACK, new Cell(0, 0)));
-        roomSettings.board.setFigure(new Knight(Color.BLACK, new Cell(0, 1)));
-        roomSettings.board.setFigure(new Bishop(Color.BLACK, new Cell(2, 1)));
-        roomSettings.board.setFigure(new Bishop(Color.WHITE, new Cell(1, 2)));
-        setKings(new Cell(7, 7), new Cell(5, 5), roomSettings);
-
-        QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.WHITE, 1);
-        int grade = bot.minimaxRoot(1, true);
-        Move bestMove = bot.getNextMove();
-
-        assertEquals(-79, grade);
-        // assertEquals(new Move(MoveType.ATTACK, new Cell(1, 2), new Cell(2, 1)), bestMove);
-    }*/
 
     @Test
     void testQBotStalemate1Step() throws ChessError, ChessException {
@@ -126,7 +73,8 @@ class QBotTest {
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
         roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
 
-        final QNegamaxTTBot bot = new QNegamaxTTBot(roomSettings, Color.WHITE, 3, new SimpleStrategy());
+        final QNegamaxTTBot bot =
+                new QNegamaxTTBot(roomSettings, Color.WHITE, 3, new SimpleStrategy());
 
         final List<Move> moves1 = bot.getTopMoves();
 
