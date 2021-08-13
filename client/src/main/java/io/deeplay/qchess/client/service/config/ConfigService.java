@@ -11,11 +11,9 @@ public class ConfigService {
      *
      * @param property поле считанное с config файла по ключу ip.
      * @return Результат property.
-     * @throws ConfigException выбросится если:<br>
-     *     - значение поля было пустым или ip вообще не было в config файле<br>
-     *     - ip состоит не из 4-х октетов<br>
-     *     - один из октетов не int<br>
-     *     - один из октетов выходит за диапазон [0..255].
+     * @throws ConfigException выбросится если:<br> - значение поля было пустым или ip вообще не
+     *                         было в config файле<br> - ip состоит не из 4-х октетов<br> - один из
+     *                         октетов не int<br> - один из октетов выходит за диапазон [0..255].
      */
     public static String validateIp(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
@@ -43,17 +41,16 @@ public class ConfigService {
      *
      * @param property поле считанное с config файла по ключу port.
      * @return Результат целочисленное представление параметра property.
-     * @throws ConfigException выбросится если:<br>
-     *     - значение поля было пустым или port вообще не было в config файле<br>
-     *     - port не int<br>
-     *     - port является неположительным числом.
+     * @throws ConfigException выбросится если:<br> - значение поля было пустым или port вообще не
+     *                         было в config файле<br> - port не int<br> - port является
+     *                         неположительным числом.
      */
     public static int validatePort(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(ConfigExceptionErrorCode.ABSENT_PORT);
         }
         try {
-            int port = Integer.parseInt(property);
+            final int port = Integer.parseInt(property);
             if (port <= 0) {
                 throw new ConfigException(ConfigExceptionErrorCode.NON_POSITIVE_PORT_VALUE);
             }
@@ -68,9 +65,8 @@ public class ConfigService {
      *
      * @param property - boolean значение обёрнутое строкой.
      * @return Результат boolean представление параметра property.
-     * @throws ConfigException выбросится если:<br>
-     *     - значение было пустым или null<br>
-     *     - property не явлеяется строкой "true" или "false".
+     * @throws ConfigException выбросится если:<br> - значение было пустым или null<br> - property
+     *                         не явлеяется строкой "true" или "false".
      */
     public static boolean validateBoolean(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
@@ -90,9 +86,8 @@ public class ConfigService {
      * @param property поле считанное с config файла по ключу playerType.
      * @return Результат одно из значений enum {@link io.deeplay.qchess.client.view.gui.PlayerType}.
      * @throws ConfigException выбросится если: - значение поля было пустым или playerType вообще не
-     *     было в config файле<br>
-     *     - неудалось распарсить значение в элемент enum {@link
-     *     io.deeplay.qchess.client.view.gui.PlayerType}.
+     *                         было в config файле<br> - неудалось распарсить значение в элемент
+     *                         enum {@link io.deeplay.qchess.client.view.gui.PlayerType}.
      */
     public static PlayerType validatePlayerType(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
@@ -110,9 +105,8 @@ public class ConfigService {
      *
      * @param property - строковое представление пути к папке.
      * @return Результат property.
-     * @throws ConfigException выбросится если:<br>
-     *     - значение было пустым или null<br>
-     *     - путь не соответствует шаблону представления пути.
+     * @throws ConfigException выбросится если:<br> - значение было пустым или null<br> - путь не
+     *                         соответствует шаблону представления пути.
      */
     public static String validatePath(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
@@ -138,10 +132,10 @@ public class ConfigService {
      *
      * @param property поле считанное с config файла по ключу color.
      * @return Результат одно из значений enum {@link io.deeplay.qchess.game.model.Color} или null
-     *     (нужно выбрать рандомный цвет).
-     * @throws ConfigException выбросится если:<br>
-     *     - значение поля было пустым или color вообще не было в config файле<br>
-     *     - property не парсится ни в один из цветов, а также не является строкой "RANDOM".
+     * (нужно выбрать рандомный цвет).
+     * @throws ConfigException выбросится если:<br> - значение поля было пустым или color вообще не
+     *                         было в config файле<br> - property не парсится ни в один из цветов, а
+     *                         также не является строкой "RANDOM".
      */
     public static Color validateColor(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
