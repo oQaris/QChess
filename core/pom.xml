@@ -4,6 +4,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>QChess-core</artifactId>
 
+  <parent>
+    <artifactId>QChess</artifactId>
+    <groupId>io.deeplay</groupId>
+    <version>0.0.1</version>
+  </parent>
+
   <build>
     <plugins>
       <plugin>
@@ -55,20 +61,8 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
-    <!-- Боты -->
-    <dependency>
-      <artifactId>QChess-qbot</artifactId>
-      <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
-    </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <artifactId>QChess</artifactId>
-    <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
-  </parent>
 
   <properties>
     <maven.compiler.source>14</maven.compiler.source>
