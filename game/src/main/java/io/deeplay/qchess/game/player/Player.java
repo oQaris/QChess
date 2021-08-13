@@ -27,7 +27,7 @@ public abstract class Player {
     }
 
     public void setGameSettings(final GameSettings gs, final Color color) {
-        this.roomSettings = gs;
+        roomSettings = gs;
         ms = gs.moveSystem;
         board = gs.board;
         egd = gs.endGameDetector;

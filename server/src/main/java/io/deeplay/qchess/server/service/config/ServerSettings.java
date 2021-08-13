@@ -28,8 +28,8 @@ public class ServerSettings {
     private final int tournamentNumberGame;
 
     public ServerSettings(final String configPath) throws ConfigException {
-        Properties property = new Properties();
-        try (FileInputStream fis = new FileInputStream(
+        final Properties property = new Properties();
+        try (final FileInputStream fis = new FileInputStream(
             Objects.requireNonNull(getClass().getResource(configPath)).getFile())) {
             property.load(fis);
             port = ConfigService.validatePort(property.getProperty("server.port"));
@@ -40,9 +40,9 @@ public class ServerSettings {
             tournamentNumberGame = ConfigService
                 .validateTournamentNumberGame(property.getProperty("server.tournamentNumberGame"));
 
-        } catch (IOException | NullPointerException e) {
+        } catch (final IOException | NullPointerException e) {
             throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             throw e;
         }
     }

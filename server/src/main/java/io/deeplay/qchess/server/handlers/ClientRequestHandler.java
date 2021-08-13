@@ -39,23 +39,23 @@ public class ClientRequestHandler {
     /**
      * @return json ответ сервера в виде ServerToClientDTO или null, если не нужно ничего отправлять
      */
-    public static String process(String jsonClientRequest, int clientId) {
+    public static String process(final String jsonClientRequest, final int clientId) {
         logger.info("От клиента <{}> пришел json: {}", clientId, jsonClientRequest);
         try {
-            ClientToServerDTO mainDTO =
+            final ClientToServerDTO mainDTO =
                     SerializationService.clientToServerDTOMain(jsonClientRequest);
-            String response =
+            final String response =
                     redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json, clientId);
 
             if (response != null)
                 logger.info("Отправлен json клиенту <{}>: {}", clientId, response);
 
             return response;
-        } catch (SerializationException e) {
+        } catch (final SerializationException e) {
             logger.warn(
                     "Пришел некорректный json от клиента <{}>: {}", clientId, jsonClientRequest);
             return null;
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.warn(
                     "Получен неизвестный запрос от клиента <{}>: {}", clientId, jsonClientRequest);
             return null;

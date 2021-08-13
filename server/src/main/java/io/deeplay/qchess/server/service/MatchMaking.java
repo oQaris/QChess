@@ -22,14 +22,14 @@ public class MatchMaking {
 
     private MatchMaking() {}
 
-    public static String findGame(ClientToServerType type, String json, int clientId)
+    public static String findGame(final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == FindGameDTO.class;
-        FindGameDTO dto = SerializationService.clientToServerDTORequest(json, FindGameDTO.class);
+        final FindGameDTO dto = SerializationService.clientToServerDTORequest(json, FindGameDTO.class);
 
         // Пока не найдется комната или свободных комнат нет
         while (true) {
-            Room room =
+            final Room room =
                     GameDAO.findSuitableRoom(
                             dto.sessionToken, dto.enemyType, dto.gameCount, dto.myPreferColor);
             if (room == null) {
@@ -46,7 +46,7 @@ public class MatchMaking {
 
                 if (room.isFull()) continue;
 
-                GameSettings gs = new GameSettings(BoardFilling.STANDARD);
+                final GameSettings gs = new GameSettings(BoardFilling.STANDARD);
                 room.setGameSettings(gs, dto.gameCount);
 
                 final Color clientColor =
@@ -56,7 +56,7 @@ public class MatchMaking {
                                         : room.getFirstPlayer().getColor().inverse()
                                 : dto.myPreferColor;
 
-                RemotePlayer enemyBot =
+                final RemotePlayer enemyBot =
                         switch (dto.enemyType) {
                             case LOCAL_PLAYER, REMOTE_PLAYER -> null;
                             case RANDOM_BOT -> new RandomBot(gs, clientColor.inverse());
@@ -74,7 +74,7 @@ public class MatchMaking {
                             SerializationService.makeMainDTOJsonToClient(
                                     new GameSettingsDTO(clientColor, null)),
                             clientId);
-                } catch (ServerException ignore) {
+                } catch (final ServerException ignore) {
                     // Сервис вызывается при открытом сервере
                 }
 

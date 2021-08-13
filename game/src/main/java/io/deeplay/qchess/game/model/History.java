@@ -55,22 +55,22 @@ public class History {
     /** Копирует всю историю */
     public History(final History history, final GameSettings gameSettings) {
         this(gameSettings);
-        this.repetitionsMap.putAll(history.repetitionsMap);
-        this.recordsList.addAll(history.recordsList);
-        this.lastMove = history.lastMove;
-        this.hasMovedBeforeLastMove = history.hasMovedBeforeLastMove;
+        repetitionsMap.putAll(history.repetitionsMap);
+        recordsList.addAll(history.recordsList);
+        lastMove = history.lastMove;
+        hasMovedBeforeLastMove = history.hasMovedBeforeLastMove;
         if (history.removedFigure != null) {
             final Cell removedFigurePosition = history.removedFigure.getCurrentPosition();
-            this.removedFigure =
+            removedFigure =
                     Figure.build(
                             history.removedFigure.figureType,
                             history.removedFigure.getColor(),
                             new Cell(removedFigurePosition.column, removedFigurePosition.row));
         }
-        this.peaceMoveCount = history.peaceMoveCount;
-        this.isWhiteMove = history.isWhiteMove;
-        this.isWhiteCastlingPossibility = history.isWhiteCastlingPossibility;
-        this.isBlackCastlingPossibility = history.isBlackCastlingPossibility;
+        peaceMoveCount = history.peaceMoveCount;
+        isWhiteMove = history.isWhiteMove;
+        isWhiteCastlingPossibility = history.isWhiteCastlingPossibility;
+        isBlackCastlingPossibility = history.isBlackCastlingPossibility;
     }
 
     /**
@@ -222,7 +222,7 @@ public class History {
         if (color == Color.WHITE && isWhiteCastlingPossibility == 0) return res;
         if (color == Color.BLACK && isBlackCastlingPossibility == 0) return res;
 
-        Figure king = gameSettings.board.findKing(color);
+        final Figure king = gameSettings.board.findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
         if (king.wasMoved) return res;
         if (gameSettings.board.isNotRightRookStandardMoved(color)) res += "k";

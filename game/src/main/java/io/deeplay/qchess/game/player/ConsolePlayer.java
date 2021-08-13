@@ -46,7 +46,7 @@ public class ConsolePlayer extends RemotePlayer {
             final Move chosenMove = inputMoveNumber(allMoves);
             specificMoveModification(chosenMove);
             return chosenMove;
-        } catch (ChessError e) {
+        } catch (final ChessError e) {
             logger.error("Возникла ошибка в консольном игроке: {}", e.getMessage());
             throw new ChessError(CONSOLE_PLAYER_ERROR, e);
         }
@@ -61,7 +61,7 @@ public class ConsolePlayer extends RemotePlayer {
         System.out.println("Выберите ход:");
         allMoves.sort(Comparator.comparing(Move::toString));
         int number = 1;
-        for (Move move : allMoves) {
+        for (final Move move : allMoves) {
             System.out.println(number + ": " + move);
             ++number;
         }
@@ -75,7 +75,7 @@ public class ConsolePlayer extends RemotePlayer {
                 logger.info("Игрок ввел: {}", input);
                 final int numMove = Integer.parseInt(input);
                 move = allMoves.get(numMove - 1);
-            } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
+            } catch (final IOException | NumberFormatException | IndexOutOfBoundsException e) {
                 logger.info("Игрок ввел неправильный ход");
                 System.out.println("Неправильный ход, повторите попытку");
             }
@@ -103,7 +103,7 @@ public class ConsolePlayer extends RemotePlayer {
                     numTurnIntoFigure = 0;
                     throw new IllegalArgumentException();
                 }
-            } catch (IOException | IllegalArgumentException e) {
+            } catch (final IOException | IllegalArgumentException e) {
                 logger.info("Игрок ввел неправильный номер фигуры");
                 System.out.println("Неправильный номер фигуры, повторите попытку");
             }

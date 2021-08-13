@@ -34,7 +34,7 @@ public class Room {
     private GameSettings gs;
     private boolean error;
 
-    public void addGameCount(int count) {
+    public void addGameCount(final int count) {
         gameCount += count;
     }
 
@@ -46,7 +46,7 @@ public class Room {
         return maxGames;
     }
 
-    public void setGameSettings(GameSettings gs, int maxGames) {
+    public void setGameSettings(final GameSettings gs, final int maxGames) {
         synchronized (mutex) {
             this.gs = gs;
             this.maxGames = maxGames;
@@ -77,12 +77,12 @@ public class Room {
         synchronized (mutex) {
             try {
                 if (player1.getColor() == Color.BLACK) {
-                    RemotePlayer temp = player1;
+                    final RemotePlayer temp = player1;
                     player1 = player2;
                     player2 = temp;
                 }
                 game = new Selfplay(gs, player1, player2);
-            } catch (ChessError chessError) {
+            } catch (final ChessError chessError) {
                 error = true;
             }
         }
@@ -95,7 +95,7 @@ public class Room {
         }
     }
 
-    public void addPlayer(RemotePlayer player) {
+    public void addPlayer(final RemotePlayer player) {
         synchronized (mutex) {
             if (player1 == null) player1 = player;
             else if (player2 == null) player2 = player;
@@ -145,7 +145,7 @@ public class Room {
     }
 
     /** @return игрок с заданным токеном или null, если его нет в этой комнате */
-    public RemotePlayer getPlayer(String sessionToken) {
+    public RemotePlayer getPlayer(final String sessionToken) {
         synchronized (mutex) {
             if (player1 != null && player1.getSessionToken().equals(sessionToken)) return player1;
             if (player2 != null && player2.getSessionToken().equals(sessionToken)) return player2;
@@ -154,7 +154,7 @@ public class Room {
     }
 
     /** @return true, если в комнате есть игрок с заданным токеном */
-    public boolean contains(String sessionToken) {
+    public boolean contains(final String sessionToken) {
         synchronized (mutex) {
             return getPlayer(sessionToken) != null;
         }
@@ -165,11 +165,11 @@ public class Room {
      *
      * @return true, если ход корректный, иначе false
      */
-    public boolean move(Move move) {
+    public boolean move(final Move move) {
         synchronized (mutex) {
             try {
                 return game.move(move);
-            } catch (ChessError chessError) {
+            } catch (final ChessError chessError) {
                 error = true;
                 return false;
             }
@@ -190,7 +190,7 @@ public class Room {
     /** Меняет цвет игрокам и сбрасывает игру */
     public void resetGame() {
         synchronized (mutex) {
-            RemotePlayer temp = player1;
+            final RemotePlayer temp = player1;
             player1 = player2;
             player2 = temp;
 
@@ -199,7 +199,7 @@ public class Room {
                 player1.setGameSettings(gs, Color.WHITE);
                 player2.setGameSettings(gs, Color.BLACK);
                 game = new Selfplay(gs, player1, player2);
-            } catch (ChessError chessError) {
+            } catch (final ChessError chessError) {
                 // Клонирование настроек безопасно, если было до этого создано успешно
             }
 
@@ -210,7 +210,7 @@ public class Room {
     /**
      * @return токен сессии клиента противника для клиента с sessionToken. Вернет null, если его нет
      */
-    public String getOpponentSessionToken(String sessionToken) {
+    public String getOpponentSessionToken(final String sessionToken) {
         synchronized (mutex) {
             if (player1 != null && player1.getSessionToken().equals(sessionToken)) {
                 if (player2 != null) return player2.getSessionToken();
@@ -229,8 +229,8 @@ public class Room {
     }
 
     /** @return статус конца игры для игрока цвета color или null, если игра еще не окончена */
-    private String getEndGameStatus(Color color) {
-        boolean isStalemate = gs.endGameDetector.isStalemate(color);
+    private String getEndGameStatus(final Color color) {
+        final boolean isStalemate = gs.endGameDetector.isStalemate(color);
         if (isStalemate && gs.endGameDetector.isCheck(color)) {
             return "Мат " + (color == Color.BLACK ? "черным" : "белым");
         } else if (isStalemate) {
@@ -252,10 +252,10 @@ public class Room {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Room room = (Room) o;
+        final Room room = (Room) o;
         return id == room.id;
     }
 
