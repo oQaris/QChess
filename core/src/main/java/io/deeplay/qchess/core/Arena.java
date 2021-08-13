@@ -7,6 +7,7 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import java.util.Map;
@@ -21,7 +22,7 @@ import org.slf4j.MDC;
 
 public class Arena {
     private static final Logger logger = LoggerFactory.getLogger(Arena.class);
-    private static final int COUNT = 10;
+    private static final int COUNT = 100;
     private static final Map<String, Function<RemotePlayer, String>> optionalLogs =
             Map.of(
                     "Minimax*", // Тут пишется регулярка для имени игроков
@@ -40,7 +41,7 @@ public class Arena {
 
     /** Тут задаётся Второй игрок */
     public static RemotePlayer newSecondPlayer(final GameSettings gs, final Color myColor) {
-        return new RandomBot(gs, myColor);
+        return new AttackBot(gs, myColor);
     }
 
     public void battle() throws InterruptedException {
@@ -62,7 +63,7 @@ public class Arena {
 
         stats.showResults();
         final Map<String, Long> elo = RatingELO.elo;
-        elo.forEach((name, rt) -> System.out.println(name + " " + rt));
+        elo.forEach((name, rt) -> logger.info("{} = {}", name, rt));
     }
 
     private static class Game implements Runnable {
@@ -89,25 +90,31 @@ public class Arena {
             } catch (final ChessError e) {
                 logger.error("Ошибка в игре: {}", e.getMessage());
             }
-            logger.info("\nGames completed: " + (doneTasks.incrementAndGet()) + "/" + COUNT);
+            logger.info("");
+            logger.info("Games completed: {}/{}", doneTasks.incrementAndGet(), COUNT);
             final EndGameType gameResult = gs.endGameDetector.getGameResult();
             logger.info("fp: {}, {}", myColor, gameResult);
 
-            final double factor =
-                    gameResult
-                                    == (firstPlayer.getColor() == Color.WHITE
-                                            ? EndGameType.CHECKMATE_TO_BLACK
-                                            : EndGameType.CHECKMATE_TO_WHITE)
-                            ? 1
-                            : gameResult
-                                            == (firstPlayer.getColor() == Color.WHITE
-                                                    ? EndGameType.CHECKMATE_TO_WHITE
-                                                    : EndGameType.CHECKMATE_TO_BLACK)
-                                    ? -1
-                                    : 0.5;
+            final double firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
+            final double secondPlayerFactor = getFactor(secondPlayer.getColor(), gameResult);
 
             stats.addGameResult(firstPlayer, secondPlayer, gameResult);
-            rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), factor);
+            rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), firstPlayerFactor);
+            rating.updateELO(secondPlayer.getName(), firstPlayer.getName(), secondPlayerFactor);
+        }
+
+        private double getFactor(final Color firstPlayerColor, final EndGameType result) {
+            return result
+                            == (firstPlayerColor == Color.WHITE
+                                    ? EndGameType.CHECKMATE_TO_BLACK
+                                    : EndGameType.CHECKMATE_TO_WHITE)
+                    ? 1
+                    : (result
+                                    == (firstPlayerColor == Color.WHITE
+                                            ? EndGameType.CHECKMATE_TO_WHITE
+                                            : EndGameType.CHECKMATE_TO_BLACK)
+                            ? 0
+                            : 0.5);
         }
     }
 }
