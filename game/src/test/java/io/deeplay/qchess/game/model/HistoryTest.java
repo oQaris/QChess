@@ -168,8 +168,8 @@ public class HistoryTest {
         Selfplay game =
                 new Selfplay(
                         gs,
-                        new RemotePlayer(gs, Color.WHITE, ""),
-                        new RemotePlayer(gs, Color.BLACK, ""));
+                        new RemotePlayer(gs, Color.WHITE, "", ""),
+                        new RemotePlayer(gs, Color.BLACK, "", ""));
         int i = 0;
         String[] strs = {
             "a2",

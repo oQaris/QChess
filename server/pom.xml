@@ -87,10 +87,12 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
+    <!-- Tests -->
     <dependency>
-      <artifactId>QChess-n-nn-bot</artifactId>
-      <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.1</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 
