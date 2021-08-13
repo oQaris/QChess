@@ -12,7 +12,6 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
 import io.deeplay.qchess.server.controller.ServerController;
 import io.deeplay.qchess.server.dao.GameDAO;
 import io.deeplay.qchess.server.database.Room;
@@ -30,7 +29,9 @@ public class MatchMaking {
 
         // Пока не найдется комната или свободных комнат нет
         while (true) {
-            Room room = GameDAO.findSuitableRoom(dto.sessionToken, dto.enemyType, dto.gameCount);
+            Room room =
+                    GameDAO.findSuitableRoom(
+                            dto.sessionToken, dto.enemyType, dto.gameCount, dto.myPreferColor);
             if (room == null) {
                 return SerializationService.makeMainDTOJsonToClient(
                         new DisconnectedDTO("Нет свободных комнат"));
@@ -40,7 +41,6 @@ public class MatchMaking {
                     return SerializationService.makeMainDTOJsonToClient(
                             new GameSettingsDTO(
                                     room.getPlayer(dto.sessionToken).getColor(),
-                                    // TODO: проверки на null
                                     room.getGameSettings().history.getLastMove()));
                 }
 
@@ -49,19 +49,25 @@ public class MatchMaking {
                 GameSettings gs = new GameSettings(BoardFilling.STANDARD);
                 room.setGameSettings(gs, dto.gameCount);
 
+                final Color clientColor =
+                        dto.myPreferColor == null
+                                ? room.isEmpty()
+                                        ? Color.WHITE
+                                        : room.getFirstPlayer().getColor().inverse()
+                                : dto.myPreferColor;
+
                 RemotePlayer enemyBot =
                         switch (dto.enemyType) {
-                            case CONSOLE_PLAYER, GUI_PLAYER -> null;
-                            case RANDOM_BOT -> new RandomBot(gs, Color.BLACK);
-                            case ATTACK_BOT -> NNNBotFactory.getNNNBot(gs, Color.BLACK);
+                            case LOCAL_PLAYER, REMOTE_PLAYER -> null;
+                            case RANDOM_BOT -> new RandomBot(gs, clientColor.inverse());
+                                // TODO: вставить своего бота
+                            case ATTACK_BOT -> new RandomBot(gs, clientColor.inverse());
                         };
 
-                if (enemyBot == null && dto.enemyType != PlayerType.GUI_PLAYER) {
+                if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {
                     return SerializationService.makeMainDTOJsonToClient(
                             new DisconnectedDTO("Неверный тип противника"));
                 }
-
-                Color clientColor = room.isEmpty() ? Color.WHITE : Color.BLACK;
 
                 try {
                     ServerController.send(
@@ -73,7 +79,7 @@ public class MatchMaking {
                 }
 
                 GameService.putPlayerToRoom(
-                        room, new RemotePlayer(gs, clientColor, dto.sessionToken));
+                        room, new RemotePlayer(gs, clientColor, dto.sessionToken, "user"));
                 if (enemyBot != null) GameService.putPlayerToRoom(room, enemyBot);
             }
             return null;

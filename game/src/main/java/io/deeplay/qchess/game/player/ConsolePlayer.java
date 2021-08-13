@@ -33,7 +33,7 @@ public class ConsolePlayer extends RemotePlayer {
 
     public ConsolePlayer(
             final GameSettings roomSettings, final Color color, final BufferedReader in) {
-        super(roomSettings, color, "console-player");
+        super(roomSettings, color, "console-player", "PS5");
         this.in = in;
     }
 
@@ -54,7 +54,7 @@ public class ConsolePlayer extends RemotePlayer {
 
     @Override
     public PlayerType getPlayerType() {
-        return PlayerType.CONSOLE_PLAYER;
+        return PlayerType.LOCAL_PLAYER;
     }
 
     private void printMoves(final List<Move> allMoves) {

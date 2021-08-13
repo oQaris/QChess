@@ -1,0 +1,45 @@
+<configuration>
+
+  <!-- Вывод на консоль -->
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+
+    <target>System.out</target>
+  </appender>
+
+  <appender name="GAME-MOVES" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>game</key>
+      <defaultValue>GAME</defaultValue>
+    </discriminator>
+
+    <sift>
+      <appender name="FILE-${game}" class="ch.qos.logback.core.FileAppender">
+        <append>false</append>
+
+        <file>logs/${game}-qchess-statistics.log</file>
+
+        <encoder>
+          <pattern>%msg%n</pattern>
+        </encoder>
+      </appender>
+    </sift>
+  </appender>
+
+  <logger level="debug" name="io.deeplay.qchess.game.Selfplay">
+    <appender-ref ref="GAME-MOVES"/>
+  </logger>
+
+  <logger level="info" name="io.deeplay.qchess.core">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+
+  <root level="off"/>
+
+</configuration>

@@ -23,8 +23,6 @@ import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.nnnbot.bot.NNNBotFactory;
-import io.deeplay.qchess.lobot.LoBot;
 import java.util.List;
 
 public class GameService {
@@ -90,10 +88,11 @@ public class GameService {
 
     private static RemotePlayer getRemotePlayer(PlayerType pt, GameSettings gs, Color color) {
         return switch (pt) {
-            case USER -> new RemotePlayer(gs, color, "user");
+            case USER -> new RemotePlayer(gs, color, "user", "user");
             case EASYBOT -> new RandomBot(gs, color);
             case MEDIUMBOT -> new AttackBot(gs, color);
-            case HARDBOT -> new LoBot(gs, color);
+                // TODO: использовать своего бота
+            case HARDBOT -> new RandomBot(gs, color);
         };
     }
 
@@ -152,9 +151,7 @@ public class GameService {
         return null;
     }
 
-    /**
-     * Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть
-     */
+    /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
     public static void botMove() {
         try {
             Move move = GameDAO.getGame().getCurrentPlayerToMove().getNextMove();

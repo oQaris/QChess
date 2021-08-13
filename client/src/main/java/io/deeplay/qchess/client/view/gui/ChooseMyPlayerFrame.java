@@ -71,7 +71,7 @@ public class ChooseMyPlayerFrame extends Frame {
                         }
 
                         ClientController.chooseMyType(myType);
-                        mf.createChoosePlayerFrame(myType);
+                        mf.createChooseEnemyPlayerFrame(myType);
                         mf.destroyChooseMyPlayerFrame();
                     }
                 });

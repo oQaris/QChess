@@ -13,6 +13,16 @@ public class GameDAO {
         Database.getInstance().newGame(gs, game, color);
     }
 
+    /** Устанавливает предпочитаемый цвет игрока клиента */
+    public static void setMyPreferColor(Color myPreferColor) {
+        Database.getInstance().setMyPreferColor(myPreferColor);
+    }
+
+    /** @return предпочитаемый цвет игрока клиента */
+    public static Color getMyPreferColor() {
+        return Database.getInstance().getMyPreferColor();
+    }
+
     /** @return цвет игрока клиента */
     public static Color getMyColor() {
         return Database.getInstance().getMyColor();
