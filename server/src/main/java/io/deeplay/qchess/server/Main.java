@@ -5,8 +5,8 @@ import io.deeplay.qchess.server.view.ServerConsole;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        IServerView view = new ServerConsole();
+    public static void main(final String[] args) throws IOException {
+        final IServerView view = new ServerConsole();
         view.startView();
         view.close();
     }

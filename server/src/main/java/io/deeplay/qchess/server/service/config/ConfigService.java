@@ -23,7 +23,7 @@ public class ConfigService {
                 throw new ConfigException(ConfigExceptionErrorCode.NON_POSITIVE_PORT_VALUE);
             }
             return port;
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new ConfigException(ConfigExceptionErrorCode.INCORRECT_PORT_VALUE);
         }
     }
@@ -47,7 +47,7 @@ public class ConfigService {
                 throw new ConfigException(ConfigExceptionErrorCode.NON_POSITIVE_MAX_PLAYERS_VALUE);
             }
             return port;
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new ConfigException(ConfigExceptionErrorCode.INCORRECT_MAX_PLAYERS);
         }
     }
@@ -89,7 +89,7 @@ public class ConfigService {
      *                         tournamentNumberGame не int<br> - tournamentNumberGame является
      *                         неположительным числом.
      */
-    public static int validateTournamentNumberGame(String property) throws ConfigException {
+    public static int validateTournamentNumberGame(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
             throw new ConfigException(ConfigExceptionErrorCode.ABSENT_TOURNAMENT);
         }
@@ -99,7 +99,7 @@ public class ConfigService {
                 throw new ConfigException(ConfigExceptionErrorCode.NON_POSITIVE_TOURNAMENT_VALUE);
             }
             return number;
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new ConfigException(ConfigExceptionErrorCode.INCORRECT_TOURNAMENT_VALUE);
         }
     }

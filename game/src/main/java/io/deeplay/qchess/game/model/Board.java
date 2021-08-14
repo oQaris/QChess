@@ -38,7 +38,7 @@ public class Board {
         cellsType = new int[boardSize * boardSize];
         try {
             fill(fillingType);
-        } catch (ChessException e) {
+        } catch (final ChessException e) {
             logger.error("Ошибка при заполнении доски");
         }
         cellsTypeHash = GameMath.hashCode64(cellsType);
@@ -69,7 +69,7 @@ public class Board {
                     ++x;
                 }
             }
-        } catch (ChessException e) {
+        } catch (final ChessException e) {
             logger.error("Ошибка при установке фигуры на доску в конструкторе доски по строке");
             throw new ChessError(INCORRECT_COORDINATES);
         }
@@ -493,7 +493,7 @@ public class Board {
     public boolean isEmptyCell(final Cell cell) {
         try {
             return cells[cell.row][cell.column] == null;
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (final ArrayIndexOutOfBoundsException e) {
             return false;
         }
     }
@@ -505,7 +505,7 @@ public class Board {
     public boolean isEnemyFigureOn(final Color color, final Cell cell) {
         try {
             return cells[cell.row][cell.column].getColor() != color;
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+        } catch (final ArrayIndexOutOfBoundsException | NullPointerException e) {
             return false;
         }
     }

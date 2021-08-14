@@ -44,7 +44,7 @@ public class BoardState {
         this.isWhiteMove = isWhiteMove;
         this.isWhiteCastlingPossibility = isWhiteCastlingPossibility;
         this.isBlackCastlingPossibility = isBlackCastlingPossibility;
-        this.isPawnEnPassantPossible =
+        isPawnEnPassantPossible =
                 lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE;
     }
 
@@ -61,7 +61,7 @@ public class BoardState {
                     && isBlackCastlingPossibility == that.isBlackCastlingPossibility
                     && isPawnEnPassantPossible == that.isPawnEnPassantPossible
                     && Arrays.equals(boardSnapshot, that.boardSnapshot);
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             return false;
         }
     }

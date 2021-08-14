@@ -16,7 +16,7 @@ public class RandomBot extends RemotePlayer {
 
     @Override
     public Move getNextMove() throws ChessError {
-        List<Move> allMoves = ms.getAllPreparedMoves(color);
+        final List<Move> allMoves = ms.getAllPreparedMoves(color);
         return allMoves.get(new Random().nextInt(allMoves.size()));
     }
 

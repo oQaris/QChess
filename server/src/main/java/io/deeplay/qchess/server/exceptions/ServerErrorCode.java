@@ -12,7 +12,7 @@ public enum ServerErrorCode {
 
     private final String message;
 
-    ServerErrorCode(String message) {
+    ServerErrorCode(final String message) {
         this.message = message;
     }
 

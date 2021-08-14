@@ -18,20 +18,20 @@ public enum ClientToServerType {
             new HashMap<>();
 
     static {
-        for (ClientToServerType t : ClientToServerType.values()) type.put(t.dto, t);
+        for (final ClientToServerType t : ClientToServerType.values()) type.put(t.dto, t);
     }
 
     private final Class<? extends IClientToServerDTO> dto;
 
-    ClientToServerType(Class<? extends IClientToServerDTO> dto) {
+    ClientToServerType(final Class<? extends IClientToServerDTO> dto) {
         this.dto = dto;
     }
 
-    public static <T extends IClientToServerDTO> ClientToServerType valueOf(Class<T> dtoClass) {
+    public static <T extends IClientToServerDTO> ClientToServerType valueOf(final Class<T> dtoClass) {
         return Objects.requireNonNull(type.get(dtoClass), "DTO клиента не найдено");
     }
 
-    public static ClientToServerType valueOf(IClientToServerDTO dto) {
+    public static ClientToServerType valueOf(final IClientToServerDTO dto) {
         return valueOf(dto.getClass());
     }
 

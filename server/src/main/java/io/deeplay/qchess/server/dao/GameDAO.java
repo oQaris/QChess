@@ -11,13 +11,13 @@ public class GameDAO {
      * @return комната с игроком, у которого токен сессии равен sessionToken или null, если комната
      *     не найдена
      */
-    public static Room getRoom(String sessionToken) {
+    public static Room getRoom(final String sessionToken) {
         return Database.getInstance().getRoom(sessionToken);
     }
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
     public static Room findSuitableRoom(
-            String sessionToken, PlayerType enemyType, int gameCount, Color myPreferColor) {
+            final String sessionToken, final PlayerType enemyType, final int gameCount, final Color myPreferColor) {
         return Database.getInstance()
                 .findSuitableRoom(sessionToken, enemyType, gameCount, myPreferColor);
     }

@@ -24,7 +24,7 @@ public class ServerConsole implements IServerView {
         try {
             ServerController.startServer();
             System.out.println("Сервер запущен");
-        } catch (ServerException e) {
+        } catch (final ServerException e) {
             System.out.println("Ошибка при запуске сервера");
             e.printStackTrace();
         }
@@ -40,11 +40,11 @@ public class ServerConsole implements IServerView {
     private int update() {
         try {
             if (in.ready()) {
-                String command = in.readLine();
+                final String command = in.readLine();
                 if (command != null) ServerController.executeCommand(command);
                 return "stop".equals(command) ? -1 : 0;
             }
-        } catch (IOException | ServerException e) {
+        } catch (final IOException | ServerException e) {
             System.out.println("Ошибка при вводе команды");
             e.printStackTrace();
         }
@@ -52,7 +52,7 @@ public class ServerConsole implements IServerView {
     }
 
     @Override
-    public void print(String message) {
+    public void print(final String message) {
         System.out.println(message);
     }
 }

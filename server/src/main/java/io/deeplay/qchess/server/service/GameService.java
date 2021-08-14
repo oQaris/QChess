@@ -26,12 +26,12 @@ public class GameService {
 
     private GameService() {}
 
-    public static void putPlayerToRoom(Room room, RemotePlayer player) {
+    public static void putPlayerToRoom(final Room room, final RemotePlayer player) {
         room.addPlayer(player);
         if (room.isFull()) {
             room.startGame();
-            Integer id1 = ConnectionControlDAO.getId(room.getFirstPlayerToken());
-            Integer id2 = ConnectionControlDAO.getId(room.getSecondPlayerToken());
+            final Integer id1 = ConnectionControlDAO.getId(room.getFirstPlayerToken());
+            final Integer id2 = ConnectionControlDAO.getId(room.getSecondPlayerToken());
             try {
                 if (id1 != null)
                     ServerController.send(
@@ -42,12 +42,12 @@ public class GameService {
 
                 // Если первый игрок (белый) - это бот
                 if (id1 == null) {
-                    Move move = player.getNextMove();
+                    final Move move = player.getNextMove();
                     room.move(move);
                     StatisticService.writeMoveStats(room.id, room.getGameCount(), move);
                     sendMove(room.getFirstPlayerToken(), room.getSecondPlayerToken(), room, move);
                 }
-            } catch (ServerException | ChessError ignore) {
+            } catch (final ServerException | ChessError ignore) {
                 // Сервис вызывается при открытом сервере
                 // Ошибок в боте быть не может
             }
@@ -61,8 +61,8 @@ public class GameService {
      * Закрывает игру и отправляет все необходимые запросы только ОППОНЕНТУ для заданного игрока по
      * причине выхода последнего
      */
-    public static void endGameForOpponentOf(String sessionToken) {
-        Room room = GameDAO.getRoom(sessionToken);
+    public static void endGameForOpponentOf(final String sessionToken) {
+        final Room room = GameDAO.getRoom(sessionToken);
         if (room == null) return;
         synchronized (room.mutex) {
             // TODO: поток может получить доступ в комнату после ее закрытия оппонентом и открытия
@@ -70,8 +70,8 @@ public class GameService {
             //   необходимо создавать комнаты в БД, а не использовать существующие
             if (room.isEmpty()) return;
 
-            String opponentToken = room.getOpponentSessionToken(sessionToken);
-            Integer opponentID = ConnectionControlDAO.getId(opponentToken);
+            final String opponentToken = room.getOpponentSessionToken(sessionToken);
+            final Integer opponentID = ConnectionControlDAO.getId(opponentToken);
 
             if (opponentID != null && !room.isFinished()) {
                 sendEndGameAndDisconnect("Оппонент покинул игру, вы победили!", opponentID);
@@ -81,19 +81,19 @@ public class GameService {
     }
 
     /** Выполняет игровое действие */
-    public static String action(ClientToServerType type, String json, int clientId)
+    public static String action(final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == ActionDTO.class;
-        ActionDTO dto = SerializationService.clientToServerDTORequest(json, ActionDTO.class);
+        final ActionDTO dto = SerializationService.clientToServerDTORequest(json, ActionDTO.class);
 
-        Room room = GameDAO.getRoom(dto.sessionToken);
+        final Room room = GameDAO.getRoom(dto.sessionToken);
         if (room == null) {
             ConnectionControlService.disconnect(dto.sessionToken, "Вашей комнаты не существует");
             return null;
         }
         synchronized (room.mutex) {
             if (room.isStarted()) {
-                boolean correct = room.move(dto.move);
+                final boolean correct = room.move(dto.move);
                 if (room.isError()) {
                     // TODO: критическая ошибка в игре (невозможна? но это не точно)
                     return null;
@@ -112,7 +112,7 @@ public class GameService {
                             room.getOpponentSessionToken(dto.sessionToken),
                             room,
                             dto.move);
-                } catch (ServerException | ChessError e) {
+                } catch (final ServerException | ChessError e) {
                     logger.error("Возникла ошибка в игровом сервисе: {}", e.getMessage());
                     // Сервис вызывается при открытом сервере
                     // TODO: критическая ошибка в игре (невозможна? но это не точно)
@@ -122,9 +122,9 @@ public class GameService {
         return null;
     }
 
-    private static void sendMove(String fromToken, String toToken, Room room, Move move)
+    private static void sendMove(final String fromToken, final String toToken, final Room room, Move move)
             throws ServerException, ChessError {
-        RemotePlayer player = room.getPlayer(toToken);
+        final RemotePlayer player = room.getPlayer(toToken);
         String sendToken = toToken;
 
         String status = room.getEndGameStatus();
@@ -136,7 +136,7 @@ public class GameService {
         }
         status = room.getEndGameStatus();
 
-        Integer clientId = ConnectionControlDAO.getId(sendToken);
+        final Integer clientId = ConnectionControlDAO.getId(sendToken);
         if (clientId != null)
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(
@@ -145,8 +145,8 @@ public class GameService {
                     clientId);
 
         if (status != null) {
-            RemotePlayer player1 = room.getFirstPlayer();
-            RemotePlayer player2 = room.getSecondPlayer();
+            final RemotePlayer player1 = room.getFirstPlayer();
+            final RemotePlayer player2 = room.getSecondPlayer();
             room.addGameCount(1);
             StatisticService.writeEndGameStats(
                     room.id, room.getGameCount(), room.getEndGameStatus());
@@ -181,19 +181,19 @@ public class GameService {
         }
     }
 
-    private static void sendResetRoom(String reason, Integer clientId) {
+    private static void sendResetRoom(final String reason, final Integer clientId) {
         if (clientId == null) return;
         try {
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(new EndGameDTO(reason)), clientId);
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(new ResetGameDTO()), clientId);
-        } catch (ServerException ignore) {
+        } catch (final ServerException ignore) {
             // Сервис вызывается при открытом сервере
         }
     }
 
-    private static void sendEndGameAndDisconnect(String reason, Integer clientId) {
+    private static void sendEndGameAndDisconnect(final String reason, final Integer clientId) {
         if (clientId == null) return;
         try {
             ServerController.send(
@@ -202,7 +202,7 @@ public class GameService {
                     SerializationService.makeMainDTOJsonToClient(
                             new DisconnectedDTO("Игра окончена")),
                     clientId);
-        } catch (ServerException ignore) {
+        } catch (final ServerException ignore) {
             // Сервис вызывается при открытом сервере
         }
     }
