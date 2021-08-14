@@ -104,7 +104,8 @@ public class ClientHandlerManager extends Thread {
     /** Отправляет всем подключенным клиентам строку */
     public void sendAll(final String json) {
         synchronized (clients) {
-            for (final ClientHandler clientHandler : clients.values()) clientHandler.sendIfNotNull(json);
+            for (final ClientHandler clientHandler : clients.values())
+                clientHandler.sendIfNotNull(json);
         }
     }
 

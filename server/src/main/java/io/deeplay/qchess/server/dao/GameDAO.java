@@ -17,7 +17,10 @@ public class GameDAO {
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
     public static Room findSuitableRoom(
-            final String sessionToken, final PlayerType enemyType, final int gameCount, final Color myPreferColor) {
+            final String sessionToken,
+            final PlayerType enemyType,
+            final int gameCount,
+            final Color myPreferColor) {
         return Database.getInstance()
                 .findSuitableRoom(sessionToken, enemyType, gameCount, myPreferColor);
     }

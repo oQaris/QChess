@@ -54,7 +54,10 @@ public class Database {
 
     /** @return комната с предпочитаемыми настройками или null, если комната не найдена */
     public Room findSuitableRoom(
-            final String sessionToken, final PlayerType enemyType, final int gameCount, final Color myPreferColor) {
+            final String sessionToken,
+            final PlayerType enemyType,
+            final int gameCount,
+            final Color myPreferColor) {
         final Color enemyColor = myPreferColor != null ? myPreferColor.inverse() : null;
         for (final Room room : rooms) {
             synchronized (room.mutex) {

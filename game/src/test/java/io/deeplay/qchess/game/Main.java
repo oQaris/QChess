@@ -11,13 +11,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-    public static void main(String[] args) throws ChessError, IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(final String[] args) throws ChessError, IOException {
+        final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-        GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-        Player firstPlayer = new ConsolePlayer(roomSettings, Color.WHITE, in);
-        Player secondPlayer = new AttackBot(roomSettings, Color.BLACK);
-        Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
+        final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+        final Player firstPlayer = new ConsolePlayer(roomSettings, Color.WHITE, in);
+        final Player secondPlayer = new AttackBot(roomSettings, Color.BLACK);
+        final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
         game.run();
 
         in.close();

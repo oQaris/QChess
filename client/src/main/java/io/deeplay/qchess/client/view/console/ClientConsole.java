@@ -31,7 +31,7 @@ public class ClientConsole implements IClientView {
         ClientController.setView(this);
         try {
             ClientController.connect(IP, PORT);
-        } catch (ClientException e) {
+        } catch (final ClientException e) {
             System.out.println("Ошибка при подключении клиента");
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ public class ClientConsole implements IClientView {
 
         try {
             ClientController.disconnect("Клиент отключен");
-        } catch (ClientException e) {
+        } catch (final ClientException e) {
             System.out.println("Ошибка при отключении от сервера");
             e.printStackTrace();
         }
@@ -55,11 +55,11 @@ public class ClientConsole implements IClientView {
     private int update() {
         try {
             if (in.ready()) {
-                String command = in.readLine();
+                final String command = in.readLine();
                 if (command != null) ClientController.executeCommand(command);
                 return "stop".equals(command) ? -1 : 0;
             }
-        } catch (IOException | ClientException e) {
+        } catch (final IOException | ClientException e) {
             System.out.println("Ошибка при вводе команды");
             e.printStackTrace();
         }
@@ -67,12 +67,12 @@ public class ClientConsole implements IClientView {
     }
 
     @Override
-    public void print(String message) {
+    public void print(final String message) {
         System.out.println(message);
     }
 
     @Override
-    public void showMessage(String message) {
+    public void showMessage(final String message) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }
 
@@ -80,7 +80,7 @@ public class ClientConsole implements IClientView {
     public void drawBoard() {
         for (int row = 0; row < 8; ++row) {
             for (int column = 0; column < 8; ++column) {
-                ViewFigure f = board.getFigure(column, row);
+                final ViewFigure f = board.getFigure(column, row);
                 if (f == null) System.out.print("_");
                 else System.out.print(figureToIcon(ViewColor.valueOf(f.getColor()), f.getType()));
             }
@@ -88,7 +88,7 @@ public class ClientConsole implements IClientView {
         }
     }
 
-    private char figureToIcon(ViewColor color, ViewFigureType figure) {
+    private char figureToIcon(final ViewColor color, final ViewFigureType figure) {
         // дублируется код из борды
         return switch (color) {
             case WHITE -> switch (figure) {
@@ -116,17 +116,17 @@ public class ClientConsole implements IClientView {
     }
 
     @Override
-    public void closeGame(String reason) {
+    public void closeGame(final String reason) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }
 
     @Override
-    public void disconnect(String reason) {
+    public void disconnect(final String reason) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }
 
     @Override
-    public void changeMyColorOnBoard(boolean color) {
+    public void changeMyColorOnBoard(final boolean color) {
         throw new UnsupportedOperationException("Еще не реализовано");
     }
 }

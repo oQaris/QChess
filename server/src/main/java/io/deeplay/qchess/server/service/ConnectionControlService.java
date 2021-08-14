@@ -19,7 +19,8 @@ public class ConnectionControlService {
         return SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason));
     }
 
-    public static String setConnection(final ClientToServerType type, final String json, final int clientId)
+    public static String setConnection(
+            final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == ConnectionDTO.class;
         final ConnectionDTO dto =
