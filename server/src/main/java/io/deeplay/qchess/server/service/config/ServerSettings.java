@@ -47,7 +47,7 @@ public class ServerSettings {
         this(DEFAULT_CONFIG_PATH);
     }
 
-    private void readConfig(final InputStream config) throws ConfigException {
+    public void readConfig(final InputStream config) throws ConfigException {
         try {
             final Properties property = new Properties();
 
