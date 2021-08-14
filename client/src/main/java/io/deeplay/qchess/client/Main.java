@@ -14,6 +14,8 @@ public class Main {
         System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, logback);
 
         // TODO: применить другие параметры из конфига
+        // TODO: для этого нужен консольный игрок или автоматический игрок без интерфейса...
+
         final IClientView view = new ClientGUI();
         view.startView();
         view.close();

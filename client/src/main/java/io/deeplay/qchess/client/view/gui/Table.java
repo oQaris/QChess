@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -51,16 +53,15 @@ public class Table extends Frame {
      * Этот путь указывает на файлы в .jar, и используется, если файлы по обычным путям не были
      * найдены или повреждены
      */
-    private static final String defaultFigureImagesPath = "/art/figures";
+    private static final String JAR_figureImagesPath = "/art/figures";
     /**
      * Этот путь указывает на файлы в .jar, и используется, если файлы по обычным путям не были
      * найдены или повреждены
      */
-    private static final String defaultIconPath = "/art/other/icon.png";
+    private static final String JAR_iconPath = "/art/other/icon.png";
 
-    // TODO: использовать эти пути вместо default
     // TODO: получать путь из конфига
-    // TODO: если конфиг поврежден или пути некорректные, использовать default пути
+    // TODO: нужно сделать пути до картинок в конфиге
     /** Обычный путь на файлы, лежащие рядом с .jar */
     private static final String figureImagesPath = "./art/figures";
     /** Обычный путь на файлы, лежащие рядом с .jar */
@@ -83,11 +84,14 @@ public class Table extends Frame {
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        try (final InputStream png = getClass().getResourceAsStream("/art/other/icon.png")) {
-            assert png != null;
+        final File file = new File(iconPath);
+        try (final InputStream png =
+                file.exists() && file.canRead()
+                        ? new FileInputStream(file)
+                        : getClass().getResourceAsStream(JAR_iconPath)) {
             final BufferedImage image = ImageIO.read(png);
             frame.setIconImage(image);
-        } catch (final IOException | NullPointerException e) {
+        } catch (final IOException | NullPointerException | IllegalArgumentException e) {
             e.printStackTrace();
         }
 
@@ -325,21 +329,29 @@ public class Table extends Frame {
             validate();
         }
 
+        private String getFigureImagesPath(
+                final String figureImagesDirectoryPath, final ViewFigure figure) {
+            return String.format(
+                    "%s/%s/%s_%s.png",
+                    figureImagesDirectoryPath,
+                    figureStyle,
+                    figure.getColor().toLowerCase(),
+                    figure.getType().toString().toLowerCase());
+        }
+
         private void assignCellFigureIcon() {
             removeAll();
             final ViewFigure figure =
                     ClientController.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             if (figure != null) {
+                final File file = new File(getFigureImagesPath(figureImagesPath, figure));
                 try (final InputStream png =
-                        getClass()
-                                .getResourceAsStream(
-                                        String.format(
-                                                "%s/%s/%s_%s.png",
-                                                defaultFigureImagesPath,
-                                                figureStyle,
-                                                figure.getColor().toLowerCase(),
-                                                figure.getType().toString().toLowerCase()))) {
-                    assert png != null;
+                        file.exists() && file.canRead()
+                                ? new FileInputStream(file)
+                                : getClass()
+                                        .getResourceAsStream(
+                                                getFigureImagesPath(
+                                                        JAR_figureImagesPath, figure))) {
                     final BufferedImage image = ImageIO.read(png);
 
                     final ImageIcon icon =
@@ -348,7 +360,7 @@ public class Table extends Frame {
                     removeAll();
                     add(label);
 
-                } catch (final IOException | NullPointerException e) {
+                } catch (final IOException | NullPointerException | IllegalArgumentException e) {
                     // logger + what do i can do?
                     e.printStackTrace();
                 }
