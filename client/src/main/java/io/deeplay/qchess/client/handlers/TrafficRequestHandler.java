@@ -48,20 +48,20 @@ public class TrafficRequestHandler {
     /**
      * @return json ответ клиента в виде ClientToServerDTO или null, если не нужно ничего отправлять
      */
-    public static String process(String jsonServerRequest) {
+    public static String process(final String jsonServerRequest) {
         logger.debug("Пришел json: {}", jsonServerRequest);
         try {
-            ServerToClientDTO mainDTO =
+            final ServerToClientDTO mainDTO =
                     SerializationService.serverToClientDTOMain(jsonServerRequest);
-            String response = redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json);
+            final String response = redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json);
 
             if (response != null) logger.debug("Отправлен json серверу: {}", jsonServerRequest);
 
             return response;
-        } catch (SerializationException e) {
+        } catch (final SerializationException e) {
             logger.warn("Пришел некорректный json от сервера: {}", jsonServerRequest);
             return null;
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.warn("Получен неизвестный запрос от сервера: {}", jsonServerRequest);
             return null;
         }

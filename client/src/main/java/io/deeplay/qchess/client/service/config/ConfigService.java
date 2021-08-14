@@ -31,7 +31,7 @@ public class ConfigService {
                 if (intOctet < 0 || intOctet > 255) {
                     throw new ConfigException(ConfigExceptionErrorCode.RANGE_OUT_IP_OCTET);
                 }
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 throw new ConfigException(ConfigExceptionErrorCode.INCORRECT_IP_OCTET_VALUE);
             }
         }
@@ -58,7 +58,7 @@ public class ConfigService {
                 throw new ConfigException(ConfigExceptionErrorCode.NON_POSITIVE_PORT_VALUE);
             }
             return port;
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new ConfigException(ConfigExceptionErrorCode.INCORRECT_PORT_VALUE);
         }
     }
@@ -100,7 +100,7 @@ public class ConfigService {
         }
         try {
             return PlayerType.valueOf(property);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new ConfigException(ConfigExceptionErrorCode.INCORRECT_PLAYER_TYPE_VALUE);
         }
     }

@@ -24,8 +24,8 @@ public class ClientSettings {
     private final boolean isTournament;
 
     public ClientSettings(final String configPath) throws ConfigException {
-        Properties property = new Properties();
-        try (FileInputStream fis =
+        final Properties property = new Properties();
+        try (final FileInputStream fis =
                 new FileInputStream(
                         Objects.requireNonNull(getClass().getResource(configPath)).getFile())) {
             property.load(fis);
@@ -40,9 +40,9 @@ public class ClientSettings {
             isTournament =
                     ConfigService.validateBoolean(property.getProperty("client.isTournament"));
 
-        } catch (IOException | NullPointerException e) {
+        } catch (final IOException | NullPointerException e) {
             throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             throw e;
         }
     }

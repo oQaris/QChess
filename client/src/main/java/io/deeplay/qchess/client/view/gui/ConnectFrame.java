@@ -21,7 +21,7 @@ public class ConnectFrame extends Frame {
     private final JTextField portField;
     private final GridBagConstraints gbc;
 
-    public ConnectFrame(MainFrame mf) {
+    public ConnectFrame(final MainFrame mf) {
         this.mf = mf;
         frame = new JFrame("Присоединиться");
         frame.setSize(OUTER_FRAME_DIMENSION);
@@ -37,8 +37,8 @@ public class ConnectFrame extends Frame {
 
         panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        JPanel ipPanel = new JPanel();
-        JPanel portPanel = new JPanel();
+        final JPanel ipPanel = new JPanel();
+        final JPanel portPanel = new JPanel();
 
         ipField = getInputIP();
         portField = getInputPort();
@@ -66,22 +66,22 @@ public class ConnectFrame extends Frame {
     }
 
     private JButton addButtonConnect() {
-        JButton connectButton = new JButton("Connect");
+        final JButton connectButton = new JButton("Connect");
 
         connectButton.addMouseListener(
                 new MouseListener() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {}
+                    public void mouseClicked(final MouseEvent e) {}
 
                     @Override
-                    public void mousePressed(MouseEvent e) {
-                        String ip = ipField.getText();
-                        int port = Integer.parseInt(portField.getText());
+                    public void mousePressed(final MouseEvent e) {
+                        final String ip = ipField.getText();
+                        final int port = Integer.parseInt(portField.getText());
                         System.out.println(ip + ":" + port);
 
                         try {
                             ClientController.connect(ip, port);
-                        } catch (ClientException clientException) {
+                        } catch (final ClientException clientException) {
                             new MessageFrame(
                                     frame, "Предупреждение", "Не удалось подключиться к серверу");
                             return;
@@ -90,7 +90,7 @@ public class ConnectFrame extends Frame {
                         try {
                             // TODO: переписать на автомат
                             ClientController.waitForAcceptConnection();
-                            boolean color = true;
+                            final boolean color = true;
                             GameService.initGame(color);
 
                             frame.dispose();
@@ -99,19 +99,19 @@ public class ConnectFrame extends Frame {
                             ClientController.sendFindGameRequest();
                             mf.destroyConnectFrame();
 
-                        } catch (ClientException clientException) {
+                        } catch (final ClientException clientException) {
                             System.err.println(clientException.getMessage());
                         }
                     }
 
                     @Override
-                    public void mouseReleased(MouseEvent e) {}
+                    public void mouseReleased(final MouseEvent e) {}
 
                     @Override
-                    public void mouseEntered(MouseEvent e) {}
+                    public void mouseEntered(final MouseEvent e) {}
 
                     @Override
-                    public void mouseExited(MouseEvent e) {}
+                    public void mouseExited(final MouseEvent e) {}
                 });
 
         return connectButton;

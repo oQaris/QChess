@@ -10,9 +10,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(final String[] args) throws IOException {
         System.out.println(
-                "Введите \"s\", чтобы запустить сервер или \"c\", чтобы запустить клиент"
-                        + System.lineSeparator()
-                        + "Ещё можно ввести \"a\", чтобы лицезреть бесконечную мощь Qbot'a");
+                "Введите \"s\", чтобы запустить сервер или \"c\", чтобы запустить клиент");
+        System.out.println("Ещё можно ввести \"a\", чтобы лицезреть бесконечную мощь Qbot'a");
 
         final String input;
         if (args.length > 0) input = args[0];

@@ -7,7 +7,7 @@ public class ViewCell {
     private final int row;
     private final boolean attack;
 
-    public ViewCell(int row, int column, boolean attack) {
+    public ViewCell(final int row, final int column, final boolean attack) {
         this.column = column;
         this.row = row;
         this.attack = attack;
@@ -26,14 +26,14 @@ public class ViewCell {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ViewCell viewCell = (ViewCell) o;
+        final ViewCell viewCell = (ViewCell) o;
         return column == viewCell.column && row == viewCell.row;
     }
 
