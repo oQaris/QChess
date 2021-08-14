@@ -30,14 +30,16 @@ public class ServerSettings {
         final File file = new File(configPath);
         if (!file.exists() || !file.canRead()) {
             logger.warn("Локальный конфиг не был прочитан, попытка прочитать из .jar ...");
-            readConfig(getClass().getResourceAsStream(JAR_CONFIG_PATH));
-        } else
-            try (final FileInputStream config = new FileInputStream(file)) {
-                readConfig(config);
-            } catch (final IOException e) {
-                logger.error("Ошибка чтения локального конфига: {}", e.getMessage());
-                throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
-            }
+        }
+        try (final InputStream config =
+                file.exists() && file.canRead()
+                        ? new FileInputStream(file)
+                        : getClass().getResourceAsStream(JAR_CONFIG_PATH)) {
+            readConfig(config);
+        } catch (final IOException e) {
+            logger.error("Ошибка чтения локального конфига: {}", e.getMessage());
+            throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
+        }
         logger.info("Конфиг успешно установлен");
     }
 
