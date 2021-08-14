@@ -2,33 +2,58 @@ package io.deeplay.qchess.client.service.config;
 
 import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.game.model.Color;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClientSettings {
 
-    public static final String DEFAULT_CONFIG_PATH = "/client_configuration.conf";
+    public static final String JAR_CONFIG_PATH = "/client_configuration.conf";
+    public static final String DEFAULT_CONFIG_PATH = "./client_configuration.conf";
+    public static final String DEFAULT_LOGBACK_NAME = "logback-client.xml";
 
-    private final String ip;
-    private final int port;
-    private final boolean isGui;
-    private final PlayerType playerType;
+    private static final transient Logger logger = LoggerFactory.getLogger(ClientSettings.class);
+
+    private String ip;
+    private int port;
+    private boolean isGui;
+    private PlayerType playerType;
     /** Строковое представление пути до папки, где хранятся логи */
-    private final String logPath;
+    private String logPath;
     /** Строковое представление пути до папки, где хранится файл с логбэком */
-    private final String logBack;
+    private String logBack;
 
-    private final Color color;
-    private final boolean isTournament;
+    private Color color;
+    private boolean isTournament;
 
     public ClientSettings(final String configPath) throws ConfigException {
-        final Properties property = new Properties();
-        try (final FileInputStream fis =
-                new FileInputStream(
-                        Objects.requireNonNull(getClass().getResource(configPath)).getFile())) {
-            property.load(fis);
+        final File file = new File(configPath);
+        if (!file.exists() || !file.canRead()) {
+            logger.warn("Локальный конфиг не был прочитан, попытка прочитать из .jar ...");
+            readConfig(getClass().getResourceAsStream(JAR_CONFIG_PATH));
+        } else
+            try (final FileInputStream config = new FileInputStream(file)) {
+                readConfig(config);
+            } catch (final IOException e) {
+                logger.error("Ошибка чтения локального конфига: {}", e.getMessage());
+                throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
+            }
+        logger.info("Конфиг успешно установлен");
+    }
+
+    public ClientSettings() throws ConfigException {
+        this(DEFAULT_CONFIG_PATH);
+    }
+
+    private void readConfig(final InputStream config) throws ConfigException {
+        try {
+            final Properties property = new Properties();
+
+            property.load(config);
             ip = ConfigService.validateIp(property.getProperty("client.ip"));
             port = ConfigService.validatePort(property.getProperty("client.port"));
             isGui = ConfigService.validateBoolean(property.getProperty("client.isGui"));
@@ -39,20 +64,10 @@ public class ClientSettings {
             color = ConfigService.validateColor(property.getProperty("client.color"));
             isTournament =
                     ConfigService.validateBoolean(property.getProperty("client.isTournament"));
-
-        } catch (final IOException | NullPointerException e) {
+        } catch (final IOException e) {
+            logger.error("Ошибка парсинга локального конфига: {}", e.getMessage());
             throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
-        } catch (final ConfigException e) {
-            throw e;
         }
-    }
-
-    public ClientSettings() throws ConfigException {
-        this(DEFAULT_CONFIG_PATH);
-    }
-
-    public static String getConfigPath() {
-        return DEFAULT_CONFIG_PATH;
     }
 
     public String getIp() {
@@ -71,10 +86,12 @@ public class ClientSettings {
         return playerType;
     }
 
+    /** @return Строковое представление пути до папки, где хранятся логи */
     public String getLogPath() {
         return logPath;
     }
 
+    /** @return Строковое представление пути до папки, где хранится файл с логбэком */
     public String getLogBack() {
         return logBack;
     }
