@@ -33,9 +33,9 @@ public class MoveSystem {
 
     public MoveSystem(final GameSettings gs) {
         this.gs = gs;
-        this.board = gs.board;
-        this.history = gs.history;
-        this.egd = gs.endGameDetector;
+        board = gs.board;
+        history = gs.history;
+        egd = gs.endGameDetector;
     }
 
     public Figure move(final Move move) throws ChessError {
@@ -123,7 +123,7 @@ public class MoveSystem {
             } else prevMoveIfRecordNotUse = move;
 
             return removedFigure;
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.warn("Ошибка при выполнении хода: {}", move);
             throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
         }
@@ -196,7 +196,7 @@ public class MoveSystem {
                 }
             }
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.error("Ошибка при отмене хода: {}", move);
             throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
         }
@@ -263,7 +263,7 @@ public class MoveSystem {
             final boolean isCorrect = isCorrectVirtualMove(move);
             move.turnInto = prevTurnInto;
             return isCorrect;
-        } catch (ChessException | NullPointerException e) {
+        } catch (final ChessException | NullPointerException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
                     move,
@@ -281,7 +281,7 @@ public class MoveSystem {
     public boolean isHasAnyCorrectMoveSilence(final Color color) {
         try {
             return board.isHasAnyCorrectMove(gs, color);
-        } catch (ChessError e) {
+        } catch (final ChessError e) {
             return false;
         }
     }
@@ -318,7 +318,7 @@ public class MoveSystem {
         try {
             for (final Move m : board.getFigureUgly(cell).getAllMoves(gs))
                 if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException ignored) {
+        } catch (final ArrayIndexOutOfBoundsException | NullPointerException ignored) {
             // Вместо проверки клетки на доске
         }
         return res;
@@ -331,7 +331,7 @@ public class MoveSystem {
                     && checkCorrectnessIfSpecificMove(move)
                     && inAvailableMoves(move)
                     && isCorrectVirtualMove(move);
-        } catch (ChessException | NullPointerException | ArrayIndexOutOfBoundsException e) {
+        } catch (final ChessException | NullPointerException | ArrayIndexOutOfBoundsException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
                     move,

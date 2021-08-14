@@ -10,39 +10,33 @@ public class ServerSettings {
     public static final String DEFAULT_CONFIG_PATH = "/server_configuration.conf";
 
     private final int port;
-    /**
-     * Максимальное кол-во игроков, которое может быть одновременно на сервере
-     */
+    /** Максимальное кол-во игроков, которое может быть одновременно на сервере */
     private final int maxPlayers;
-    /**
-     * Строковое представление пути до папки, где хранятся логи
-     */
+    /** Строковое представление пути до папки, где хранятся логи */
     private final String logPath;
-    /**
-     * Строковое представление пути до папки, где хранится файл с логбэком
-     */
+    /** Строковое представление пути до папки, где хранится файл с логбэком */
     private final String logBack;
-    /**
-     * Количество игр, которые будет играться в турнире при его проведении
-     */
+    /** Количество игр, которые будет играться в турнире при его проведении */
     private final int tournamentNumberGame;
 
     public ServerSettings(final String configPath) throws ConfigException {
-        Properties property = new Properties();
-        try (FileInputStream fis = new FileInputStream(
-            Objects.requireNonNull(getClass().getResource(configPath)).getFile())) {
+        final Properties property = new Properties();
+        try (final FileInputStream fis =
+                new FileInputStream(
+                        Objects.requireNonNull(getClass().getResource(configPath)).getFile())) {
             property.load(fis);
             port = ConfigService.validatePort(property.getProperty("server.port"));
-            maxPlayers = ConfigService
-                .validateMaxPlayers(property.getProperty("server.maxPlayers"));
+            maxPlayers =
+                    ConfigService.validateMaxPlayers(property.getProperty("server.maxPlayers"));
             logPath = ConfigService.validatePath(property.getProperty("server.logPath"));
             logBack = ConfigService.validatePath(property.getProperty("server.logBack"));
-            tournamentNumberGame = ConfigService
-                .validateTournamentNumberGame(property.getProperty("server.tournamentNumberGame"));
+            tournamentNumberGame =
+                    ConfigService.validateTournamentNumberGame(
+                            property.getProperty("server.tournamentNumberGame"));
 
-        } catch (IOException | NullPointerException e) {
+        } catch (final IOException | NullPointerException e) {
             throw new ConfigException(ConfigExceptionErrorCode.READ_CONFIG_FILE);
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             throw e;
         }
     }

@@ -15,14 +15,15 @@ public class ConnectionControlService {
 
     private ConnectionControlService() {}
 
-    public static String getJsonToDisconnect(String reason) {
+    public static String getJsonToDisconnect(final String reason) {
         return SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason));
     }
 
-    public static String setConnection(ClientToServerType type, String json, int clientId)
+    public static String setConnection(
+            final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == ConnectionDTO.class;
-        ConnectionDTO dto =
+        final ConnectionDTO dto =
                 SerializationService.clientToServerDTORequest(json, ConnectionDTO.class);
 
         if (dto.connection) {
@@ -30,7 +31,7 @@ public class ConnectionControlService {
                 disconnect(dto.sessionToken, "Уже подключен");
                 return null;
             } else {
-                String newSessionToken = UUID.randomUUID().toString();
+                final String newSessionToken = UUID.randomUUID().toString();
                 ConnectionControlDAO.addPlayer(newSessionToken, clientId);
                 return SerializationService.makeMainDTOJsonToClient(
                         new AcceptConnectionDTO(newSessionToken));
@@ -42,8 +43,8 @@ public class ConnectionControlService {
         return null;
     }
 
-    public static void disconnect(String sessionToken, String reason) {
-        Integer clientId = ConnectionControlDAO.getId(sessionToken);
+    public static void disconnect(final String sessionToken, final String reason) {
+        final Integer clientId = ConnectionControlDAO.getId(sessionToken);
         if (clientId == null) return;
         GameService.endGameForOpponentOf(sessionToken);
         ConnectionControlDAO.removePlayer(sessionToken);
@@ -53,7 +54,7 @@ public class ConnectionControlService {
                     clientId);
             // TODO: убрать костыль (перенести id клиентов в БД), возвращать Json
             ServerController.closeConnection(clientId);
-        } catch (ServerException ignore) {
+        } catch (final ServerException ignore) {
             // Сервис вызывается при открытом сервере
         }
     }

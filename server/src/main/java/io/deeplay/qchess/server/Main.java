@@ -6,12 +6,12 @@ import io.deeplay.qchess.server.view.ServerConsole;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(final String[] args) throws IOException {
         // TODO: получение пути до logback из конфига
         System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "./logback-server.xml");
         // TODO: если конфиг поврежден или путь до logback некорректный, продолжить программу
 
-        IServerView view = new ServerConsole();
+        final IServerView view = new ServerConsole();
         view.startView();
         view.close();
     }

@@ -46,7 +46,7 @@ public class Selfplay {
         }
         try {
             roomSettings.history.addRecord(null);
-        } catch (ChessError | NullPointerException e) {
+        } catch (final ChessError | NullPointerException e) {
             logger.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
@@ -91,7 +91,7 @@ public class Selfplay {
         try {
             return roomSettings.board.getFigure(move.getFrom()).getColor()
                     == currentPlayerToMove.getColor();
-        } catch (ChessException | NullPointerException e) {
+        } catch (final ChessException | NullPointerException e) {
             return false;
         }
     }
@@ -159,7 +159,7 @@ public class Selfplay {
                 logger.debug("<---------------------------------------------------------------->");
             }
             return removedFigure;
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.error("Не удалось выполнить проверенный ход: {}", move);
             throw new ChessError(ERROR_WHILE_ADD_PEACE_MOVE_COUNT, e);
         }

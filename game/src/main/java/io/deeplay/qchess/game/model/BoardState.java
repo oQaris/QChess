@@ -44,8 +44,7 @@ public class BoardState {
         this.isWhiteMove = isWhiteMove;
         this.isWhiteCastlingPossibility = isWhiteCastlingPossibility;
         this.isBlackCastlingPossibility = isBlackCastlingPossibility;
-        this.isPawnEnPassantPossible =
-                lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE;
+        isPawnEnPassantPossible = lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE;
     }
 
     /** Используется только для нахождения повторений доски */
@@ -61,7 +60,7 @@ public class BoardState {
                     && isBlackCastlingPossibility == that.isBlackCastlingPossibility
                     && isPawnEnPassantPossible == that.isPawnEnPassantPossible
                     && Arrays.equals(boardSnapshot, that.boardSnapshot);
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             return false;
         }
     }
