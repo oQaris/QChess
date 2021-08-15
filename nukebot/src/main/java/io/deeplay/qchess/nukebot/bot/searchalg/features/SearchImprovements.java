@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.features;
+package io.deeplay.qchess.nukebot.bot.searchalg.features;
 
 import io.deeplay.qchess.game.model.Move;
 import java.util.Comparator;

@@ -4,9 +4,8 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation;
-import io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.ParallelSearch;
+import io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl.ParallelExecutorsSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -31,11 +30,9 @@ public class NukeBotFactory {
         final int maxDepth = 3;
         gs.history.setMinBoardStateToSave(maxDepth);
 
-        final EvaluationFunc evaluationFunc =
-                color == Color.BLACK
-                        ? MatrixEvaluation::figurePositionHeuristics
-                        : ImprovedMatrixEvaluation::figurePositionHeuristics;
-        final SearchFunc deepSearch = new ParallelSearch(gs, color, evaluationFunc, maxDepth);
+        final EvaluationFunc evaluationFunc = ImprovedMatrixEvaluation::figurePositionHeuristics;
+        final SearchFunc deepSearch =
+                new ParallelExecutorsSearch(gs, color, evaluationFunc, maxDepth);
 
         final NukeBot nukeBot = new NukeBot(gs, color, deepSearch);
 

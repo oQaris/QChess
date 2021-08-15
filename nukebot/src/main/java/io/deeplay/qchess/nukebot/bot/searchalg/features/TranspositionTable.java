@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.features;
+package io.deeplay.qchess.nukebot.bot.searchalg.features;
 
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Move;
@@ -19,7 +19,6 @@ public class TranspositionTable {
     /**
      * Кладет результат во вхождение, если оно есть, иначе создает новое и помещает в ТТ
      *
-     * @param entry вхождение, возможно null
      * @param allMoves все возможные текущие ходы
      * @param result лучшая оценка
      * @param boardState состояние доски
@@ -28,25 +27,20 @@ public class TranspositionTable {
      * @param depth текущая глубина
      */
     public void store(
-            TTEntry entry,
             final List<Move> allMoves,
             final int result,
             final BoardState boardState,
             final int alfaOrigin,
             final int betaOrigin,
             final int depth) {
-        if (entry == null) {
-            entry = new TTEntry(allMoves, depth);
-            entries.put(boardState, entry);
-        } else {
-            entry.depth = depth;
-            entry.allMoves = allMoves;
-        }
+        final TTEntry entry = new TTEntry(allMoves, depth);
 
         if (result <= alfaOrigin) entry.upperBound = result;
         if (result >= betaOrigin) entry.lowerBound = result;
         if (alfaOrigin < result && result < betaOrigin)
             entry.lowerBound = entry.upperBound = result;
+
+        entries.put(boardState, entry);
     }
 
     public static class TTEntry {

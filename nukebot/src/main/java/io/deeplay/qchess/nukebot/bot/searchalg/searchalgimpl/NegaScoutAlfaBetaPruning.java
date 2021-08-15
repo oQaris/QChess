@@ -1,13 +1,13 @@
-package io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.searchalgimpl;
+package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.Updater;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.SearchAlgorithm;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm;
+import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,13 +19,13 @@ import java.util.List;
 public class NegaScoutAlfaBetaPruning extends SearchAlgorithm {
 
     public NegaScoutAlfaBetaPruning(
-            final Updater updater,
+            final ResultUpdater resultUpdater,
             final Move mainMove,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(updater, mainMove, gs, color, evaluationFunc, maxDepth);
+        super(resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class NegaScoutAlfaBetaPruning extends SearchAlgorithm {
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
                             maxDepth);
-            updater.updateResult(mainMove, est);
+            resultUpdater.updateResult(mainMove, est, maxDepth);
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }

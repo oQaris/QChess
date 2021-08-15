@@ -1,12 +1,12 @@
-package io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl;
+package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.Updater;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
+import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
+import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 
 public abstract class NullMoveMTDFCompatible extends MTDFSearch {
 
@@ -16,13 +16,13 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
 
     protected NullMoveMTDFCompatible(
             final TranspositionTable table,
-            final Updater updater,
+            final ResultUpdater resultUpdater,
             final Move mainMove,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(table, updater, mainMove, gs, color, evaluationFunc, maxDepth);
+        super(table, resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
     }
 
     protected boolean isAllowNullMove(final Color color) {

@@ -13,7 +13,7 @@ import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.player.Player;
-import io.deeplay.qchess.qbot.QMinimaxBot;
+import io.deeplay.qchess.game.player.RandomBot;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +29,7 @@ public class NukeBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NukeBotTest.class);
 
-    private static final int COUNT = 1;
+    private static final int COUNT = 4;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -185,13 +185,11 @@ public class NukeBotTest {
             if (NukeBotColor == Color.WHITE) {
                 nukeBot = NukeBotFactory.getNukeBot(gs, Color.WHITE);
                 firstPlayer = nukeBot;
-                secondPlayer = new QMinimaxBot(gs, Color.BLACK, 3);
-                // secondPlayer = new RandomBot(gs, Color.BLACK);
+                secondPlayer = new RandomBot(gs, Color.BLACK);
                 // secondPlayer = NukeBotFactory.getNukeBot(gs, Color.BLACK);
             } else {
                 // firstPlayer = NukeBotFactory.getNukeBot(gs, Color.WHITE);
-                firstPlayer = new QMinimaxBot(gs, Color.WHITE, 3);
-                // firstPlayer = new RandomBot(gs, Color.WHITE);
+                firstPlayer = new RandomBot(gs, Color.WHITE);
                 nukeBot = NukeBotFactory.getNukeBot(gs, Color.BLACK);
                 secondPlayer = nukeBot;
             }

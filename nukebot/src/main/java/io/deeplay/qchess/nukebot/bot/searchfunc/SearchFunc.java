@@ -27,5 +27,10 @@ public abstract class SearchFunc {
         this.gs = gs;
     }
 
+    /** @return true, если время на обдумывание хода вышло */
+    static boolean timesUp(final long startTimeMillis, final long maxTimeMillis) {
+        return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
+    }
+
     public abstract Move findBest() throws ChessError;
 }

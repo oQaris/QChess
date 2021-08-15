@@ -1,11 +1,11 @@
-package io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg;
+package io.deeplay.qchess.nukebot.bot.searchalg;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.Updater;
+import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.List;
 
 public abstract class SearchAlgorithm implements Runnable {
@@ -15,18 +15,18 @@ public abstract class SearchAlgorithm implements Runnable {
     public final Color enemyColor;
     public final int maxDepth;
 
-    protected final Updater updater;
+    protected final ResultUpdater resultUpdater;
     protected final Move mainMove;
     protected final GameSettings gs;
 
     protected SearchAlgorithm(
-            final Updater updater,
+            final ResultUpdater resultUpdater,
             final Move mainMove,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        this.updater = updater;
+        this.resultUpdater = resultUpdater;
         this.mainMove = mainMove;
         this.gs = gs;
         this.evaluationFunc = evaluationFunc;

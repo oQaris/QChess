@@ -1,4 +1,4 @@
-package io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.searchalgimpl.mtdfcompatible;
+package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -6,10 +6,10 @@ import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.Updater;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.features.SearchImprovements;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable;
-import io.deeplay.qchess.nukebot.bot.searchfunc.parallelsearch.searchalg.features.TranspositionTable.TTEntry;
+import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
+import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable.TTEntry;
+import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.List;
 
 /** Минимакс с транспозиционной таблицей */
@@ -17,22 +17,18 @@ public class MinimaxWithTT extends MTDFSearch {
 
     public MinimaxWithTT(
             final TranspositionTable table,
-            final Updater updater,
+            final ResultUpdater resultUpdater,
             final Move mainMove,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(table, updater, mainMove, gs, color, evaluationFunc, maxDepth);
+        super(table, resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
     }
 
     @Override
     public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
-        gs.moveSystem.move(mainMove);
-        final int est = minimax(false, alfa, beta, maxDepth);
-        updater.updateResult(mainMove, est);
-        gs.moveSystem.undoMove();
-        return est;
+        return minimax(false, alfa, beta, depth);
     }
 
     @Override
@@ -45,7 +41,7 @@ public class MinimaxWithTT extends MTDFSearch {
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
                             maxDepth);
-            updater.updateResult(mainMove, est);
+            resultUpdater.updateResult(mainMove, est, maxDepth);
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }
@@ -98,7 +94,7 @@ public class MinimaxWithTT extends MTDFSearch {
             }
         }
 
-        table.store(entry, allMoves, optEstimation, boardState, alfaOrigin, betaOrigin, depth);
+        table.store(allMoves, optEstimation, boardState, alfaOrigin, betaOrigin, depth);
 
         return optEstimation;
     }
