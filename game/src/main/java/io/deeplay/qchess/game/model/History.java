@@ -266,9 +266,10 @@ public class History {
         return getRepetitions(lastState) >= repetition;
     }
 
-    private int getRepetitions(final BoardState bs) {
-        return repetitionsMap.getOrDefault(bs, 0)
-                + (parentHistory == null ? 0 : parentHistory.getRepetitions(bs));
+    /** @return число повторений доски boardState */
+    public int getRepetitions(final BoardState boardState) {
+        return repetitionsMap.getOrDefault(boardState, 0)
+                + (parentHistory == null ? 0 : parentHistory.getRepetitions(boardState));
     }
 
     public Move getLastMove() {
