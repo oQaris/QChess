@@ -23,7 +23,7 @@ import org.slf4j.MDC;
 
 public class Arena {
     private static final Logger logger = LoggerFactory.getLogger(Arena.class);
-    private static final int COUNT = 100;
+    private static final int COUNT = 1000;
     private static final Map<String, Function<RemotePlayer, String>> optionalLogs =
             Map.of(
                     "Minimax*", // Тут пишется регулярка для имени игроков
@@ -96,26 +96,24 @@ public class Arena {
             final EndGameType gameResult = gs.endGameDetector.getGameResult();
             logger.info("fp: {}, {}", myColor, gameResult);
 
-            final double firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
-            final double secondPlayerFactor = getFactor(secondPlayer.getColor(), gameResult);
-
             stats.addGameResult(firstPlayer, secondPlayer, gameResult);
+
+            final float firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
             rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), firstPlayerFactor);
-            rating.updateELO(secondPlayer.getName(), firstPlayer.getName(), secondPlayerFactor);
         }
 
-        private double getFactor(final Color firstPlayerColor, final EndGameType result) {
+        private float getFactor(final Color firstPlayerColor, final EndGameType result) {
             return result
-                            == (firstPlayerColor == Color.WHITE
-                                    ? EndGameType.CHECKMATE_TO_BLACK
-                                    : EndGameType.CHECKMATE_TO_WHITE)
-                    ? 1
-                    : (result
-                                    == (firstPlayerColor == Color.WHITE
-                                            ? EndGameType.CHECKMATE_TO_WHITE
-                                            : EndGameType.CHECKMATE_TO_BLACK)
-                            ? 0
-                            : 0.5);
+                == (firstPlayerColor == Color.WHITE
+                ? EndGameType.CHECKMATE_TO_BLACK
+                : EndGameType.CHECKMATE_TO_WHITE)
+                ? 1f
+                : (result
+                    == (firstPlayerColor == Color.WHITE
+                    ? EndGameType.CHECKMATE_TO_WHITE
+                    : EndGameType.CHECKMATE_TO_BLACK)
+                    ? 0f
+                    : 0.5f);
         }
     }
 }
