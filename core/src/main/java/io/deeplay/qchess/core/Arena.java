@@ -104,16 +104,16 @@ public class Arena {
 
         private float getFactor(final Color firstPlayerColor, final EndGameType result) {
             return result
-                == (firstPlayerColor == Color.WHITE
-                ? EndGameType.CHECKMATE_TO_BLACK
-                : EndGameType.CHECKMATE_TO_WHITE)
-                ? 1f
-                : (result
-                    == (firstPlayerColor == Color.WHITE
-                    ? EndGameType.CHECKMATE_TO_WHITE
-                    : EndGameType.CHECKMATE_TO_BLACK)
-                    ? 0f
-                    : 0.5f);
+                            == (firstPlayerColor == Color.WHITE
+                                    ? EndGameType.CHECKMATE_TO_BLACK
+                                    : EndGameType.CHECKMATE_TO_WHITE)
+                    ? 1f
+                    : (result
+                                    == (firstPlayerColor == Color.WHITE
+                                            ? EndGameType.CHECKMATE_TO_WHITE
+                                            : EndGameType.CHECKMATE_TO_BLACK)
+                            ? 0f
+                            : 0.5f);
         }
     }
 }
