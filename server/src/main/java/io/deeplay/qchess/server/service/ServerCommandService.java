@@ -10,7 +10,7 @@ public class ServerCommandService {
 
     private ServerCommandService() {}
 
-    public static void handleCommand(String command) throws ServerException {
+    public static void handleCommand(final String command) throws ServerException {
         if (command.startsWith("msg ")) {
             ServerController.sendAll(
                     SerializationService.makeMainDTOJsonToClient(

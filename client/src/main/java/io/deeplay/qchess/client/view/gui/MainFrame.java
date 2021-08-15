@@ -1,5 +1,6 @@
 package io.deeplay.qchess.client.view.gui;
 
+import io.deeplay.qchess.client.view.model.ViewColor;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
@@ -8,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class MainFrame {
+    private ChooseMyColorFrame chooseMyColorFrame;
     private ChooseMyPlayerFrame chooseMyPlayerFrame;
     private ChooseEnemyPlayerFrame chooseEnemyPlayerFrame;
     private ChooseStyleFrame chooseStyleFrame;
@@ -16,22 +18,23 @@ public class MainFrame {
     private PlayerType myPlayerType;
     private PlayerType enemyPlayerType;
     private String style;
+    private ViewColor myColor;
 
     public void createStartFrame() {
-        JFrame frame = new JFrame("Начало");
+        final JFrame frame = new JFrame("Начало");
         frame.setSize(new Dimension(200, 200));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLayout(new GridBagLayout());
         frame.setLocationRelativeTo(null);
 
-        JButton startButton = new JButton("Начать");
+        final JButton startButton = new JButton("Начать");
         startButton.addMouseListener(
                 new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent e) {
+                    public void mousePressed(final MouseEvent e) {
                         super.mousePressed(e);
-                        createChooseMyPlayerFrame();
+                        createChooseMyColorFrame();
                         frame.setVisible(false);
                         frame.dispose();
                     }
@@ -40,27 +43,37 @@ public class MainFrame {
         frame.setVisible(true);
     }
 
-    public void createChooseMyPlayerFrame() {
+    public void createChooseMyColorFrame() {
+        chooseMyColorFrame = new ChooseMyColorFrame(this);
+    }
+
+    public void createChooseMyPlayerFrame(final ViewColor myColor) {
+        this.myColor = myColor;
         chooseMyPlayerFrame = new ChooseMyPlayerFrame(this);
     }
 
-    public void createChoosePlayerFrame(PlayerType playerType) {
-        this.myPlayerType = playerType;
+    public void createChooseEnemyPlayerFrame(final PlayerType playerType) {
+        myPlayerType = playerType;
         chooseEnemyPlayerFrame = new ChooseEnemyPlayerFrame(this);
     }
 
-    public void createChooseStyleFrame(PlayerType playerType) {
-        this.enemyPlayerType = playerType;
+    public void createChooseStyleFrame(final PlayerType playerType) {
+        enemyPlayerType = playerType;
         chooseStyleFrame = new ChooseStyleFrame(this);
     }
 
-    public void createConnectFrame(String style) {
+    public void createConnectFrame(final String style) {
         this.style = style;
         connectFrame = new ConnectFrame(this);
     }
 
-    public void createTable(boolean color) {
+    public void createTable(final boolean color) {
         table = new Table(style, color, this);
+    }
+
+    public void destroyChooseMyColorFrame() {
+        chooseMyColorFrame.destroy();
+        chooseMyColorFrame = null;
     }
 
     public void destroyChooseMyPlayerFrame() {
@@ -102,5 +115,9 @@ public class MainFrame {
 
     public String getStyle() {
         return style;
+    }
+
+    public ViewColor getColor() {
+        return myColor;
     }
 }

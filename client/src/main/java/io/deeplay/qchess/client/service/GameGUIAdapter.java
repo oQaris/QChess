@@ -18,12 +18,12 @@ import java.util.Set;
 
 public class GameGUIAdapter {
 
-    public static Set<ViewCell> getAllMoves(int row, int column) {
-        Cell cell = new Cell(column, row);
-        Set<ViewCell> set = new HashSet<>();
+    public static Set<ViewCell> getAllMoves(final int row, final int column) {
+        final Cell cell = new Cell(column, row);
+        final Set<ViewCell> set = new HashSet<>();
         try {
-            for (Move move : GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(cell)) {
-                ViewCell vc =
+            for (final Move move : GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(cell)) {
+                final ViewCell vc =
                         new ViewCell(
                                 move.getTo().row,
                                 move.getTo().column,
@@ -32,26 +32,26 @@ public class GameGUIAdapter {
                                         || move.getMoveType() == MoveType.EN_PASSANT);
                 set.add(vc);
             }
-        } catch (ChessError e) {
+        } catch (final ChessError e) {
             e.printStackTrace();
         }
         return set;
     }
 
-    public static boolean checkFigure(int row, int column, boolean isWhite) {
-        Cell cell = new Cell(column, row);
+    public static boolean checkFigure(final int row, final int column, final boolean isWhite) {
+        final Cell cell = new Cell(column, row);
         Figure figure = null;
         try {
             figure = GameDAO.getGameSettings().board.getFigure(cell);
-        } catch (ChessException e) {
+        } catch (final ChessException e) {
             e.printStackTrace();
         }
         return figure != null && (figure.getColor() == Color.WHITE) == isWhite;
     }
 
-    public static ViewFigure getFigure(int row, int column) {
-        Cell cell = new Cell(column, row);
-        Figure figure;
+    public static ViewFigure getFigure(final int row, final int column) {
+        final Cell cell = new Cell(column, row);
+        final Figure figure;
         ViewFigure vf = null;
         try {
             figure = GameDAO.getGameSettings().board.getFigure(cell);
@@ -62,24 +62,25 @@ public class GameGUIAdapter {
                                 ViewFigureType.valueOf(
                                         FigureType.nameOfTypeNumber[figure.figureType.type]));
             }
-        } catch (ChessException e) {
+        } catch (final ChessException e) {
             e.printStackTrace();
         }
 
         return vf;
     }
 
-    public static Move tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
-        Cell from = new Cell(columnFrom, rowFrom);
-        Cell to = new Cell(columnTo, rowTo);
-        List<Move> set;
+    public static Move tryMakeMove(
+            final int rowFrom, final int columnFrom, final int rowTo, final int columnTo) {
+        final Cell from = new Cell(columnFrom, rowFrom);
+        final Cell to = new Cell(columnTo, rowTo);
+        final List<Move> set;
         try {
             set = GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(from);
-        } catch (ChessError e) {
+        } catch (final ChessError e) {
             e.printStackTrace();
             return null;
         }
-        for (Move move : set) {
+        for (final Move move : set) {
             if (to.equals(move.getTo())) {
                 return move;
             }
@@ -89,13 +90,14 @@ public class GameGUIAdapter {
     }
 
     /** @return true, если королю цвета color поставили шах */
-    public static boolean isCheck(boolean color) {
+    public static boolean isCheck(final boolean color) {
         return GameDAO.getGameSettings().endGameDetector.isCheck(color ? Color.WHITE : Color.BLACK);
     }
 
     /** @return клетка короля цвета color */
-    public static ViewCell getKingCell(boolean color) {
-        Cell cell = GameDAO.getGameSettings().board.findKingCell(color ? Color.WHITE : Color.BLACK);
+    public static ViewCell getKingCell(final boolean color) {
+        final Cell cell =
+                GameDAO.getGameSettings().board.findKingCell(color ? Color.WHITE : Color.BLACK);
         return new ViewCell(cell.row, cell.column, false);
     }
 }

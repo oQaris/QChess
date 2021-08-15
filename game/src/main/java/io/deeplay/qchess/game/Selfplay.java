@@ -8,10 +8,12 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.player.Player;
+import io.deeplay.qchess.game.player.RemotePlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +33,20 @@ public class Selfplay {
         this.roomSettings = roomSettings;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
-        currentPlayerToMove = firstPlayer;
+        currentPlayerToMove = firstPlayer.getColor() == Color.WHITE ? firstPlayer : secondPlayer;
+        if (firstPlayer instanceof RemotePlayer && secondPlayer instanceof RemotePlayer) {
+            logger.debug("За белых играет:  {}", ((RemotePlayer) currentPlayerToMove).getName());
+            logger.debug(
+                    "За чёрных играет: {}",
+                    ((RemotePlayer)
+                                    (currentPlayerToMove == firstPlayer
+                                            ? secondPlayer
+                                            : firstPlayer))
+                            .getName());
+        }
         try {
             roomSettings.history.addRecord(null);
-        } catch (ChessError | NullPointerException e) {
+        } catch (final ChessError | NullPointerException e) {
             logger.error("Возникло исключение в истории {}", e.getMessage());
             throw new ChessError(INCORRECT_FILLING_BOARD, e);
         }
@@ -79,7 +91,7 @@ public class Selfplay {
         try {
             return roomSettings.board.getFigure(move.getFrom()).getColor()
                     == currentPlayerToMove.getColor();
-        } catch (ChessException | NullPointerException e) {
+        } catch (final ChessException | NullPointerException e) {
             return false;
         }
     }
@@ -147,7 +159,7 @@ public class Selfplay {
                 logger.debug("<---------------------------------------------------------------->");
             }
             return removedFigure;
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.error("Не удалось выполнить проверенный ход: {}", move);
             throw new ChessError(ERROR_WHILE_ADD_PEACE_MOVE_COUNT, e);
         }

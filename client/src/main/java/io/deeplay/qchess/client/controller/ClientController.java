@@ -10,6 +10,7 @@ import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
+import io.deeplay.qchess.client.view.model.ViewColor;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.FindGameDTO;
@@ -37,12 +38,12 @@ public class ClientController {
      *
      * @param view окружение клиента
      */
-    public static void setView(IClientView view) {
+    public static void setView(final IClientView view) {
         ClientController.view = view;
     }
 
     /** Отправляет сообщение View, если view и message не null */
-    public static void print(String message) {
+    public static void print(final String message) {
         if (view != null && message != null) view.print(message);
     }
 
@@ -52,7 +53,7 @@ public class ClientController {
      * @throws ClientException если клиент уже подключен к серверу или возникла ошибка при
      *     подключении
      */
-    public static void connect(String ip, int port) throws ClientException {
+    public static void connect(final String ip, final int port) throws ClientException {
         client.connect(ip, port);
     }
 
@@ -61,7 +62,7 @@ public class ClientController {
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void disconnect(String reason) throws ClientException {
+    public static void disconnect(final String reason) throws ClientException {
         client.disconnect();
         view.disconnect(reason);
     }
@@ -81,7 +82,7 @@ public class ClientController {
      *
      * @throws ClientException если клиент уже подключен к серверу
      */
-    public static void setPort(int port) throws ClientException {
+    public static void setPort(final int port) throws ClientException {
         client.setPort(port);
     }
 
@@ -95,7 +96,7 @@ public class ClientController {
      *
      * @throws ClientException если клиент уже подключен к серверу
      */
-    public static void setIp(String ip) throws ClientException {
+    public static void setIp(final String ip) throws ClientException {
         client.setIp(ip);
     }
 
@@ -114,7 +115,7 @@ public class ClientController {
      *
      * @throws ClientException если при выполнении команды возникла ошибка
      */
-    public static void executeCommand(String command) throws ClientException {
+    public static void executeCommand(final String command) throws ClientException {
         client.executeCommand(command);
     }
 
@@ -123,17 +124,17 @@ public class ClientController {
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void sendIfNotNull(String json) throws ClientException {
+    public static void sendIfNotNull(final String json) throws ClientException {
         client.sendIfNotNull(json);
     }
 
     /** @return все возможные ходы в удобной форме для View */
-    public static Set<ViewCell> getAllMoves(int row, int column) {
+    public static Set<ViewCell> getAllMoves(final int row, final int column) {
         return GameGUIAdapter.getAllMoves(row, column);
     }
 
     /** @return true, если фигура на указанной клетке isWhite */
-    public static boolean checkFigure(int row, int column, boolean isWhite) {
+    public static boolean checkFigure(final int row, final int column, final boolean isWhite) {
         return GameGUIAdapter.checkFigure(row, column, isWhite);
     }
 
@@ -141,13 +142,14 @@ public class ClientController {
      * @return фигура на указанной клетке в удобной форме для View или null, если фигуры на
      *     указанной клетке нет
      */
-    public static ViewFigure getFigure(int row, int column) {
+    public static ViewFigure getFigure(final int row, final int column) {
         return GameGUIAdapter.getFigure(row, column);
     }
 
     // TODO: добавить javadoc
-    public static int tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
-        Move move = GameGUIAdapter.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
+    public static int tryMakeMove(
+            final int rowFrom, final int columnFrom, final int rowTo, final int columnTo) {
+        final Move move = GameGUIAdapter.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
         if (move != null) {
             if (move.getMoveType() == MoveType.TURN_INTO
                     || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
@@ -169,9 +171,13 @@ public class ClientController {
      * @throws ClientException если клиент не подключен к серверу
      */
     public static void makeMove(
-            int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure)
+            final int rowFrom,
+            final int columnFrom,
+            final int rowTo,
+            final int columnTo,
+            final Object turnFigure)
             throws ClientException {
-        Move move =
+        final Move move =
                 GameService.makeMove(
                         rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));
         view.drawBoard();
@@ -179,8 +185,8 @@ public class ClientController {
     }
 
     // TODO: добавить javadoc и переделать номально без кастов
-    private static FigureType getFigureType(Object figure) {
-        String strFigure = (String) figure;
+    private static FigureType getFigureType(final Object figure) {
+        final String strFigure = (String) figure;
         if ("Ферзь".equals(strFigure)) {
             return FigureType.QUEEN;
         } else if ("Ладья".equals(strFigure)) {
@@ -205,13 +211,28 @@ public class ClientController {
     }
 
     /** Выбирает тип соперника */
-    public static void chooseEnemy(PlayerType playerType) {
+    public static void chooseEnemy(final PlayerType playerType) {
         GameService.chooseEnemy(playerType);
     }
 
     /** Выбирает КЕМ играть */
-    public static void chooseMyType(PlayerType playerType) {
+    public static void chooseMyType(final PlayerType playerType) {
         GameDAO.setMyType(playerType);
+    }
+
+    /**
+     * Выбирает КАКИМ ЦВЕТОМ играть
+     *
+     * @param myColor - если пришёл null, значит нужно выбрать цвет рандомно
+     */
+    public static void chooseMyColor(final ViewColor myColor) {
+        GameDAO.setMyPreferColor(
+                myColor == null
+                        ? null
+                        : switch (myColor) {
+                            case WHITE -> Color.WHITE;
+                            case BLACK -> Color.BLACK;
+                        });
     }
 
     /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
@@ -220,17 +241,17 @@ public class ClientController {
     }
 
     /** Закрывает View клиента и отключается от сервера */
-    public static void closeGame(String reason) {
+    public static void closeGame(final String reason) {
         view.closeGame(reason);
     }
 
     /** Выводит окно с сообщением */
-    public static void showMessage(String message) {
+    public static void showMessage(final String message) {
         view.showMessage(message);
     }
 
     /** Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет) */
-    public static void resetMyColorOnBoard(Color color) {
+    public static void resetMyColorOnBoard(final Color color) {
         view.changeMyColorOnBoard(color == Color.WHITE);
     }
 
@@ -242,7 +263,10 @@ public class ClientController {
         client.sendIfNotNull(
                 SerializationService.makeMainDTOJsonToServer(
                         new FindGameDTO(
-                                SessionDAO.getSessionToken(), getType(GameDAO.getEnemyType()), 2)));
+                                SessionDAO.getSessionToken(),
+                                getType(GameDAO.getEnemyType()),
+                                2,
+                                GameDAO.getMyPreferColor())));
     }
 
     /**
@@ -250,22 +274,23 @@ public class ClientController {
      *
      * @return тип игрока из движка
      */
-    private static io.deeplay.qchess.game.player.PlayerType getType(PlayerType pt) {
+    private static io.deeplay.qchess.game.player.PlayerType getType(final PlayerType pt) {
         return switch (pt) {
-            case USER -> io.deeplay.qchess.game.player.PlayerType.GUI_PLAYER;
+            case USER -> io.deeplay.qchess.game.player.PlayerType.REMOTE_PLAYER;
             case EASYBOT -> io.deeplay.qchess.game.player.PlayerType.RANDOM_BOT;
             case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
+                // TODO: заменить на своего бота
             case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
         };
     }
 
     /** @return true, если королю цвета color поставили шах */
-    public static boolean isCheck(boolean color) {
+    public static boolean isCheck(final boolean color) {
         return GameGUIAdapter.isCheck(color);
     }
 
     /** @return клетка короля цвета color */
-    public static ViewCell getKingCell(boolean color) {
+    public static ViewCell getKingCell(final boolean color) {
         return GameGUIAdapter.getKingCell(color);
     }
 }

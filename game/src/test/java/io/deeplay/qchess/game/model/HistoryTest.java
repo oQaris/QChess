@@ -20,7 +20,7 @@ public class HistoryTest {
 
     @Before
     public void setUp() {
-        GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
+        final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
         history = new History(gameSettings);
         board = gameSettings.board;
     }
@@ -28,7 +28,7 @@ public class HistoryTest {
     @Test
     public void testGetConvertingFigurePosition()
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = history.getClass().getDeclaredMethod("getConvertingFigurePosition");
+        final Method method = history.getClass().getDeclaredMethod("getConvertingFigurePosition");
         method.setAccessible(true);
 
         Assert.assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", method.invoke(history));
@@ -37,7 +37,7 @@ public class HistoryTest {
     @Test
     public void testGetCastlingPossibility()
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = history.getClass().getDeclaredMethod("getCastlingPossibility");
+        final Method method = history.getClass().getDeclaredMethod("getCastlingPossibility");
         method.setAccessible(true);
 
         Assert.assertEquals("KQkq", method.invoke(history));
@@ -47,13 +47,13 @@ public class HistoryTest {
     public void testGetPawnEnPassantPossibilityWithoutLongMove()
             throws ChessException, NoSuchMethodException, InvocationTargetException,
                     IllegalAccessException, NoSuchFieldException {
-        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("a2"), Cell.parse("a3"));
+        final Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("a2"), Cell.parse("a3"));
         board.moveFigure(move);
 
-        Field prevMove = history.getClass().getDeclaredField("lastMove");
+        final Field prevMove = history.getClass().getDeclaredField("lastMove");
         prevMove.setAccessible(true);
         prevMove.set(history, move);
-        Method method = history.getClass().getDeclaredMethod("getPawnEnPassantPossibility");
+        final Method method = history.getClass().getDeclaredMethod("getPawnEnPassantPossibility");
         method.setAccessible(true);
 
         Assert.assertEquals("", method.invoke(history));
@@ -63,13 +63,13 @@ public class HistoryTest {
     public void testGetPawnEnPassantPossibilityWithLongMove()
             throws ChessException, NoSuchMethodException, InvocationTargetException,
                     IllegalAccessException, NoSuchFieldException {
-        Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
+        final Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
         board.moveFigure(move);
 
-        Field prevMove = history.getClass().getDeclaredField("lastMove");
+        final Field prevMove = history.getClass().getDeclaredField("lastMove");
         prevMove.setAccessible(true);
         prevMove.set(history, move);
-        Method method = history.getClass().getDeclaredMethod("getPawnEnPassantPossibility");
+        final Method method = history.getClass().getDeclaredMethod("getPawnEnPassantPossibility");
         method.setAccessible(true);
 
         Assert.assertEquals(" a3", method.invoke(history));
@@ -84,13 +84,13 @@ public class HistoryTest {
 
     @Test
     public void testAddRecord1() throws ChessException, ChessError {
-        String expected = "rnbqkbnr/p1pppppp/8/1p6/P7/R7/1PPPPPPP/1NBQKBNR b Kkq";
-        Move[] moveList = {
+        final String expected = "rnbqkbnr/p1pppppp/8/1p6/P7/R7/1PPPPPPP/1NBQKBNR b Kkq";
+        final Move[] moveList = {
             new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4")),
             new Move(MoveType.LONG_MOVE, Cell.parse("b7"), Cell.parse("b5")),
             new Move(MoveType.QUIET_MOVE, Cell.parse("a1"), Cell.parse("a3")),
         };
-        for (Move move : moveList) {
+        for (final Move move : moveList) {
             board.moveFigure(move);
             history.addRecord(move);
         }
@@ -100,8 +100,8 @@ public class HistoryTest {
 
     @Test
     public void testAddRecord2() throws ChessException, ChessError {
-        String expected = "rnbqkb1r/1ppppnpp/8/5p2/1p6/P1N5/2PPPPPP/R1BQKBNR w KQkq";
-        Move[] moveList = {
+        final String expected = "rnbqkb1r/1ppppnpp/8/5p2/1p6/P1N5/2PPPPPP/R1BQKBNR w KQkq";
+        final Move[] moveList = {
             new Move(MoveType.QUIET_MOVE, Cell.parse("b1"), Cell.parse("c3")),
             new Move(MoveType.LONG_MOVE, Cell.parse("f7"), Cell.parse("f5")),
             new Move(MoveType.LONG_MOVE, Cell.parse("b2"), Cell.parse("b4")),
@@ -114,7 +114,7 @@ public class HistoryTest {
             new Move(MoveType.ATTACK, Cell.parse("a5"), Cell.parse("b4"))
         };
 
-        for (Move move : moveList) {
+        for (final Move move : moveList) {
             board.moveFigure(move);
             history.addRecord(move);
         }
@@ -124,8 +124,8 @@ public class HistoryTest {
 
     @Test
     public void testAddRecord3() throws ChessException, ChessError {
-        String expected = "rnbqkbnr/p2pppp1/p6p/2p5/8/8/1PPPPPPP/RNBQKBNR w KQkq";
-        Move[] moveList = {
+        final String expected = "rnbqkbnr/p2pppp1/p6p/2p5/8/8/1PPPPPPP/RNBQKBNR w KQkq";
+        final Move[] moveList = {
             new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4")),
             new Move(MoveType.QUIET_MOVE, Cell.parse("h7"), Cell.parse("h6")),
             new Move(MoveType.QUIET_MOVE, Cell.parse("a4"), Cell.parse("a5")),
@@ -134,7 +134,7 @@ public class HistoryTest {
             new Move(MoveType.ATTACK, Cell.parse("b7"), Cell.parse("a6"))
         };
 
-        for (Move move : moveList) {
+        for (final Move move : moveList) {
             board.moveFigure(move);
             history.addRecord(move);
         }
@@ -144,8 +144,8 @@ public class HistoryTest {
 
     @Test
     public void testAddRecord4() throws ChessException, ChessError {
-        String expected = "rnbqkbnr/2pp1ppp/pp6/4p1N1/8/5P2/PPPPP1PP/RNBQKB1R w KQkq e6";
-        Move[] moveList = {
+        final String expected = "rnbqkbnr/2pp1ppp/pp6/4p1N1/8/5P2/PPPPP1PP/RNBQKB1R w KQkq e6";
+        final Move[] moveList = {
             new Move(MoveType.QUIET_MOVE, Cell.parse("f2"), Cell.parse("f3")),
             new Move(MoveType.QUIET_MOVE, Cell.parse("b7"), Cell.parse("b6")),
             new Move(MoveType.QUIET_MOVE, Cell.parse("g1"), Cell.parse("h3")),
@@ -154,7 +154,7 @@ public class HistoryTest {
             new Move(MoveType.LONG_MOVE, Cell.parse("e7"), Cell.parse("e5"))
         };
 
-        for (Move move : moveList) {
+        for (final Move move : moveList) {
             board.moveFigure(move);
             history.addRecord(move);
         }
@@ -164,14 +164,14 @@ public class HistoryTest {
 
     @Test
     public void test() throws ChessError {
-        GameSettings gs = new GameSettings(BoardFilling.STANDARD);
-        Selfplay game =
+        final GameSettings gs = new GameSettings(BoardFilling.STANDARD);
+        final Selfplay game =
                 new Selfplay(
                         gs,
-                        new RemotePlayer(gs, Color.WHITE, ""),
-                        new RemotePlayer(gs, Color.BLACK, ""));
+                        new RemotePlayer(gs, Color.WHITE, "", ""),
+                        new RemotePlayer(gs, Color.BLACK, "", ""));
         int i = 0;
-        String[] strs = {
+        final String[] strs = {
             "a2",
             "a4",
             "LONG_MOVE",
@@ -498,8 +498,8 @@ public class HistoryTest {
         while (gs.endGameDetector.updateEndGameStatus(game.getCurrentPlayerToMove().getColor())
                 == EndGameType.NOTHING) {
             if (!strs[i].equals("END")) {
-                Move move = Selfplay.createMove(strs[i++], strs[i++], strs[i++]);
-                boolean moveT = game.move(move);
+                final Move move = Selfplay.createMove(strs[i++], strs[i++], strs[i++]);
+                final boolean moveT = game.move(move);
                 if (!moveT) throw new RuntimeException("Некорректная проверка истории");
             } else return;
         }

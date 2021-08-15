@@ -11,25 +11,25 @@ import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 
 public class SessionService {
 
-    public static String acceptConnection(ServerToClientType type, String json)
+    public static String acceptConnection(final ServerToClientType type, final String json)
             throws SerializationException {
         assert type.getDTO() == AcceptConnectionDTO.class;
-        AcceptConnectionDTO dto =
+        final AcceptConnectionDTO dto =
                 SerializationService.serverToClientDTORequest(json, AcceptConnectionDTO.class);
         SessionDAO.setSessionToken(dto.sessionToken);
         return null;
     }
 
-    public static String disconnect(ServerToClientType type, String json)
+    public static String disconnect(final ServerToClientType type, final String json)
             throws SerializationException {
         assert type.getDTO() == DisconnectedDTO.class;
-        DisconnectedDTO dto =
+        final DisconnectedDTO dto =
                 SerializationService.serverToClientDTORequest(json, DisconnectedDTO.class);
 
         try {
             ClientController.closeGame(dto.reason);
             ClientController.disconnect("Сервер разорвал соединение: " + dto.reason);
-        } catch (ClientException ignore) {
+        } catch (final ClientException ignore) {
             // Сервис вызывается только после подключения
         }
         return null;

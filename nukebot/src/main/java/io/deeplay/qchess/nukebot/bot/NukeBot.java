@@ -19,8 +19,9 @@ public class NukeBot extends RemotePlayer {
     @Deprecated private double maxTimeToThink = Double.MIN_VALUE;
     @Deprecated private double minTimeToThink = Double.MAX_VALUE;
 
-    public NukeBot(GameSettings roomSettings, Color color, SearchFunc searchFunc) {
-        super(roomSettings, color, "n-nn-bot-" + UUID.randomUUID());
+    public NukeBot(
+            final GameSettings roomSettings, final Color color, final SearchFunc searchFunc) {
+        super(roomSettings, color, "nuke-bot-" + UUID.randomUUID(), "nuke-bot");
         this.searchFunc = searchFunc;
     }
 
@@ -30,7 +31,7 @@ public class NukeBot extends RemotePlayer {
     }
 
     @Deprecated
-    public void setId(int id) {
+    public void setId(final int id) {
         this.id = id;
     }
 
@@ -57,11 +58,11 @@ public class NukeBot extends RemotePlayer {
     @Override
     public Move getNextMove() throws ChessError {
         ++moveCount;
-        long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
 
-        Move move = searchFunc.findBest();
+        final Move move = searchFunc.findBest();
 
-        double time = (System.currentTimeMillis() - startTime) / 1000.;
+        final double time = (System.currentTimeMillis() - startTime) / 1000.;
         timeToThink += time;
         if (time < minTimeToThink) minTimeToThink = time;
         if (time > maxTimeToThink) maxTimeToThink = time;

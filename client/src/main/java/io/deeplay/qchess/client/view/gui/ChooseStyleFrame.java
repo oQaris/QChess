@@ -23,7 +23,7 @@ public class ChooseStyleFrame extends Frame {
     private final Map<JRadioButton, String> rbs = new HashMap<>();
     private final GridBagConstraints gbc;
 
-    public ChooseStyleFrame(MainFrame mf) {
+    public ChooseStyleFrame(final MainFrame mf) {
         this.mf = mf;
         frame = new JFrame("Choose Enemy");
         frame.setSize(OUTER_FRAME_DIMENSION);
@@ -53,15 +53,15 @@ public class ChooseStyleFrame extends Frame {
     }
 
     private JButton addButtonConnect() {
-        JButton continueButton = new JButton("Продолжить");
+        final JButton continueButton = new JButton("Продолжить");
 
         continueButton.addMouseListener(
                 new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent e) {
+                    public void mousePressed(final MouseEvent e) {
                         super.mousePressed(e);
                         String style = null;
-                        for (Entry<JRadioButton, String> rb : rbs.entrySet()) {
+                        for (final Entry<JRadioButton, String> rb : rbs.entrySet()) {
                             if (rb.getKey().isSelected()) {
                                 style = rb.getValue();
                                 break;
@@ -75,8 +75,8 @@ public class ChooseStyleFrame extends Frame {
         return continueButton;
     }
 
-    public void addRadioButton(String name, boolean pressed, String text) {
-        JRadioButton button = new JRadioButton(name, pressed);
+    public void addRadioButton(final String name, final boolean pressed, final String text) {
+        final JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
         panel.add(button, gbc);
