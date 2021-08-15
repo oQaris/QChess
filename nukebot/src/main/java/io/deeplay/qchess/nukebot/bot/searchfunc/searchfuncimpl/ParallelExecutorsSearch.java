@@ -99,7 +99,7 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
     }
 
     @Override
-    public boolean isValidMoveVersion(final int myMoveVersion) {
-        return moveVersion == myMoveVersion;
+    public boolean isInvalidMoveVersion(final int myMoveVersion) {
+        return moveVersion != myMoveVersion;
     }
 }

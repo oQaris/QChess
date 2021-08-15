@@ -54,6 +54,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
     public int uq(final boolean isMyMove, int alfa, int beta, int depth, boolean verify)
             throws ChessError {
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         // --------------- Поиск в ТТ --------------- //
 
@@ -76,6 +77,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Условие выхода из рекурсии --------------- //
 
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
+
         if (depth <= 0 || isTerminalNode(allMoves))
             // return quiesce(isMyMove, alfa, beta, depth, false);
             return isMyMove
@@ -83,6 +86,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                     : -getEvaluation(allMoves, false, depth);
 
         // --------------- Verified Null-Move --------------- //
+
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         final boolean isAllowNullMove =
                 isAllowNullMove(isMyMove ? myColor : enemyColor) && (!verify || depth > 1);
@@ -112,6 +117,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
             gs.moveSystem.undoMove();
 
+            if (resultUpdater.isInvalidMoveVersion(moveVersion))
+                return EvaluationFunc.MIN_ESTIMATION;
+
             if (est >= beta) {
                 if (verify) {
                     --depth;
@@ -132,6 +140,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         do { // если будет обнаружена позиция Цугцванга, повторить поиск с начальной глубиной:
             doResearch = false;
 
+            if (resultUpdater.isInvalidMoveVersion(moveVersion))
+                return EvaluationFunc.MIN_ESTIMATION;
+
             final Iterator<Move> it = allMoves.iterator();
             Move move = it.next();
 
@@ -142,6 +153,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             gs.moveSystem.undoMove();
 
             while (alfa < beta && it.hasNext()) {
+                if (resultUpdater.isInvalidMoveVersion(moveVersion))
+                    return EvaluationFunc.MIN_ESTIMATION;
+
                 move = it.next();
                 gs.moveSystem.move(move);
 
@@ -182,6 +196,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
     private int quiesce( // TODO: вынести в отдельный класс
             final boolean isMyMove, int alfa, int beta, final int depth, final boolean theLast)
             throws ChessError {
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         // --------------- Поиск в ТТ --------------- //
 
@@ -209,11 +224,15 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Условие выхода из рекурсии --------------- //
 
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
+
         if (standPat >= beta) return beta;
         if (alfa < standPat) alfa = standPat;
         if (theLast || isTerminalNode(allMoves)) return alfa;
 
         // --------------- Проведение взятий до потери пульса --------------- //
+
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         final Iterator<Move> attackMoves =
                 allMoves.stream()
@@ -225,6 +244,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                                         })
                         .sorted(SearchImprovements.movesPriority) // TODO: заменить
                         .iterator();
+
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         if (!attackMoves.hasNext()) { // попытка избавиться от Horizon effect
             /*for (final Move move : allMoves) {
@@ -243,6 +264,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                 gs.moveSystem.move(attackMoves.next());
                 final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1, false);
                 gs.moveSystem.undoMove();
+
+                if (resultUpdater.isInvalidMoveVersion(moveVersion))
+                    return EvaluationFunc.MIN_ESTIMATION;
 
                 if (score >= beta) {
                     alfa = beta;

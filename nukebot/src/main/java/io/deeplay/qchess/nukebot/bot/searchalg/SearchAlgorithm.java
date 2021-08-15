@@ -44,6 +44,8 @@ public abstract class SearchAlgorithm implements Runnable {
 
     public int getEvaluation(final List<Move> allMoves, final boolean isMyMove, final int depth)
             throws ChessError {
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
+
         final Color enemyColor = myColor.inverse();
         if (isMyMove) { // allMoves are mine
             if (gs.endGameDetector.isStalemate(allMoves))
@@ -67,9 +69,12 @@ public abstract class SearchAlgorithm implements Runnable {
                 return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
         }
 
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
+
         // Проверка на ничью должна быть после проверок на пат и мат
         if (gs.endGameDetector.isDraw()) return 0;
 
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
         return evaluationFunc.getHeuristics(gs, myColor);
     }
 }

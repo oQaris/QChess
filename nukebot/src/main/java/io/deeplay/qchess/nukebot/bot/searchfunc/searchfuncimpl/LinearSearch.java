@@ -60,7 +60,7 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
     }
 
     @Override
-    public boolean isValidMoveVersion(final int myMoveVersion) {
-        return true;
+    public boolean isInvalidMoveVersion(final int myMoveVersion) {
+        return false;
     }
 }

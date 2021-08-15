@@ -17,8 +17,10 @@ public interface ResultUpdater {
     void updateResult(Move move, int estimation, int maxDepth, int moveVersion);
 
     /**
+     * Чем чаще проверяется валидность версии, тем лучше
+     *
      * @param myMoveVersion версия хода в алгоритме поиска
-     * @return true, если версия хода совпадает с текущей
+     * @return true, если версия хода НЕ совпадает с текущей
      */
-    boolean isValidMoveVersion(int myMoveVersion);
+    boolean isInvalidMoveVersion(int myMoveVersion);
 }

@@ -126,7 +126,8 @@ public class NukeBotTest {
 
         System.out.println(gs.board);
 
-        final Move expected = new Move(MoveType.TURN_INTO_ATTACK, Cell.parse("e2"), Cell.parse("f1"));
+        final Move expected =
+                new Move(MoveType.TURN_INTO_ATTACK, Cell.parse("e2"), Cell.parse("f1"));
         expected.turnInto = FigureType.QUEEN;
         Assert.assertEquals(expected, move);
     }
