@@ -54,38 +54,38 @@ public class Table extends Frame {
     private boolean myColor;
     private int clickedCell;
 
-    public Table(String figureStyle, boolean myColor, MainFrame mf) {
+    public Table(final String figureStyle, final boolean myColor, final MainFrame mf) {
         this.mf = mf;
         this.myColor = myColor;
         this.figureStyle = figureStyle;
-        this.frame = new JFrame("QChess");
-        this.frame.setLayout(new BorderLayout());
-        this.frame.setSize(OUTER_FRAME_DIMENSION);
-        this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.frame.setResizable(false);
-        this.frame.setLocationRelativeTo(null);
-        try (InputStream png = getClass().getResourceAsStream("/art/other/icon.png")) {
+        frame = new JFrame("QChess");
+        frame.setLayout(new BorderLayout());
+        frame.setSize(OUTER_FRAME_DIMENSION);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        try (final InputStream png = getClass().getResourceAsStream("/art/other/icon.png")) {
             assert png != null;
             final BufferedImage image = ImageIO.read(png);
-            this.frame.setIconImage(image);
-        } catch (IOException | NullPointerException e) {
+            frame.setIconImage(image);
+        } catch (final IOException | NullPointerException e) {
             e.printStackTrace();
         }
 
-        this.boardPanel = new BoardPanel();
-        this.frame.add(boardPanel, BorderLayout.CENTER);
+        boardPanel = new BoardPanel();
+        frame.add(boardPanel, BorderLayout.CENTER);
 
-        this.frame.setVisible(true);
+        frame.setVisible(true);
 
         clickedCell = -1;
 
-        this.frame.addWindowListener(new CloseFrameListener(this));
+        frame.addWindowListener(new CloseFrameListener(this));
 
         if (mf.getMyPlayerType() != PlayerType.USER) {
-            this.frame.addKeyListener(
+            frame.addKeyListener(
                     new KeyAdapter() {
                         @Override
-                        public void keyPressed(KeyEvent e) {
+                        public void keyPressed(final KeyEvent e) {
                             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                                 // бот ходить
                                 ClientController.botMove();
@@ -95,32 +95,33 @@ public class Table extends Frame {
         }
     }
 
-    public void setMyColor(boolean myColor) {
+    public void setMyColor(final boolean myColor) {
         this.myColor = myColor;
     }
 
     public void remakeBoardPanel() {
-        this.frame.remove(boardPanel);
-        this.boardPanel = new BoardPanel();
-        this.frame.add(boardPanel, BorderLayout.CENTER);
-        this.frame.validate();
-        this.frame.repaint();
+        frame.remove(boardPanel);
+        boardPanel = new BoardPanel();
+        frame.add(boardPanel, BorderLayout.CENTER);
+        frame.validate();
+        frame.repaint();
     }
 
+    @Override
     public void repaint() {
         boardPanel.drawBoard();
     }
 
-    public void showMessage(String message) {
+    public void showMessage(final String message) {
         new MessageFrame(frame, "Игра окончена", message);
     }
 
-    public void closeGame(String message) {
+    public void closeGame(final String message) {
         showMessage(message);
         mf.destroyTable();
         try {
             ClientController.disconnect("Игра окончена");
-        } catch (ClientException e) {
+        } catch (final ClientException e) {
             System.err.println(e.getMessage());
         }
     }
@@ -130,28 +131,28 @@ public class Table extends Frame {
 
         BoardPanel() {
             super(new GridLayout(BOARD_SIZE, BOARD_SIZE));
-            this.boardCells = new ArrayList<>();
-            int size = BOARD_SIZE * BOARD_SIZE;
+            boardCells = new ArrayList<>();
+            final int size = BOARD_SIZE * BOARD_SIZE;
             for (int i = 0; i < size; i++) {
                 final CellPanel cellPanel = new CellPanel(this, inverseInt(i, size));
                 cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                this.boardCells.add(cellPanel);
-                this.add(cellPanel);
+                boardCells.add(cellPanel);
+                add(cellPanel);
             }
             if (!myColor) {
                 Collections.reverse(boardCells);
             }
-            this.setPreferredSize(Table.BOARD_PANEL_DIMENSION);
-            this.validate();
+            setPreferredSize(Table.BOARD_PANEL_DIMENSION);
+            validate();
         }
 
-        private int inverseInt(int i, int size) {
-            int inverse = myColor ? 0 : 1;
+        private int inverseInt(final int i, final int size) {
+            final int inverse = myColor ? 0 : 1;
             return (1 - 2 * inverse) * (i - (size - 1) * inverse);
         }
 
         private void drawBoard() {
-            for (CellPanel cp : boardCells) {
+            for (final CellPanel cp : boardCells) {
                 cp.drawCell();
             }
             validate();
@@ -176,22 +177,22 @@ public class Table extends Frame {
             super(new GridBagLayout());
             this.cellId = cellId;
             this.boardPanel = boardPanel;
-            this.setPreferredSize(Table.CELL_PANEL_DIMENSION);
+            setPreferredSize(Table.CELL_PANEL_DIMENSION);
 
             cellColor =
                     (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
                             ? Table.lightCellColor
                             : Table.darkCellColor;
 
-            this.assignCellColor();
-            this.assignCellFigureIcon();
-            CellPanel thisCellPanel = this;
+            assignCellColor();
+            assignCellFigureIcon();
+            final CellPanel thisCellPanel = this;
 
             if (mf.getMyPlayerType() == PlayerType.USER) {
-                this.addMouseListener(
+                addMouseListener(
                         new MouseAdapter() {
                             @Override
-                            public void mousePressed(MouseEvent e) {
+                            public void mousePressed(final MouseEvent e) {
                                 // TODO: Refactor this method to reduce its Cognitive Complexity
                                 if (isLeftMouseButton(e) && ClientController.isMyStep()) {
                                     boolean twoClick = false;
@@ -206,7 +207,7 @@ public class Table extends Frame {
                                         }
                                     } else if (taggedCells.contains(cellId)) {
                                         // move
-                                        int action =
+                                        final int action =
                                                 ClientController.tryMakeMove(
                                                         clickedCell / BOARD_SIZE,
                                                         clickedCell % BOARD_SIZE,
@@ -238,7 +239,7 @@ public class Table extends Frame {
                                                         cellId / BOARD_SIZE,
                                                         cellId % BOARD_SIZE,
                                                         turnFigure);
-                                            } catch (ClientException clientException) {
+                                            } catch (final ClientException clientException) {
                                                 clientException.printStackTrace();
                                             }
 
@@ -249,7 +250,7 @@ public class Table extends Frame {
                                             }
 
                                             if (action == 3) {
-                                                int coeff = myColor ? BOARD_SIZE : 1;
+                                                final int coeff = myColor ? BOARD_SIZE : 1;
                                                 for (int i = BOARD_SIZE * (coeff - 1);
                                                         i < BOARD_SIZE * coeff;
                                                         i++) {
@@ -267,7 +268,7 @@ public class Table extends Frame {
                             }
 
                             @Override
-                            public void mouseEntered(MouseEvent e) {
+                            public void mouseEntered(final MouseEvent e) {
                                 if (ClientController.isMyStep()) {
                                     if (thisCellPanel.getBackground() == chooseCellColor) {
                                         thisCellPanel.setBackground(chooseHoverCellColor);
@@ -284,7 +285,7 @@ public class Table extends Frame {
                             }
 
                             @Override
-                            public void mouseExited(MouseEvent e) {
+                            public void mouseExited(final MouseEvent e) {
                                 if (ClientController.isMyStep()) {
                                     if (thisCellPanel.getBackground() == chooseHoverCellColor) {
                                         thisCellPanel.setBackground(chooseCellColor);
@@ -302,15 +303,15 @@ public class Table extends Frame {
                             }
                         });
             }
-            this.validate();
+            validate();
         }
 
         private void assignCellFigureIcon() {
-            this.removeAll();
-            ViewFigure figure =
+            removeAll();
+            final ViewFigure figure =
                     ClientController.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             if (figure != null) {
-                try (InputStream png =
+                try (final InputStream png =
                         getClass()
                                 .getResourceAsStream(
                                         String.format(
@@ -322,13 +323,13 @@ public class Table extends Frame {
                     assert png != null;
                     final BufferedImage image = ImageIO.read(png);
 
-                    ImageIcon icon =
+                    final ImageIcon icon =
                             new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-                    JLabel label = new JLabel(icon);
-                    this.removeAll();
-                    this.add(label);
+                    final JLabel label = new JLabel(icon);
+                    removeAll();
+                    add(label);
 
-                } catch (IOException | NullPointerException e) {
+                } catch (final IOException | NullPointerException e) {
                     // logger + what do i can do?
                     e.printStackTrace();
                 }
@@ -337,7 +338,7 @@ public class Table extends Frame {
         }
 
         private void assignCellColor() {
-            this.setBackground(cellColor);
+            setBackground(cellColor);
         }
 
         private void drawCell() {
@@ -352,7 +353,7 @@ public class Table extends Frame {
         }
 
         private void clearColorOnBoard() {
-            for (Integer id : taggedCells) {
+            for (final Integer id : taggedCells) {
                 boardPanel.boardCells.get(id).assignCellColor();
             }
             clickedCell = -1;
@@ -361,13 +362,13 @@ public class Table extends Frame {
 
         private void setColorOnBoard() {
             clickedCell = cellId;
-            this.setBackground(chooseHoverCellColor);
-            Set<ViewCell> cellList =
+            setBackground(chooseHoverCellColor);
+            final Set<ViewCell> cellList =
                     ClientController.getAllMoves(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             taggedCells.add(cellId);
             if (!cellList.isEmpty()) {
-                for (ViewCell cell : cellList) {
-                    int id = cell.getRow() * BOARD_SIZE + cell.getColumn();
+                for (final ViewCell cell : cellList) {
+                    final int id = cell.getRow() * BOARD_SIZE + cell.getColumn();
                     taggedCells.add(id);
                     boardPanel
                             .boardCells

@@ -4,11 +4,11 @@ public class ViewBoard {
     public final int SIZE = 8;
     private final ViewFigure[][] cells = new ViewFigure[SIZE][SIZE];
 
-    public void setFigure(int column, int row, ViewFigure figure) {
+    public void setFigure(final int column, final int row, final ViewFigure figure) {
         cells[row][column] = figure;
     }
 
-    public ViewFigure getFigure(int column, int row) {
+    public ViewFigure getFigure(final int column, final int row) {
         return cells[row][column];
     }
 }

@@ -39,7 +39,8 @@ public class SerializationService {
      * @return десериализованный объект
      * @throws SerializationException если json некорректный
      */
-    private static <T> T deserialize(final String json, final Class<T> clazz) throws SerializationException {
+    private static <T> T deserialize(final String json, final Class<T> clazz)
+            throws SerializationException {
         try {
             return gson.fromJson(json, clazz);
         } catch (final JsonSyntaxException e) {

@@ -22,10 +22,12 @@ public class MatchMaking {
 
     private MatchMaking() {}
 
-    public static String findGame(final ClientToServerType type, final String json, final int clientId)
+    public static String findGame(
+            final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == FindGameDTO.class;
-        final FindGameDTO dto = SerializationService.clientToServerDTORequest(json, FindGameDTO.class);
+        final FindGameDTO dto =
+                SerializationService.clientToServerDTORequest(json, FindGameDTO.class);
 
         // Пока не найдется комната или свободных комнат нет
         while (true) {

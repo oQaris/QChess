@@ -9,12 +9,12 @@ import io.deeplay.qchess.game.model.Color;
 public class GameDAO {
 
     /** Добавляет или заменяет игру */
-    public static void newGame(GameSettings gs, Selfplay game, Color color) {
+    public static void newGame(final GameSettings gs, final Selfplay game, final Color color) {
         Database.getInstance().newGame(gs, game, color);
     }
 
     /** Устанавливает предпочитаемый цвет игрока клиента */
-    public static void setMyPreferColor(Color myPreferColor) {
+    public static void setMyPreferColor(final Color myPreferColor) {
         Database.getInstance().setMyPreferColor(myPreferColor);
     }
 
@@ -34,7 +34,7 @@ public class GameDAO {
     }
 
     /** Устанавливает тип противника */
-    public static void setEnemy(PlayerType playerType) {
+    public static void setEnemy(final PlayerType playerType) {
         Database.getInstance().setEnemyType(playerType);
     }
 
@@ -44,7 +44,7 @@ public class GameDAO {
     }
 
     /** Устанавливает тип игрока клиента */
-    public static void setMyType(PlayerType playerType) {
+    public static void setMyType(final PlayerType playerType) {
         Database.getInstance().setMyType(playerType);
     }
 

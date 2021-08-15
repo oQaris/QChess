@@ -9,9 +9,10 @@ public class ConfigService {
      *
      * @param property поле считанное с config файла по ключу port.
      * @return Результат целочисленное представление параметра property.
-     * @throws ConfigException выбросится если:<br> - значение поля было пустым или port вообще не
-     *                         было в config файле<br> - port не int<br> - port является
-     *                         неположительным числом.
+     * @throws ConfigException выбросится если:<br>
+     *     - значение поля было пустым или port вообще не было в config файле<br>
+     *     - port не int<br>
+     *     - port является неположительным числом.
      */
     public static int validatePort(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
@@ -33,9 +34,10 @@ public class ConfigService {
      *
      * @param property поле считанное с config файла по ключу maxPlayers.
      * @return Результат целочисленное представление параметра property.
-     * @throws ConfigException выбросится если:<br> - значение поля было пустым или maxPlayers
-     *                         вообще не было в config файле<br> - maxPlayers не int<br> -
-     *                         maxPlayers является неположительным числом.
+     * @throws ConfigException выбросится если:<br>
+     *     - значение поля было пустым или maxPlayers вообще не было в config файле<br>
+     *     - maxPlayers не int<br>
+     *     - maxPlayers является неположительным числом.
      */
     public static int validateMaxPlayers(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
@@ -57,8 +59,9 @@ public class ConfigService {
      *
      * @param property - строковое представление пути к папке.
      * @return Результат property.
-     * @throws ConfigException выбросится если:<br> - значение было пустым или null<br> - путь не
-     *                         соответствует шаблону представления пути.
+     * @throws ConfigException выбросится если:<br>
+     *     - значение было пустым или null<br>
+     *     - путь не соответствует шаблону представления пути.
      */
     public static String validatePath(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {
@@ -84,10 +87,10 @@ public class ConfigService {
      *
      * @param property поле считанное с config файла по ключу tournamentNumberGame.
      * @return Результат целочисленное представление параметра property.
-     * @throws ConfigException выбросится если:<br> - значение поля было пустым или
-     *                         tournamentNumberGame вообще не было в config файле<br> -
-     *                         tournamentNumberGame не int<br> - tournamentNumberGame является
-     *                         неположительным числом.
+     * @throws ConfigException выбросится если:<br>
+     *     - значение поля было пустым или tournamentNumberGame вообще не было в config файле<br>
+     *     - tournamentNumberGame не int<br>
+     *     - tournamentNumberGame является неположительным числом.
      */
     public static int validateTournamentNumberGame(final String property) throws ConfigException {
         if (property == null || property.isEmpty()) {

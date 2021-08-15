@@ -54,17 +54,17 @@ public class LocalClient implements IClient {
     }
 
     @Override
-    public void connect(String ip, int port) throws ClientException {
+    public void connect(final String ip, final int port) throws ClientException {
         synchronized (mutex) {
             logger.debug("Подключение клиента к серверу {}:{}", ip, port);
             checkIsConnected();
-            Socket socket;
+            final Socket socket;
             try {
                 LocalClient.ip = ip;
                 LocalClient.port = port;
                 socket = new Socket(ip, port);
                 logger.info("Клиент успешно подключился к серверу {}:{}", ip, port);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.warn("Ошибка получения сокета для подключения клиента: {}", e.getMessage());
                 disconnect();
                 throw new ClientException(FAILED_CONNECT, e);
@@ -76,7 +76,7 @@ public class LocalClient implements IClient {
                 logger.debug("Обработчик входящего трафика для клиента успешно создан");
                 inputTrafficHandler.start();
                 isConnected = true;
-            } catch (ClientException e) {
+            } catch (final ClientException e) {
                 disconnect();
                 throw e;
             }
@@ -120,7 +120,7 @@ public class LocalClient implements IClient {
     }
 
     @Override
-    public void setPort(int port) throws ClientException {
+    public void setPort(final int port) throws ClientException {
         synchronized (mutex) {
             checkIsConnected();
             LocalClient.port = port;
@@ -133,7 +133,7 @@ public class LocalClient implements IClient {
     }
 
     @Override
-    public void setIp(String ip) throws ClientException {
+    public void setIp(final String ip) throws ClientException {
         synchronized (mutex) {
             checkIsConnected();
             LocalClient.ip = ip;
@@ -142,7 +142,7 @@ public class LocalClient implements IClient {
 
     @Override
     public <T extends IServerToClientDTO> T waitForResponse(
-            IClientToServerDTO dto, Class<T> forDTOClass) throws ClientException {
+            final IClientToServerDTO dto, final Class<T> forDTOClass) throws ClientException {
         logger.debug("Начало ожидания запроса {}...", dto);
         checkIsNotConnected();
 
@@ -172,7 +172,7 @@ public class LocalClient implements IClient {
                         if (lastResponse.type == ServerToClientType.valueOf(forDTOClass))
                             return SerializationService.serverToClientDTORequest(
                                     lastResponse.json, forDTOClass);
-                    } catch (SerializationException | NullPointerException e) {
+                    } catch (final SerializationException | NullPointerException e) {
                         // Ожидается другой ответ
                     }
                 }
@@ -181,12 +181,12 @@ public class LocalClient implements IClient {
     }
 
     @Override
-    public void executeCommand(String command) throws ClientException {
+    public void executeCommand(final String command) throws ClientException {
         ClientCommandService.handleCommand(command);
     }
 
     @Override
-    public void sendIfNotNull(String json) throws ClientException {
+    public void sendIfNotNull(final String json) throws ClientException {
         synchronized (mutex) {
             checkIsNotConnected();
             inputTrafficHandler.sendIfNotNull(json);
@@ -214,7 +214,7 @@ public class LocalClient implements IClient {
             inputTrafficHandler.terminate();
             try {
                 inputTrafficHandler.join();
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 logger.error(
                         "Обработчик трафика убил убийцу обработчика трафика: {}", e.getMessage());
             }

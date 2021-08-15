@@ -81,7 +81,8 @@ public class GameService {
     }
 
     /** Выполняет игровое действие */
-    public static String action(final ClientToServerType type, final String json, final int clientId)
+    public static String action(
+            final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == ActionDTO.class;
         final ActionDTO dto = SerializationService.clientToServerDTORequest(json, ActionDTO.class);
@@ -122,7 +123,8 @@ public class GameService {
         return null;
     }
 
-    private static void sendMove(final String fromToken, final String toToken, final Room room, Move move)
+    private static void sendMove(
+            final String fromToken, final String toToken, final Room room, Move move)
             throws ServerException, ChessError {
         final RemotePlayer player = room.getPlayer(toToken);
         String sendToken = toToken;

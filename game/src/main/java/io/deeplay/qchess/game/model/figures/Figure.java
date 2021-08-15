@@ -86,7 +86,7 @@ public abstract class Figure {
     }
 
     /** @return все возможные ходы фигуры, не учитывая шаха */
-    public abstract List<Move> getAllMoves(final GameSettings settings);
+    public abstract List<Move> getAllMoves(GameSettings settings);
 
     protected List<Move> rayTrace(final Board board, final List<Cell> directions) {
         final List<Move> result = new LinkedList<>();
@@ -120,7 +120,7 @@ public abstract class Figure {
         return result;
     }
 
-    public abstract boolean isAttackedCell(final GameSettings settings, final Cell cell);
+    public abstract boolean isAttackedCell(GameSettings settings, Cell cell);
 
     @Override
     public int hashCode() {
