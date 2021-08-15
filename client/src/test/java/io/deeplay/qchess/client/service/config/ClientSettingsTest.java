@@ -11,7 +11,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_IP) {
                 Assert.fail();
             }
@@ -24,7 +24,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PORT) {
                 Assert.fail();
             }
@@ -37,7 +37,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_BOOLEAN) {
                 Assert.fail();
             }
@@ -50,7 +50,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PLAYER_TYPE) {
                 Assert.fail();
             }
@@ -63,7 +63,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PATH) {
                 Assert.fail();
             }
@@ -76,7 +76,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_COLOR) {
                 Assert.fail();
             }
@@ -89,7 +89,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_IP) {
                 Assert.fail();
             }
@@ -102,7 +102,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PORT) {
                 Assert.fail();
             }
@@ -115,7 +115,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_BOOLEAN) {
                 Assert.fail();
             }
@@ -128,7 +128,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PLAYER_TYPE) {
                 Assert.fail();
             }
@@ -141,7 +141,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_PATH) {
                 Assert.fail();
             }
@@ -154,7 +154,7 @@ public class ClientSettingsTest {
         try {
             new ClientSettings(configPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.ABSENT_COLOR) {
                 Assert.fail();
             }
@@ -166,7 +166,7 @@ public class ClientSettingsTest {
         final String configPath = "/50_test_complete.conf";
         try {
             new ClientSettings(configPath);
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             Assert.fail();
         }
     }
@@ -176,7 +176,7 @@ public class ClientSettingsTest {
         final String configPath = "/51_test_complete.conf";
         try {
             new ClientSettings(configPath);
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             Assert.fail();
         }
     }
@@ -186,7 +186,7 @@ public class ClientSettingsTest {
         final String configPath = "/52_test_complete.conf";
         try {
             new ClientSettings(configPath);
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             Assert.fail();
         }
     }
@@ -196,7 +196,7 @@ public class ClientSettingsTest {
         final String configPath = "/53_test_complete.conf";
         try {
             new ClientSettings(configPath);
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             Assert.fail();
         }
     }

@@ -11,7 +11,8 @@ public class ChatService {
 
     private ChatService() {}
 
-    public static String incomingMessage(final ClientToServerType type, final String json, final int clientId)
+    public static String incomingMessage(
+            final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == ChatMessageDTO.class;
         final ChatMessageDTO dto =

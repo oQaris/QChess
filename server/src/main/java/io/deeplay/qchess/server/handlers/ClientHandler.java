@@ -29,7 +29,8 @@ public class ClientHandler implements Runnable {
     private final int id;
     private volatile boolean stop;
 
-    public ClientHandler(final Socket socket, final Consumer<Integer> removeClientFromClientList, final int id)
+    public ClientHandler(
+            final Socket socket, final Consumer<Integer> removeClientFromClientList, final int id)
             throws ServerException {
         try {
             this.socket = socket;

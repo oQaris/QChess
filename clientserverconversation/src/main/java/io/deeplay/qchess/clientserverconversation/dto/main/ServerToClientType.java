@@ -37,7 +37,8 @@ public enum ServerToClientType {
         this.dto = dto;
     }
 
-    public static <T extends IServerToClientDTO> ServerToClientType valueOf(final Class<T> dtoClass) {
+    public static <T extends IServerToClientDTO> ServerToClientType valueOf(
+            final Class<T> dtoClass) {
         return Objects.requireNonNull(type.get(dtoClass), "DTO сервера не найдено");
     }
 

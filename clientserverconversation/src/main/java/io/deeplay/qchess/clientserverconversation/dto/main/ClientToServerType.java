@@ -27,7 +27,8 @@ public enum ClientToServerType {
         this.dto = dto;
     }
 
-    public static <T extends IClientToServerDTO> ClientToServerType valueOf(final Class<T> dtoClass) {
+    public static <T extends IClientToServerDTO> ClientToServerType valueOf(
+            final Class<T> dtoClass) {
         return Objects.requireNonNull(type.get(dtoClass), "DTO клиента не найдено");
     }
 
