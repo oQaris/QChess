@@ -52,7 +52,8 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
         theBestMaxDepth = -1;
 
         final int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
-        final ExecutorService executor = Executors.newFixedThreadPool(availableProcessorsCount);
+        final ExecutorService executor =
+                Executors.newFixedThreadPool(Math.min(allMoves.size(), availableProcessorsCount));
 
         for (final Move move : allMoves) {
             final GameSettings gsParallel = new GameSettings(gs, maxDepth);
