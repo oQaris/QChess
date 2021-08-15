@@ -54,9 +54,9 @@ public class NukeBotTest {
     @Ignore
     @Test
     public void speedTest() throws ChessError {
-        GameSettings gs = new GameSettings(BoardFilling.STANDARD);
-        Random rand = new Random();
-        int count = 1000000;
+        final GameSettings gs = new GameSettings(BoardFilling.STANDARD);
+        final Random rand = new Random();
+        final int count = 1000000;
         int i = count;
         double time = 0;
         double time2 = 0;
@@ -67,7 +67,7 @@ public class NukeBotTest {
                                 MoveType.QUIET_MOVE,
                                 new Cell(rand.nextInt(8), rand.nextInt(8)),
                                 new Cell(rand.nextInt(8), rand.nextInt(8))));
-            } catch (ChessError e) {
+            } catch (final ChessError e) {
                 // e.printStackTrace();
             }
 
@@ -92,16 +92,16 @@ public class NukeBotTest {
         MDC.put("time", time);
         NukeBotFactory.setTime(time);
 
-        int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
+        final int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
         logger.info("Number of available processors: {}", availableProcessorsCount);
 
-        long startTime;
+        final long startTime;
         if (COUNT == 1) {
             startTime = System.currentTimeMillis();
             new Game(0).run();
 
         } else {
-            ExecutorService executor =
+            final ExecutorService executor =
                     Executors.newFixedThreadPool(Math.min(availableProcessorsCount, COUNT));
             startTime = System.currentTimeMillis();
 
@@ -112,7 +112,7 @@ public class NukeBotTest {
             executor.shutdown();
         }
 
-        long timeInSec = (System.currentTimeMillis() - startTime) / 1000;
+        final long timeInSec = (System.currentTimeMillis() - startTime) / 1000;
 
         logger.info("<------------------------------------------------------>");
         logger.info("Game count: {}", COUNT);
@@ -145,18 +145,18 @@ public class NukeBotTest {
     @Ignore
     @Test
     public void testCheckmate() throws ChessError, ChessException {
-        GameSettings gs = new GameSettings(BoardFilling.EMPTY);
+        final GameSettings gs = new GameSettings(BoardFilling.EMPTY);
         gs.board.setFigure(new King(Color.BLACK, Cell.parse("a8")));
         gs.board.setFigure(new King(Color.WHITE, Cell.parse("h8")));
         gs.board.setFigure(new Rook(Color.WHITE, Cell.parse("c7")));
         gs.board.setFigure(new Rook(Color.WHITE, Cell.parse("d5")));
         System.out.println(gs.board);
 
-        NukeBot bot = NukeBotFactory.getNukeBot(gs, Color.WHITE);
-        NukeBot bot2 = NukeBotFactory.getNukeBot(gs, Color.BLACK);
-        Selfplay game = new Selfplay(gs, bot, bot2);
+        final NukeBot bot = NukeBotFactory.getNukeBot(gs, Color.WHITE);
+        final NukeBot bot2 = NukeBotFactory.getNukeBot(gs, Color.BLACK);
+        final Selfplay game = new Selfplay(gs, bot, bot2);
 
-        Move move = bot.getNextMove();
+        final Move move = bot.getNextMove();
         game.move(move);
         System.err.println(move);
 
@@ -171,17 +171,17 @@ public class NukeBotTest {
         private GameSettings gs;
         private Selfplay game;
 
-        public Game(int id) {
-            this.NukeBotColor = id % 2 == 0 ? Color.WHITE : Color.BLACK;
+        public Game(final int id) {
+            NukeBotColor = id % 2 == 0 ? Color.WHITE : Color.BLACK;
             this.id = id;
         }
 
         @Override
         public void run() {
             gs = new GameSettings(Board.BoardFilling.STANDARD);
-            Player firstPlayer;
-            Player secondPlayer;
-            NukeBot nukeBot;
+            final Player firstPlayer;
+            final Player secondPlayer;
+            final NukeBot nukeBot;
             if (NukeBotColor == Color.WHITE) {
                 nukeBot = NukeBotFactory.getNukeBot(gs, Color.WHITE);
                 firstPlayer = nukeBot;
@@ -200,7 +200,7 @@ public class NukeBotTest {
                 MDC.put("game", Integer.toString(id));
                 game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();
-            } catch (ChessError e) {
+            } catch (final ChessError e) {
                 e.printStackTrace();
             }
 
@@ -209,7 +209,7 @@ public class NukeBotTest {
                 averageTimeToMove += nukeBot.getAverageTimeToThink();
                 minTimeToMove = Math.min(minTimeToMove, nukeBot.getMinTimeToThink());
                 maxTimeToMove = Math.max(maxTimeToMove, nukeBot.getMaxTimeToThink());
-                EndGameType egt = updateEndGameStatistics();
+                final EndGameType egt = updateEndGameStatistics();
                 MDC.put("time", time);
                 logger.info("<------------------->");
                 logger.info("Games completed: {}/{}", doneTasks, COUNT);
@@ -279,7 +279,7 @@ public class NukeBotTest {
 
             public final String msg;
 
-            EndGameType(String msg) {
+            EndGameType(final String msg) {
                 this.msg = msg;
             }
         }

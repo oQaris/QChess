@@ -30,8 +30,8 @@ public abstract class SearchAlgorithm implements Runnable {
         this.mainMove = mainMove;
         this.gs = gs;
         this.evaluationFunc = evaluationFunc;
-        this.myColor = color;
-        this.enemyColor = color.inverse();
+        myColor = color;
+        enemyColor = color.inverse();
         this.maxDepth = maxDepth;
     }
 
@@ -41,7 +41,7 @@ public abstract class SearchAlgorithm implements Runnable {
 
     public int getEvaluation(final List<Move> allMoves, final boolean isMyMove, final int depth)
             throws ChessError {
-        Color enemyColor = myColor.inverse();
+        final Color enemyColor = myColor.inverse();
         if (isMyMove) { // allMoves are mine
             if (gs.endGameDetector.isStalemate(allMoves))
                 return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;

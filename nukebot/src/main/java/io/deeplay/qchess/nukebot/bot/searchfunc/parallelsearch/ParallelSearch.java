@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class ParallelSearch extends SearchFunc implements Updater {
 
     private final Object mutexTheBest = new Object();
-    private ExecutorService executor;
+    private final ExecutorService executor;
     /** Лучшая оценка для текущего цвета myColor */
     private volatile int theBestEstimation;
     /** Лучший ход для текущего цвета myColor */
@@ -30,7 +30,7 @@ public class ParallelSearch extends SearchFunc implements Updater {
         super(gs, color, evaluationFunc, maxDepth);
 
         final int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
-        this.executor = Executors.newFixedThreadPool(availableProcessorsCount);
+        executor = Executors.newFixedThreadPool(availableProcessorsCount);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ParallelSearch extends SearchFunc implements Updater {
         for (final Move move : allMoves) {
             final GameSettings gsParallel = gs;
             // final GameSettings gsParallel = new GameSettings(gs);
-            var searchAlgorithm =
+            final var searchAlgorithm =
                     SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
                             this, move, gsParallel, myColor, evaluationFunc, maxDepth);
 

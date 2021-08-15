@@ -11,13 +11,13 @@ import io.deeplay.qchess.nukebot.bot.NukeBotFactory;
 
 public class Main {
 
-    public static void main(String[] args) throws ChessError {
-        GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+    public static void main(final String[] args) throws ChessError {
+        final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
 
-        Player firstPlayer = NukeBotFactory.getNukeBot(roomSettings, Color.WHITE);
-        Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+        final Player firstPlayer = NukeBotFactory.getNukeBot(roomSettings, Color.WHITE);
+        final Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
 
-        Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
+        final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
         game.run();
     }
 }

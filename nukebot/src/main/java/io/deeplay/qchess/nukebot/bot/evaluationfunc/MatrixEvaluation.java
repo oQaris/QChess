@@ -110,16 +110,16 @@ public class MatrixEvaluation {
      *
      * @param myColor цвет игрока, который укрепляет свою позицию
      */
-    public static int figurePositionHeuristics(GameSettings gs, Color myColor) {
+    public static int figurePositionHeuristics(final GameSettings gs, final Color myColor) {
         int enemyEstimation = 0;
         int myEstimation = 0;
         for (int row = 0; row < 8; ++row)
             for (int column = 0; column < 8; ++column) {
                 final Figure figure = gs.board.getFigureUgly(row, column);
                 if (figure != null) {
-                    int r = figure.getColor() == Color.BLACK ? 7 - row : row;
+                    final int r = figure.getColor() == Color.BLACK ? 7 - row : row;
 
-                    int eval =
+                    final int eval =
                             evaluations.get(figure.figureType)[r][column]
                                     + costInPawns.get(figure.figureType);
                     if (figure.getColor() == myColor) myEstimation += eval;
@@ -136,9 +136,10 @@ public class MatrixEvaluation {
      * @deprecated Не является потокобезопасной
      */
     @Deprecated
-    public static int figureAttackHeuristics(GameSettings gs, Color myColor) throws ChessError {
-        int myMoveCount = gs.board.getAllPreparedMoves(gs, myColor).size();
-        int enemyMoveCount = gs.board.getAllPreparedMoves(gs, myColor.inverse()).size();
+    public static int figureAttackHeuristics(final GameSettings gs, final Color myColor)
+            throws ChessError {
+        final int myMoveCount = gs.board.getAllPreparedMoves(gs, myColor).size();
+        final int enemyMoveCount = gs.board.getAllPreparedMoves(gs, myColor.inverse()).size();
         return myMoveCount - enemyMoveCount;
     }
 
@@ -149,7 +150,8 @@ public class MatrixEvaluation {
      * @deprecated Не является потокобезопасной
      */
     @Deprecated
-    public static int ultimateHeuristics(GameSettings gs, Color myColor) throws ChessError {
+    public static int ultimateHeuristics(final GameSettings gs, final Color myColor)
+            throws ChessError {
         // TODO: use Lazy Evaluation
         return figurePositionHeuristics(gs, myColor) + 20 * figureAttackHeuristics(gs, myColor);
     }

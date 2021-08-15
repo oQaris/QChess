@@ -47,11 +47,11 @@ public class PVSNullMoveWithTT extends NullMoveMTDFCompatible {
                             maxDepth);
             updater.updateResult(mainMove, est);
             gs.moveSystem.undoMove();
-        } catch (ChessError ignore) {
+        } catch (final ChessError ignore) {
         }
     }
 
-    private int pvs(boolean isMyMove, int alfa, int beta, final int depth) throws ChessError {
+    private int pvs(final boolean isMyMove, int alfa, int beta, final int depth) throws ChessError {
         final BoardState boardState = gs.history.getLastBoardState();
         final TranspositionTable.TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {

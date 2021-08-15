@@ -10,7 +10,7 @@ public class FigureCountEvaluation {
      *
      * @param myColor цвет игрока, который укрепляет свою позицию
      */
-    public static int defenseHeuristics(GameSettings gs, Color myColor) {
+    public static int defenseHeuristics(final GameSettings gs, final Color myColor) {
         return gs.board.getFigureCount(myColor);
     }
 
@@ -19,7 +19,7 @@ public class FigureCountEvaluation {
      *
      * @param myColor цвет игрока, который атакует соперника
      */
-    public static int attackHeuristics(GameSettings gs, Color myColor) {
+    public static int attackHeuristics(final GameSettings gs, final Color myColor) {
         return -defenseHeuristics(gs, myColor.inverse());
     }
 
@@ -28,7 +28,7 @@ public class FigureCountEvaluation {
      *
      * @param myColor цвет игрока, который укрепляет свою позицию и пытается атаковать противника
      */
-    public static int attackDefenseHeuristics(GameSettings gs, Color myColor) {
+    public static int attackDefenseHeuristics(final GameSettings gs, final Color myColor) {
         return 5 * defenseHeuristics(gs, myColor) + 4 * attackHeuristics(gs, myColor);
     }
 }

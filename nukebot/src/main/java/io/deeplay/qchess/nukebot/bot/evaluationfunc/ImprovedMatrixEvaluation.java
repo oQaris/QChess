@@ -109,16 +109,16 @@ public class ImprovedMatrixEvaluation {
      *
      * @param myColor цвет игрока, который укрепляет свою позицию
      */
-    public static int figurePositionHeuristics(GameSettings gs, Color myColor) {
+    public static int figurePositionHeuristics(final GameSettings gs, final Color myColor) {
         int enemyEstimation = 0;
         int myEstimation = 0;
         for (int row = 0; row < 8; ++row)
             for (int column = 0; column < 8; ++column) {
                 final Figure figure = gs.board.getFigureUgly(row, column);
                 if (figure != null) {
-                    int r = figure.getColor() == Color.BLACK ? 7 - row : row;
+                    final int r = figure.getColor() == Color.BLACK ? 7 - row : row;
 
-                    int eval =
+                    final int eval =
                             evaluations.get(figure.figureType)[r][column]
                                     + costInPawns.get(figure.figureType);
                     if (figure.getColor() == myColor) myEstimation += eval;

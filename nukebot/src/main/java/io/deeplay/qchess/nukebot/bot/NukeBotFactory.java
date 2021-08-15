@@ -20,24 +20,24 @@ public class NukeBotFactory {
     private static int lastBotId;
 
     /** Устанавливает время для записи логов */
-    public static void setTime(String time) {
+    public static void setTime(final String time) {
         NukeBotFactory.time = time;
     }
 
-    public static synchronized NukeBot getNukeBot(GameSettings gs, Color color) {
+    public static synchronized NukeBot getNukeBot(final GameSettings gs, final Color color) {
         MDC.put("time", time);
         ++lastBotId;
 
         final int maxDepth = 3;
         gs.history.setMinBoardStateToSave(maxDepth);
 
-        EvaluationFunc evaluationFunc =
+        final EvaluationFunc evaluationFunc =
                 color == Color.BLACK
                         ? MatrixEvaluation::figurePositionHeuristics
                         : ImprovedMatrixEvaluation::figurePositionHeuristics;
-        SearchFunc deepSearch = new ParallelSearch(gs, color, evaluationFunc, maxDepth);
+        final SearchFunc deepSearch = new ParallelSearch(gs, color, evaluationFunc, maxDepth);
 
-        NukeBot nukeBot = new NukeBot(gs, color, deepSearch);
+        final NukeBot nukeBot = new NukeBot(gs, color, deepSearch);
 
         nukeBot.setId(lastBotId);
 

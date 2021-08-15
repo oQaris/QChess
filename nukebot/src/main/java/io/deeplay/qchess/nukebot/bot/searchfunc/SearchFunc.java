@@ -22,7 +22,7 @@ public abstract class SearchFunc {
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
         this.evaluationFunc = evaluationFunc;
-        this.myColor = color;
+        myColor = color;
         this.maxDepth = maxDepth;
         this.gs = gs;
     }

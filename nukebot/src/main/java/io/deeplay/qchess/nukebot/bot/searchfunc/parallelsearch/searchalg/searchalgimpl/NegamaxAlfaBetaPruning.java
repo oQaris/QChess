@@ -39,7 +39,7 @@ public class NegamaxAlfaBetaPruning extends SearchAlgorithm {
                             maxDepth);
             updater.updateResult(mainMove, est);
             gs.moveSystem.undoMove();
-        } catch (ChessError ignore) {
+        } catch (final ChessError ignore) {
         }
     }
 

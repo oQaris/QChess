@@ -12,7 +12,7 @@ public class TranspositionTable {
     private final Map<BoardState, TTEntry> entries = new ConcurrentHashMap<>(500000);
 
     /** @return вхождение состояния игры или null, если такое состояние еще не встречалось */
-    public TTEntry find(BoardState boardState) {
+    public TTEntry find(final BoardState boardState) {
         return entries.get(boardState);
     }
 
@@ -56,7 +56,7 @@ public class TranspositionTable {
         public int upperBound = EvaluationFunc.MAX_ESTIMATION;
         public int depth;
 
-        public TTEntry(List<Move> allMoves, int depth) {
+        public TTEntry(final List<Move> allMoves, final int depth) {
             this.allMoves = allMoves;
             this.depth = depth;
         }

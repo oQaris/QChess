@@ -51,7 +51,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                             true);
             updater.updateResult(mainMove, est);
             gs.moveSystem.undoMove();
-        } catch (ChessError ignore) {
+        } catch (final ChessError ignore) {
         }
     }
 

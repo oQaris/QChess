@@ -9,7 +9,7 @@ public abstract class SearchImprovements {
     public static final Comparator<Move> movesPriority =
             (m1, m2) -> m2.getMoveType().importantLevel - m1.getMoveType().importantLevel;
 
-    public static void prioritySort(List<Move> allMoves) {
+    public static void prioritySort(final List<Move> allMoves) {
         allMoves.sort(movesPriority);
     }
 }
