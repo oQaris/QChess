@@ -122,13 +122,13 @@ public class History {
     public void checkAndAddPeaceMoveCount(final Move move) {
         switch (move.getMoveType()) {
             case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK:
-                // if (parentHistory == null) clearHistory(minBoardStateToSave);
+                if (parentHistory == null) clearHistory(minBoardStateToSave);
             case ATTACK:
                 peaceMoveCount = 0;
                 break;
             default:
                 if (gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN) {
-                    // if (parentHistory == null) clearHistory(minBoardStateToSave);
+                    if (parentHistory == null) clearHistory(minBoardStateToSave);
                     peaceMoveCount = 0;
                 } else ++peaceMoveCount;
                 break;
