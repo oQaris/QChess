@@ -15,23 +15,25 @@ public abstract class SearchAlgorithmFactory {
     public static SearchAlgorithm getSearchAlgorithm(
             final ResultUpdater resultUpdater,
             final Move mainMove,
+            final int moveVersion,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
         return new NegamaxAlfaBetaPruning(
-                resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
+                resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
     public static MTDFSearch getMTDFCompatibleAlgorithm(
             final ResultUpdater resultUpdater,
             final Move mainMove,
+            final int moveVersion,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
         final TranspositionTable table = new TranspositionTable();
         return new UltimateQuintessence(
-                table, resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
+                table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 }

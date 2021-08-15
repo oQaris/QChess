@@ -18,11 +18,12 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
             final TranspositionTable table,
             final ResultUpdater resultUpdater,
             final Move mainMove,
+            final int moveVersion,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(table, resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
+        super(table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
     protected boolean isAllowNullMove(final Color color) {

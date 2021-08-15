@@ -21,11 +21,12 @@ public class NegaScoutAlfaBetaPruning extends SearchAlgorithm {
     public NegaScoutAlfaBetaPruning(
             final ResultUpdater resultUpdater,
             final Move mainMove,
+            final int moveVersion,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
+        super(resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
     @Override
@@ -38,7 +39,7 @@ public class NegaScoutAlfaBetaPruning extends SearchAlgorithm {
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
                             maxDepth);
-            resultUpdater.updateResult(mainMove, est, maxDepth);
+            resultUpdater.updateResult(mainMove, est, maxDepth, moveVersion);
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }

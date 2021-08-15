@@ -10,6 +10,7 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.player.Player;
@@ -29,7 +30,7 @@ public class NukeBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(NukeBotTest.class);
 
-    private static final int COUNT = 4;
+    private static final int COUNT = 1;
 
     private static final Object mutexDoneTask = new Object();
     private static volatile int doneTasks;
@@ -83,6 +84,51 @@ public class NukeBotTest {
         }
         System.out.println("fast: " + time);
         System.out.println("simple: " + time2);
+    }
+
+    /** Мат ладьей за 1 ход */
+    @Ignore
+    @Test
+    public void testCheckmate() throws ChessError, ChessException {
+        final GameSettings gs = new GameSettings(BoardFilling.EMPTY);
+        gs.board.setFigure(new King(Color.BLACK, Cell.parse("a8")));
+        gs.board.setFigure(new King(Color.WHITE, Cell.parse("h8")));
+        gs.board.setFigure(new Rook(Color.WHITE, Cell.parse("c7")));
+        gs.board.setFigure(new Rook(Color.WHITE, Cell.parse("d5")));
+        System.out.println(gs.board);
+
+        final NukeBot bot = NukeBotFactory.getNukeBot(gs, Color.WHITE);
+        final NukeBot bot2 = NukeBotFactory.getNukeBot(gs, Color.BLACK);
+        final Selfplay game = new Selfplay(gs, bot, bot2);
+
+        final Move move = bot.getNextMove();
+        game.move(move);
+        System.err.println(move);
+
+        Assert.assertTrue(gs.endGameDetector.isCheckmate(Color.BLACK));
+    }
+
+    @Ignore
+    @Test
+    public void testTurnInto() throws ChessError {
+        final GameSettings gs = new GameSettings("r1b1k2r/pppn1ppp/2n5/8/3P4/P1Pq3P/4p1K1/5BNR");
+        System.out.println(gs.board);
+
+        final NukeBot bot = NukeBotFactory.getNukeBot(gs, Color.WHITE);
+        final NukeBot bot2 = NukeBotFactory.getNukeBot(gs, Color.BLACK);
+        final Selfplay game = new Selfplay(gs, bot, bot2);
+
+        game.move(new Move(MoveType.QUIET_MOVE, Cell.parse("a3"), Cell.parse("a4")));
+
+        final Move move = bot2.getNextMove();
+        game.move(move);
+        System.err.println(move);
+
+        System.out.println(gs.board);
+
+        final Move expected = new Move(MoveType.TURN_INTO_ATTACK, Cell.parse("e2"), Cell.parse("f1"));
+        expected.turnInto = FigureType.QUEEN;
+        Assert.assertEquals(expected, move);
     }
 
     @Ignore
@@ -139,28 +185,6 @@ public class NukeBotTest {
                 "Opponent win + semi-win rate: {}% + {}%",
                 checkmateToNukeBot * 100 / COUNT, stalemateToNukeBot * 100 / COUNT);
         logger.info("Draw rate: {}%", drawCount * 100 / COUNT);
-    }
-
-    /** Мат ладьей за 1 ход */
-    @Ignore
-    @Test
-    public void testCheckmate() throws ChessError, ChessException {
-        final GameSettings gs = new GameSettings(BoardFilling.EMPTY);
-        gs.board.setFigure(new King(Color.BLACK, Cell.parse("a8")));
-        gs.board.setFigure(new King(Color.WHITE, Cell.parse("h8")));
-        gs.board.setFigure(new Rook(Color.WHITE, Cell.parse("c7")));
-        gs.board.setFigure(new Rook(Color.WHITE, Cell.parse("d5")));
-        System.out.println(gs.board);
-
-        final NukeBot bot = NukeBotFactory.getNukeBot(gs, Color.WHITE);
-        final NukeBot bot2 = NukeBotFactory.getNukeBot(gs, Color.BLACK);
-        final Selfplay game = new Selfplay(gs, bot, bot2);
-
-        final Move move = bot.getNextMove();
-        game.move(move);
-        System.err.println(move);
-
-        Assert.assertTrue(gs.endGameDetector.isCheckmate(Color.BLACK));
     }
 
     private static class Game implements Runnable {

@@ -22,11 +22,12 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             final TranspositionTable table,
             final ResultUpdater resultUpdater,
             final Move mainMove,
+            final int moveVersion,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(table, resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
+        super(table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                             EvaluationFunc.MAX_ESTIMATION,
                             maxDepth,
                             true);
-            resultUpdater.updateResult(mainMove, est, maxDepth);
+            resultUpdater.updateResult(mainMove, est, maxDepth, moveVersion);
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }

@@ -17,17 +17,20 @@ public abstract class SearchAlgorithm implements Runnable {
 
     protected final ResultUpdater resultUpdater;
     protected final Move mainMove;
+    protected final int moveVersion;
     protected final GameSettings gs;
 
     protected SearchAlgorithm(
             final ResultUpdater resultUpdater,
             final Move mainMove,
+            final int moveVersion,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
         this.resultUpdater = resultUpdater;
         this.mainMove = mainMove;
+        this.moveVersion = moveVersion;
         this.gs = gs;
         this.evaluationFunc = evaluationFunc;
         myColor = color;

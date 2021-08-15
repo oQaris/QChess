@@ -17,11 +17,12 @@ public abstract class MTDFSearch extends SearchAlgorithm {
             final TranspositionTable table,
             final ResultUpdater resultUpdater,
             final Move mainMove,
+            final int moveVersion,
             final GameSettings gs,
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(resultUpdater, mainMove, gs, color, evaluationFunc, maxDepth);
+        super(resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
         this.table = table;
     }
 
@@ -31,7 +32,7 @@ public abstract class MTDFSearch extends SearchAlgorithm {
             final long startTimeMillis = System.currentTimeMillis();
             for (int d = 1; d <= depth; ++d) {
                 firstGuess = MTDF(firstGuess, d);
-                resultUpdater.updateResult(mainMove, firstGuess, d);
+                resultUpdater.updateResult(mainMove, firstGuess, d, moveVersion);
                 if (timesUp(startTimeMillis, maxTimeMillis)) break;
             }
             gs.moveSystem.undoMove();

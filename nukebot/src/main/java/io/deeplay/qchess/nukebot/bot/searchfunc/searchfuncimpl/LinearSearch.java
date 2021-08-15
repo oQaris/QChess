@@ -40,7 +40,7 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
         for (final Move move : allMoves) {
             final MTDFSearch searchAlgorithm =
                     SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
-                            this, move, gs, myColor, evaluationFunc, maxDepth);
+                            this, move, 0, gs, myColor, evaluationFunc, maxDepth);
 
             // searchAlgorithm.MTDFStart(0, maxDepth, TIME_TO_MOVE);
             searchAlgorithm.run();
@@ -50,11 +50,17 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
     }
 
     @Override
-    public void updateResult(final Move move, final int estimation, final int maxDepth) {
+    public void updateResult(
+            final Move move, final int estimation, final int maxDepth, final int moveVersion) {
         if (maxDepth > theBestMaxDepth || estimation > theBestEstimation) {
             theBestEstimation = estimation;
             theBestMove = move;
             theBestMaxDepth = maxDepth;
         }
+    }
+
+    @Override
+    public boolean isValidMoveVersion(final int myMoveVersion) {
+        return true;
     }
 }

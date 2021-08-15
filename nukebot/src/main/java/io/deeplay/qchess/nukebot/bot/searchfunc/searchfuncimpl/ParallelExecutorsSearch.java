@@ -7,6 +7,7 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithmFactory;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 import java.util.List;
@@ -22,6 +23,8 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
     private static final Logger logger = LoggerFactory.getLogger(ParallelExecutorsSearch.class);
 
     private final Object mutexTheBest = new Object();
+    /** Используется, чтобы незавершенные потоки с прошлых ходов случайно не сломали текущий */
+    private volatile int moveVersion;
     /** Лучшая оценка для текущего цвета myColor */
     private volatile int theBestEstimation;
     /** Лучший ход для текущего цвета myColor */
@@ -52,10 +55,10 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
         final ExecutorService executor = Executors.newFixedThreadPool(availableProcessorsCount);
 
         for (final Move move : allMoves) {
-            final GameSettings gsParallel = new GameSettings(gs);
-            final var searchAlgorithm =
-                    SearchAlgorithmFactory.getSearchAlgorithm(
-                            this, move, gsParallel, myColor, evaluationFunc, maxDepth);
+            final GameSettings gsParallel = new GameSettings(gs, maxDepth);
+            final MTDFSearch searchAlgorithm =
+                    SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
+                            this, move, moveVersion, gsParallel, myColor, evaluationFunc, maxDepth);
 
             // TODO: test this
             // executor.execute(() -> searchAlgorithm.MTDFStart(0, maxDepth, 5000));
@@ -65,7 +68,12 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
 
         final long time = System.currentTimeMillis() - startTime;
         try {
-            executor.awaitTermination(TIME_TO_MOVE - time, TimeUnit.MILLISECONDS);
+            final boolean allIsComplete =
+                    executor.awaitTermination(TIME_TO_MOVE - time, TimeUnit.MILLISECONDS);
+            if (!allIsComplete)
+                synchronized (mutexTheBest) {
+                    ++moveVersion;
+                }
         } catch (final InterruptedException e) {
             logger.error("Ошибка в функции поиска: {}", e.getMessage());
         }
@@ -74,10 +82,13 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
     }
 
     @Override
-    public void updateResult(final Move move, final int estimation, final int maxDepth) {
-        // 2 проверки нужно, чтобы лишний раз не синхронизировать
+    public void updateResult(
+            final Move move, final int estimation, final int maxDepth, final int moveVersion) {
+        if (moveVersion != this.moveVersion) return;
         if (maxDepth > theBestMaxDepth || estimation > theBestEstimation) {
             synchronized (mutexTheBest) {
+                // 2 одинаковые проверки нужны, чтобы лишний раз не синхронизировать
+                if (moveVersion != this.moveVersion) return;
                 if (maxDepth > theBestMaxDepth || estimation > theBestEstimation) {
                     theBestEstimation = estimation;
                     theBestMove = move;
@@ -85,5 +96,10 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isValidMoveVersion(final int myMoveVersion) {
+        return moveVersion == myMoveVersion;
     }
 }
