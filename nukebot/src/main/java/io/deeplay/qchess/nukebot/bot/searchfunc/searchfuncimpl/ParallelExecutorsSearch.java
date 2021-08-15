@@ -60,8 +60,7 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
                     SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
                             this, move, moveVersion, gsParallel, myColor, evaluationFunc, maxDepth);
 
-            // TODO: test this
-            // executor.execute(() -> searchAlgorithm.MTDFStart(0, maxDepth, 5000));
+            // executor.execute(() -> searchAlgorithm.MTDFStart(0, maxDepth));
             executor.execute(searchAlgorithm);
         }
         executor.shutdown();

@@ -22,6 +22,8 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
     /** Лучшая глубина для текущего цвета myColor, на которой была основана оценка */
     private int theBestMaxDepth;
 
+    private long startTime;
+
     public LinearSearch(
             final GameSettings gs,
             final Color color,
@@ -32,6 +34,8 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
 
     @Override
     public Move findBest() throws ChessError {
+        startTime = System.currentTimeMillis();
+
         final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
         SearchImprovements.prioritySort(allMoves);
 
@@ -42,7 +46,7 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
                     SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
                             this, move, 0, gs, myColor, evaluationFunc, maxDepth);
 
-            // searchAlgorithm.MTDFStart(0, maxDepth, TIME_TO_MOVE);
+            // searchAlgorithm.MTDFStart(0, maxDepth);
             searchAlgorithm.run();
         }
 
@@ -61,6 +65,6 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
 
     @Override
     public boolean isInvalidMoveVersion(final int myMoveVersion) {
-        return false;
+        return System.currentTimeMillis() - startTime > TIME_TO_MOVE;
     }
 }

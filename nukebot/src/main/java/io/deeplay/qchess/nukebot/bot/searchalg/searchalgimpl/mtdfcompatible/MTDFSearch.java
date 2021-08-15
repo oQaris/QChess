@@ -26,22 +26,17 @@ public abstract class MTDFSearch extends SearchAlgorithm {
         this.table = table;
     }
 
-    public void MTDFStart(int firstGuess, final int depth, final long maxTimeMillis) {
+    public void MTDFStart(int firstGuess, final int depth) {
         try {
             gs.moveSystem.move(mainMove);
-            final long startTimeMillis = System.currentTimeMillis();
             for (int d = 1; d <= depth; ++d) {
                 firstGuess = MTDF(firstGuess, d);
+                if (resultUpdater.isInvalidMoveVersion(moveVersion)) break;
                 resultUpdater.updateResult(mainMove, firstGuess, d, moveVersion);
-                if (timesUp(startTimeMillis, maxTimeMillis)) break;
             }
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }
-    }
-
-    private boolean timesUp(final long startTimeMillis, final long maxTimeMillis) {
-        return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
     }
 
     private int MTDF(final int firstGuess, final int depth) throws ChessError {
@@ -53,6 +48,7 @@ public abstract class MTDFSearch extends SearchAlgorithm {
             if (est == lowerBound) beta = est + 1;
             else beta = est;
             est = alfaBetaWithTT(beta - 1, beta, depth);
+            if (resultUpdater.isInvalidMoveVersion(moveVersion)) return est;
             if (est < beta) upperBound = est;
             else lowerBound = est;
         } while (lowerBound < upperBound);

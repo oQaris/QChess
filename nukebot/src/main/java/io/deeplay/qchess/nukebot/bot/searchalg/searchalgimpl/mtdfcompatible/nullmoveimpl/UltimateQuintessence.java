@@ -152,10 +152,10 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             if (firstEst > alfa) alfa = firstEst;
             gs.moveSystem.undoMove();
 
-            while (alfa < beta && it.hasNext()) {
-                if (resultUpdater.isInvalidMoveVersion(moveVersion))
-                    return EvaluationFunc.MIN_ESTIMATION;
+            if (resultUpdater.isInvalidMoveVersion(moveVersion))
+                return EvaluationFunc.MIN_ESTIMATION;
 
+            while (alfa < beta && it.hasNext()) {
                 move = it.next();
                 gs.moveSystem.move(move);
 
@@ -171,6 +171,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
                 gs.moveSystem.undoMove();
                 if (est > alfa) alfa = est;
+
+                if (resultUpdater.isInvalidMoveVersion(moveVersion))
+                    return EvaluationFunc.MIN_ESTIMATION;
             }
 
             if (failHigh && alfa < beta) {
