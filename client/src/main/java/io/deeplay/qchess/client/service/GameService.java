@@ -148,8 +148,6 @@ public class GameService {
                     e.printStackTrace();
                     return null;
                 }
-                // TODO: удалить
-                System.err.println(GameDAO.getGameSettings().board.toString());
                 return move;
             }
         }
