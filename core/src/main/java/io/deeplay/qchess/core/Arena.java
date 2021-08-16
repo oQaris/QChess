@@ -98,11 +98,11 @@ public class Arena {
 
             stats.addGameResult(firstPlayer, secondPlayer, gameResult);
 
-            final float firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
+            final double firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
             rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), firstPlayerFactor);
         }
 
-        private float getFactor(final Color firstPlayerColor, final EndGameType result) {
+        private double getFactor(final Color firstPlayerColor, final EndGameType result) {
             return result
                             == (firstPlayerColor == Color.WHITE
                                     ? EndGameType.CHECKMATE_TO_BLACK
