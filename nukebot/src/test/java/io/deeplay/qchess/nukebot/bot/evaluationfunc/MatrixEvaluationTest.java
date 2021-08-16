@@ -1,12 +1,11 @@
 package io.deeplay.qchess.nukebot.bot.evaluationfunc;
 
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation.bishopEval;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation.costInPawns;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation.knightEval;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation.middleGameKingEval;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation.pawnEval;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation.queenEval;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.ImprovedMatrixEvaluation.rookEval;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation.bishopEval;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation.costInPawns;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation.knightEval;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation.pawnEval;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation.queenEval;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation.rookEval;
 
 import io.deeplay.qchess.game.model.figures.FigureType;
 import org.junit.Ignore;
@@ -88,10 +87,10 @@ public class MatrixEvaluationTest {
                 // / 4;
                 // final int P = pawnEval[row][column] + MatrixEvaluation.pawnEval[row][column] / 4;
                 // final int R = rookEval[row][column] + MatrixEvaluation.rookEval[row][column] / 4;
-                final int Q =
-                        middleGameKingEval[row][column]
-                                + MatrixEvaluation.kingEval[row][column] / 4;
-                System.out.print(Q + ", ");
+                /*final int Q =
+                middleGameKingEval[row][column]
+                        + MatrixEvaluation.kingEval[row][column] / 4;*/
+                // System.out.print(Q + ", ");
             }
             System.out.println();
         }

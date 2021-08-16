@@ -10,7 +10,7 @@
 
 - [x] Оценка стоимости фигур в пешках
 - [x] Оценка позиции фигур
-- [ ] Оценка [PeSTO](https://www.chessprogramming.org/PeSTO%27s_Evaluation_Function)
+- [x] Оценка [PeSTO](https://www.chessprogramming.org/PeSTO%27s_Evaluation_Function)
 
 ### searchfunc
 
