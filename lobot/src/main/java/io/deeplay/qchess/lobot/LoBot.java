@@ -222,18 +222,16 @@ public class LoBot extends RemotePlayer {
 
     private int minimax(int depth, int alpha, int beta, Color currentColor)
         throws ChessError, ChessException {
-        if (depth == 0) {
-            return evaluation.evaluateBoard(roomSettings, color);
-        }
-
-        List<Move> moves = ms.getAllPreparedMoves(currentColor);
-
         EndGameType endGameType = egd.updateEndGameStatus();
         egd.revertEndGameStatus();
         if (endGameType != EndGameType.NOTHING) {
             return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
+        if (depth == 0) {
+            return evaluation.evaluateBoard(roomSettings, color);
+        }
 
+        List<Move> moves = ms.getAllPreparedMoves(currentColor);
         int bestMoveValue = color == currentColor ? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;
         for (Move move : moves) {
             int alphaForLambda = alpha;

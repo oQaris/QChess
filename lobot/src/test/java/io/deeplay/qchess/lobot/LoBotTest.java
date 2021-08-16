@@ -8,6 +8,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
+import io.deeplay.qchess.lobot.evaluation.MonteCarloEvaluation;
 import io.deeplay.qchess.lobot.evaluation.PestoEvaluation;
 import io.deeplay.qchess.lobot.evaluation.StaticPositionMatrixEvaluation;
 import io.deeplay.qchess.lobot.evaluation.FiguresCostSumEvaluation;
@@ -53,6 +54,43 @@ public class LoBotTest {
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
         logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
         executor.shutdown();
+    }
+
+    @Test
+    public void testMonteCarloEvaluation() {
+        final int[] results = new int[3];
+        Arrays.fill(results, 0);
+        long startTime = System.currentTimeMillis();
+        int avr = 0;
+        int max = 0;
+
+        for (int i = 1; i <= GAME_COUNT; i++) {
+            GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
+            Player firstPlayer = new LoBot(roomSettings, Color.WHITE, new Strategy(new MonteCarloEvaluation(5, false), TraversalAlgorithm.MINIMAX, 2));
+            Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
+            try {
+                Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
+                game.run();
+                int index = getEndGameType(roomSettings.endGameDetector.getGameResult());
+                if (index < 3) {
+                    results[index]++;
+                } else {
+                    logger.info("{} WTF?!", i);
+                }
+            } catch (ChessError e) {
+                e.printStackTrace();
+            }
+            logger.info("Game {} complete", i);
+            max += LoBot.MAX_TIME;
+            avr += ((LoBot.FULL_TIME * 1.0) / LoBot.STEP_COUNT);
+            LoBot.MAX_TIME = 0;
+            LoBot.FULL_TIME = 0;
+            LoBot.STEP_COUNT = 0;
+        }
+        logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
+        logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
+        logger.info("AVR MAX: {}", (max * 1.0 / GAME_COUNT));
+        logger.info("AVR AVR: {}", (avr * 1.0 / GAME_COUNT));
     }
 
     @Test
