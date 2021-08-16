@@ -9,6 +9,7 @@ import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
@@ -62,8 +63,8 @@ public class MatchMaking {
                         switch (dto.enemyType) {
                             case LOCAL_PLAYER, REMOTE_PLAYER -> null;
                             case RANDOM_BOT -> new RandomBot(gs, clientColor.inverse());
+                            case ATTACK_BOT -> new AttackBot(gs, clientColor.inverse());
                                 // TODO: вставить своего бота
-                            case ATTACK_BOT -> new RandomBot(gs, clientColor.inverse());
                         };
 
                 if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {
