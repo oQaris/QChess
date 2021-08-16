@@ -4,6 +4,8 @@ public class GameMath {
 
     public static final int[] hash64Coeff = new int[64];
     public static final int pow31in64;
+    public static final int[][][] zobristHash64 = new int[13][8][8];
+    public static long SEED_RANDOM = 1L;
 
     static {
         int degree = 1;
@@ -12,6 +14,16 @@ public class GameMath {
             degree *= 31;
         }
         pow31in64 = degree;
+
+        long prevSeed = 1L;
+        for (int figure = 0; figure < 12; ++figure)
+            for (int y = 0; y < 8; ++y)
+                for (int x = 0; x < 8; ++x) {
+                    prevSeed = next(prevSeed);
+                    zobristHash64[figure][y][x] = rand(prevSeed);
+                }
+        // Хеши пустых клеток
+        for (int y = 0; y < 8; ++y) for (int x = 0; x < 8; ++x) zobristHash64[12][y][x] = 0;
     }
 
     /** @return a в степени n */
@@ -23,6 +35,56 @@ public class GameMath {
             n >>= 1;
         }
         return res;
+    }
+
+    /** Устанавливает глобальный сид */
+    public static void srand(final long seed) {
+        SEED_RANDOM = seed;
+    }
+
+    /**
+     * Не является атомарной операцией
+     *
+     * @return псевдослучайное число
+     */
+    public static int rand() {
+        SEED_RANDOM = 0xFFFFFFFFFFFFL & (0xBL + 0x5DEECE66DL * SEED_RANDOM);
+        return (int) (SEED_RANDOM >>> 16);
+    }
+
+    public static long next(final long prevSeed) {
+        return 0xFFFFFFFFFFFFL & (0xBL + 0x5DEECE66DL * prevSeed);
+    }
+
+    public static int rand(final long prevSeed) {
+        return (int) (prevSeed >>> 16);
+    }
+
+    /**
+     * Возвращает хеши, основанные на XOR и хешах Зобриста для массива с размером 8x8, при условии,
+     * что числа в массиве лежат в отрезке [0, 12]. Есть возможность пересчитать хеш, не
+     * пересчитывая весь массив при его изменении:
+     *
+     * <pre>{@code
+     * hash64 = zobristHash64(array);
+     * }</pre>
+     *
+     * Пересчитывание хеша при изменении массива:
+     *
+     * <pre>{@code
+     * hash64 ^= GameMath.zobristHash64[array[y][x]][y][x]
+     *         ^ GameMath.zobristHash64[newValue][y][x];
+     * array[y][x] = newValue;
+     * }</pre>
+     *
+     * @param array array.length == 8 && array[i].length == 8
+     * @return хеш array
+     */
+    public static int zobristHash64(final int[][] array) {
+        int hash = 0;
+        for (int y = 0; y < 8; ++y)
+            for (int x = 0; x < 8; ++x) hash ^= zobristHash64[array[y][x]][y][x];
+        return hash;
     }
 
     /**
