@@ -13,7 +13,7 @@ public class ServerController {
     private ServerController() {}
 
     /** Отправляет сообщение View, если view и message не null */
-    public static void print(String message) {
+    public static void print(final String message) {
         if (view != null && message != null) view.print(message);
     }
 
@@ -26,7 +26,7 @@ public class ServerController {
      *
      * @param view окружение сервера
      */
-    public static void setView(IServerView view) {
+    public static void setView(final IServerView view) {
         ServerController.view = view;
     }
 
@@ -63,7 +63,7 @@ public class ServerController {
      *
      * @throws ServerException если сервер уже открыт
      */
-    public static void setMaxClients(int maxClients) throws ServerException {
+    public static void setMaxClients(final int maxClients) throws ServerException {
         server.setMaxClients(maxClients);
     }
 
@@ -77,7 +77,7 @@ public class ServerController {
      *
      * @throws ServerException если сервер уже открыт
      */
-    public static void setPort(int port) throws ServerException {
+    public static void setPort(final int port) throws ServerException {
         server.setPort(port);
     }
 
@@ -86,7 +86,7 @@ public class ServerController {
      *
      * @throws ServerException если при выполнении команды возникла ошибка
      */
-    public static void executeCommand(String command) throws ServerException {
+    public static void executeCommand(final String command) throws ServerException {
         server.executeCommand(command);
     }
 
@@ -95,7 +95,7 @@ public class ServerController {
      *
      * @throws ServerException если сервер закрыт
      */
-    public static void sendAll(String json) throws ServerException {
+    public static void sendAll(final String json) throws ServerException {
         server.sendAll(json);
     }
 
@@ -104,7 +104,7 @@ public class ServerController {
      *
      * @throws ServerException если сервер закрыт
      */
-    public static void send(String json, int clientId) throws ServerException {
+    public static void send(final String json, final int clientId) throws ServerException {
         server.send(json, clientId);
     }
 
@@ -113,7 +113,7 @@ public class ServerController {
      *
      * @throws ServerException если сервер закрыт
      */
-    public static void closeConnection(int clientId) throws ServerException {
+    public static void closeConnection(final int clientId) throws ServerException {
         server.closeConnection(clientId);
     }
 }

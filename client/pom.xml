@@ -2,10 +2,41 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.deeplay</groupId>
+    <artifactId>QChess</artifactId>
+    <version>0.0.1</version>
+  </parent>
+
   <artifactId>QChess-client</artifactId>
+  <version>0.0.1</version>
 
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>copy-resource-one</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
@@ -38,12 +69,12 @@
     <dependency>
       <artifactId>slf4j-api</artifactId>
       <groupId>org.slf4j</groupId>
-      <version>1.7.32</version>
+      <version>1.7.31</version>
     </dependency>
     <dependency>
       <artifactId>logback-classic</artifactId>
       <groupId>ch.qos.logback</groupId>
-      <version>1.2.5</version>
+      <version>1.2.3</version>
     </dependency>
     <!-- QChess modules -->
     <dependency>
@@ -56,27 +87,19 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
+    <!-- Tests -->
     <dependency>
-      <artifactId>QChess-qbot</artifactId>
-      <groupId>io.deeplay</groupId>
-      <scope>compile</scope>
-      <version>0.0.1</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <artifactId>QChess</artifactId>
-    <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
-  </parent>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <version>0.0.1</version>
 
 </project>

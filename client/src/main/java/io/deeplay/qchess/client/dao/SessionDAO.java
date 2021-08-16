@@ -10,7 +10,7 @@ public class SessionDAO {
     }
 
     /** Устанавливает токен для подключения к серверу */
-    public static void setSessionToken(String sessionToken) {
+    public static void setSessionToken(final String sessionToken) {
         Database.getInstance().setSessionToken(sessionToken);
     }
 }

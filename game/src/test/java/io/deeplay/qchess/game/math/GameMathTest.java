@@ -21,7 +21,7 @@ public class GameMathTest {
         int simpleMult = 1;
         for (int t = 1; t < 100; ++t) {
             simpleMult *= 31;
-            int fastMult = GameMath.pow(31, t);
+            final int fastMult = GameMath.pow(31, t);
 
             Assert.assertEquals(simpleMult, fastMult);
         }
@@ -29,7 +29,7 @@ public class GameMathTest {
 
     @Test
     public void testHashCode64_STD() {
-        int[] array = new int[64];
+        final int[] array = new int[64];
         for (int i = 0; i < 64; ++i) array[i] = i * 11 % 37;
 
         final int stdHash = Arrays.hashCode(array);
@@ -43,8 +43,8 @@ public class GameMathTest {
 
     @Test
     public void testRecalcHash() {
-        int[] array = new int[64];
-        int[] toSet = new int[64];
+        final int[] array = new int[64];
+        final int[] toSet = new int[64];
         for (int i = 0; i < 64; ++i) {
             array[i] = i * 11 % 37;
             toSet[i] = i * 31 % 29;
@@ -79,23 +79,23 @@ public class GameMathTest {
     @Ignore
     @Test
     public void speedTest() {
-        int[] array = new int[64];
+        final int[] array = new int[64];
         for (int i = 0; i < 64; ++i) array[i] = i * 11 % 37;
 
         double maxTime = Double.MIN_VALUE;
         double minTime = Double.MAX_VALUE;
 
-        int count = 100000;
+        final int count = 100000;
         int i = count;
         double time = 0;
         while (--i >= 0) {
-            long startTime = System.nanoTime();
+            final long startTime = System.nanoTime();
 
             for (int j = 0; j < 1000; ++j) GameMath.hashCode64(array);
             // for (int j = 0; j < 1000; ++j) Arrays.hashCode(array);
 
-            long endTime = System.nanoTime();
-            double t = (double) (endTime - startTime);
+            final long endTime = System.nanoTime();
+            final double t = (double) (endTime - startTime);
             if (t > maxTime) maxTime = t;
             if (t < minTime) minTime = t;
             time += t / count;

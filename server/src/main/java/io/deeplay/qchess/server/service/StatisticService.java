@@ -11,14 +11,16 @@ public class StatisticService {
     private StatisticService() {}
 
     /** Записывает результат игры в файл */
-    public static synchronized void writeEndGameStats(int roomId, int gameId, String result) {
+    public static synchronized void writeEndGameStats(
+            final int roomId, final int gameId, final String result) {
         MDC.put("path", roomId + "/" + "games_result");
         // logger.info("{} - {}", gameId, result);
         logger.info(result);
     }
 
     /** Записывает очередной ход игры в файл */
-    public static synchronized void writeMoveStats(int roomId, int gameId, Move move) {
+    public static synchronized void writeMoveStats(
+            final int roomId, final int gameId, final Move move) {
         MDC.put("path", roomId + "/" + "moves_" + gameId);
         logger.info("{}", move);
     }

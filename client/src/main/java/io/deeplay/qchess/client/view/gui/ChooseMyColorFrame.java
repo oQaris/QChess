@@ -25,7 +25,7 @@ public class ChooseMyColorFrame extends Frame {
     private final GridBagConstraints gbc;
     private final Map<JRadioButton, ViewColor> rbs = new HashMap<>();
 
-    public ChooseMyColorFrame(MainFrame mf) {
+    public ChooseMyColorFrame(final MainFrame mf) {
         this.mf = mf;
         frame = new JFrame("Choose my plater");
         frame.setSize(OUTER_FRAME_DIMENSION);
@@ -55,15 +55,15 @@ public class ChooseMyColorFrame extends Frame {
     }
 
     private JButton addButtonConnect() {
-        JButton continueButton = new JButton("Продолжить");
+        final JButton continueButton = new JButton("Продолжить");
 
         continueButton.addMouseListener(
                 new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent e) {
+                    public void mousePressed(final MouseEvent e) {
                         super.mousePressed(e);
                         ViewColor myColor = null;
-                        for (JRadioButton rb : rbs.keySet()) {
+                        for (final JRadioButton rb : rbs.keySet()) {
                             if (rb.isSelected()) {
                                 myColor = rbs.get(rb);
                                 break;
@@ -78,8 +78,8 @@ public class ChooseMyColorFrame extends Frame {
         return continueButton;
     }
 
-    public void addRadioButton(String name, boolean pressed, ViewColor myColor) {
-        JRadioButton button = new JRadioButton(name, pressed);
+    public void addRadioButton(final String name, final boolean pressed, final ViewColor myColor) {
+        final JRadioButton button = new JRadioButton(name, pressed);
 
         buttonGroup.add(button);
         panel.add(button, gbc);

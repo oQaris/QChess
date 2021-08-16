@@ -7,10 +7,10 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.player.AttackBot;
+import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.qbot.QMinimaxBot;
-import io.deeplay.qchess.qbot.QNegamaxTTBot;
-import io.deeplay.qchess.qbot.strategy.PestoStrategy;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,31 +23,36 @@ import org.slf4j.MDC;
 
 public class Arena {
     private static final Logger logger = LoggerFactory.getLogger(Arena.class);
-    private static final int COUNT = 4;
+    private static final int COUNT = 1000;
     private static final Map<String, Function<RemotePlayer, String>> optionalLogs =
             Map.of(
-                    "Самый НигаЖёский",
-                    bot -> "Обращений к ТТ: " + ((QNegamaxTTBot) bot).countFindingTT);
+                    "Minimax*", // Тут пишется регулярка для имени игроков
+                    // А тут задаётся функция, которая вызывается после каждой партии.
+                    // Должна возвращать строку, выводимую в логах
+                    bot -> "Optional Log"
+                    // Пример:
+                    /*"Обращений к ТТ: " + ((QNegamaxTTBot) bot).countFindingTT*/ );
     private static final ArenaStats stats = new ArenaStats(logger, optionalLogs);
+    private static final RatingELO rating = new RatingELO();
 
     /** Тут задаётся Первый игрок */
     public static RemotePlayer newFirstPlayer(final GameSettings gs, final Color myColor) {
-        return new QMinimaxBot(gs, myColor, 3, new PestoStrategy());
+        return new RandomBot(gs, myColor);
     }
 
     /** Тут задаётся Второй игрок */
     public static RemotePlayer newSecondPlayer(final GameSettings gs, final Color myColor) {
-        return new QNegamaxTTBot(gs, myColor, 3, new PestoStrategy());
+        return new AttackBot(gs, myColor);
     }
 
-    public void battle() throws InterruptedException {
-        logger.info(
-                "Запущена битва ботов:\n{}\n{}",
-                newFirstPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName(),
-                newSecondPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName());
+    public void battle() throws InterruptedException, IOException {
+        logger.info("Запущена битва ботов:");
+        logger.info(newFirstPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName());
+        logger.info(newSecondPlayer(new GameSettings(BoardFilling.EMPTY), Color.WHITE).getName());
 
         final int countProc = Runtime.getRuntime().availableProcessors();
         final ExecutorService executor = Executors.newFixedThreadPool(Math.min(countProc, COUNT));
+        rating.pullELO();
 
         stats.startTracking();
         for (int i = 1; i <= COUNT; i++) {
@@ -58,6 +63,8 @@ public class Arena {
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 
         stats.showResults();
+        logger.info("{}", rating);
+        rating.saveELO();
     }
 
     private static class Game implements Runnable {
@@ -82,13 +89,31 @@ public class Arena {
                 final Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();
             } catch (final ChessError e) {
-                logger.error("Ошибка в игре: {}", e.getLocalizedMessage());
+                logger.error("Ошибка в игре: {}", e.getMessage());
             }
-            logger.info("\nGames completed: " + (doneTasks.incrementAndGet()) + "/" + COUNT);
+            logger.info("");
+            logger.info("Games completed: {}/{}", doneTasks.incrementAndGet(), COUNT);
             final EndGameType gameResult = gs.endGameDetector.getGameResult();
             logger.info("fp: {}, {}", myColor, gameResult);
 
             stats.addGameResult(firstPlayer, secondPlayer, gameResult);
+
+            final double firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
+            rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), firstPlayerFactor);
+        }
+
+        private double getFactor(final Color firstPlayerColor, final EndGameType result) {
+            return result
+                            == (firstPlayerColor == Color.WHITE
+                                    ? EndGameType.CHECKMATE_TO_BLACK
+                                    : EndGameType.CHECKMATE_TO_WHITE)
+                    ? 1
+                    : (result
+                                    == (firstPlayerColor == Color.WHITE
+                                            ? EndGameType.CHECKMATE_TO_WHITE
+                                            : EndGameType.CHECKMATE_TO_BLACK)
+                            ? 0
+                            : 0.5);
         }
     }
 }

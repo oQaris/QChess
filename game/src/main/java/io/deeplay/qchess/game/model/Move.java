@@ -24,9 +24,9 @@ public class Move {
     }
 
     public Move(final Move move, final FigureType turnInto) {
-        this.moveType = move.moveType;
-        this.from = move.from;
-        this.to = move.to;
+        moveType = move.moveType;
+        from = move.from;
+        to = move.to;
         this.turnInto = turnInto;
     }
 

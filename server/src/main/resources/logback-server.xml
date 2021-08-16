@@ -86,11 +86,15 @@
     <appender-ref ref="SIFTER"/>
   </logger>
 
-  <logger level="off" name="game.src.test.java.io.deeplay.qchess.game">
+  <logger level="off" name="io.deeplay.qchess.game.Selfplay">
     <appender-ref ref="GAME-STATISTICS"/>
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <appender-ref ref="FILE-LAST-SESSION-INFO"/>
   </logger>
+
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+  </root>
 
 </configuration>

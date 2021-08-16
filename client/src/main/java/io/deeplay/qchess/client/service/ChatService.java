@@ -8,10 +8,10 @@ import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 
 public class ChatService {
 
-    public static String incomingMessage(ServerToClientType type, String json)
+    public static String incomingMessage(final ServerToClientType type, final String json)
             throws SerializationException {
         assert type.getDTO() == ChatMessageDTO.class;
-        ChatMessageDTO dto =
+        final ChatMessageDTO dto =
                 SerializationService.serverToClientDTORequest(json, ChatMessageDTO.class);
         ClientController.print("Пришло сообщение: " + dto.message);
         return null;

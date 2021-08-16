@@ -14,6 +14,7 @@ public class Database {
     private PlayerType playerType;
     private PlayerType myType;
     private Color myColor;
+    private Color myPreferColor;
 
     private Database() {}
 
@@ -28,12 +29,12 @@ public class Database {
     }
 
     /** Устанавливает токен для подключения к серверу */
-    public void setSessionToken(String sessionToken) {
+    public void setSessionToken(final String sessionToken) {
         this.sessionToken = sessionToken;
     }
 
     /** Добавляет или заменяет игру */
-    public void newGame(GameSettings gs, Selfplay game, Color color) {
+    public void newGame(final GameSettings gs, final Selfplay game, final Color color) {
         this.gs = gs;
         this.game = game;
         myColor = color;
@@ -45,7 +46,7 @@ public class Database {
     }
 
     /** Устанавливает тип противника */
-    public void setEnemyType(PlayerType playerType) {
+    public void setEnemyType(final PlayerType playerType) {
         this.playerType = playerType;
     }
 
@@ -55,8 +56,8 @@ public class Database {
     }
 
     /** Устанавливает тип игрока клиента */
-    public void setMyType(PlayerType playerType) {
-        this.myType = playerType;
+    public void setMyType(final PlayerType playerType) {
+        myType = playerType;
     }
 
     /** @return настройки текущей игры */
@@ -82,5 +83,15 @@ public class Database {
     /** @return цвет игрока клиента */
     public Color getMyColor() {
         return myColor;
+    }
+
+    /** @return предпочитаемый цвет игрока клиента */
+    public Color getMyPreferColor() {
+        return myPreferColor;
+    }
+
+    /** Устанавливает предпочитаемый цвет игрока клиента */
+    public void setMyPreferColor(final Color myPreferColor) {
+        this.myPreferColor = myPreferColor;
     }
 }

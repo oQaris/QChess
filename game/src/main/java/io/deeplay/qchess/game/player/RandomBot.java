@@ -11,12 +11,12 @@ import java.util.UUID;
 public class RandomBot extends RemotePlayer {
 
     public RandomBot(final GameSettings roomSettings, final Color color) {
-        super(roomSettings, color, "random-bot-" + UUID.randomUUID(), "СлуЧайный");
+        super(roomSettings, color, "random-bot-" + UUID.randomUUID(), "Рандомный_Бот");
     }
 
     @Override
     public Move getNextMove() throws ChessError {
-        List<Move> allMoves = ms.getAllPreparedMoves(color);
+        final List<Move> allMoves = ms.getAllPreparedMoves(color);
         return allMoves.get(new Random().nextInt(allMoves.size()));
     }
 

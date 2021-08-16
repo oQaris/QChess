@@ -12,7 +12,6 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.qbot.QMinimaxBot;
 import io.deeplay.qchess.server.controller.ServerController;
 import io.deeplay.qchess.server.dao.GameDAO;
 import io.deeplay.qchess.server.database.Room;
@@ -23,14 +22,18 @@ public class MatchMaking {
 
     private MatchMaking() {}
 
-    public static String findGame(ClientToServerType type, String json, int clientId)
+    public static String findGame(
+            final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == FindGameDTO.class;
-        FindGameDTO dto = SerializationService.clientToServerDTORequest(json, FindGameDTO.class);
+        final FindGameDTO dto =
+                SerializationService.clientToServerDTORequest(json, FindGameDTO.class);
 
         // Пока не найдется комната или свободных комнат нет
         while (true) {
-            Room room = GameDAO.findSuitableRoom(dto.sessionToken, dto.enemyType, dto.gameCount);
+            final Room room =
+                    GameDAO.findSuitableRoom(
+                            dto.sessionToken, dto.enemyType, dto.gameCount, dto.myPreferColor);
             if (room == null) {
                 return SerializationService.makeMainDTOJsonToClient(
                         new DisconnectedDTO("Нет свободных комнат"));
@@ -40,35 +43,40 @@ public class MatchMaking {
                     return SerializationService.makeMainDTOJsonToClient(
                             new GameSettingsDTO(
                                     room.getPlayer(dto.sessionToken).getColor(),
-                                    // TODO: проверки на null
                                     room.getGameSettings().history.getLastMove()));
                 }
 
                 if (room.isFull()) continue;
 
-                GameSettings gs = new GameSettings(BoardFilling.STANDARD);
+                final GameSettings gs = new GameSettings(BoardFilling.STANDARD);
                 room.setGameSettings(gs, dto.gameCount);
 
-                RemotePlayer enemyBot =
+                final Color clientColor =
+                        dto.myPreferColor == null
+                                ? room.isEmpty()
+                                        ? Color.WHITE
+                                        : room.getFirstPlayer().getColor().inverse()
+                                : dto.myPreferColor;
+
+                final RemotePlayer enemyBot =
                         switch (dto.enemyType) {
-                            case CONSOLE_PLAYER, GUI_PLAYER -> null;
-                            case RANDOM_BOT -> new RandomBot(gs, Color.BLACK);
-                            case ATTACK_BOT -> new QMinimaxBot(gs, Color.BLACK);
+                            case LOCAL_PLAYER, REMOTE_PLAYER -> null;
+                            case RANDOM_BOT -> new RandomBot(gs, clientColor.inverse());
+                                // TODO: вставить своего бота
+                            case ATTACK_BOT -> new RandomBot(gs, clientColor.inverse());
                         };
 
-                if (enemyBot == null && dto.enemyType != PlayerType.GUI_PLAYER) {
+                if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {
                     return SerializationService.makeMainDTOJsonToClient(
                             new DisconnectedDTO("Неверный тип противника"));
                 }
-
-                Color clientColor = room.isEmpty() ? Color.WHITE : Color.BLACK;
 
                 try {
                     ServerController.send(
                             SerializationService.makeMainDTOJsonToClient(
                                     new GameSettingsDTO(clientColor, null)),
                             clientId);
-                } catch (ServerException ignore) {
+                } catch (final ServerException ignore) {
                     // Сервис вызывается при открытом сервере
                 }
 
