@@ -34,8 +34,8 @@ public class Room {
     private GameSettings gs;
     private boolean error;
 
-    public void addGameCount(final int count) {
-        gameCount += count;
+    public void incrementEndGameCount() {
+        ++gameCount;
     }
 
     public int getGameCount() {
@@ -184,6 +184,7 @@ public class Room {
             gs = null;
             game = null;
             error = false;
+            gameCount = 0;
         }
     }
 
