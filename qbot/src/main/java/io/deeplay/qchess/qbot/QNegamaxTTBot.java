@@ -14,6 +14,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
+import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
@@ -24,19 +25,30 @@ import org.slf4j.LoggerFactory;
 public class QNegamaxTTBot extends QBot {
     private static final Logger logger = LoggerFactory.getLogger(QNegamaxTTBot.class);
     private final TranspositionTable table = new TranspositionTable();
+    private final boolean ttEnable;
     private int countFindingTT = 0;
 
     public QNegamaxTTBot(
             final GameSettings roomSettings,
             final Color color,
             final int searchDepth,
-            final Strategy strategy) {
+            final Strategy strategy,
+            final boolean ttEnable) {
         super(roomSettings, color, searchDepth, strategy, "NegaMaxBot");
+        this.ttEnable = ttEnable;
+    }
+
+    public QNegamaxTTBot(
+            final GameSettings roomSettings,
+            final Color color,
+            final int searchDepth,
+            final boolean ttEnable) {
+        this(roomSettings, color, searchDepth, new SimpleStrategy(), ttEnable);
     }
 
     public QNegamaxTTBot(
             final GameSettings roomSettings, final Color color, final int searchDepth) {
-        this(roomSettings, color, searchDepth, new SimpleStrategy());
+        this(roomSettings, color, searchDepth, new SimpleStrategy(), true);
     }
 
     public QNegamaxTTBot(final GameSettings roomSettings, final Color color) {
@@ -79,9 +91,9 @@ public class QNegamaxTTBot extends QBot {
     /** Точка входа в негамакс после выполнения виртуального хода */
     public int root(final Move move) throws ChessError {
         logger.debug("Негамакс с виртуальным {} ходом стартовал", move);
-        ms.move(move);
-        final int res = -negamax(depth, Strategy.MIN_EST, Strategy.MAX_EST, color.inverse());
-        ms.undoMove();
+        final GameSettings newGs = new GameSettings(roomSettings, MAX_DEPTH);
+        newGs.moveSystem.move(move);
+        final int res = -negamax(newGs, depth, Strategy.MIN_EST, Strategy.MAX_EST, color.inverse());
         logger.debug("Оценка хода: {}", res);
         return res;
     }
@@ -96,13 +108,15 @@ public class QNegamaxTTBot extends QBot {
      * @return Оценку позиции на доске
      * @throws ChessError При выполнении некорректного хода (при нормальной работе невозможно)
      */
-    private int negamax(final int curDepth, int alpha, int beta, final Color curColor)
+    private int negamax(
+            final GameSettings gs, final int curDepth, int alpha, int beta, final Color curColor)
             throws ChessError {
         final int alphaOrig = alpha;
-        final BoardState boardState = roomSettings.history.getLastBoardState();
+        final BoardState boardState = gs.history.getLastBoardState();
         final TTEntry entry = table.find(boardState);
 
-        if (entry != null && entry.depth >= curDepth) {
+        // todo сделать что то с entry.depth == curDepth
+        if (ttEnable && entry != null && entry.depth == curDepth) {
             countFindingTT++;
             if (entry.flag == EXACT) return entry.value;
             else if (entry.flag == LOWERBOUND) alpha = max(alpha, entry.value);
@@ -112,13 +126,12 @@ public class QNegamaxTTBot extends QBot {
 
         final int coef = curColor == Color.WHITE ? 1 : -1;
         if (curDepth == 0) {
-            return coef * strategy.evaluateBoard(board);
+            return coef * strategy.evaluateBoard(gs.board);
         }
 
-        final List<Move> allMoves = ms.getAllPreparedMoves(curColor);
+        final List<Move> allMoves = gs.moveSystem.getAllPreparedMoves(curColor);
         // Если терминальный узел
-        final EndGameType gameResult = egd.updateEndGameStatus(allMoves, curColor);
-        // egd.revertEndGameStatus();
+        final EndGameType gameResult = gs.endGameDetector.updateEndGameStatus(allMoves, curColor);
         if (gameResult != EndGameType.NOTHING) {
             return coef * strategy.gradeIfTerminalNode(gameResult, curDepth);
         }
@@ -127,11 +140,9 @@ public class QNegamaxTTBot extends QBot {
         int value = Integer.MIN_VALUE;
 
         for (final Move move : allMoves) {
-            /*if (curDepth == depth)
-            System.err.println(curDepth + " - " + child + " - " + curColor);*/
-            ms.move(move);
-            value = max(value, -negamax(curDepth - 1, -beta, -alpha, curColor.inverse()));
-            ms.undoMove();
+            gs.moveSystem.move(move);
+            value = max(value, -negamax(gs, curDepth - 1, -beta, -alpha, curColor.inverse()));
+            gs.moveSystem.undoMove();
             alpha = max(alpha, value);
             if (alpha >= beta) break;
         }
@@ -144,5 +155,37 @@ public class QNegamaxTTBot extends QBot {
         table.store(new TTEntry(value, curDepth, flag), boardState);
 
         return value;
+    }
+
+    public static class Builder {
+        private final GameSettings gameSettings;
+        private final Color color;
+        private int depth = 3;
+        private Strategy strategy = new PestoStrategy();
+        private boolean ttEnable = true;
+
+        public Builder(final GameSettings gameSettings, final Color color) {
+            this.gameSettings = gameSettings;
+            this.color = color;
+        }
+
+        public Builder setDepth(final int depth) {
+            this.depth = depth;
+            return this;
+        }
+
+        public Builder setStrategy(final Strategy strategy) {
+            this.strategy = strategy;
+            return this;
+        }
+
+        public Builder withTT() {
+            ttEnable = true;
+            return this;
+        }
+
+        public QNegamaxTTBot build() {
+            return new QNegamaxTTBot(gameSettings, color, depth, strategy, ttEnable);
+        }
     }
 }

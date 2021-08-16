@@ -15,7 +15,7 @@ public abstract class QBot extends RemotePlayer {
     protected final Strategy strategy;
     protected final int depth;
 
-    public QBot(
+    protected QBot(
             final GameSettings roomSettings,
             final Color color,
             final int searchDepth,

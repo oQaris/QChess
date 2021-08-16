@@ -24,9 +24,9 @@ public class TranspositionTable {
     }
 
     public static class TTEntry {
-        public Flag flag;
-        public int value;
-        public int depth;
+        public final Flag flag;
+        public final int value;
+        public final int depth;
 
         public TTEntry(final int value, final int depth, final Flag flag) {
             this.value = value;
