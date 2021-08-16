@@ -107,13 +107,13 @@ public class Arena {
                             == (firstPlayerColor == Color.WHITE
                                     ? EndGameType.CHECKMATE_TO_BLACK
                                     : EndGameType.CHECKMATE_TO_WHITE)
-                    ? 1f
+                    ? 1
                     : (result
                                     == (firstPlayerColor == Color.WHITE
                                             ? EndGameType.CHECKMATE_TO_WHITE
                                             : EndGameType.CHECKMATE_TO_BLACK)
-                            ? 0f
-                            : 0.5f);
+                            ? 0
+                            : 0.5);
         }
     }
 }
