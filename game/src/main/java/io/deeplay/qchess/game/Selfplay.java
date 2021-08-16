@@ -116,6 +116,7 @@ public class Selfplay {
                         currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
             } else {
                 // TODO: отправлять ответ GameResponse, что ход некорректный (эхх вечная тудушка)
+                logger.error("От игрока {} пришел некорректный ход: {}", currentPlayerToMove, move);
                 throw new IllegalArgumentException("некорректный ход");
             }
             egd.updateEndGameStatus(currentPlayerToMove.getColor());
