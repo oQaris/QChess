@@ -19,12 +19,12 @@ public class ClientGUI implements IClientView {
     }
 
     @Override
-    public void print(String message) {
+    public void print(final String message) {
         System.out.println(message);
     }
 
     @Override
-    public void showMessage(String message) {
+    public void showMessage(final String message) {
         mf.getTable().showMessage(message);
     }
 
@@ -39,17 +39,17 @@ public class ClientGUI implements IClientView {
     }
 
     @Override
-    public void closeGame(String reason) {
+    public void closeGame(final String reason) {
         if (mf.getTable() != null) mf.getTable().closeGame(reason);
     }
 
     @Override
-    public void disconnect(String reason) {
+    public void disconnect(final String reason) {
         print(reason);
     }
 
     @Override
-    public void changeMyColorOnBoard(boolean color) {
+    public void changeMyColorOnBoard(final boolean color) {
         mf.getTable().setMyColor(color);
         mf.getTable().remakeBoardPanel();
     }

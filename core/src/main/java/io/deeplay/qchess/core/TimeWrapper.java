@@ -14,13 +14,17 @@ public class TimeWrapper extends RemotePlayer {
     private final RemotePlayer player;
     private final List<Long> times = new ArrayList<>(300);
 
-    public TimeWrapper(RemotePlayer player) {
+    public TimeWrapper(final RemotePlayer player) {
         super(
                 player.getRoomSettings(),
                 player.getColor(),
                 player.getSessionToken(),
                 player.getName());
         this.player = player;
+    }
+
+    public RemotePlayer getPlayer() {
+        return player;
     }
 
     @Override
@@ -65,8 +69,8 @@ public class TimeWrapper extends RemotePlayer {
     /** Выводит на консоль схематичный график времени обдумывания каждого хода */
     public void printGraph() {
         final long min = getMin();
-        for (Long time : times) {
-            long t = time / min;
+        for (final Long time : times) {
+            final long t = time / min;
             System.out.println("*".repeat((int) t));
         }
     }

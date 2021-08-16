@@ -28,20 +28,21 @@ public enum ServerToClientType {
             new HashMap<>();
 
     static {
-        for (ServerToClientType t : ServerToClientType.values()) type.put(t.dto, t);
+        for (final ServerToClientType t : ServerToClientType.values()) type.put(t.dto, t);
     }
 
     private final Class<? extends IServerToClientDTO> dto;
 
-    ServerToClientType(Class<? extends IServerToClientDTO> dto) {
+    ServerToClientType(final Class<? extends IServerToClientDTO> dto) {
         this.dto = dto;
     }
 
-    public static <T extends IServerToClientDTO> ServerToClientType valueOf(Class<T> dtoClass) {
+    public static <T extends IServerToClientDTO> ServerToClientType valueOf(
+            final Class<T> dtoClass) {
         return Objects.requireNonNull(type.get(dtoClass), "DTO сервера не найдено");
     }
 
-    public static ServerToClientType valueOf(IServerToClientDTO dto) {
+    public static ServerToClientType valueOf(final IServerToClientDTO dto) {
         return valueOf(dto.getClass());
     }
 

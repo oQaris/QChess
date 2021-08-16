@@ -11,7 +11,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validatePort(incorrectPort);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.NON_POSITIVE_PORT_VALUE) {
                 Assert.fail();
             }
@@ -24,7 +24,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validateMaxPlayers(incorrectMaxPlayers);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.NON_POSITIVE_MAX_PLAYERS_VALUE) {
                 Assert.fail();
             }
@@ -37,7 +37,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validateTournamentNumberGame(incorrectTournamentNumberGame);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.NON_POSITIVE_TOURNAMENT_VALUE) {
                 Assert.fail();
             }
@@ -50,7 +50,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validatePort(incorrectPort);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PORT_VALUE) {
                 Assert.fail();
             }
@@ -63,7 +63,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validateMaxPlayers(incorrectMaxPlayers);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_MAX_PLAYERS) {
                 Assert.fail();
             }
@@ -76,7 +76,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validateTournamentNumberGame(incorrectTournamentNumberGame);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_TOURNAMENT_VALUE) {
                 Assert.fail();
             }
@@ -89,7 +89,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validatePath(incorrectPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PATH) {
                 Assert.fail();
             }
@@ -102,7 +102,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validatePath(incorrectPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PATH) {
                 Assert.fail();
             }
@@ -115,7 +115,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validatePath(incorrectPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PATH) {
                 Assert.fail();
             }
@@ -128,7 +128,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validatePath(incorrectPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PATH) {
                 Assert.fail();
             }
@@ -141,7 +141,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validatePath(incorrectPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PATH) {
                 Assert.fail();
             }
@@ -154,7 +154,7 @@ public class ConfigServiceTest {
         try {
             ConfigService.validatePath(incorrectPath);
             Assert.fail();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             if (e.getExceptionType() != ConfigExceptionErrorCode.INCORRECT_PATH) {
                 Assert.fail();
             }
@@ -165,7 +165,7 @@ public class ConfigServiceTest {
     public void testCompeteConfigRead() {
         try {
             new ServerSettings();
-        } catch (ConfigException e) {
+        } catch (final ConfigException e) {
             Assert.fail();
         }
     }

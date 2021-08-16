@@ -27,17 +27,17 @@ import java.util.List;
 
 public class GameService {
 
-    public static String setGameSettings(ServerToClientType type, String json)
+    public static String setGameSettings(final ServerToClientType type, final String json)
             throws SerializationException {
         assert type.getDTO() == GameSettingsDTO.class;
-        GameSettingsDTO dto =
+        final GameSettingsDTO dto =
                 SerializationService.serverToClientDTORequest(json, GameSettingsDTO.class);
 
         initGame(dto.color == Color.WHITE);
         if (dto.botMove != null) {
             try {
                 GameDAO.getGame().move(dto.botMove);
-            } catch (ChessError chessError) {
+            } catch (final ChessError chessError) {
                 // TODO: Ошибка в игре
             }
         }
@@ -45,33 +45,34 @@ public class GameService {
         return null;
     }
 
-    public static String endGame(ServerToClientType type, String json)
+    public static String endGame(final ServerToClientType type, final String json)
             throws SerializationException {
         assert type.getDTO() == EndGameDTO.class;
-        EndGameDTO dto = SerializationService.serverToClientDTORequest(json, EndGameDTO.class);
+        final EndGameDTO dto =
+                SerializationService.serverToClientDTORequest(json, EndGameDTO.class);
 
         ClientController.showMessage(dto.reason);
         return null;
     }
 
-    public static String resetGame(ServerToClientType type, String json) {
+    public static String resetGame(final ServerToClientType type, final String json) {
         try {
             ClientController.sendFindGameRequest();
-        } catch (ClientException e) {
+        } catch (final ClientException e) {
             // Сервис работает при запущенном клиенте
         }
         return null;
     }
 
-    public static void chooseEnemy(PlayerType playerType) {
+    public static void chooseEnemy(final PlayerType playerType) {
         GameDAO.setEnemy(playerType);
     }
 
-    public static void initGame(boolean color) {
-        GameSettings gs = new GameSettings(BoardFilling.STANDARD);
+    public static void initGame(final boolean color) {
+        final GameSettings gs = new GameSettings(BoardFilling.STANDARD);
         try {
-            Player player1;
-            Player player2;
+            final Player player1;
+            final Player player2;
             if (color) {
                 player1 = getRemotePlayer(GameDAO.getMyType(), gs, Color.WHITE);
                 player2 = getRemotePlayer(GameDAO.getEnemyType(), gs, Color.BLACK);
@@ -79,14 +80,15 @@ public class GameService {
                 player1 = getRemotePlayer(GameDAO.getEnemyType(), gs, Color.WHITE);
                 player2 = getRemotePlayer(GameDAO.getMyType(), gs, Color.BLACK);
             }
-            Selfplay game = new Selfplay(gs, player1, player2);
+            final Selfplay game = new Selfplay(gs, player1, player2);
             GameDAO.newGame(gs, game, color ? Color.WHITE : Color.BLACK);
-        } catch (ChessError ignore) {
+        } catch (final ChessError ignore) {
             // Стандартная расстановка доски верна всегда
         }
     }
 
-    private static RemotePlayer getRemotePlayer(PlayerType pt, GameSettings gs, Color color) {
+    private static RemotePlayer getRemotePlayer(
+            final PlayerType pt, final GameSettings gs, final Color color) {
         return switch (pt) {
             case USER -> new RemotePlayer(gs, color, "user", "user");
             case EASYBOT -> new RandomBot(gs, color);
@@ -96,15 +98,15 @@ public class GameService {
         };
     }
 
-    public static String startGame(ServerToClientType type, String json) {
+    public static String startGame(final ServerToClientType type, final String json) {
         GameDAO.startGame();
         return null;
     }
 
-    public static String action(ServerToClientType type, String json)
+    public static String action(final ServerToClientType type, final String json)
             throws SerializationException {
         assert type.getDTO() == ActionDTO.class;
-        ActionDTO dto = SerializationService.serverToClientDTORequest(json, ActionDTO.class);
+        final ActionDTO dto = SerializationService.serverToClientDTORequest(json, ActionDTO.class);
 
         makeMove(
                 dto.move.getFrom().row,
@@ -123,27 +125,29 @@ public class GameService {
      * @return сделанный ход или null TODO: null ? why ????????????
      */
     public static Move makeMove(
-            int rowFrom, int columnFrom, int rowTo, int columnTo, FigureType figureType) {
-        Cell from = new Cell(columnFrom, rowFrom);
-        Cell to = new Cell(columnTo, rowTo);
-        List<Move> set;
+            final int rowFrom,
+            final int columnFrom,
+            final int rowTo,
+            final int columnTo,
+            final FigureType figureType) {
+        final Cell from = new Cell(columnFrom, rowFrom);
+        final Cell to = new Cell(columnTo, rowTo);
+        final List<Move> set;
         try {
             set = GameDAO.getGameSettings().moveSystem.getAllCorrectMoves(from);
-        } catch (ChessError e) {
+        } catch (final ChessError e) {
             e.printStackTrace();
             return null;
         }
-        for (Move move : set) {
+        for (final Move move : set) {
             if (to.equals(move.getTo())) {
                 try {
                     move.turnInto = figureType;
                     GameDAO.getGame().move(move);
-                } catch (ChessError e) {
+                } catch (final ChessError e) {
                     e.printStackTrace();
                     return null;
                 }
-                // TODO: удалить
-                System.err.println(GameDAO.getGameSettings().board.toString());
                 return move;
             }
         }
@@ -154,16 +158,16 @@ public class GameService {
     /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
     public static void botMove() {
         try {
-            Move move = GameDAO.getGame().getCurrentPlayerToMove().getNextMove();
+            final Move move = GameDAO.getGame().getCurrentPlayerToMove().getNextMove();
             GameDAO.getGame().move(move);
             ClientController.drawBoard();
             sendMove(move);
-        } catch (ChessError | ClientException ignore) {
+        } catch (final ChessError | ClientException ignore) {
             // В боте нет ошибок (?)
         }
     }
 
-    public static void sendMove(Move move) throws ClientException {
+    public static void sendMove(final Move move) throws ClientException {
         ClientController.sendIfNotNull(
                 SerializationService.makeMainDTOJsonToServer(
                         new io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ActionDTO(

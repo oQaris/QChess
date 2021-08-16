@@ -13,7 +13,7 @@ public class SerializationService {
     private static final Gson gson = new Gson();
 
     /** @return json */
-    private static String serialize(Object obj) {
+    private static String serialize(final Object obj) {
         return gson.toJson(obj);
     }
 
@@ -22,7 +22,7 @@ public class SerializationService {
      *
      * @return json основного объекта, хранящий запрос серверу
      */
-    public static String makeMainDTOJsonToServer(IClientToServerDTO dto) {
+    public static String makeMainDTOJsonToServer(final IClientToServerDTO dto) {
         return serialize(new ClientToServerDTO(ClientToServerType.valueOf(dto), serialize(dto)));
     }
 
@@ -31,7 +31,7 @@ public class SerializationService {
      *
      * @return json основного объекта, хранящий запрос клиенту
      */
-    public static String makeMainDTOJsonToClient(IServerToClientDTO dto) {
+    public static String makeMainDTOJsonToClient(final IServerToClientDTO dto) {
         return serialize(new ServerToClientDTO(ServerToClientType.valueOf(dto), serialize(dto)));
     }
 
@@ -39,10 +39,11 @@ public class SerializationService {
      * @return десериализованный объект
      * @throws SerializationException если json некорректный
      */
-    private static <T> T deserialize(String json, Class<T> clazz) throws SerializationException {
+    private static <T> T deserialize(final String json, final Class<T> clazz)
+            throws SerializationException {
         try {
             return gson.fromJson(json, clazz);
-        } catch (JsonSyntaxException e) {
+        } catch (final JsonSyntaxException e) {
             throw new SerializationException();
         }
     }
@@ -51,7 +52,7 @@ public class SerializationService {
      * @return основной объект, хранящий запрос от сервера к клиенту
      * @throws SerializationException если json некорректный
      */
-    public static ServerToClientDTO serverToClientDTOMain(String json)
+    public static ServerToClientDTO serverToClientDTOMain(final String json)
             throws SerializationException {
         return deserialize(json, ServerToClientDTO.class);
     }
@@ -60,7 +61,7 @@ public class SerializationService {
      * @return основной объект, хранящий запрос от клиента к серверу
      * @throws SerializationException если json некорректный
      */
-    public static ClientToServerDTO clientToServerDTOMain(String json)
+    public static ClientToServerDTO clientToServerDTOMain(final String json)
             throws SerializationException {
         return deserialize(json, ClientToServerDTO.class);
     }
@@ -70,7 +71,7 @@ public class SerializationService {
      * @throws SerializationException если json некорректный
      */
     public static <T extends IServerToClientDTO> T serverToClientDTORequest(
-            String json, Class<T> clazz) throws SerializationException {
+            final String json, final Class<T> clazz) throws SerializationException {
         return deserialize(json, clazz);
     }
 
@@ -79,7 +80,7 @@ public class SerializationService {
      * @throws SerializationException если json некорректный
      */
     public static <T extends IClientToServerDTO> T clientToServerDTORequest(
-            String json, Class<T> clazz) throws SerializationException {
+            final String json, final Class<T> clazz) throws SerializationException {
         return deserialize(json, clazz);
     }
 }

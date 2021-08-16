@@ -30,8 +30,8 @@ public class Cell {
     }
 
     public Cell(final Cell cell) {
-        this.column = cell.column;
-        this.row = cell.row;
+        column = cell.column;
+        row = cell.row;
     }
 
     /** @deprecated Использует стандартный размер доски - плохо для гибкости */

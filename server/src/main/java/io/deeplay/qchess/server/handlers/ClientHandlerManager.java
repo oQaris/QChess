@@ -29,7 +29,7 @@ public class ClientHandlerManager extends Thread {
     private volatile boolean stop;
     private volatile boolean allClientsWasClosed;
 
-    public ClientHandlerManager(ServerSocket server) {
+    public ClientHandlerManager(final ServerSocket server) {
         this.server = server;
     }
 
@@ -43,15 +43,15 @@ public class ClientHandlerManager extends Thread {
         while (!stop) {
             try {
                 // TODO: replace to non-blocking NIO
-                Socket socket = server.accept();
+                final Socket socket = server.accept();
 
                 if (socket != null) {
-                    int id;
+                    final int id;
                     synchronized (mutexLastId) {
                         id = lastId++;
                     }
 
-                    ClientHandler client =
+                    final ClientHandler client =
                             new ClientHandler(socket, this::removeClientFromClientList, id);
 
                     if (clients.size() == ServerController.getMaxClients()) {
@@ -67,7 +67,7 @@ public class ClientHandlerManager extends Thread {
                         }
                     }
                 }
-            } catch (IOException | ServerException e) {
+            } catch (final IOException | ServerException e) {
                 logger.warn("Ошибка при подключении клиента: {}", e.getMessage());
             }
         }
@@ -75,7 +75,7 @@ public class ClientHandlerManager extends Thread {
         logger.debug("Менеджер обработчиков клиентов остановил свою работу");
     }
 
-    private void removeClientFromClientList(int id) {
+    private void removeClientFromClientList(final int id) {
         synchronized (clients) {
             clients.remove(id);
             if (clients.isEmpty()) allClientsWasClosed = true;
@@ -88,7 +88,7 @@ public class ClientHandlerManager extends Thread {
         synchronized (clients) {
             if (clients.isEmpty()) allClientsWasClosed = true;
             else
-                for (ClientHandler clientHandler : clients.values()) {
+                for (final ClientHandler clientHandler : clients.values()) {
                     clientHandler.sendIfNotNull(
                             SerializationService.makeMainDTOJsonToClient(
                                     new EndGameDTO("Сервер закрыт.")));
@@ -102,19 +102,20 @@ public class ClientHandlerManager extends Thread {
     }
 
     /** Отправляет всем подключенным клиентам строку */
-    public void sendAll(String json) {
+    public void sendAll(final String json) {
         synchronized (clients) {
-            for (ClientHandler clientHandler : clients.values()) clientHandler.sendIfNotNull(json);
+            for (final ClientHandler clientHandler : clients.values())
+                clientHandler.sendIfNotNull(json);
         }
     }
 
     /** Отправляет клиенту строку, если он подключен */
-    public void send(String json, int toClientId) {
+    public void send(final String json, final int toClientId) {
         clients.get(toClientId).sendIfNotNull(json);
     }
 
     /** Закрывает соединение с клиентом */
-    public void closeConnection(int clientId) {
+    public void closeConnection(final int clientId) {
         clients.get(clientId).terminate();
     }
 }

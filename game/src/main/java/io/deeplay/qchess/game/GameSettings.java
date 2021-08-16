@@ -16,34 +16,34 @@ public class GameSettings {
     public final String fen;
 
     public GameSettings(final Board.BoardFilling boardType) {
-        this.boardSize = Board.STD_BOARD_SIZE;
+        boardSize = Board.STD_BOARD_SIZE;
         this.boardType = boardType;
-        this.fen = null;
-        this.board = new Board(boardType);
-        this.history = new History(this);
-        this.endGameDetector = new EndGameDetector(this);
-        this.moveSystem = new MoveSystem(this);
+        fen = null;
+        board = new Board(boardType);
+        history = new History(this);
+        endGameDetector = new EndGameDetector(this);
+        moveSystem = new MoveSystem(this);
     }
 
     public GameSettings(final String fen) throws ChessError {
-        this.boardSize = 0;
-        this.boardType = null;
+        boardSize = 0;
+        boardType = null;
         this.fen = fen;
-        this.board = new Board(fen);
-        this.history = new History(this);
-        this.endGameDetector = new EndGameDetector(this);
-        this.moveSystem = new MoveSystem(this);
+        board = new Board(fen);
+        history = new History(this);
+        endGameDetector = new EndGameDetector(this);
+        moveSystem = new MoveSystem(this);
     }
 
     /** Копирует gs */
     public GameSettings(final GameSettings gs) {
-        this.boardSize = gs.boardSize;
-        this.boardType = gs.boardType;
-        this.fen = gs.fen;
-        this.board = new Board(gs.board);
-        this.history = new History(gs.history, this);
-        this.endGameDetector = new EndGameDetector(this);
-        this.moveSystem = new MoveSystem(this);
+        boardSize = gs.boardSize;
+        boardType = gs.boardType;
+        fen = gs.fen;
+        board = new Board(gs.board);
+        history = new History(gs.history, this);
+        endGameDetector = new EndGameDetector(this);
+        moveSystem = new MoveSystem(this);
     }
 
     /**
