@@ -26,7 +26,7 @@ public class AttackBot extends RemotePlayer {
     }
 
     public AttackBot(final GameSettings roomSettings, final Color color) {
-        super(roomSettings, color, "attack-bot-" + UUID.randomUUID(), "Эрен");
+        super(roomSettings, color, "attack-bot-" + UUID.randomUUID(), "Атакующий_Бот");
     }
 
     @Override
@@ -34,14 +34,14 @@ public class AttackBot extends RemotePlayer {
         final List<Move> topMoves = new ArrayList<>();
         int maxGrade = 0;
         for (final Move move : ms.getAllPreparedMoves(color)) {
-            final Figure figure = board.getFigureUgly(move.getFrom());
-
-            final int curGrade = grades.get(figure.figureType);
-            if (curGrade > maxGrade) {
-                maxGrade = curGrade;
+            final Figure attackedFigure = board.getFigureUgly(move.getTo());
+            final int currentGrade =
+                    attackedFigure == null ? 0 : grades.get(attackedFigure.figureType);
+            if (currentGrade > maxGrade) {
+                maxGrade = currentGrade;
                 if (!topMoves.isEmpty()) topMoves.clear();
             }
-            if (curGrade == maxGrade) topMoves.add(move);
+            if (currentGrade == maxGrade) topMoves.add(move);
         }
         return topMoves.get(new Random().nextInt(topMoves.size()));
     }

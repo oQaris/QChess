@@ -14,26 +14,17 @@ public class BotTest extends TestCase {
     final int COUNT = 1;
 
     public void testBotsRandom() throws ChessError {
-        // ExecutorService executor = Executors.newCachedThreadPool();
         log.error("//------------ Два Рандомных Бота ------------//");
         final long m = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
-            /*executor.execute(
-            () -> {*/
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new RandomBot(roomSettings, Color.WHITE);
             final Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
-            // try {
             game.run();
-            /*} catch (ChessError error) {
-                error.printStackTrace();
-            }*/
-            // });
             System.out.println("1 - " + (i + 1) + "/" + COUNT);
         }
-        log.error("Time: {}\n", System.currentTimeMillis() - m);
-        // executor.shutdown();
+        log.error("Time: {}", System.currentTimeMillis() - m);
     }
 
     public void testBotsRndAtk() throws ChessError {
@@ -47,7 +38,7 @@ public class BotTest extends TestCase {
             game.run();
             System.out.println("2 - " + (i + 1) + "/" + COUNT);
         }
-        log.error("Time: {}\n", System.currentTimeMillis() - m);
+        log.error("Time: {}", System.currentTimeMillis() - m);
     }
 
     public void testBotsAttack() throws ChessError {

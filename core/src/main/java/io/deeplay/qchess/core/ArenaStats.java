@@ -75,9 +75,9 @@ public class ArenaStats {
         maxFirst.set(Math.max(maxFirst.get(), firstPlayer.getMax()));
         maxSecond.set(Math.max(maxSecond.get(), secondPlayer.getMax()));
 
-        logger.info("-=+=+=+=+=- First -=+=+=+=+=+-");
+        logger.info("-=+=+=+=+=+=+=+=- First -=+=+=+=+=+=+=+=+-");
         flushLogs(firstPlayer);
-        logger.info("-=+=+=+=+=- Second -=+=+=+=+=-");
+        logger.info("-=+=+=+=+=+=+=+=- Second -=+=+=+=+=+=+=+=-");
         flushLogs(secondPlayer);
     }
 
