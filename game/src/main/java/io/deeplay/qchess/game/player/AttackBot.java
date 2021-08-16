@@ -35,12 +35,13 @@ public class AttackBot extends RemotePlayer {
         int maxGrade = 0;
         for (final Move move : ms.getAllPreparedMoves(color)) {
             final Figure attackedFigure = board.getFigureUgly(move.getTo());
-            final int curGrade = attackedFigure == null ? 0 : grades.get(attackedFigure.figureType);
-            if (curGrade > maxGrade) {
-                maxGrade = curGrade;
+            final int currentGrade =
+                    attackedFigure == null ? 0 : grades.get(attackedFigure.figureType);
+            if (currentGrade > maxGrade) {
+                maxGrade = currentGrade;
                 if (!topMoves.isEmpty()) topMoves.clear();
             }
-            if (curGrade == maxGrade) topMoves.add(move);
+            if (currentGrade == maxGrade) topMoves.add(move);
         }
         return topMoves.get(new Random().nextInt(topMoves.size()));
     }
