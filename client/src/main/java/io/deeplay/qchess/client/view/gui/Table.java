@@ -109,8 +109,7 @@ public class Table extends Frame {
                     new KeyAdapter() {
                         @Override
                         public void keyPressed(final KeyEvent e) {
-                            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                // бот ходить
+                            if (ClientController.isMyStep() && e.getKeyCode() == KeyEvent.VK_ENTER) {
                                 ClientController.botMove();
                             }
                         }
