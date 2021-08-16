@@ -78,8 +78,10 @@ public class Table extends Frame {
     private boolean myColor;
     private int clickedCell;
     private final Map<ViewFigure, ImageIcon> figureArtMap = new HashMap<>();
+    private boolean canBotMove;
 
     public Table(final String figureStyle, final boolean myColor, final MainFrame mf) {
+        canBotMove = myColor;
         this.figureStyle = figureStyle;
         loadArts();
         this.mf = mf;
@@ -115,8 +117,11 @@ public class Table extends Frame {
                     new KeyAdapter() {
                         @Override
                         public void keyPressed(final KeyEvent e) {
-                            if (ClientController.isMyStep() && e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                ClientController.botMove();
+                            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                                if (canBotMove == myColor && ClientController.isMyStep() && !ClientController.isEndGame()) {
+                                    ClientController.botMove();
+                                    canBotMove = !canBotMove;
+                                }
                             }
                         }
                     });
@@ -138,6 +143,7 @@ public class Table extends Frame {
     @Override
     public void repaint() {
         boardPanel.drawBoard();
+        canBotMove = myColor;
     }
 
     public void showMessage(final String message) {
