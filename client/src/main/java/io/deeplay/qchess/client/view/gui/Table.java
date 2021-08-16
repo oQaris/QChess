@@ -4,7 +4,9 @@ import static javax.swing.SwingUtilities.isLeftMouseButton;
 
 import io.deeplay.qchess.client.controller.ClientController;
 import io.deeplay.qchess.client.exceptions.ClientException;
+import io.deeplay.qchess.client.view.model.ViewColor;
 import io.deeplay.qchess.client.view.model.ViewFigure;
+import io.deeplay.qchess.client.view.model.ViewFigureType;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -22,8 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -73,11 +77,13 @@ public class Table extends Frame {
     private BoardPanel boardPanel;
     private boolean myColor;
     private int clickedCell;
+    private final Map<ViewFigure, ImageIcon> figureArtMap = new HashMap<>();
 
     public Table(final String figureStyle, final boolean myColor, final MainFrame mf) {
+        this.figureStyle = figureStyle;
+        loadArts();
         this.mf = mf;
         this.myColor = myColor;
-        this.figureStyle = figureStyle;
         frame = new JFrame("QChess");
         frame.setLayout(new BorderLayout());
         frame.setSize(OUTER_FRAME_DIMENSION);
@@ -146,6 +152,47 @@ public class Table extends Frame {
         } catch (final ClientException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    private void initFigureArtMap() {
+        for(ViewColor viewColor : ViewColor.values()) {
+            for(ViewFigureType viewFigureType : ViewFigureType.values()) {
+                figureArtMap.put(new ViewFigure(viewColor.toString(), viewFigureType), null);
+            }
+        }
+    }
+
+    private void loadArts() {
+        initFigureArtMap();
+        for(ViewFigure viewFigure : figureArtMap.keySet()) {
+            final File file = new File(getFigureImagesPath(figureImagesPath, viewFigure));
+            try (final InputStream png =
+                file.exists() && file.canRead()
+                    ? new FileInputStream(file)
+                    : getClass()
+                        .getResourceAsStream(
+                            getFigureImagesPath(
+                                JAR_figureImagesPath, viewFigure))) {
+                final BufferedImage image = ImageIO.read(png);
+                final ImageIcon icon =
+                    new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                figureArtMap.put(viewFigure, icon);
+
+            } catch (final IOException | NullPointerException | IllegalArgumentException e) {
+                // logger + what do i can do?
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String getFigureImagesPath(
+        final String figureImagesDirectoryPath, final ViewFigure figure) {
+        return String.format(
+            "%s/%s/%s_%s.png",
+            figureImagesDirectoryPath,
+            figureStyle,
+            figure.getColor().toLowerCase(),
+            figure.getType().toString().toLowerCase());
     }
 
     private class BoardPanel extends JPanel {
@@ -328,41 +375,14 @@ public class Table extends Frame {
             validate();
         }
 
-        private String getFigureImagesPath(
-                final String figureImagesDirectoryPath, final ViewFigure figure) {
-            return String.format(
-                    "%s/%s/%s_%s.png",
-                    figureImagesDirectoryPath,
-                    figureStyle,
-                    figure.getColor().toLowerCase(),
-                    figure.getType().toString().toLowerCase());
-        }
-
         private void assignCellFigureIcon() {
             removeAll();
             final ViewFigure figure =
                     ClientController.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             if (figure != null) {
-                final File file = new File(getFigureImagesPath(figureImagesPath, figure));
-                try (final InputStream png =
-                        file.exists() && file.canRead()
-                                ? new FileInputStream(file)
-                                : getClass()
-                                        .getResourceAsStream(
-                                                getFigureImagesPath(
-                                                        JAR_figureImagesPath, figure))) {
-                    final BufferedImage image = ImageIO.read(png);
-
-                    final ImageIcon icon =
-                            new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-                    final JLabel label = new JLabel(icon);
-                    removeAll();
-                    add(label);
-
-                } catch (final IOException | NullPointerException | IllegalArgumentException e) {
-                    // logger + what do i can do?
-                    e.printStackTrace();
-                }
+                final JLabel label = new JLabel(figureArtMap.get(figure));
+                removeAll();
+                add(label);
             }
             super.repaint();
         }
