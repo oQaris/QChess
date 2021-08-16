@@ -1,12 +1,15 @@
 package io.deeplay.qchess.client.view.gui;
 
 import io.deeplay.qchess.client.view.model.ViewColor;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
 
 public class MainFrame {
     private ChooseMyColorFrame chooseMyColorFrame;
@@ -19,6 +22,12 @@ public class MainFrame {
     private PlayerType enemyPlayerType;
     private String style;
     private ViewColor myColor;
+
+    public MainFrame() {
+        UIManager.put("Button.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+        UIManager.put("RadioButton.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+    }
+
 
     public void createStartFrame() {
         final JFrame frame = new JFrame("Начало");
@@ -39,6 +48,7 @@ public class MainFrame {
                         frame.dispose();
                     }
                 });
+        //startButton.setFocusPainted(false);
         frame.add(startButton);
         frame.setVisible(true);
     }

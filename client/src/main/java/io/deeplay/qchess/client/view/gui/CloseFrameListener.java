@@ -26,7 +26,7 @@ public class CloseFrameListener extends WindowAdapter {
                         JOptionPane.QUESTION_MESSAGE,
                         null,
                         options,
-                        options[0]);
+                        null);
         if (n == 0) {
             frame.destroy();
             try {
