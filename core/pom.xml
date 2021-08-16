@@ -70,6 +70,12 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
+    <dependency>
+      <groupId>io.deeplay</groupId>
+      <artifactId>QChess-qbot</artifactId>
+      <version>0.0.1</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <properties>

@@ -12,42 +12,31 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
-import io.deeplay.qchess.qbot.strategy.PestoStrategy;
+import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class QNegamaxTTBot extends RemotePlayer {
-    public static final int MAX_DEPTH = 100;
+public class QNegamaxTTBot extends QBot {
     private static final Logger logger = LoggerFactory.getLogger(QNegamaxTTBot.class);
-    private final Strategy strategy;
     private final TranspositionTable table = new TranspositionTable();
-    private final int depth;
-    public int countFindingTT = 0;
+    private int countFindingTT = 0;
 
     public QNegamaxTTBot(
             final GameSettings roomSettings,
             final Color color,
             final int searchDepth,
             final Strategy strategy) {
-        super(roomSettings, color, "negamax-bot-" + UUID.randomUUID(), "Самый НигаЖёский");
-        this.strategy = strategy;
-        this.depth = searchDepth;
-        if (this.depth < 0 || this.depth > MAX_DEPTH) {
-            throw new IllegalArgumentException("Некорректная глубина поиска!");
-        }
+        super(roomSettings, color, searchDepth, strategy, "NegaMaxBot");
     }
 
     public QNegamaxTTBot(
             final GameSettings roomSettings, final Color color, final int searchDepth) {
-        this(roomSettings, color, searchDepth, new PestoStrategy());
+        this(roomSettings, color, searchDepth, new SimpleStrategy());
     }
 
     public QNegamaxTTBot(final GameSettings roomSettings, final Color color) {
@@ -63,19 +52,18 @@ public class QNegamaxTTBot extends RemotePlayer {
         moves.sort((m1, m2) -> m2.getMoveType().importantLevel - m1.getMoveType().importantLevel);
     }
 
-    @Override
-    public Move getNextMove() throws ChessError {
-        final List<Move> topMoves = this.getTopMoves();
-        return topMoves.get(new Random().nextInt(topMoves.size()));
+    public int getCountFindingTT() {
+        return countFindingTT;
     }
 
+    @Override
     public List<Move> getTopMoves() throws ChessError {
         final List<Move> topMoves = new ArrayList<>();
         int maxGrade = Integer.MIN_VALUE;
-        final List<Move> allMoves = this.ms.getAllPreparedMoves(this.color);
+        final List<Move> allMoves = ms.getAllPreparedMoves(color);
         QNegamaxTTBot.orderMoves(allMoves);
         for (final Move move : allMoves) {
-            final int curGrade = this.root(move);
+            final int curGrade = root(move);
             if (curGrade > maxGrade) {
                 maxGrade = curGrade;
                 topMoves.clear();
@@ -91,9 +79,9 @@ public class QNegamaxTTBot extends RemotePlayer {
     /** Точка входа в негамакс после выполнения виртуального хода */
     public int root(final Move move) throws ChessError {
         logger.debug("Негамакс с виртуальным {} ходом стартовал", move);
-        this.ms.move(move);
-        final int res = -this.negamax(this.depth, Integer.MIN_VALUE, Integer.MAX_VALUE, this.color.inverse());
-        this.ms.undoMove();
+        ms.move(move);
+        final int res = -negamax(depth, Strategy.MIN_EST, Strategy.MAX_EST, color.inverse());
+        ms.undoMove();
         logger.debug("Оценка хода: {}", res);
         return res;
     }
@@ -110,9 +98,7 @@ public class QNegamaxTTBot extends RemotePlayer {
      */
     private int negamax(final int curDepth, int alpha, int beta, final Color curColor)
             throws ChessError {
-
         final int alphaOrig = alpha;
-
         final BoardState boardState = roomSettings.history.getLastBoardState();
         final TTEntry entry = table.find(boardState);
 
@@ -121,21 +107,20 @@ public class QNegamaxTTBot extends RemotePlayer {
             if (entry.flag == EXACT) return entry.value;
             else if (entry.flag == LOWERBOUND) alpha = max(alpha, entry.value);
             else if (entry.flag == UPPERBOUND) beta = min(beta, entry.value);
-
             if (alpha >= beta) return entry.value;
         }
 
         final int coef = curColor == Color.WHITE ? 1 : -1;
         if (curDepth == 0) {
-            return coef * this.strategy.evaluateBoard(this.board);
+            return coef * strategy.evaluateBoard(board);
         }
 
-        final List<Move> allMoves = this.ms.getAllPreparedMoves(curColor);
+        final List<Move> allMoves = ms.getAllPreparedMoves(curColor);
         // Если терминальный узел
-        final EndGameType gameResult = this.egd.updateEndGameStatus();
-        this.egd.revertEndGameStatus();
+        final EndGameType gameResult = egd.updateEndGameStatus(allMoves, curColor);
+        // egd.revertEndGameStatus();
         if (gameResult != EndGameType.NOTHING) {
-            return coef * this.strategy.gradeIfTerminalNode(gameResult, curDepth);
+            return coef * strategy.gradeIfTerminalNode(gameResult, curDepth);
         }
 
         QNegamaxTTBot.orderMoves(allMoves);
@@ -143,10 +128,10 @@ public class QNegamaxTTBot extends RemotePlayer {
 
         for (final Move move : allMoves) {
             /*if (curDepth == depth)
-                System.err.println(curDepth + " - " + child + " - " + curColor);*/
-            this.ms.move(move);
-            value = max(value, -this.negamax(curDepth - 1, -beta, -alpha, curColor.inverse()));
-            this.ms.undoMove();
+            System.err.println(curDepth + " - " + child + " - " + curColor);*/
+            ms.move(move);
+            value = max(value, -negamax(curDepth - 1, -beta, -alpha, curColor.inverse()));
+            ms.undoMove();
             alpha = max(alpha, value);
             if (alpha >= beta) break;
         }

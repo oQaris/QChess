@@ -5,37 +5,26 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.qbot.strategy.PestoStrategy;
+import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class QMinimaxBot extends RemotePlayer {
-    public static final int MAX_DEPTH = 100;
+public class QMinimaxBot extends QBot {
     private static final Logger logger = LoggerFactory.getLogger(QMinimaxBot.class);
-    private final Strategy strategy;
-    private final int depth;
 
     public QMinimaxBot(
             final GameSettings roomSettings,
             final Color color,
             final int searchDepth,
             final Strategy strategy) {
-        super(roomSettings, color, "minimax-bot-" + UUID.randomUUID(), "Самый жёский");
-        this.strategy = strategy;
-        this.depth = searchDepth;
-        if (this.depth < 0 || this.depth > MAX_DEPTH) {
-            throw new IllegalArgumentException("Некорректная глубина поиска!");
-        }
+        super(roomSettings, color, searchDepth, strategy, "MiniMaxBot");
     }
 
     public QMinimaxBot(final GameSettings roomSettings, final Color color, final int searchDepth) {
-        this(roomSettings, color, searchDepth, new PestoStrategy());
+        this(roomSettings, color, searchDepth, new SimpleStrategy());
     }
 
     public QMinimaxBot(final GameSettings roomSettings, final Color color) {
@@ -52,20 +41,15 @@ public class QMinimaxBot extends RemotePlayer {
     }
 
     @Override
-    public Move getNextMove() throws ChessError {
-        final List<Move> topMoves = this.getTopMoves();
-        return topMoves.get(new Random().nextInt(topMoves.size()));
-    }
-
     // todo Refactor this method to reduce its Cognitive Complexity
     public List<Move> getTopMoves() throws ChessError {
         final List<Move> topMoves = new ArrayList<>();
-        int maxGrade = this.color == Color.WHITE ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-        final List<Move> allMoves = this.ms.getAllPreparedMoves(this.color);
+        int maxGrade = color == Color.WHITE ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        final List<Move> allMoves = ms.getAllPreparedMoves(color);
         QMinimaxBot.sortMoves(allMoves);
         for (final Move move : allMoves) {
-            final int curGrade = this.minimaxRootWithVirtualMove(move);
-            if (this.color == Color.WHITE) {
+            final int curGrade = minimaxRootWithVirtualMove(move);
+            if (color == Color.WHITE) {
                 if (curGrade > maxGrade) {
                     maxGrade = curGrade;
                     topMoves.clear();
@@ -91,16 +75,16 @@ public class QMinimaxBot extends RemotePlayer {
     /** Точка входа в минимакс после выполнения виртуального хода */
     public int minimaxRootWithVirtualMove(final Move move) throws ChessError {
         logger.debug("Минимакс с виртуальным {} ходом стартовал", move);
-        this.ms.move(move);
+        ms.move(move);
         final int res =
-                this.minimax(
-                        this.depth,
+                minimax(
+                        depth,
                         Integer.MIN_VALUE,
                         Integer.MAX_VALUE,
                         // т.к. следующий ход противника, то максимизируем его,
                         // если сами играем за чёрных (а он за белых)
-                        this.color == Color.BLACK);
-        this.ms.undoMove();
+                        color == Color.BLACK);
+        ms.undoMove();
         logger.debug("Оценка хода: {}", res);
         return res;
     }
@@ -111,8 +95,7 @@ public class QMinimaxBot extends RemotePlayer {
                 "Минимакс стартовал с глубиной поиска: {}. Максимизирует? {}",
                 depth,
                 isMaximisingPlayer);
-        final int res =
-                this.minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isMaximisingPlayer);
+        final int res = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isMaximisingPlayer);
         logger.debug("Оценка хода: {}", res);
         return res;
     }
@@ -131,17 +114,17 @@ public class QMinimaxBot extends RemotePlayer {
             throws ChessError {
         logger.trace("Глубина поиска: {}", curDepth);
         if (curDepth == 0) {
-            return this.strategy.evaluateBoard(this.board);
+            return strategy.evaluateBoard(board);
         }
 
         final Color curColor = isMaximisingPlayer ? Color.WHITE : Color.BLACK;
-        final List<Move> allMoves = this.ms.getAllPreparedMoves(curColor);
+        final List<Move> allMoves = ms.getAllPreparedMoves(curColor);
         // Если терминальный узел
         // todo Оптимизировать, чтоб два раза не вызывать ms.getAllMoves
-        final EndGameType gameResult = this.egd.updateEndGameStatus();
-        this.egd.revertEndGameStatus();
+        final EndGameType gameResult = egd.updateEndGameStatus(allMoves, curColor);
+        // egd.revertEndGameStatus();
         if (gameResult != EndGameType.NOTHING) {
-            return this.strategy.gradeIfTerminalNode(gameResult, curDepth);
+            return strategy.gradeIfTerminalNode(gameResult, curDepth);
         }
 
         QMinimaxBot.sortMoves(allMoves);
@@ -151,9 +134,9 @@ public class QMinimaxBot extends RemotePlayer {
             value = Integer.MIN_VALUE;
             for (final Move move : allMoves) {
                 // GameSettings newNode = new GameSettings(node);
-                this.ms.move(move);
-                value = Math.max(value, this.minimax(curDepth - 1, alpha, beta, false));
-                this.ms.undoMove();
+                ms.move(move);
+                value = Math.max(value, minimax(curDepth - 1, alpha, beta, false));
+                ms.undoMove();
                 alpha = Math.max(alpha, value);
                 if (value >= beta) {
                     break;
@@ -163,9 +146,9 @@ public class QMinimaxBot extends RemotePlayer {
             value = Integer.MAX_VALUE;
             for (final Move move : allMoves) {
                 // GameSettings newNode = new GameSettings(node);
-                this.ms.move(move);
-                value = Math.min(value, this.minimax(curDepth - 1, alpha, beta, true));
-                this.ms.undoMove();
+                ms.move(move);
+                value = Math.min(value, minimax(curDepth - 1, alpha, beta, true));
+                ms.undoMove();
                 beta = Math.min(beta, value);
                 if (value <= alpha) {
                     break;
@@ -174,6 +157,6 @@ public class QMinimaxBot extends RemotePlayer {
         }
         // отнимаем/прибавляем грубину, чтоб из ходов с одинаковыми оценками выбирался тот,
         // который достигается за меньшее число ходов
-        return value + (isMaximisingPlayer ? 1 : -1) * curDepth;
+        return value /* + (isMaximisingPlayer ? 1 : -1) * curDepth*/;
     }
 }

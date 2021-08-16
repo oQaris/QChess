@@ -10,6 +10,8 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.qbot.QMinimaxBot;
+import io.deeplay.qchess.qbot.QNegamaxTTBot;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -23,26 +25,20 @@ import org.slf4j.MDC;
 
 public class Arena {
     private static final Logger logger = LoggerFactory.getLogger(Arena.class);
-    private static final int COUNT = 1000;
+    private static final int COUNT = 100;
     private static final Map<String, Function<RemotePlayer, String>> optionalLogs =
-            Map.of(
-                    "Minimax*", // Тут пишется регулярка для имени игроков
-                    // А тут задаётся функция, которая вызывается после каждой партии.
-                    // Должна возвращать строку, выводимую в логах
-                    bot -> "Optional Log"
-                    // Пример:
-                    /*"Обращений к ТТ: " + ((QNegamaxTTBot) bot).countFindingTT*/ );
+            Map.of("Nega*", bot -> "Обращений к ТТ: " + ((QNegamaxTTBot) bot).getCountFindingTT());
     private static final ArenaStats stats = new ArenaStats(logger, optionalLogs);
     private static final RatingELO rating = new RatingELO();
 
     /** Тут задаётся Первый игрок */
     public static RemotePlayer newFirstPlayer(final GameSettings gs, final Color myColor) {
-        return new RandomBot(gs, myColor);
+        return new QNegamaxTTBot(gs, myColor);
     }
 
     /** Тут задаётся Второй игрок */
     public static RemotePlayer newSecondPlayer(final GameSettings gs, final Color myColor) {
-        return new AttackBot(gs, myColor);
+        return new QMinimaxBot(gs, myColor);
     }
 
     public void battle() throws InterruptedException, IOException {

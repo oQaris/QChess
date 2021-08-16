@@ -39,7 +39,7 @@ public class AttackBot extends RemotePlayer {
                     attackedFigure == null ? 0 : grades.get(attackedFigure.figureType);
             if (currentGrade > maxGrade) {
                 maxGrade = currentGrade;
-                if (!topMoves.isEmpty()) topMoves.clear();
+                topMoves.clear();
             }
             if (currentGrade == maxGrade) topMoves.add(move);
         }

@@ -20,7 +20,7 @@ public class TranspositionTable {
      * @param boardState состояние доски
      */
     public void store(final TTEntry entry, final BoardState boardState) {
-        this.entries.put(boardState, entry);
+        entries.put(boardState, entry);
     }
 
     public static class TTEntry {
