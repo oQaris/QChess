@@ -35,13 +35,17 @@ public class GameSettings {
         moveSystem = new MoveSystem(this);
     }
 
-    /** Копирует gs */
-    public GameSettings(final GameSettings gs) {
+    /**
+     * Копирует gs, создавая новую историю без очищения, но с ссылкой на предыдущую историю
+     *
+     * @param averageMaxMoves среднее максимальное число ходов, которое будет в истории
+     */
+    public GameSettings(final GameSettings gs, final int averageMaxMoves) {
         boardSize = gs.boardSize;
         boardType = gs.boardType;
         fen = gs.fen;
         board = new Board(gs.board);
-        history = new History(gs.history, this);
+        history = new History(gs.history, this, averageMaxMoves);
         endGameDetector = new EndGameDetector(this);
         moveSystem = new MoveSystem(this);
     }
