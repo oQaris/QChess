@@ -36,7 +36,11 @@ class QBotTest {
     }
 
     QBot getTestedBot(final GameSettings game, final Color myColor, final int depth) {
-        return new QNegamaxTTBot(game, myColor, depth, new SimpleStrategy());
+        return new QNegamaxTTBot.Builder(game, myColor)
+                .setStrategy(new SimpleStrategy())
+                .setDepth(depth)
+                .withTT()
+                .build();
     }
 
     @Test
@@ -54,13 +58,13 @@ class QBotTest {
     @Test
     void testQBotStalemate1Step() throws ChessError, ChessException {
         // мат ладьёй за один ход
-        final GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
-        setKings(Cell.parse("a8"), Cell.parse("h8"), roomSettings);
-        roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("c7")));
-        roomSettings.board.setFigure(new Rook(Color.BLACK, Cell.parse("d5")));
-        System.out.println(roomSettings.board);
+        final GameSettings game = new GameSettings(Board.BoardFilling.EMPTY);
+        setKings(Cell.parse("a8"), Cell.parse("h8"), game);
+        game.board.setFigure(new Rook(Color.BLACK, Cell.parse("c7")));
+        game.board.setFigure(new Rook(Color.BLACK, Cell.parse("d5")));
+        System.out.println(game.board);
 
-        final QBot bot = getTestedBot(roomSettings, Color.BLACK, 1);
+        final QBot bot = getTestedBot(game, Color.BLACK, 1);
         final List<Move> moves = bot.getTopMoves();
 
         assertEquals(1, moves.size());
@@ -72,22 +76,21 @@ class QBotTest {
     @Test
     void testQBotStalemate2Step() throws ChessError, ChessException {
         // тут можно поставить мат в 2 хода
-        final GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
-        setKings(Cell.parse("c4"), Cell.parse("b8"), roomSettings);
-        roomSettings.board.setFigure(new Pawn(Color.BLACK, Cell.parse("h5")));
-        roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
-        roomSettings.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
+        final GameSettings game = new GameSettings(Board.BoardFilling.EMPTY);
+        setKings(Cell.parse("c4"), Cell.parse("b8"), game);
+        game.board.setFigure(new Pawn(Color.BLACK, Cell.parse("h5")));
+        game.board.setFigure(new Rook(Color.WHITE, Cell.parse("e7")));
+        game.board.setFigure(new Rook(Color.WHITE, Cell.parse("c6")));
 
-        final QBot bot = getTestedBot(roomSettings, Color.WHITE, 3);
+        final QBot bot = getTestedBot(game, Color.WHITE, 3);
 
         final List<Move> moves1 = bot.getTopMoves();
 
         final Move expected = new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("h6"));
         assertTrue(moves1.contains(expected));
 
-        roomSettings.board.moveFigure(expected);
-        roomSettings.board.moveFigure(
-                new Move(MoveType.QUIET_MOVE, Cell.parse("b8"), Cell.parse("a8")));
+        game.moveSystem.move(expected);
+        game.moveSystem.move(new Move(MoveType.QUIET_MOVE, Cell.parse("b8"), Cell.parse("a8")));
 
         final List<Move> moves2 = bot.getTopMoves();
         assertEquals(1, moves2.size());
@@ -105,30 +108,40 @@ class QBotTest {
     @Test
     void testQBotCheckMate2StepAny() throws ChessError, ChessException {
         // тут можно поставить 2 разных мата в 2 хода
-        final GameSettings roomSettings = new GameSettings(Board.BoardFilling.EMPTY);
-        roomSettings.history.setMinBoardStateToSave(QBot.MAX_DEPTH);
-        setKings(Cell.parse("e1"), Cell.parse("b1"), roomSettings);
-        roomSettings.board.setFigure(new Queen(Color.WHITE, Cell.parse("a3")));
-        roomSettings.board.setFigure(new Knight(Color.WHITE, Cell.parse("a2")));
-        roomSettings.board.setFigure(new Pawn(Color.WHITE, Cell.parse("f2")));
-        roomSettings.board.setFigure(new Pawn(Color.WHITE, Cell.parse("g2")));
-        roomSettings.board.setFigure(new Pawn(Color.WHITE, Cell.parse("h3")));
-        roomSettings.board.setFigure(new Pawn(Color.BLACK, Cell.parse("b2")));
-        roomSettings.board.setFigure(new Pawn(Color.BLACK, Cell.parse("b3")));
+        final GameSettings game = new GameSettings(Board.BoardFilling.EMPTY);
+        game.history.setMinBoardStateToSave(QBot.MAX_DEPTH);
+        setKings(Cell.parse("e1"), Cell.parse("b1"), game);
+        game.board.setFigure(new Queen(Color.WHITE, Cell.parse("a3")));
+        game.board.setFigure(new Knight(Color.WHITE, Cell.parse("a2")));
+        game.board.setFigure(new Pawn(Color.WHITE, Cell.parse("f2")));
+        game.board.setFigure(new Pawn(Color.WHITE, Cell.parse("g2")));
+        game.board.setFigure(new Pawn(Color.WHITE, Cell.parse("h3")));
+        game.board.setFigure(new Pawn(Color.BLACK, Cell.parse("b2")));
+        game.board.setFigure(new Pawn(Color.BLACK, Cell.parse("b3")));
 
-        final QBot bot = getTestedBot(roomSettings, Color.WHITE, 5);
+        final QBot bot = getTestedBot(game, Color.WHITE, 5);
 
-        roomSettings.board.moveFigure(bot.getNextMove());
-        final List<Move> blackMoves = roomSettings.moveSystem.getAllPreparedMoves(Color.BLACK);
+        for (final Move firstMove : bot.getTopMoves()) {
+            game.moveSystem.move(firstMove);
+            System.err.println("Белые походили: " + firstMove);
 
-        for (final Move move : blackMoves) {
-            roomSettings.moveSystem.move(move);
-            roomSettings.moveSystem.move(bot.getNextMove());
-            assertEquals(
-                    EndGameType.CHECKMATE_TO_BLACK,
-                    roomSettings.endGameDetector.updateEndGameStatus());
-            roomSettings.moveSystem.undoMove();
-            roomSettings.moveSystem.undoMove();
+            final List<Move> blackMoves = game.moveSystem.getAllPreparedMoves(Color.BLACK);
+
+            for (final Move move : blackMoves) {
+                game.moveSystem.move(move);
+                System.out.println("Чёрные походили: " + move);
+
+                for (final Move secondMove : bot.getTopMoves()) {
+                    game.moveSystem.move(secondMove);
+                    System.err.println("Белые ответили: " + secondMove);
+                    System.out.print(game.board);
+                    assertEquals(
+                            EndGameType.CHECKMATE_TO_BLACK,
+                            game.endGameDetector.updateEndGameStatus());
+                    game.moveSystem.undoMove();
+                }
+                game.moveSystem.undoMove();
+            }
         }
     }
 

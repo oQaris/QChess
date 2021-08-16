@@ -5,7 +5,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.qbot.QBot;
 
 public interface Strategy {
-    int MAX_EST = Integer.MAX_VALUE- QBot.MAX_DEPTH;
+    int MAX_EST = Integer.MAX_VALUE - QBot.MAX_DEPTH;
     int MIN_EST = Integer.MIN_VALUE + 1 + QBot.MAX_DEPTH;
 
     /**
@@ -13,7 +13,7 @@ public interface Strategy {
      */
     default int gradeIfTerminalNode(final EndGameType endGameStatus, final int curDepth) {
         return switch (endGameStatus) {
-            case CHECKMATE_TO_BLACK -> MAX_EST  + curDepth;
+            case CHECKMATE_TO_BLACK -> MAX_EST + curDepth;
             case CHECKMATE_TO_WHITE -> MIN_EST - curDepth;
             default -> 0; // Ничьи и пат
         };

@@ -135,19 +135,17 @@ public class PestoStrategy implements Strategy {
         -53, -34, -21, -11, -28, -14, -24, -43
     };
     int[][] mgPestoTable = {
-        mgPawnTable, mgKnightTable, mgBishopTable, mgRookTable,
-        mgQueenTable, mgKingTable
+        mgPawnTable, mgKnightTable, mgBishopTable, mgRookTable, mgQueenTable, mgKingTable
     };
     int[][] egPestoTable = {
-        egPawnTable, egKnightTable, egBishopTable, egRookTable,
-        egQueenTable, egKingTable
+        egPawnTable, egKnightTable, egBishopTable, egRookTable, egQueenTable, egKingTable
     };
     int[] gamePhaseInc = {0, 0, 1, 1, 1, 1, 2, 2, 4, 4, 0, 0};
     int[][] mgTable = new int[12][64];
     int[][] egTable = new int[12][64];
 
     public PestoStrategy() {
-      initTables();
+        initTables();
     }
 
     private static int figureToInt(final Figure figure) {
@@ -172,10 +170,10 @@ public class PestoStrategy implements Strategy {
         int sq;
         for (int p = 0, pc = 0; p <= 5; pc += 2, p++) {
             for (sq = 0; sq < 64; sq++) {
-              mgTable[pc][sq] = mgValue[p] + mgPestoTable[p][sq];
-              egTable[pc][sq] = egValue[p] + egPestoTable[p][sq];
-              mgTable[pc + 1][sq] = mgValue[p] + mgPestoTable[p][PestoStrategy.flip(sq)];
-              egTable[pc + 1][sq] = egValue[p] + egPestoTable[p][PestoStrategy.flip(sq)];
+                mgTable[pc][sq] = mgValue[p] + mgPestoTable[p][sq];
+                egTable[pc][sq] = egValue[p] + egPestoTable[p][sq];
+                mgTable[pc + 1][sq] = mgValue[p] + mgPestoTable[p][PestoStrategy.flip(sq)];
+                egTable[pc + 1][sq] = egValue[p] + egPestoTable[p][PestoStrategy.flip(sq)];
             }
         }
     }
@@ -202,7 +200,7 @@ public class PestoStrategy implements Strategy {
         final int egScore = eg[0] - eg[1];
         int mgPhase = gamePhase;
         if (mgPhase > 24) {
-          mgPhase = 24; /* in case of early promotion */
+            mgPhase = 24; /* in case of early promotion */
         }
         final int egPhase = 24 - mgPhase;
         return (mgScore * mgPhase + egScore * egPhase) / 24;
