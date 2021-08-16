@@ -7,8 +7,6 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Board.BoardFilling;
 import io.deeplay.qchess.game.model.Color;
-import io.deeplay.qchess.game.player.AttackBot;
-import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.qbot.QMinimaxBot;
 import io.deeplay.qchess.qbot.QNegamaxTTBot;
@@ -25,20 +23,22 @@ import org.slf4j.MDC;
 
 public class Arena {
     private static final Logger logger = LoggerFactory.getLogger(Arena.class);
-    private static final int COUNT = 100;
+    private static final int COUNT = 10;
     private static final Map<String, Function<RemotePlayer, String>> optionalLogs =
-            Map.of("Nega*", bot -> "Обращений к ТТ: " + ((QNegamaxTTBot) bot).getCountFindingTT());
+            Map.of(
+                    "NegaMaxBot",
+                    bot -> "Обращений к ТТ: " + ((QNegamaxTTBot) bot).getCountFindingTT());
     private static final ArenaStats stats = new ArenaStats(logger, optionalLogs);
     private static final RatingELO rating = new RatingELO();
 
     /** Тут задаётся Первый игрок */
     public static RemotePlayer newFirstPlayer(final GameSettings gs, final Color myColor) {
-        return new QNegamaxTTBot(gs, myColor);
+        return new QNegamaxTTBot(gs, myColor, 4);
     }
 
     /** Тут задаётся Второй игрок */
     public static RemotePlayer newSecondPlayer(final GameSettings gs, final Color myColor) {
-        return new QMinimaxBot(gs, myColor);
+        return new QMinimaxBot(gs, myColor, 3);
     }
 
     public void battle() throws InterruptedException, IOException {
