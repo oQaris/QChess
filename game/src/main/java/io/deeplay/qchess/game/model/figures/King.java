@@ -22,15 +22,15 @@ public class King extends Figure {
         final List<Move> res = getAttackedMoves(settings.board);
         final Cell newCell = new Cell(position.column, position.row);
         // рокировка
-        if (isCorrectCastling(settings, true))
+        if (isCorrectCastling(settings.board, true))
             res.add(new Move(MoveType.SHORT_CASTLING, newCell, position.createAdd(new Cell(2, 0))));
-        if (isCorrectCastling(settings, false))
+        if (isCorrectCastling(settings.board, false))
             res.add(new Move(MoveType.LONG_CASTLING, newCell, position.createAdd(new Cell(-2, 0))));
         return res;
     }
 
     @Override
-    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
+    public boolean isAttackedCell(final Board board, final Cell cell) {
         final int x = cell.column;
         final int y = cell.row;
         final int myX = position.column;
@@ -50,27 +50,24 @@ public class King extends Figure {
     }
 
     /** @return true, если рокировка возможна */
-    private boolean isCorrectCastling(final GameSettings settings, final boolean shortCastling) {
+    private boolean isCorrectCastling(final Board board, final boolean shortCastling) {
         logger.trace("Запущена проверка на возможность рокировки для {}", this);
         if (wasMoved
-                || !settings.board.isEmptyCell(
-                        position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
-                || !settings.board.isEmptyCell(
-                        position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
-                || !shortCastling
-                        && !settings.board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
-                || Board.isAttackedCell(settings, position, color.inverse())
+                || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 1 : -1, 0)))
+                || !board.isEmptyCell(position.createAdd(new Cell(shortCastling ? 2 : -2, 0)))
+                || !shortCastling && !board.isEmptyCell(position.createAdd(new Cell(-3, 0)))
+                || Board.isAttackedCell(board, position, color.inverse())
                 || Board.isAttackedCell(
-                        settings,
+                        board,
                         position.createAdd(new Cell(shortCastling ? 1 : -1, 0)),
                         color.inverse())
                 || Board.isAttackedCell(
-                        settings,
+                        board,
                         position.createAdd(new Cell(shortCastling ? 2 : -2, 0)),
                         color.inverse())) return false;
 
         return shortCastling
-                ? settings.board.isNotRightRookStandardMoved(color)
-                : settings.board.isNotLeftRookStandardMoved(color);
+                ? board.isNotRightRookStandardMoved(color)
+                : board.isNotLeftRookStandardMoved(color);
     }
 }

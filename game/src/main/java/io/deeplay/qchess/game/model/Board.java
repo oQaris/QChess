@@ -104,10 +104,9 @@ public class Board {
     }
 
     /** @return true, если клетка cell атакуется цветом color */
-    public static boolean isAttackedCell(
-            final GameSettings settings, final Cell cell, final Color color) {
-        for (final Figure f : settings.board.getFigures(color))
-            if (f.isAttackedCell(settings, cell)) return true;
+    public static boolean isAttackedCell(final Board board, final Cell cell, final Color color) {
+        for (final Figure f : board.getFigures(color))
+            if (f.isAttackedCell(board, cell)) return true;
         return false;
     }
 

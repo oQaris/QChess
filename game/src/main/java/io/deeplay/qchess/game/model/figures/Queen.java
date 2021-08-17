@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
@@ -18,8 +19,8 @@ public class Queen extends Figure {
     }
 
     @Override
-    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
-        return Rook.isAttackedCell(settings, position, cell)
-                || Bishop.isAttackedCell(settings, position, cell);
+    public boolean isAttackedCell(final Board board, final Cell cell) {
+        return Rook.isAttackedCell(board, position, cell)
+                || Bishop.isAttackedCell(board, position, cell);
     }
 }
