@@ -9,15 +9,17 @@ public class Strategy {
     private final Evaluation evaluation;
     private final TraversalAlgorithm algorithm;
     private final int depth;
+    private final boolean onMonteCarlo;
 
     public Strategy() {
-        this(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 2);
+        this(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 2, false);
     }
 
-    public Strategy(Evaluation evaluation, TraversalAlgorithm algorithm, int depth) {
+    public Strategy(Evaluation evaluation, TraversalAlgorithm algorithm, int depth, boolean onMonteCarlo) {
         this.evaluation = evaluation;
         this.algorithm = algorithm;
         this.depth = depth;
+        this.onMonteCarlo = onMonteCarlo;
     }
 
     public Evaluation getEvaluation() {
@@ -30,6 +32,10 @@ public class Strategy {
 
     public int getDepth() {
         return depth;
+    }
+
+    public boolean getOnMonteCarlo() {
+        return onMonteCarlo;
     }
 
     public static int getTerminalEvaluation(final Color color, final EndGameType endGameType) {

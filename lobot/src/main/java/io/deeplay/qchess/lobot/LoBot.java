@@ -9,6 +9,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.lobot.evaluation.Evaluation;
+import io.deeplay.qchess.lobot.evaluation.MonteCarloEvaluation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,6 +24,7 @@ public class LoBot extends RemotePlayer {
     private final Evaluation evaluation;
     private final int depth;
     private final ChessMoveFunc<Integer> algorithm;
+    private final boolean onMonteCarlo;
 
     public LoBot(GameSettings roomSettings, Color color) {
         this(roomSettings, color, new Strategy());
@@ -33,6 +35,8 @@ public class LoBot extends RemotePlayer {
         this.evaluation = strategy.getEvaluation();
         this.depth = strategy.getDepth();
         algorithm = getAlgorithm(strategy.getAlgorithm());
+        roomSettings.history.setMinBoardStateToSave(100);
+        onMonteCarlo = strategy.getOnMonteCarlo();
     }
 
     private ChessMoveFunc<Integer> getAlgorithm(TraversalAlgorithm traversal) {
@@ -92,7 +96,31 @@ public class LoBot extends RemotePlayer {
             }
         }
 
-        return bestMoves.get((new Random()).nextInt(bestMoves.size()));
+        if(bestMoves.size() == 1) {
+            return bestMoves.get(0);
+        }
+
+        if(!onMonteCarlo || Math.abs(bestMove) > Integer.MAX_VALUE - 500) {
+            return bestMoves.get((new Random()).nextInt(bestMoves.size()));
+        }
+        return getBestMonteCarloTopMove(bestMoves);
+    }
+
+    private Move getBestMonteCarloTopMove(List<Move> bestMoves) throws ChessError {
+        Evaluation monteCarlo = new MonteCarloEvaluation(20);
+        int maxEvaluation = 0;
+        Move bestMove = bestMoves.get(0);
+        for(Move move : bestMoves) {
+            roomSettings.moveSystem.move(move);
+            int evaluation = monteCarlo.evaluateBoard(roomSettings, color.inverse());
+            roomSettings.moveSystem.undoMove();
+
+            if(evaluation > maxEvaluation) {
+                maxEvaluation = evaluation;
+                bestMove = move;
+            }
+        }
+        return bestMove;
     }
 
     private int negamax(int depth, Color currentColor) throws ChessError, ChessException {
@@ -222,13 +250,15 @@ public class LoBot extends RemotePlayer {
 
     private int minimax(int depth, int alpha, int beta, Color currentColor)
         throws ChessError, ChessException {
+
+        if (depth == 0) {
+            return evaluation.evaluateBoard(roomSettings, color);
+        }
+
         EndGameType endGameType = egd.updateEndGameStatus();
         egd.revertEndGameStatus();
         if (endGameType != EndGameType.NOTHING) {
             return Strategy.getTerminalEvaluation(currentColor, endGameType);
-        }
-        if (depth == 0) {
-            return evaluation.evaluateBoard(roomSettings, color);
         }
 
         List<Move> moves = ms.getAllPreparedMoves(currentColor);

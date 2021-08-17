@@ -8,27 +8,29 @@ import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.game.player.RandomBot;
+import io.deeplay.qchess.lobot.LoBot;
+import io.deeplay.qchess.lobot.Strategy;
+import io.deeplay.qchess.lobot.TraversalAlgorithm;
 import io.deeplay.qchess.lobot.montecarloservice.MonteCarloSelfplay;
 
 public class MonteCarloEvaluation implements Evaluation {
     private final int iterationNumber;
-    private final PlayerType botType;
 
-    public MonteCarloEvaluation(final int iterationsNumber, boolean attacked) {
+    public MonteCarloEvaluation(final int iterationsNumber) {
         this.iterationNumber = iterationsNumber;
-        this.botType = attacked? PlayerType.ATTACK_BOT : PlayerType.RANDOM_BOT;
     }
 
     @Override
     public int evaluateBoard(final GameSettings gameSettings, final Color color) {
         MonteCarloSelfplay game;
+        GameSettings gs;
         Player firstPlayer;
         Player secondPlayer;
         int wins = 0;
         for(int i = 0; i < iterationNumber; i++) {
-            final GameSettings gs = new GameSettings(gameSettings);
-            firstPlayer = botType == PlayerType.ATTACK_BOT? new AttackBot(gs, color) : new RandomBot(gs, color);
-            secondPlayer = botType == PlayerType.ATTACK_BOT? new AttackBot(gs, color.inverse()) : new RandomBot(gs, color.inverse());
+            gs = new GameSettings(gameSettings, 100);
+            firstPlayer = new AttackBot(gs, color);
+            secondPlayer = new AttackBot(gs, color.inverse());
             try {
                 game = new MonteCarloSelfplay(gs, firstPlayer, secondPlayer);
                 game.run();
@@ -40,6 +42,7 @@ public class MonteCarloEvaluation implements Evaluation {
                 wins++;
             }
         }
+        //System.out.println((wins * 1000) / iterationNumber);
         return (wins * 1000) / iterationNumber;
     }
 }
