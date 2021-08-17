@@ -90,6 +90,9 @@ public class Board {
                                     board.cells[y][x].figureType,
                                     board.cells[y][x].getColor(),
                                     new Cell(x, y));
+
+                    cells[y][x].wasMoved = board.cells[y][x].wasMoved;
+
                     if (cells[y][x].figureType == FigureType.KING) {
                         if (cells[y][x].getColor() == Color.WHITE)
                             whiteKing = cells[y][x].getCurrentPosition();

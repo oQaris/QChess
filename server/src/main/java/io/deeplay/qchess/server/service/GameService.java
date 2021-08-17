@@ -149,7 +149,7 @@ public class GameService {
         if (status != null) {
             final RemotePlayer player1 = room.getFirstPlayer();
             final RemotePlayer player2 = room.getSecondPlayer();
-            room.addGameCount(1);
+            room.incrementEndGameCount();
             StatisticService.writeEndGameStats(
                     room.id, room.getGameCount(), room.getEndGameStatus());
 
