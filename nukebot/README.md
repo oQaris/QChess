@@ -67,7 +67,7 @@ Search, реализующий [Null-Move Heuristic](https://www.chessprogrammin
 - [x] Таблицы транспонирования (ТТ) + совместимость с [MTDF](https://en.wikipedia.org/wiki/MTD(f))
 - [x] [Verified Null-Move](https://arxiv.org/abs/0808.1125)
 - [x] Функция оценивания [quiesce](https://www.chessprogramming.org/Quiescence_Search) + ТТ
-- [ ] Сортировка ходов [MVV-LVA](https://www.chessprogramming.org/MVV-LVA) - улучшение quiesce
+- [x] Сортировка ходов [MVV-LVA](https://www.chessprogramming.org/MVV-LVA) - улучшение quiesce
 - [ ] [Delta Pruning](https://www.chessprogramming.org/Delta_Pruning) - улучшение quiesce
 - [ ] [SEE](https://www.chessprogramming.org/Static_Exchange_Evaluation) - улучшение quiesce
 - [ ] [Guard Heuristic](https://www.chessprogramming.org/Guard_Heuristic) - улучшение quiesce

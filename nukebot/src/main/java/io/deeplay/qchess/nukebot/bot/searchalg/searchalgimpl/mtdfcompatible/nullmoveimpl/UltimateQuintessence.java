@@ -80,10 +80,10 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         if (depth <= 0 || isTerminalNode(allMoves))
-            // return quiesce(isMyMove, alfa, beta, depth, false);
-            return isMyMove
-                    ? getEvaluation(allMoves, true, depth)
-                    : -getEvaluation(allMoves, false, depth);
+            return quiesce(isMyMove, alfa, beta, depth, false);
+        /*return isMyMove
+        ? getEvaluation(allMoves, true, depth)
+        : -getEvaluation(allMoves, false, depth);*/
 
         // --------------- Verified Null-Move --------------- //
 
@@ -230,15 +230,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         final Iterator<Move> attackMoves =
-                allMoves.stream()
-                        .filter(
-                                move ->
-                                        switch (move.getMoveType()) {
-                                            case ATTACK, EN_PASSANT, TURN_INTO_ATTACK -> true;
-                                            default -> false;
-                                        })
-                        .sorted(SearchImprovements.movesPriority) // TODO: заменить
-                        .iterator();
+                SearchImprovements.MVV_LVA_attack_sort(gs.board, allMoves);
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
