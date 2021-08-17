@@ -63,8 +63,8 @@ public class MatchMaking {
                         switch (dto.enemyType) {
                             case LOCAL_PLAYER, REMOTE_PLAYER -> null;
                             case RANDOM_BOT -> new RandomBot(gs, clientColor.inverse());
-                                // TODO: вставить своего бота
                             case ATTACK_BOT -> new AttackBot(gs, clientColor.inverse());
+                                // TODO: вставить своего бота
                         };
 
                 if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {
