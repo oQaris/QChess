@@ -140,6 +140,11 @@ public abstract class Figure {
     /** @return true, если клетка cell на доске settings.board атакуется этой фигурой */
     public abstract boolean isAttackedCell(GameSettings settings, Cell cell);
 
+    /** @return id типа фигуры (совместим с PeSTO) */
+    public int getPestoValue() {
+        return figureType.getPestoValue(color);
+    }
+
     @Override
     public int hashCode() {
         return hashCodes[color == Color.WHITE ? 0 : 1][wasMoved ? 0 : 1][position.column][

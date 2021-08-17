@@ -35,6 +35,7 @@ public class Board {
         boardSize = size;
         cells = new Figure[boardSize][boardSize];
         cellsType = new int[boardSize * boardSize];
+        for (int i = 0; i < 64; ++i) cellsType[i] = FigureType.getEmptyPestoValue();
         try {
             fill(fillingType);
         } catch (final ChessException e) {
@@ -276,7 +277,7 @@ public class Board {
         cells[position.row][position.column] = figure;
 
         final int i = position.row * STD_BOARD_SIZE + position.column;
-        final int newValue = figure.figureType.type + FigureType.getColorCoeff(figure.getColor());
+        final int newValue = figure.getPestoValue();
         cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
         cellsType[i] = newValue;
 
@@ -293,7 +294,7 @@ public class Board {
         cells[position.row][position.column] = figure;
 
         final int i = position.row * 8 + position.column;
-        final int newValue = figure.figureType.type + FigureType.getColorCoeff(figure.getColor());
+        final int newValue = figure.getPestoValue();
         cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
         cellsType[i] = newValue;
     }
@@ -490,8 +491,9 @@ public class Board {
         cells[cell.row][cell.column] = null;
 
         final int i = cell.row * 8 + cell.column;
-        cellsTypeHash -= GameMath.hash64Coeff[i] * cellsType[i];
-        cellsType[i] = 0;
+        final int newValue = FigureType.getEmptyPestoValue();
+        cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
+        cellsType[i] = newValue;
 
         return old;
     }
@@ -506,8 +508,9 @@ public class Board {
         cells[cell.row][cell.column] = null;
 
         final int i = cell.row * 8 + cell.column;
-        cellsTypeHash -= GameMath.hash64Coeff[i] * cellsType[i];
-        cellsType[i] = 0;
+        final int newValue = FigureType.getEmptyPestoValue();
+        cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
+        cellsType[i] = newValue;
 
         return old;
     }
@@ -576,6 +579,11 @@ public class Board {
     /** @return копия состояния типов фигур на доске */
     public int[] fastSnapshot() {
         return cellsType.clone();
+    }
+
+    /** @return ссылка на состояния типов фигур на доске (совместимо с PeSTO) */
+    public int[] fastSnapshotReference() {
+        return cellsType;
     }
 
     public enum BoardFilling {
