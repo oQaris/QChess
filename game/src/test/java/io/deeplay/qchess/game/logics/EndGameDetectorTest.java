@@ -9,6 +9,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
@@ -123,16 +124,19 @@ public class EndGameDetectorTest {
         final Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
         final Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
 
-        gs.history.checkAndAddPeaceMoveCount(move);
+        gs.history.checkAndAddPeaceMoveCount(move, FigureType.KING, null);
         Assert.assertTrue(endGameDetector.isDrawWithPeaceMoves());
-        gs.history.checkAndAddPeaceMoveCount(moveAttack);
+        gs.history.setRemovedFigure(new Pawn(Color.BLACK, Cell.parse("e2")));
+        gs.history.checkAndAddPeaceMoveCount(
+                moveAttack, FigureType.KING, new Pawn(Color.BLACK, Cell.parse("e2")));
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
-        gs.history.checkAndAddPeaceMoveCount(move);
+        gs.history.checkAndAddPeaceMoveCount(move, FigureType.KING, null);
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
 
         count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT);
 
-        gs.history.checkAndAddPeaceMoveCount(moveAttack);
+        gs.history.checkAndAddPeaceMoveCount(
+                moveAttack, FigureType.KING, new Pawn(Color.BLACK, Cell.parse("e2")));
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
     }
 
@@ -146,9 +150,9 @@ public class EndGameDetectorTest {
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
         final Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
 
-        gs.history.checkAndAddPeaceMoveCount(move);
+        gs.history.checkAndAddPeaceMoveCount(move, FigureType.KING, null);
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
-        gs.history.checkAndAddPeaceMoveCount(move);
+        gs.history.checkAndAddPeaceMoveCount(move, FigureType.KING, null);
         Assert.assertTrue(endGameDetector.isDrawWithPeaceMoves());
     }
 

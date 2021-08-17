@@ -13,8 +13,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class EndGameDetector {
+    /** Максимальное число ходов до ничьи без взятия и хода пешки */
     public static final int END_PEACE_MOVE_COUNT = 75;
+    /** Максимальное число повторений доски до ничьи */
     public static final int END_REPETITIONS_COUNT = 5;
+
     private static final List<List<FigureType>> MATERIAL =
             Arrays.asList(
                     // todo Добавить Король против короля с 2 одноцветными слонами
