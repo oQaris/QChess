@@ -76,52 +76,11 @@ public class GameMathTest {
         }
     }
 
-    @Test
-    public void testRecalcZobristHash() {
-        final int[][] array = new int[8][8];
-        final int[][] toSet = new int[8][8];
-        GameMath.srand(1);
-        for (int y = 0; y < 8; ++y)
-            for (int x = 0; x < 8; ++x) {
-                array[y][x] = Math.abs((y + x) * GameMath.rand()) % 13;
-                toSet[y][x] = Math.abs((y + x) * GameMath.rand()) % 13;
-            }
-
-        int hash64 = GameMath.zobristHash64(array);
-
-        for (int y = 0; y < 8; ++y)
-            for (int x = 0; x < 8; ++x) {
-                // recalc:
-                hash64 ^=
-                        GameMath.zobristHash64[array[y][x]][y][x]
-                                ^ GameMath.zobristHash64[toSet[y][x]][y][x];
-
-                // set
-                array[y][x] = toSet[y][x];
-
-                // tests:
-                final int finalHash64 = GameMath.zobristHash64(array);
-                Assert.assertEquals(finalHash64, hash64);
-            }
-    }
-
     @Ignore
     @Test
     public void speedTest() {
         final int[] array = new int[64];
         for (int i = 0; i < 64; ++i) array[i] = i * 11 % 37;
-
-        final int[][] array2 = new int[8][8];
-        final int[][] toSet = new int[8][8];
-        GameMath.srand(1);
-        for (int y = 0; y < 8; ++y)
-            for (int x = 0; x < 8; ++x) {
-                array2[y][x] = Math.abs((y + x) * GameMath.rand()) % 13;
-                toSet[y][x] = Math.abs((y + x) * GameMath.rand()) % 13;
-            }
-
-        final int zobristHash64 = GameMath.zobristHash64(array2);
-        int hash64 = GameMath.hashCode64(array);
 
         double maxTime = Double.MIN_VALUE;
         double minTime = Double.MAX_VALUE;
@@ -132,23 +91,8 @@ public class GameMathTest {
         while (--i >= 0) {
             final long startTime = System.nanoTime();
 
-            // for (int j = 0; j < 1000; ++j) GameMath.hashCode64(array);
-            for (int j = 0; j < 1000; ++j) {
-                for (int y = 0; y < 8; ++y)
-                    for (int x = 0; x < 8; ++x) {
-                        // recalc:
-                        /*zobristHash64 ^=
-                                GameMath.zobristHash64[array2[y][x]][y][x]
-                                        ^ GameMath.zobristHash64[toSet[y][x]][y][x];*/
-
-                        final int g = 8 * y + x;
-                        hash64 += GameMath.hash64Coeff[g] * (toSet[y][x] - array[g]);
-
-                        // set
-                        // array2[y][x] = toSet[y][x];
-                        array[g] = toSet[y][x];
-                    }
-            }
+            for (int j = 0; j < 1000; ++j) GameMath.hashCode64(array);
+            // for (int j = 0; j < 1000; ++j) Arrays.hashCode(array);
 
             final long endTime = System.nanoTime();
             final double t = (double) (endTime - startTime);
@@ -159,23 +103,5 @@ public class GameMathTest {
         System.out.println("average: " + time / 1000000. + " millis");
         System.out.println("max: " + maxTime / 1000000. + " millis");
         System.out.println("min: " + minTime / 1000000. + " millis");
-    }
-
-    @Test
-    public void testRandom() {
-        GameMath.srand(1);
-        // [6 фигур] x [2 цвета] x [64 квадрата]
-        final int[] hashes = new int[768];
-        for (int i = 0; i < 768; ++i) {
-            hashes[i] = GameMath.rand();
-        }
-
-        for (int i = 0; i < 767; ++i) {
-            for (int j = i + 1; j < 768; ++j) {
-                if (hashes[i] == hashes[j]) {
-                    Assert.fail();
-                }
-            }
-        }
     }
 }

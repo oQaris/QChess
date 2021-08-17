@@ -103,8 +103,6 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
             // null-move:
             gs.moveSystem.move(nullMove);
-            // TODO: try Aspiration Window
-            // final int est = -uq(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify);
 
             // aspiration window:
             final int est =
@@ -162,12 +160,6 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                 // null-window search:
                 int est = -uq(!isMyMove, -alfa - 1, -alfa, depth - 1, verify);
                 if (alfa < est && est < beta) est = -uq(!isMyMove, -beta, -alfa, depth - 1, verify);
-
-                // aspiration window:
-                /*int alfaBound = -alfa - QUARTER_PAWN_COST;
-                if (alfaBound <= alfa) alfaBound = -alfa - 1;
-                int est = -uq(!isMyMove, alfaBound, -alfa + QUARTER_PAWN_COST, depth - 1, verify);
-                if (alfa < est && est < beta) est = -uq(!isMyMove, -beta, -alfa, depth - 1, verify);*/
 
                 gs.moveSystem.undoMove();
                 if (est > alfa) alfa = est;
@@ -255,6 +247,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                 gs.moveSystem.move(move);
                 final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1, true);
                 gs.moveSystem.undoMove();
+
+                if (resultUpdater.isInvalidMoveVersion(moveVersion))
+                    return EvaluationFunc.MIN_ESTIMATION;
 
                 if (score >= beta) {
                     alfa = beta;
