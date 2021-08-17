@@ -52,6 +52,9 @@ public class Selfplay {
         }
     }
 
+    /**
+     * @return ход без проверок из from в to типа type (если это превращение, turnInto будет null)
+     */
     public static Move createMove(final String from, final String to, final String type) {
         return new Move(MoveType.valueOf(type), Cell.parse(from), Cell.parse(to));
     }
@@ -79,14 +82,17 @@ public class Selfplay {
         return currentPlayerToMove;
     }
 
+    /** @return первый игрок (белый) */
     public Player getFirstPlayer() {
         return firstPlayer;
     }
 
+    /** @return первый игрок (черный) */
     public Player getSecondPlayer() {
         return secondPlayer;
     }
 
+    /** @return true, если текущий игрок ходит своей фигурой */
     private boolean isCorrectPlayerColor(final Move move) {
         try {
             return roomSettings.board.getFigure(move.getFrom()).getColor()
