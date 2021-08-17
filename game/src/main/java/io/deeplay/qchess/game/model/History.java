@@ -122,11 +122,11 @@ public class History implements Iterable<BoardState> {
 
     /**
      * @param move сделанный ход
-     * @param moveFigure фигура, которой был сделан ход
+     * @param moveFigureType тип фигуры, которой был сделан ход
      * @param removedFigure фигура, которую взяли или null, если ход не атакующий
      */
     public void checkAndAddPeaceMoveCount(
-            final Move move, final FigureType moveFigure, final FigureType removedFigure) {
+            final Move move, final FigureType moveFigureType, final Figure removedFigure) {
         switch (move.getMoveType()) {
             case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK:
                 if (parentHistory == null) clearHistory(minBoardStateToSave);
@@ -134,13 +134,13 @@ public class History implements Iterable<BoardState> {
                 break;
             case ATTACK:
                 if (parentHistory == null) {
-                    if (removedFigure == FigureType.PAWN || moveFigure == FigureType.PAWN)
-                        clearHistory(minBoardStateToSave);
+                    if (removedFigure.figureType == FigureType.PAWN
+                            || moveFigureType == FigureType.PAWN) clearHistory(minBoardStateToSave);
                 }
                 peaceMoveCount = 0;
                 break;
             default:
-                if (moveFigure == FigureType.PAWN) {
+                if (moveFigureType == FigureType.PAWN) {
                     if (parentHistory == null) clearHistory(minBoardStateToSave);
                     peaceMoveCount = 0;
                 } else ++peaceMoveCount;
@@ -150,18 +150,18 @@ public class History implements Iterable<BoardState> {
 
     /**
      * @param move ход, после которого проверяется на возможность очищения
-     * @param moveFigure фигура, которой нужно походить
+     * @param moveFigureType тип фигуры, которой нужно походить
      * @param removedFigure фигура, которую возьмут или null, если ход не атакующий
      * @return true, если история очистится после хода move
      */
     public boolean willHistoryClear(
-            final Move move, final FigureType moveFigure, final FigureType removedFigure) {
+            final Move move, final FigureType moveFigureType, final Figure removedFigure) {
         return parentHistory == null
                 && switch (move.getMoveType()) {
                     case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK -> true;
-                    case ATTACK -> removedFigure == FigureType.PAWN
-                            || moveFigure == FigureType.PAWN;
-                    default -> moveFigure == FigureType.PAWN;
+                    case ATTACK -> removedFigure.figureType == FigureType.PAWN
+                            || moveFigureType == FigureType.PAWN;
+                    default -> moveFigureType == FigureType.PAWN;
                 };
     }
 
