@@ -6,14 +6,10 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.Player;
-import io.deeplay.qchess.game.player.PlayerType;
-import io.deeplay.qchess.game.player.RandomBot;
-import io.deeplay.qchess.lobot.LoBot;
-import io.deeplay.qchess.lobot.Strategy;
-import io.deeplay.qchess.lobot.TraversalAlgorithm;
 import io.deeplay.qchess.lobot.montecarloservice.MonteCarloSelfplay;
 
 public class MonteCarloEvaluation implements Evaluation {
+
     private final int iterationNumber;
 
     public MonteCarloEvaluation(final int iterationsNumber) {
@@ -27,7 +23,7 @@ public class MonteCarloEvaluation implements Evaluation {
         Player firstPlayer;
         Player secondPlayer;
         int wins = 0;
-        for(int i = 0; i < iterationNumber; i++) {
+        for (int i = 0; i < iterationNumber; i++) {
             gs = new GameSettings(gameSettings, 100);
             firstPlayer = new AttackBot(gs, color);
             secondPlayer = new AttackBot(gs, color.inverse());
@@ -38,7 +34,8 @@ public class MonteCarloEvaluation implements Evaluation {
                 chessError.printStackTrace();
             }
             EndGameType endResult = gs.endGameDetector.getGameResult();
-            if(color == Color.WHITE && endResult == EndGameType.CHECKMATE_TO_BLACK || color == Color.BLACK && endResult == EndGameType.CHECKMATE_TO_WHITE) {
+            if (color == Color.WHITE && endResult == EndGameType.CHECKMATE_TO_BLACK
+                || color == Color.BLACK && endResult == EndGameType.CHECKMATE_TO_WHITE) {
                 wins++;
             }
         }

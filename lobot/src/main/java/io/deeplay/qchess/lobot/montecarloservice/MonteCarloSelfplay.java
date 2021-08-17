@@ -1,12 +1,9 @@
 package io.deeplay.qchess.lobot.montecarloservice;
 
-import static io.deeplay.qchess.game.exceptions.ChessErrorCode.ERROR_WHILE_ADD_PEACE_MOVE_COUNT;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.player.Player;
 
 public class MonteCarloSelfplay {

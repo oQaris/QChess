@@ -17,76 +17,58 @@ import java.util.UUID;
 
 public class LoBot extends RemotePlayer {
 
-    public static int STEP_COUNT = 0;
-    public static long FULL_TIME = 0;
-    public static long MAX_TIME = 0;
-
     private final Evaluation evaluation;
     private final int depth;
     private final ChessMoveFunc<Integer> algorithm;
     private final boolean onMonteCarlo;
 
-    public LoBot(GameSettings roomSettings, Color color) {
+    public LoBot(final GameSettings roomSettings, final Color color) {
         this(roomSettings, color, new Strategy());
     }
 
-    public LoBot(GameSettings roomSettings, Color color, Strategy strategy) {
+    public LoBot(final GameSettings roomSettings, final Color color, final Strategy strategy) {
         super(roomSettings, color, "lobot-" + UUID.randomUUID(), "lobot");
-        this.evaluation = strategy.getEvaluation();
-        this.depth = strategy.getDepth();
+        evaluation = strategy.getEvaluation();
+        depth = strategy.getDepth();
         algorithm = getAlgorithm(strategy.getAlgorithm());
         roomSettings.history.setMinBoardStateToSave(100);
         onMonteCarlo = strategy.getOnMonteCarlo();
     }
 
-    private ChessMoveFunc<Integer> getAlgorithm(TraversalAlgorithm traversal) {
-        if (traversal == TraversalAlgorithm.MINIMAX) {
-            return (from, to) ->
+    private ChessMoveFunc<Integer> getAlgorithm(final TraversalAlgorithm traversal) {
+        return switch (traversal) {
+            case MINIMAX -> (from, to) ->
                 minimax(depth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, color.inverse());
-        } else if (traversal == TraversalAlgorithm.EXPECTIMAX) {
-            return (from, to) -> expectimax(depth - 1, color.inverse());
-        } else if (traversal == TraversalAlgorithm.NEGASCOUT) {
-            return (from, to) -> negascout(depth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE,
+            case EXPECTIMAX -> (from, to) -> expectimax(depth - 1, color.inverse());
+            case NEGAMAX -> (from, to) -> negamax(depth - 1, color.inverse());
+            case NEGASCOUT -> (from, to) -> negascout(depth - 1, Integer.MIN_VALUE,
+                Integer.MAX_VALUE,
                 color.inverse());
-        } else if (traversal == TraversalAlgorithm.NEGAMAX) {
-            return (from, to) -> negamax(depth - 1, color.inverse());
-        } else if (traversal == TraversalAlgorithm.NEGAMAXALPHABETA) {
-            return (from, to) -> negamaxWithAlphaBeta(depth - 1, Integer.MIN_VALUE,
+            case NEGAMAXALPHABETA -> (from, to) -> negamaxWithAlphaBeta(depth - 1,
+                Integer.MIN_VALUE,
                 Integer.MAX_VALUE, color.inverse());
-        }
-        return null;
+            default -> null;
+        };
     }
 
 
     @Override
     public Move getNextMove() throws ChessError {
         try {
-            long startTime = System.currentTimeMillis();
-
-            Move move = runRoot();
-
-            long time = System.currentTimeMillis() - startTime;
-            FULL_TIME += time;
-            STEP_COUNT++;
-            if (time > MAX_TIME) {
-                MAX_TIME = time;
-            }
-
-            return move;
-        } catch (ChessException e) {
+            return runRoot();
+        } catch (final ChessException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     private Move runRoot() throws ChessError, ChessException {
-
-        List<Move> moves = ms.getAllPreparedMoves(color);
+        final List<Move> moves = ms.getAllPreparedMoves(color);
         int bestMove = Integer.MIN_VALUE;
-        List<Move> bestMoves = new ArrayList<>();
+        final List<Move> bestMoves = new ArrayList<>();
 
-        for (Move move : moves) {
-            int value = roomSettings.moveSystem.virtualMove(move, algorithm);
+        for (final Move move : moves) {
+            final int value = roomSettings.moveSystem.virtualMove(move, algorithm);
             if (value > bestMove) {
                 bestMove = value;
                 bestMoves.clear();
@@ -96,26 +78,26 @@ public class LoBot extends RemotePlayer {
             }
         }
 
-        if(bestMoves.size() == 1) {
+        if (bestMoves.size() == 1) {
             return bestMoves.get(0);
         }
 
-        if(!onMonteCarlo || Math.abs(bestMove) > Integer.MAX_VALUE - 500) {
+        if (!onMonteCarlo || Math.abs(bestMove) > Integer.MAX_VALUE - 500) {
             return bestMoves.get((new Random()).nextInt(bestMoves.size()));
         }
         return getBestMonteCarloTopMove(bestMoves);
     }
 
-    private Move getBestMonteCarloTopMove(List<Move> bestMoves) throws ChessError {
-        Evaluation monteCarlo = new MonteCarloEvaluation(20);
+    private Move getBestMonteCarloTopMove(final List<Move> bestMoves) throws ChessError {
+        final Evaluation monteCarlo = new MonteCarloEvaluation(20);
         int maxEvaluation = 0;
         Move bestMove = bestMoves.get(0);
-        for(Move move : bestMoves) {
+        for (final Move move : bestMoves) {
             roomSettings.moveSystem.move(move);
-            int evaluation = monteCarlo.evaluateBoard(roomSettings, color.inverse());
+            final int evaluation = monteCarlo.evaluateBoard(roomSettings, color.inverse());
             roomSettings.moveSystem.undoMove();
 
-            if(evaluation > maxEvaluation) {
+            if (evaluation > maxEvaluation) {
                 maxEvaluation = evaluation;
                 bestMove = move;
             }
@@ -123,47 +105,49 @@ public class LoBot extends RemotePlayer {
         return bestMove;
     }
 
-    private int negamax(int depth, Color currentColor) throws ChessError, ChessException {
+    private int negamax(final int depth, final Color currentColor)
+        throws ChessError, ChessException {
         if (depth == 0) {
             return -evaluation.evaluateBoard(roomSettings, color);
         }
 
-        List<Move> moves = ms.getAllPreparedMoves(currentColor);
+        final List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        EndGameType endGameType = egd.updateEndGameStatus();
+        final EndGameType endGameType = egd.updateEndGameStatus();
         egd.revertEndGameStatus();
         if (endGameType != EndGameType.NOTHING) {
             return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
 
         int bestMoveValue = Integer.MIN_VALUE;
-        for (Move move : moves) {
-            int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+        for (final Move move : moves) {
+            final int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
                 negamax(depth - 1, currentColor.inverse()));
             bestMoveValue = Math.max(bestMoveValue, currentValue);
         }
         return -bestMoveValue;
     }
 
-    private int negamaxWithAlphaBeta(int depth, int alpha, int beta, Color currentColor)
+    private int negamaxWithAlphaBeta(final int depth, int alpha, final int beta,
+        final Color currentColor)
         throws ChessError, ChessException {
         if (depth == 0) {
             return -evaluation.evaluateBoard(roomSettings, color);
         }
 
-        List<Move> moves = ms.getAllPreparedMoves(currentColor);
+        final List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        EndGameType endGameType = egd.updateEndGameStatus();
+        final EndGameType endGameType = egd.updateEndGameStatus();
         egd.revertEndGameStatus();
         if (endGameType != EndGameType.NOTHING) {
             return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
 
         int bestMoveValue = Integer.MIN_VALUE;
-        for (Move move : moves) {
+        for (final Move move : moves) {
             final int alphaForLambda = alpha;
             final int betaForLambda = beta;
-            int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+            final int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
                 negamaxWithAlphaBeta(depth - 1, -betaForLambda, -alphaForLambda,
                     currentColor.inverse()));
             bestMoveValue = Math.max(bestMoveValue, currentValue);
@@ -175,15 +159,15 @@ public class LoBot extends RemotePlayer {
         return -bestMoveValue;
     }
 
-    private int negascout(int depth, int alpha, int beta, Color currentColor)
+    private int negascout(final int depth, int alpha, final int beta, final Color currentColor)
         throws ChessError, ChessException {
         if (depth == 0) {
             return -evaluation.evaluateBoard(roomSettings, color);
         }
 
-        List<Move> moves = ms.getAllPreparedMoves(currentColor);
+        final List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        EndGameType endGameType = egd.updateEndGameStatus();
+        final EndGameType endGameType = egd.updateEndGameStatus();
         egd.revertEndGameStatus();
         if (endGameType != EndGameType.NOTHING) {
             return Strategy.getTerminalEvaluation(currentColor, endGameType);
@@ -216,14 +200,15 @@ public class LoBot extends RemotePlayer {
         return -alpha;
     }
 
-    private int expectimax(int depth, Color currentColor) throws ChessError, ChessException {
+    private int expectimax(final int depth, final Color currentColor)
+        throws ChessError, ChessException {
         if (depth == 0) {
             return evaluation.evaluateBoard(roomSettings, color);
         }
 
-        List<Move> moves = ms.getAllPreparedMoves(currentColor);
+        final List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        EndGameType endGameType = egd.updateEndGameStatus();
+        final EndGameType endGameType = egd.updateEndGameStatus();
         egd.revertEndGameStatus();
         if (endGameType != EndGameType.NOTHING) {
             return Strategy.getTerminalEvaluation(currentColor, endGameType);
@@ -231,16 +216,16 @@ public class LoBot extends RemotePlayer {
 
         if (color == currentColor) {
             int bestMoveValue = Integer.MIN_VALUE;
-            for (Move move : moves) {
-                int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+            for (final Move move : moves) {
+                final int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
                     expectimax(depth - 1, currentColor.inverse()));
                 bestMoveValue = Math.max(bestMoveValue, currentValue);
             }
             return bestMoveValue;
         } else {
             int sum = 0;
-            for (Move move : moves) {
-                int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+            for (final Move move : moves) {
+                final int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
                     expectimax(depth - 1, currentColor.inverse()));
                 sum += currentValue;
             }
@@ -248,25 +233,25 @@ public class LoBot extends RemotePlayer {
         }
     }
 
-    private int minimax(int depth, int alpha, int beta, Color currentColor)
+    private int minimax(final int depth, int alpha, int beta, final Color currentColor)
         throws ChessError, ChessException {
 
         if (depth == 0) {
             return evaluation.evaluateBoard(roomSettings, color);
         }
 
-        EndGameType endGameType = egd.updateEndGameStatus();
+        final EndGameType endGameType = egd.updateEndGameStatus();
         egd.revertEndGameStatus();
         if (endGameType != EndGameType.NOTHING) {
             return Strategy.getTerminalEvaluation(currentColor, endGameType);
         }
 
-        List<Move> moves = ms.getAllPreparedMoves(currentColor);
+        final List<Move> moves = ms.getAllPreparedMoves(currentColor);
         int bestMoveValue = color == currentColor ? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;
-        for (Move move : moves) {
-            int alphaForLambda = alpha;
-            int betaForLambda = beta;
-            int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+        for (final Move move : moves) {
+            final int alphaForLambda = alpha;
+            final int betaForLambda = beta;
+            final int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
                 minimax(depth - 1, alphaForLambda, betaForLambda, currentColor.inverse()));
 
             if (color == currentColor) {
