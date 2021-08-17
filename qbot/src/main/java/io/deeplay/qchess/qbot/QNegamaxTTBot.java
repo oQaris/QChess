@@ -12,6 +12,7 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
@@ -19,6 +20,7 @@ import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +68,16 @@ public class QNegamaxTTBot extends QBot {
 
     public int getCountFindingTT() {
         return countFindingTT;
+    }
+
+    @Override
+    public Move getNextMove() throws ChessError {
+        final List<Move> topMoves = getTopMoves();
+        final Move move = topMoves.get(new Random().nextInt(topMoves.size()));
+        System.out.println(getName() + " " + move);
+        if (board.getFigureUgly(move.getTo()) != null
+                || board.getFigureUgly(move.getFrom()).figureType == FigureType.PAWN) table.clear();
+        return move;
     }
 
     @Override
@@ -162,7 +174,7 @@ public class QNegamaxTTBot extends QBot {
         private final Color color;
         private int depth = 3;
         private Strategy strategy = new PestoStrategy();
-        private boolean ttEnable = true;
+        private boolean ttEnable = false;
 
         public Builder(final GameSettings gameSettings, final Color color) {
             this.gameSettings = gameSettings;

@@ -33,7 +33,9 @@ public abstract class QBot extends RemotePlayer {
     @Override
     public Move getNextMove() throws ChessError {
         final List<Move> topMoves = getTopMoves();
-        return topMoves.get(new Random().nextInt(topMoves.size()));
+        final Move move = topMoves.get(new Random().nextInt(topMoves.size()));
+        System.out.println(getName() + " " + move);
+        return move;
     }
 
     abstract List<Move> getTopMoves() throws ChessError;

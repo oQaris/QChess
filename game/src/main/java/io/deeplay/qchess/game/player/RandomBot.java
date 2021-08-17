@@ -9,6 +9,14 @@ import java.util.Random;
 import java.util.UUID;
 
 public class RandomBot extends RemotePlayer {
+    public static class RandomBotFactory implements BotFactory {
+
+        @Override
+        public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
+            // name ignores
+            return new RandomBot(gs, myColor);
+        }
+    }
 
     public RandomBot(final GameSettings roomSettings, final Color color) {
         super(roomSettings, color, "random-bot-" + UUID.randomUUID(), "Рандомный_Бот");

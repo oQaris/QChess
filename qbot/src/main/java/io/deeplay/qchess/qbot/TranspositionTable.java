@@ -23,6 +23,10 @@ public class TranspositionTable {
         entries.put(boardState, entry);
     }
 
+    public void clear(){
+        entries.clear();
+    }
+
     public static class TTEntry {
         public final Flag flag;
         public final int value;
