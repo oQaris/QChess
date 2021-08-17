@@ -6,7 +6,8 @@ import io.deeplay.qchess.core.config.ArenaSettings;
 import io.deeplay.qchess.core.config.ConfigException;
 import io.deeplay.qchess.game.player.AttackBot.AttackBotFactory;
 import io.deeplay.qchess.game.player.BotFactory.SpecificFactory;
-import io.deeplay.qchess.game.player.RandomBot.RandomBotFactory;
+import io.deeplay.qchess.lobot.LobotFactory;
+import io.deeplay.qchess.nukebot.bot.NukeBotFactory;
 import io.deeplay.qchess.qbot.QBotFactory;
 import io.deeplay.qchess.server.view.IServerView;
 import io.deeplay.qchess.server.view.ServerConsole;
@@ -45,9 +46,9 @@ public class Main {
                 final SpecificFactory qbotFactory =
                         new SpecificFactory(new QBotFactory(), conf.getQbotName());
                 final SpecificFactory lobotFactory =
-                        new SpecificFactory(new RandomBotFactory(), conf.getLobotName());
+                        new SpecificFactory(new LobotFactory(), conf.getLobotName());
                 final SpecificFactory nukebotFactory =
-                        new SpecificFactory(new AttackBotFactory(), conf.getNukebotName());
+                        new SpecificFactory(new NukeBotFactory(), conf.getNukebotName());
 
                 final Tournament tournament =
                         new Tournament(

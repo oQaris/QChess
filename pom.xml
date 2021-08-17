@@ -13,6 +13,8 @@
     <module>game</module>
     <module>core</module>
     <module>qbot</module>
+    <module>nukebot</module>
+    <module>lobot</module>
   </modules>
 
   <packaging>pom</packaging>

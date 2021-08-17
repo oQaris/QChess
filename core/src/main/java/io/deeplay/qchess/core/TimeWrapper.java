@@ -30,25 +30,25 @@ public class TimeWrapper extends RemotePlayer {
     @Override
     public Move getNextMove() throws ChessError {
         final long startTime = System.currentTimeMillis();
-        final Move result = this.player.getNextMove();
-        this.times.add(System.currentTimeMillis() - startTime);
+        final Move result = player.getNextMove();
+        times.add(System.currentTimeMillis() - startTime);
         return result;
     }
 
     /** @return Среднее арифметическое времени хода */
     public double getMean() {
-        return (double) this.times.stream().mapToLong(Long::longValue).sum() / this.times.size();
+        return (double) times.stream().mapToLong(Long::longValue).sum() / times.size();
     }
 
     /** @return Медиану времени хода */
     public long getMedian() {
-        return this.times.stream().sorted().skip(this.times.size() / 2).findFirst().orElse(0L);
+        return times.stream().sorted().skip(times.size() / 2).findFirst().orElse(0L);
     }
 
     /** @return Моду времени хода */
     public long getMode() {
         final Optional<Entry<Long, Long>> maxInFrequency =
-                this.times.stream()
+                times.stream()
                         .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                         .entrySet()
                         .stream()
@@ -58,18 +58,18 @@ public class TimeWrapper extends RemotePlayer {
 
     /** @return Максимальное временя хода */
     public long getMax() {
-        return this.times.stream().max(Long::compare).orElse(0L);
+        return times.stream().max(Long::compare).orElse(0L);
     }
 
     /** @return Минимальное временя хода */
     public long getMin() {
-        return this.times.stream().min(Long::compare).orElse(0L);
+        return times.stream().min(Long::compare).orElse(0L);
     }
 
     /** Выводит на консоль схематичный график времени обдумывания каждого хода */
     public void printGraph() {
-        final long min = this.getMin();
-        for (final Long time : this.times) {
+        final long min = getMin();
+        for (final Long time : times) {
             final long t = time / min;
             System.out.println("*".repeat((int) t));
         }
