@@ -14,19 +14,24 @@ public enum FigureType {
         "PAWN", "KNIGHT", "BISHOP", "ROOK", "QUEEN", "KING"
     };
 
-    /** Нужен для быстрого вычисления состояния доски */
+    /** id тип фигуры. Нужен для быстрого вычисления состояния доски */
     public final int type;
 
     FigureType(final int type) {
         this.type = type;
     }
 
-    /** Фигуры будут записываться в доску этим значением */
-    public int getPestoValue(final Color color) {
-        return 2 * type + (color == Color.WHITE ? 0 : 1);
-    }
-
+    /** @return id тип пустой клетки на доске (совместим с PeSTO) */
     public static int getEmptyPestoValue() {
         return 12;
+    }
+
+    /**
+     * Фигуры будут записываться в доску этим значением
+     *
+     * @return id типа фигуры (совместим с PeSTO)
+     */
+    public int getPestoValue(final Color color) {
+        return 2 * type + (color == Color.WHITE ? 0 : 1);
     }
 }

@@ -14,11 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Figure {
+    /** Хеши фигур [color][wasMoved][column][row] */
     public static final int[][][][] hashCodes = new int[2][2][8][8];
+    /** Векторы смещения для диагональных ходов (как крестик) */
     protected static final List<Cell> xMove =
             Arrays.asList(new Cell(-1, -1), new Cell(-1, 1), new Cell(1, -1), new Cell(1, 1));
+    /** Векторы смещения для ходов по линии (как плюс) */
     protected static final List<Cell> plusMove =
             Arrays.asList(new Cell(-1, 0), new Cell(0, -1), new Cell(0, 1), new Cell(1, 0));
+    /** Векторы смещения для диагональных ходов и ходов по линии (как крестик и плюс) */
     protected static final List<Cell> xPlusMove =
             Arrays.asList(
                     new Cell(-1, -1),
@@ -29,6 +33,7 @@ public abstract class Figure {
                     new Cell(0, -1),
                     new Cell(0, 1),
                     new Cell(1, 0));
+    /** Векторы смещения для ходов конем */
     protected static final List<Cell> knightMove =
             Arrays.asList(
                     new Cell(-2, -1),
@@ -66,6 +71,12 @@ public abstract class Figure {
         logger.trace("Фигура {} была создана", this);
     }
 
+    /**
+     * @param type тип новой фигуры
+     * @param color цвет новой фигуры
+     * @param position ссылка на позицию новой фигуры
+     * @return новая фигура с типом type, цветом color и ссылкой на позицию position
+     */
     public static Figure build(final FigureType type, final Color color, final Cell position) {
         return switch (type) {
             case BISHOP -> new Bishop(color, position);
@@ -77,15 +88,21 @@ public abstract class Figure {
         };
     }
 
+    /** @return ссылка на позицию фигуры */
     public Cell getCurrentPosition() {
         return position;
     }
 
+    /**
+     * Устанавливает новую позицию фигуре
+     *
+     * @param position новая позиция
+     */
     public void setCurrentPosition(final Cell position) {
         this.position = position;
     }
 
-    /** @return все возможные ходы фигуры, не учитывая шаха */
+    /** @return все псевдо-легальные ходы фигуры (без учета шаха) */
     public abstract List<Move> getAllMoves(GameSettings settings);
 
     protected List<Move> rayTrace(final Board board, final List<Cell> directions) {
@@ -120,8 +137,10 @@ public abstract class Figure {
         return result;
     }
 
-    public abstract boolean isAttackedCell(GameSettings settings, Cell cell);
+    /** @return true, если клетка cell на доске board атакуется этой фигурой */
+    public abstract boolean isAttackedCell(Board board, Cell cell);
 
+    /** @return id типа фигуры (совместим с PeSTO) */
     public int getPestoValue() {
         return figureType.getPestoValue(color);
     }

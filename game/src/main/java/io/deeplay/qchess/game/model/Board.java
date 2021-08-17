@@ -20,8 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Board {
-    /** @deprecated Плохо для гибкости */
-    @Deprecated public static final int STD_BOARD_SIZE = 8;
+    public static final int STD_BOARD_SIZE = 8;
 
     private static final transient Logger logger = LoggerFactory.getLogger(Board.class);
 
@@ -49,17 +48,18 @@ public class Board {
         this(STD_BOARD_SIZE, fillingType);
     }
 
-    public Board(final String placement) throws ChessError {
+    /** @param fen строка в нотации Форсайта-Эдвардса */
+    public Board(final String fen) throws ChessError {
         this(STD_BOARD_SIZE, BoardFilling.EMPTY);
         try {
-            if (!NotationService.checkValidityPlacement(placement)) {
+            if (!NotationService.checkValidityPlacement(fen)) {
                 logger.error(
                         "Ошибка при парсинге строки для конструктора доски (строка не валидна)");
                 throw new ChessError(INCORRECT_STRING_FOR_FILLING_BOARD);
             }
             int y = 0;
             int x = 0;
-            for (final Character currentSymbol : placement.toCharArray()) {
+            for (final Character currentSymbol : fen.toCharArray()) {
                 if (currentSymbol.equals('/')) {
                     ++y;
                     x = 0;
@@ -104,13 +104,13 @@ public class Board {
     }
 
     /** @return true, если клетка cell атакуется цветом color */
-    public static boolean isAttackedCell(
-            final GameSettings settings, final Cell cell, final Color color) {
-        for (final Figure f : settings.board.getFigures(color))
-            if (f.isAttackedCell(settings, cell)) return true;
+    public static boolean isAttackedCell(final Board board, final Cell cell, final Color color) {
+        for (final Figure f : board.getFigures(color))
+            if (f.isAttackedCell(board, cell)) return true;
         return false;
     }
 
+    /** @return символ фигуры figure цвета color */
     private static char figureToIcon(final Color color, final FigureType figure) {
         return switch (color) {
             case WHITE -> switch (figure) {
@@ -212,6 +212,7 @@ public class Board {
         return false;
     }
 
+    /** Заполняет доску расстановкой fillingType */
     private void fill(final BoardFilling fillingType) throws ChessException {
         logger.debug("Начато заполнение {} доски", fillingType);
         switch (fillingType) {
@@ -232,12 +233,19 @@ public class Board {
         logger.debug("Доска {} инициализирована", fillingType);
     }
 
-    /** @return true, если клетка принадлежит доске */
+    /**
+     * @return true, если клетка принадлежит доске
+     * @deprecated Оставлено для совместимости и тестирования
+     */
     @Deprecated
     public boolean isCorrectCell(final int column, final int row) {
         return column >= 0 && row >= 0 && column < boardSize && row < boardSize;
     }
 
+    /**
+     * Быстрое заполнение доски по первой линии фигур. 1 и 8 линии задаются orderFirstLine, на 2 и 7
+     * будут стоять пешки, остальные линии останутся пустыми
+     */
     private void fillBoardForFirstLine(final FigureType[] orderFirstLine) throws ChessException {
         final Cell startBlack = new Cell(0, 0);
         final Cell startWhite = new Cell(0, boardSize - 1);
@@ -253,7 +261,11 @@ public class Board {
         }
     }
 
-    /** Устанавливает фигуру на доску */
+    /**
+     * Устанавливает фигуру на доску
+     *
+     * @deprecated Оставлено для совместимости
+     */
     @Deprecated
     public void setFigure(final Figure figure) throws ChessException {
         final Cell position = figure.getCurrentPosition();
@@ -286,6 +298,7 @@ public class Board {
         cellsType[i] = newValue;
     }
 
+    /** Устанавливает фигуру на доску БЕЗ ПРОВЕРОК и пересчитывания хеша доски */
     public void setFigureUglyWithoutRecalcHash(final Figure figure)
             throws ArrayIndexOutOfBoundsException {
         final Cell position = figure.getCurrentPosition();
@@ -312,6 +325,7 @@ public class Board {
         return list;
     }
 
+    /** @return количество фигур на доске цвета color */
     public int getFigureCount(final Color color) {
         int count = 0;
         for (int yl = 0, yr = boardSize - 1; yl < yr; ++yl, --yr) {
@@ -325,21 +339,24 @@ public class Board {
         return count;
     }
 
-    /**
-     * @param color цвет игрока
-     * @return позиция короля определенного цвета или null, если король не найден
-     */
+    /** @return фигура короля цвета color или null, если король не найден */
     public Figure findKing(final Color color) {
         return color == Color.WHITE
                 ? cells[whiteKing.row][whiteKing.column]
                 : cells[blackKing.row][blackKing.column];
     }
 
+    /** @return позиция короля цвета color или null, если король не найден */
     public Cell findKingCell(final Color color) {
         return color == Color.WHITE ? whiteKing : blackKing;
     }
 
-    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    /**
+     * 0 - нет возможности рокироваться<br>
+     * 1 - левая рокировка возможна<br>
+     * 2 - правая<br>
+     * 3 - обе
+     */
     public int isCastlingPossible(final Color color) throws ChessError {
         final Figure king = findKing(color);
         if (king == null) throw new ChessError(KING_NOT_FOUND);
@@ -378,6 +395,7 @@ public class Board {
      *
      * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
      * @throws ChessException если ход выходит за пределы доски
+     * @deprecated Оставлено для совместимости
      */
     @Deprecated
     public Figure moveFigure(final Move move) throws ChessException {
@@ -406,6 +424,11 @@ public class Board {
         return figureTo;
     }
 
+    /**
+     * Перемещает фигуру без проверок и установки флагов перемещения, и пересчитывания хеша доски
+     *
+     * @return предыдущая фигура на месте перемещения или null, если клетка была пуста
+     */
     public Figure moveFigureUglyWithoutRecalcHash(final Move move)
             throws ArrayIndexOutOfBoundsException {
         final Figure figureFrom = getFigureUgly(move.getFrom());
@@ -419,6 +442,7 @@ public class Board {
     /**
      * @return фигура или null, если клетка пуста
      * @throws ChessException если клетка не лежит в пределах доски
+     * @deprecated Оставлено для совместимости
      */
     @Deprecated
     public Figure getFigure(final Cell cell) throws ChessException {
@@ -454,6 +478,7 @@ public class Board {
      * Убирает фигуру с доски
      *
      * @return удаленную фигуру или null, если клетка была пуста
+     * @deprecated Оставлено для совместимости
      */
     @Deprecated
     public Figure removeFigure(final Cell cell) throws ChessException {
@@ -489,6 +514,11 @@ public class Board {
         return old;
     }
 
+    /**
+     * Убирает фигуру с доски БЕЗ ПРОВЕРОК и пересчитывания хеша доски
+     *
+     * @return удаленную фигуру или null, если клетка была пуста
+     */
     public Figure removeFigureUglyWithoutRecalcHash(final Cell cell) {
         final Figure old = cells[cell.row][cell.column];
         cells[cell.row][cell.column] = null;

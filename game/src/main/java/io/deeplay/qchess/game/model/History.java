@@ -14,7 +14,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class History implements Iterable<BoardState> {
+    /** Среднее из максимальных число ходов за 1 партию */
     private static final int AVERAGE_MAXIMUM_MOVES = 100;
+
     private static final Map<FigureType, Character> NOTATION = new EnumMap<>(FigureType.class);
 
     static {
@@ -31,10 +33,11 @@ public class History implements Iterable<BoardState> {
 
     private final GameSettings gameSettings;
     private final Map<BoardState, Integer> repetitionsMap;
-    /** using like a stack */
+    /** Используется как стек */
     private final Deque<BoardState> recordsList;
 
     private Move lastMove;
+    /** Двигалась ли фигура до последнего хода (фигура, которая совершила этот последний ход) */
     private boolean hasMovedBeforeLastMove;
     /** Исключая пешку при взятии на проходе */
     private Figure removedFigure;
@@ -49,6 +52,10 @@ public class History implements Iterable<BoardState> {
     /** Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки */
     private int minBoardStateToSave;
 
+    /**
+     * Родитель текущей истории или null, если текущая история является корнем (обычно это история
+     * основной партии, не симуляции бота)
+     */
     private History parentHistory;
 
     public History(final GameSettings gameSettings) {
@@ -104,23 +111,36 @@ public class History implements Iterable<BoardState> {
         addRecord(lastMove);
     }
 
+    /**
+     * @return true, если фигура двигалась до последнего хода (фигура, которая совершила этот
+     *     последний ход)
+     */
     public boolean isHasMovedBeforeLastMove() {
         return hasMovedBeforeLastMove;
     }
 
+    /**
+     * Устанавливает, двигалась ли фигура до последнего хода (фигура, которая совершила этот
+     * последний ход)
+     */
     public void setHasMovedBeforeLastMove(final boolean hasMoved) {
         hasMovedBeforeLastMove = hasMoved;
     }
 
+    /** @return последняя взятая фигура или null, если последний ход не был атакующим */
     public Figure getRemovedFigure() {
         return removedFigure;
     }
 
+    /** Устанавливает последнюю взятую фигуру */
     public void setRemovedFigure(final Figure removedFigure) {
         this.removedFigure = removedFigure;
     }
 
     /**
+     * Добавляет 1 к мирным ходам, если ход move не был ходом пешки или взятием. Также очищает
+     * историю, если возможно
+     *
      * @param move сделанный ход
      * @param moveFigureType тип фигуры, которой был сделан ход
      * @param removedFigure фигура, которую взяли или null, если ход не атакующий
@@ -200,7 +220,7 @@ public class History implements Iterable<BoardState> {
         final StringBuilder rec = new StringBuilder(70);
 
         rec.append(getConvertingFigurePosition());
-        rec.append(' ').append(isWhiteMove ? 'w' : 'b');
+        rec.append(' ').append(isWhiteMove ? 'b' : 'w');
 
         final String castlingPossibility = getCastlingPossibility();
         if (!"".equals(castlingPossibility)) rec.append(' ').append(castlingPossibility);
@@ -243,6 +263,7 @@ public class History implements Iterable<BoardState> {
         return getCastlingPossibility(Color.WHITE) + getCastlingPossibility(Color.BLACK);
     }
 
+    /** @return Строка - часть записи отвечающая, можно ли использовать рокировки */
     private String getCastlingPossibility(final Color color) throws ChessError {
         String res = "";
         if (color == Color.WHITE && isWhiteCastlingPossibility == 0) return res;
@@ -277,6 +298,7 @@ public class History implements Iterable<BoardState> {
         return result.toString();
     }
 
+    /** @return число ходов без взятия и хода пешки */
     public int getPeaceMoveCount() {
         return peaceMoveCount;
     }
@@ -302,6 +324,7 @@ public class History implements Iterable<BoardState> {
                 + (parentHistory == null ? 0 : parentHistory.getRepetitions(boardState));
     }
 
+    /** @return последний ход */
     public Move getLastMove() {
         return lastMove;
     }
@@ -353,6 +376,7 @@ public class History implements Iterable<BoardState> {
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
     }
 
+    /** @return итератор от конца истории в начало */
     @Override
     public Iterator<BoardState> iterator() {
         return recordsList.iterator();

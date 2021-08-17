@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
@@ -12,8 +13,7 @@ public class Bishop extends Figure {
         super(color, position, FigureType.BISHOP);
     }
 
-    public static boolean isAttackedCell(
-            final GameSettings settings, final Cell fromPos, final Cell cell) {
+    public static boolean isAttackedCell(final Board board, final Cell fromPos, final Cell cell) {
         final int x = cell.column;
         final int y = cell.row;
         final int myX = fromPos.column;
@@ -22,7 +22,7 @@ public class Bishop extends Figure {
         if (x != myY - y + myX && x != myX + y - myY) return false;
         final Cell attackVector = new Cell(Integer.compare(x, myX), Integer.compare(y, myY));
         final Cell pos = fromPos.createAdd(attackVector);
-        while (pos.column != x && settings.board.isEmptyCell(pos)) pos.shift(attackVector);
+        while (pos.column != x && board.isEmptyCell(pos)) pos.shift(attackVector);
         return pos.column == x;
     }
 
@@ -32,7 +32,7 @@ public class Bishop extends Figure {
     }
 
     @Override
-    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
-        return isAttackedCell(settings, position, cell);
+    public boolean isAttackedCell(final Board board, final Cell cell) {
+        return isAttackedCell(board, position, cell);
     }
 }

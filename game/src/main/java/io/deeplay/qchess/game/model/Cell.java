@@ -61,7 +61,7 @@ public class Cell {
         return this;
     }
 
-    /** @deprecated Не использовать вне доски */
+    /** @deprecated Не использовать вне доски 8x8 */
     @Deprecated
     @Override
     public int hashCode() {
@@ -76,7 +76,7 @@ public class Cell {
         return column == cell.column && row == cell.row;
     }
 
-    /** @deprecated Использует стандартный размер доски - плохо для гибкости */
+    /** @deprecated Использует стандартный размер доски */
     @Deprecated
     @Override
     public String toString() {
