@@ -119,20 +119,49 @@ public class History {
         this.removedFigure = removedFigure;
     }
 
-    public void checkAndAddPeaceMoveCount(final Move move) {
+    /**
+     * @param move сделанный ход
+     * @param moveFigure фигура, которой был сделан ход
+     * @param removedFigure фигура, которую взяли или null, если ход не атакующий
+     */
+    public void checkAndAddPeaceMoveCount(
+            final Move move, final FigureType moveFigure, final FigureType removedFigure) {
         switch (move.getMoveType()) {
             case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK:
                 if (parentHistory == null) clearHistory(minBoardStateToSave);
+                peaceMoveCount = 0;
+                break;
             case ATTACK:
+                if (parentHistory == null) {
+                    if (removedFigure == FigureType.PAWN || moveFigure == FigureType.PAWN)
+                        clearHistory(minBoardStateToSave);
+                }
                 peaceMoveCount = 0;
                 break;
             default:
-                if (gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN) {
+                if (moveFigure == FigureType.PAWN) {
                     if (parentHistory == null) clearHistory(minBoardStateToSave);
                     peaceMoveCount = 0;
                 } else ++peaceMoveCount;
                 break;
         }
+    }
+
+    /**
+     * @param move ход, после которого проверяется на возможность очищения
+     * @param moveFigure фигура, которой нужно походить
+     * @param removedFigure фигура, которую возьмут или null, если ход не атакующий
+     * @return true, если история очистится после хода move
+     */
+    public boolean willClearHistory(
+            final Move move, final FigureType moveFigure, final FigureType removedFigure) {
+        return parentHistory == null
+                && switch (move.getMoveType()) {
+                    case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK -> true;
+                    case ATTACK -> removedFigure == FigureType.PAWN
+                            || moveFigure == FigureType.PAWN;
+                    default -> moveFigure == FigureType.PAWN;
+                };
     }
 
     /**
