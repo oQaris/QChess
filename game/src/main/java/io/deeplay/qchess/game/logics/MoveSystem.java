@@ -117,7 +117,7 @@ public class MoveSystem {
             moveFigure.wasMoved = true;
             history.setRemovedFigure(removedFigure);
             if (useHistoryRecord) {
-                history.checkAndAddPeaceMoveCount(move);
+                history.checkAndAddPeaceMoveCount(move, moveFigure.figureType, removedFigure);
                 if (changeMoveSideInRecord) history.addRecord(move);
                 else history.addRecordButNotChangeMoveSide(move);
             } else prevMoveIfRecordNotUse = move;

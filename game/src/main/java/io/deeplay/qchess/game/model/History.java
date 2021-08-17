@@ -10,9 +10,10 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-public class History {
+public class History implements Iterable<BoardState> {
     private static final int AVERAGE_MAXIMUM_MOVES = 100;
     private static final Map<FigureType, Character> NOTATION = new EnumMap<>(FigureType.class);
 
@@ -119,20 +120,49 @@ public class History {
         this.removedFigure = removedFigure;
     }
 
-    public void checkAndAddPeaceMoveCount(final Move move) {
+    /**
+     * @param move сделанный ход
+     * @param moveFigureType тип фигуры, которой был сделан ход
+     * @param removedFigure фигура, которую взяли или null, если ход не атакующий
+     */
+    public void checkAndAddPeaceMoveCount(
+            final Move move, final FigureType moveFigureType, final Figure removedFigure) {
         switch (move.getMoveType()) {
             case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK:
                 if (parentHistory == null) clearHistory(minBoardStateToSave);
+                peaceMoveCount = 0;
+                break;
             case ATTACK:
+                if (parentHistory == null) {
+                    if (removedFigure.figureType == FigureType.PAWN
+                            || moveFigureType == FigureType.PAWN) clearHistory(minBoardStateToSave);
+                }
                 peaceMoveCount = 0;
                 break;
             default:
-                if (gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN) {
+                if (moveFigureType == FigureType.PAWN) {
                     if (parentHistory == null) clearHistory(minBoardStateToSave);
                     peaceMoveCount = 0;
                 } else ++peaceMoveCount;
                 break;
         }
+    }
+
+    /**
+     * @param move ход, после которого проверяется на возможность очищения
+     * @param moveFigureType тип фигуры, которой нужно походить
+     * @param removedFigure фигура, которую возьмут или null, если ход не атакующий
+     * @return true, если история очистится после хода move
+     */
+    public boolean willHistoryClear(
+            final Move move, final FigureType moveFigureType, final Figure removedFigure) {
+        return parentHistory == null
+                && switch (move.getMoveType()) {
+                    case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK -> true;
+                    case ATTACK -> removedFigure.figureType == FigureType.PAWN
+                            || moveFigureType == FigureType.PAWN;
+                    default -> moveFigureType == FigureType.PAWN;
+                };
     }
 
     /**
@@ -321,5 +351,10 @@ public class History {
         isBlackCastlingPossibility = boardState.isBlackCastlingPossibility;
         recordsList.push(boardState);
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
+    }
+
+    @Override
+    public Iterator<BoardState> iterator() {
+        return recordsList.iterator();
     }
 }
