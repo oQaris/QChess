@@ -11,9 +11,6 @@ import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.qbot.QNegamaxTTBot;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import org.slf4j.Logger;
@@ -22,13 +19,13 @@ import org.slf4j.MDC;
 
 public class Arena {
     private static final Logger logger = LoggerFactory.getLogger(Arena.class);
-    private final int countGame;
-    private final SpecificFactory firstFactory;
-    private final SpecificFactory secondFactory;
     private static final Map<String, Function<RemotePlayer, String>> optionalLogs =
             Map.of(
                     "NegaMaxBot",
                     bot -> "Обращений к ТТ: " + ((QNegamaxTTBot) bot).getCountFindingTT());
+    private final int countGame;
+    private final SpecificFactory firstFactory;
+    private final SpecificFactory secondFactory;
     private final ArenaStats stats = new ArenaStats(logger, optionalLogs);
     private final RatingELO rating = new RatingELO();
 
@@ -46,15 +43,15 @@ public class Arena {
         logger.info(firstFactory.getBotName());
         logger.info(secondFactory.getBotName());
 
-        final int countProc = Runtime.getRuntime().availableProcessors();
+        /*final int countProc = Runtime.getRuntime().availableProcessors();
         final ExecutorService executor =
-                Executors.newFixedThreadPool(Math.min(countProc, countGame));
+                Executors.newFixedThreadPool(Math.min(countProc, countGame));*/
         rating.pullELO();
 
         stats.startTracking();
         for (int i = 1; i <= countGame; i++) {
-            executor.execute(
-                    i % 2 == 0
+            // executor.execute(
+            (i % 2 == 0
                             ? new Game(
                                     firstFactory,
                                     secondFactory,
@@ -68,10 +65,11 @@ public class Arena {
                                     countGame,
                                     rating,
                                     Color.BLACK,
-                                    stats));
+                                    stats))
+                    .run();
         }
-        executor.shutdown();
-        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        // executor.shutdown();
+        // executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 
         stats.showResults();
         logger.info("{}", rating);
@@ -110,6 +108,8 @@ public class Arena {
             final TimeWrapper secondPlayer =
                     new TimeWrapper(secondFactory.create(gs, myColor.inverse()));
             try {
+                /*MDC.put("tournament",
+                firstFactory.getBotName() + "_VS_" + secondFactory.getBotName());*/
                 MDC.put("game", Integer.toString(curTask.incrementAndGet()));
                 final Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();
@@ -125,6 +125,12 @@ public class Arena {
 
             final double firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
             rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), firstPlayerFactor);
+            stats.showResults();
+            try {
+                rating.saveELO();
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
         }
 
         private double getFactor(final Color firstPlayerColor, final EndGameType result) {

@@ -115,40 +115,40 @@ public class ArenaStats {
                         + gameResultsWhite.get(DRAW_WITH_NOT_ENOUGH_MATERIAL);
 
         final int passedGame = countGame.get();
-        logger.info("{}<---------------------------------------->", System.lineSeparator());
-        logger.info(
+        logger.warn("{}<---------------------------------------->", System.lineSeparator());
+        logger.warn(
                 "Время на {} игр: {} min {} sec",
                 passedGame,
                 timeGameInSec / 60,
                 timeGameInSec % 60);
-        logger.info("Всего ничьих: {}", drawWithPMC + drawWithRep + drawWithNEM);
-        logger.info("\tПравило 50-ти ходов:      {}", drawWithPMC);
-        logger.info("\tС повторением позиций:    {}", drawWithRep);
-        logger.info("\tПри недостатке материала: {}", drawWithNEM);
-        logger.info(
+        logger.warn("Всего ничьих: {}", drawWithPMC + drawWithRep + drawWithNEM);
+        logger.warn("\tПравило 50-ти ходов:      {}", drawWithPMC);
+        logger.warn("\tС повторением позиций:    {}", drawWithRep);
+        logger.warn("\tПри недостатке материала: {}", drawWithNEM);
+        logger.warn(
                 "\tПатов первому игроку:     {}",
                 gameResultsBlack.get(STALEMATE_TO_BLACK)
                         + gameResultsWhite.get(STALEMATE_TO_WHITE));
-        logger.info(
+        logger.warn(
                 "\tПатов второму игроку:     {}",
                 gameResultsBlack.get(STALEMATE_TO_WHITE)
                         + gameResultsWhite.get(STALEMATE_TO_BLACK));
-        logger.info(
+        logger.warn(
                 "Матов первому игроку: {}",
                 gameResultsBlack.get(CHECKMATE_TO_BLACK)
                         + gameResultsWhite.get(CHECKMATE_TO_WHITE));
-        logger.info(
+        logger.warn(
                 "Матов второму игроку: {}",
                 gameResultsBlack.get(CHECKMATE_TO_WHITE)
                         + gameResultsWhite.get(CHECKMATE_TO_BLACK));
-        logger.info("");
-        logger.info(
+        logger.warn("");
+        logger.warn(
                 "Средне-медианное время хода первого игрока:\t{}",
                 meanMedianFirst.get() / passedGame);
-        logger.info("Максимальное время хода первого игрока:\t{}", maxFirst.get());
-        logger.info(
+        logger.warn("Максимальное время хода первого игрока:\t{}", maxFirst.get());
+        logger.warn(
                 "Средне-медианное время хода второго игрока:\t{}",
                 meanMedianSecond.get() / passedGame);
-        logger.info("Максимальное время хода второго игрока:\t{}", maxSecond.get());
+        logger.warn("Максимальное время хода второго игрока:\t{}", maxSecond.get());
     }
 }

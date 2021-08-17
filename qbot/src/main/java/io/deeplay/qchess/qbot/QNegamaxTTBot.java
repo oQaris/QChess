@@ -74,7 +74,6 @@ public class QNegamaxTTBot extends QBot {
     public Move getNextMove() throws ChessError {
         final List<Move> topMoves = getTopMoves();
         final Move move = topMoves.get(new Random().nextInt(topMoves.size()));
-        System.out.println(getName() + " " + move);
         if (board.getFigureUgly(move.getTo()) != null
                 || board.getFigureUgly(move.getFrom()).figureType == FigureType.PAWN) table.clear();
         return move;

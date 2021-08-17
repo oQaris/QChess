@@ -1,6 +1,5 @@
 package io.deeplay.qchess.core;
 
-import ch.qos.logback.classic.util.ContextInitializer;
 import io.deeplay.qchess.client.view.IClientView;
 import io.deeplay.qchess.client.view.gui.ClientGUI;
 import io.deeplay.qchess.core.config.ArenaSettings;
@@ -8,6 +7,7 @@ import io.deeplay.qchess.core.config.ConfigException;
 import io.deeplay.qchess.game.player.AttackBot.AttackBotFactory;
 import io.deeplay.qchess.game.player.BotFactory.SpecificFactory;
 import io.deeplay.qchess.game.player.RandomBot.RandomBotFactory;
+import io.deeplay.qchess.qbot.QBotFactory;
 import io.deeplay.qchess.server.view.IServerView;
 import io.deeplay.qchess.server.view.ServerConsole;
 import java.io.IOException;
@@ -39,14 +39,19 @@ public class Main {
                 // Aрена
             case "a", "-a", "arena" -> {
                 final ArenaSettings conf = new ArenaSettings();
-                //System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, conf.getLogback());
+                // System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, conf.getLogback());
 
                 // todo Надо реализовать свои
-                final SpecificFactory qbotFactory = new SpecificFactory(new AttackBotFactory(), conf.getQbotName());
-                final SpecificFactory lobotFactory = new SpecificFactory(new RandomBotFactory(), conf.getLobotName());
-                final SpecificFactory nukebotFactory = new SpecificFactory(new AttackBotFactory(), conf.getNukebotName());
+                final SpecificFactory qbotFactory =
+                        new SpecificFactory(new QBotFactory(), conf.getQbotName());
+                final SpecificFactory lobotFactory =
+                        new SpecificFactory(new RandomBotFactory(), conf.getLobotName());
+                final SpecificFactory nukebotFactory =
+                        new SpecificFactory(new AttackBotFactory(), conf.getNukebotName());
 
-                final Tournament tournament = new Tournament(conf.getNumberGame(), qbotFactory, lobotFactory, nukebotFactory);
+                final Tournament tournament =
+                        new Tournament(
+                                conf.getNumberGame(), qbotFactory, lobotFactory, nukebotFactory);
                 try {
                     tournament.runMegaBattle();
                 } catch (final InterruptedException e) {

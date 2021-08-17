@@ -48,7 +48,7 @@ public class ArenaSettings {
 
             property.load(config);
             final String logStr = property.getProperty("arena.logback");
-            logback = ConfigService.validatePath(logStr != null ? logStr : DEFAULT_LOGBACK_NAME);
+            // logback = ConfigService.validatePath(logStr != null ? logStr : DEFAULT_LOGBACK_NAME);
             numberGame = ConfigService.validateNumberGame(property.getProperty("arena.numberGame"));
             qbotName = property.getProperty("arena.qbot");
             lobotName = property.getProperty("arena.lobot");

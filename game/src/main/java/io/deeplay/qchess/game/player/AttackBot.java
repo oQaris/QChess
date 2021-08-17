@@ -16,15 +16,6 @@ import java.util.UUID;
 public class AttackBot extends RemotePlayer {
     private static final Map<FigureType, Integer> grades = new EnumMap<>(FigureType.class);
 
-    public static class AttackBotFactory implements BotFactory {
-
-        @Override
-        public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
-            // name ignores
-            return new AttackBot(gs, myColor);
-        }
-    }
-
     static {
         grades.put(FigureType.PAWN, 1);
         grades.put(FigureType.KNIGHT, 3);
@@ -58,5 +49,14 @@ public class AttackBot extends RemotePlayer {
     @Override
     public PlayerType getPlayerType() {
         return PlayerType.ATTACK_BOT;
+    }
+
+    public static class AttackBotFactory implements BotFactory {
+
+        @Override
+        public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
+            // name ignores
+            return new AttackBot(gs, myColor);
+        }
     }
 }

@@ -23,7 +23,7 @@ public class TranspositionTable {
         entries.put(boardState, entry);
     }
 
-    public void clear(){
+    public void clear() {
         entries.clear();
     }
 
