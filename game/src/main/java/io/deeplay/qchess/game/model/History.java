@@ -10,9 +10,10 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-public class History {
+public class History implements Iterable<BoardState> {
     private static final int AVERAGE_MAXIMUM_MOVES = 100;
     private static final Map<FigureType, Character> NOTATION = new EnumMap<>(FigureType.class);
 
@@ -350,5 +351,10 @@ public class History {
         isBlackCastlingPossibility = boardState.isBlackCastlingPossibility;
         recordsList.push(boardState);
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
+    }
+
+    @Override
+    public Iterator<BoardState> iterator() {
+        return recordsList.iterator();
     }
 }
