@@ -75,9 +75,9 @@ public class GameService {
             final Player player2;
             if (color) {
                 player1 = getRemotePlayer(GameDAO.getMyType(), gs, Color.WHITE);
-                player2 = getRemotePlayer(GameDAO.getEnemyType(), gs, Color.BLACK);
+                player2 = new RemotePlayer(gs, Color.BLACK, "enemy", "enemy");
             } else {
-                player1 = getRemotePlayer(GameDAO.getEnemyType(), gs, Color.WHITE);
+                player1 = new RemotePlayer(gs, Color.WHITE, "enemy", "enemy");
                 player2 = getRemotePlayer(GameDAO.getMyType(), gs, Color.BLACK);
             }
             final Selfplay game = new Selfplay(gs, player1, player2);
@@ -94,7 +94,7 @@ public class GameService {
             case EASYBOT -> new RandomBot(gs, color);
             case MEDIUMBOT -> new AttackBot(gs, color);
                 // TODO: использовать своего бота
-            case HARDBOT -> new RandomBot(gs, color);
+            case HARDBOT -> new AttackBot(gs, color);
         };
     }
 
