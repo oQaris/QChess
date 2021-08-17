@@ -154,7 +154,7 @@ public class History implements Iterable<BoardState> {
      * @param removedFigure фигура, которую возьмут или null, если ход не атакующий
      * @return true, если история очистится после хода move
      */
-    public boolean willClearHistory(
+    public boolean willHistoryClear(
             final Move move, final FigureType moveFigure, final FigureType removedFigure) {
         return parentHistory == null
                 && switch (move.getMoveType()) {
