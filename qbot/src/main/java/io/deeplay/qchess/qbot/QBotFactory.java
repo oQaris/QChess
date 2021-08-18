@@ -74,11 +74,11 @@ public class QBotFactory implements BotFactory {
             }
         }
         final QBot bot = builder.build();
-        System.out.println(bot.getClass());
+        /*System.out.println(bot.getClass());
         System.out.println(bot.depth);
         System.out.println(bot.strategy);
         System.out.println(
-                bot instanceof QNegamaxTTBot ? ((QNegamaxTTBot) bot).ttEnable : "not_supported");
+                bot instanceof QNegamaxTTBot ? ((QNegamaxTTBot) bot).ttEnable : "not_supported");*/
         return bot;
     }
 

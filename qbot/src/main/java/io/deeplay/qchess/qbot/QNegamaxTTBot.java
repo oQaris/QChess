@@ -46,12 +46,12 @@ public class QNegamaxTTBot extends QBot {
             final Color color,
             final int searchDepth,
             final boolean ttEnable) {
-        this(roomSettings, color, searchDepth, new SimpleStrategy(), ttEnable);
+        this(roomSettings, color, searchDepth, new PestoStrategy(), ttEnable);
     }
 
     public QNegamaxTTBot(
             final GameSettings roomSettings, final Color color, final int searchDepth) {
-        this(roomSettings, color, searchDepth, new SimpleStrategy(), true);
+        this(roomSettings, color, searchDepth, new PestoStrategy(), true);
     }
 
     public QNegamaxTTBot(final GameSettings roomSettings, final Color color) {
