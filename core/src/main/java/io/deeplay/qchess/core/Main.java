@@ -23,7 +23,7 @@ public class Main {
                 new SpecificFactory(new NukeBotFactory(), conf.getNukebotName());
 
         final Tournament tournament =
-                new Tournament(conf.getNumberGame(), qbotFactory, /*lobotFactory,*/ nukebotFactory);
+                new Tournament(conf.getNumberGame(), qbotFactory, lobotFactory, nukebotFactory);
         try {
             tournament.runMegaBattle();
         } catch (final InterruptedException e) {
