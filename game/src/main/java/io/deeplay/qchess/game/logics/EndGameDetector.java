@@ -13,8 +13,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class EndGameDetector {
+    /** Максимальное число ходов до ничьи без взятия и хода пешки */
     public static final int END_PEACE_MOVE_COUNT = 75;
+    /** Максимальное число повторений доски до ничьи */
     public static final int END_REPETITIONS_COUNT = 5;
+
     private static final List<List<FigureType>> MATERIAL =
             Arrays.asList(
                     // todo Добавить Король против короля с 2 одноцветными слонами
@@ -31,18 +34,22 @@ public class EndGameDetector {
         this.gs = gs;
     }
 
+    /** @return результат окончания игры */
     public EndGameType getGameResult() {
         return gameResult;
     }
 
+    /** Сбрасывает результат окончания игры */
     public void resetEndGameStatus() {
         gameResult = EndGameType.NOTHING;
     }
 
+    /** Устанавливает предыдущий результат окончания игры */
     public void revertEndGameStatus() {
         gameResult = prevGameResult;
     }
 
+    /** @return обновляет и возвращает результат окончания игры */
     public EndGameType updateEndGameStatus() {
         prevGameResult = gameResult;
         gameResult = EndGameType.NOTHING;
@@ -65,19 +72,24 @@ public class EndGameDetector {
         return gameResult;
     }
 
-    /** @return результат игры для цвета color */
+    /** @return обновляет и возвращает результат игры для цвета color */
     public EndGameType updateEndGameStatus(final Color color) {
         return updateEndGameStatus(!isStalemate(color), color);
     }
 
     /**
      * @param allMoves все доступные ходы цвета color
-     * @return результат игры для цвета color, у которого все доступные ходы в allMoves
+     * @return обновляет и возвращает результат игры для цвета color, у которого все доступные ходы
+     *     в allMoves
      */
     public EndGameType updateEndGameStatus(final List<Move> allMoves, final Color color) {
         return updateEndGameStatus(!allMoves.isEmpty(), color);
     }
 
+    /**
+     * @param isHasAnyCorrectMove true, если игрок с цветом color имеет хотя бы 1 легальный ход
+     * @return обновляет и возвращает результат окончания игры для цвета color
+     */
     public EndGameType updateEndGameStatus(final boolean isHasAnyCorrectMove, final Color color) {
         gameResult = EndGameType.NOTHING;
         if (!isHasAnyCorrectMove) {
@@ -98,7 +110,7 @@ public class EndGameDetector {
         return gameResult;
     }
 
-    /** @return true, если это не ничья */
+    /** @return true, если это ничья */
     public boolean isDraw() {
         return isDrawWithRepetitions()
                 || isDrawWithNotEnoughMaterialForCheckmate()
@@ -106,7 +118,7 @@ public class EndGameDetector {
     }
 
     /**
-     * Условия ничьи: 1) пешка не ходит 50 ходов 2) никто не рубит
+     * Условия ничьи: 1) пешка не ходит 75 ходов 2) никто не рубит
      *
      * @return true, если ничья
      */
@@ -124,7 +136,7 @@ public class EndGameDetector {
     }
 
     /**
-     * Недостаточно фигур, чтобы поставить мат
+     * Условия ничьи: недостаточно фигур, чтобы поставить мат
      *
      * @return true, если ничья
      */

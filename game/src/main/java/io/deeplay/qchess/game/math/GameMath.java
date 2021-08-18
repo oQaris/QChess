@@ -2,7 +2,9 @@ package io.deeplay.qchess.game.math;
 
 public class GameMath {
 
+    /** Коэффициент для изменения хеша без пересчитывания */
     public static final int[] hash64Coeff = new int[64];
+    /** 31 в степени 64 */
     public static final int pow31in64;
 
     static {
