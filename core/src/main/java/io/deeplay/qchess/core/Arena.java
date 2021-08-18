@@ -27,7 +27,7 @@ public class Arena {
     private final SpecificFactory firstFactory;
     private final SpecificFactory secondFactory;
     private final ArenaStats stats = new ArenaStats(logger, optionalLogs);
-    private final RatingELO rating = new RatingELO();
+    private static final RatingELO rating = new RatingELO();
 
     public Arena(
             final SpecificFactory firstFactory,
