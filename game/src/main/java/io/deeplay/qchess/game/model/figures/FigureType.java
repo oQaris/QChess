@@ -22,7 +22,7 @@ public enum FigureType {
     }
 
     /** @return id тип пустой клетки на доске (совместим с PeSTO) */
-    public static int getEmptyPestoValue() {
+    public static int getEmptyValue() {
         return 12;
     }
 

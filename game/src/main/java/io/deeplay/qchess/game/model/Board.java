@@ -35,7 +35,7 @@ public class Board {
         boardSize = size;
         cells = new Figure[boardSize][boardSize];
         cellsType = new int[boardSize * boardSize];
-        for (int i = 0; i < 64; ++i) cellsType[i] = FigureType.getEmptyPestoValue();
+        for (int i = 0; i < 64; ++i) cellsType[i] = FigureType.getEmptyValue();
         try {
             fill(fillingType);
         } catch (final ChessException e) {
@@ -277,7 +277,7 @@ public class Board {
         cells[position.row][position.column] = figure;
 
         final int i = position.row * STD_BOARD_SIZE + position.column;
-        final int newValue = figure.getPestoValue();
+        final int newValue = figure.getValue();
         cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
         cellsType[i] = newValue;
 
@@ -294,7 +294,7 @@ public class Board {
         cells[position.row][position.column] = figure;
 
         final int i = position.row * 8 + position.column;
-        final int newValue = figure.getPestoValue();
+        final int newValue = figure.getValue();
         cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
         cellsType[i] = newValue;
     }
@@ -491,7 +491,7 @@ public class Board {
         cells[cell.row][cell.column] = null;
 
         final int i = cell.row * 8 + cell.column;
-        final int newValue = FigureType.getEmptyPestoValue();
+        final int newValue = FigureType.getEmptyValue();
         cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
         cellsType[i] = newValue;
 
@@ -508,7 +508,7 @@ public class Board {
         cells[cell.row][cell.column] = null;
 
         final int i = cell.row * 8 + cell.column;
-        final int newValue = FigureType.getEmptyPestoValue();
+        final int newValue = FigureType.getEmptyValue();
         cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
         cellsType[i] = newValue;
 
