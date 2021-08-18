@@ -37,7 +37,7 @@ public class Selfplay {
             this.firstPlayer = secondPlayer;
             this.secondPlayer = firstPlayer;
         }
-        currentPlayerToMove = firstPlayer;
+        currentPlayerToMove = this.firstPlayer;
         if (logger.isDebugEnabled()
                 && firstPlayer instanceof RemotePlayer
                 && secondPlayer instanceof RemotePlayer) {
