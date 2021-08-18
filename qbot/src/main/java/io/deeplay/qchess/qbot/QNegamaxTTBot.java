@@ -15,7 +15,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
-import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,8 +24,8 @@ import org.slf4j.LoggerFactory;
 
 public class QNegamaxTTBot extends QBot {
     private static final Logger logger = LoggerFactory.getLogger(QNegamaxTTBot.class);
+    public final boolean ttEnable;
     private final TranspositionTable table = new TranspositionTable();
-    private final boolean ttEnable;
     private final Comparator<Move> order =
             Comparator.comparing(m -> m.getMoveType().importantLevel);
     private int countFindingTT = 0;
@@ -46,12 +45,12 @@ public class QNegamaxTTBot extends QBot {
             final Color color,
             final int searchDepth,
             final boolean ttEnable) {
-        this(roomSettings, color, searchDepth, new SimpleStrategy(), ttEnable);
+        this(roomSettings, color, searchDepth, new PestoStrategy(), ttEnable);
     }
 
     public QNegamaxTTBot(
             final GameSettings roomSettings, final Color color, final int searchDepth) {
-        this(roomSettings, color, searchDepth, new SimpleStrategy(), true);
+        this(roomSettings, color, searchDepth, new PestoStrategy(), true);
     }
 
     public QNegamaxTTBot(final GameSettings roomSettings, final Color color) {
@@ -160,7 +159,7 @@ public class QNegamaxTTBot extends QBot {
         return value;
     }
 
-    public static class Builder {
+    public static class Builder extends QBot.Builder {
         private final GameSettings gameSettings;
         private final Color color;
         private int depth = 3;
@@ -172,21 +171,25 @@ public class QNegamaxTTBot extends QBot {
             this.color = color;
         }
 
+        @Override
         public Builder setDepth(final int depth) {
             this.depth = depth;
             return this;
         }
 
+        @Override
         public Builder setStrategy(final Strategy strategy) {
             this.strategy = strategy;
             return this;
         }
 
+        @Override
         public Builder withTT() {
             ttEnable = true;
             return this;
         }
 
+        @Override
         public QNegamaxTTBot build() {
             return new QNegamaxTTBot(gameSettings, color, depth, strategy, ttEnable);
         }

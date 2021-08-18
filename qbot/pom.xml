@@ -34,6 +34,18 @@
       <scope>test</scope>
       <version>4.13.2</version>
     </dependency>
+    <!-- Для фабрики бота -->
+    <dependency>
+      <artifactId>reflections8</artifactId>
+      <groupId>net.oneandone.reflections8</groupId>
+      <version>0.11.5</version>
+    </dependency>
+    <dependency>
+      <artifactId>commons-text</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <version>1.9</version>
+    </dependency>
+
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>

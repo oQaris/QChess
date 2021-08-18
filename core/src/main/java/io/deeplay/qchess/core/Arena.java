@@ -8,6 +8,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.BotFactory.SpecificFactory;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.game.player.TimeWrapper;
 import io.deeplay.qchess.qbot.QNegamaxTTBot;
 import java.io.IOException;
 import java.util.Map;
@@ -23,11 +24,20 @@ public class Arena {
             Map.of(
                     "NegaMaxBot",
                     bot -> "Обращений к ТТ: " + ((QNegamaxTTBot) bot).getCountFindingTT());
+    private static final RatingELO rating = new RatingELO();
+
+    static {
+        try {
+            rating.pullELO();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private final int countGame;
     private final SpecificFactory firstFactory;
     private final SpecificFactory secondFactory;
     private final ArenaStats stats = new ArenaStats(logger, optionalLogs);
-    private static final RatingELO rating = new RatingELO();
 
     public Arena(
             final SpecificFactory firstFactory,
@@ -46,7 +56,6 @@ public class Arena {
         /*final int countProc = Runtime.getRuntime().availableProcessors();
         final ExecutorService executor =
                 Executors.newFixedThreadPool(Math.min(countProc, countGame));*/
-        rating.pullELO();
 
         stats.startTracking();
         for (int i = 1; i <= countGame; i++) {
@@ -71,9 +80,9 @@ public class Arena {
         // executor.shutdown();
         // executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 
-        stats.showResults();
+        stats.showResults(firstFactory.getBotName() + "_VS_" + secondFactory.getBotName());
         logger.info("{}", rating);
-        rating.saveELO();
+        // rating.saveELO();
     }
 
     private static class Game implements Runnable {
@@ -129,7 +138,7 @@ public class Arena {
 
             final double firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
             rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), firstPlayerFactor);
-            stats.showResults();
+            stats.showResults(firstFactory.getBotName() + "_VS_" + secondFactory.getBotName());
             try {
                 rating.saveELO();
             } catch (final IOException e) {

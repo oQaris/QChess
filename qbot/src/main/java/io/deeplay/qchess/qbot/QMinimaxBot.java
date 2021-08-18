@@ -159,4 +159,39 @@ public class QMinimaxBot extends QBot {
         // который достигается за меньшее число ходов
         return value /* + (isMaximisingPlayer ? 1 : -1) * curDepth*/;
     }
+
+    public static class Builder extends QBot.Builder {
+        private final GameSettings gameSettings;
+        private final Color color;
+        private int depth = 3;
+        private Strategy strategy = new PestoStrategy();
+
+        public Builder(final GameSettings gameSettings, final Color color) {
+            this.gameSettings = gameSettings;
+            this.color = color;
+        }
+
+        @Override
+        public QMinimaxBot.Builder setDepth(final int depth) {
+            this.depth = depth;
+            return this;
+        }
+
+        @Override
+        public QMinimaxBot.Builder setStrategy(final Strategy strategy) {
+            this.strategy = strategy;
+            return this;
+        }
+
+        @Override
+        public QMinimaxBot.Builder withTT() {
+            throw new UnsupportedOperationException(
+                    "Минимаксный бот не поддерживает таблицы транспонирования!");
+        }
+
+        @Override
+        public QMinimaxBot build() {
+            return new QMinimaxBot(gameSettings, color, depth, strategy);
+        }
+    }
 }
