@@ -1,17 +1,15 @@
 package io.deeplay.qchess.game.model.figures;
 
-import io.deeplay.qchess.game.model.Color;
-
 public enum FigureType {
-    BISHOP(1),
-    KING(2),
-    KNIGHT(3),
-    PAWN(4),
-    QUEEN(5),
-    ROOK(6);
+    PAWN(0),
+    KNIGHT(1),
+    BISHOP(2),
+    ROOK(3),
+    QUEEN(4),
+    KING(5);
 
     public static final String[] nameOfTypeNumber = {
-        "NULL", "BISHOP", "KING", "KNIGHT", "PAWN", "QUEEN", "ROOK"
+        "PAWN", "KNIGHT", "BISHOP", "ROOK", "QUEEN", "KING"
     };
 
     /** Нужен для быстрого вычисления состояния доски */
@@ -21,8 +19,8 @@ public enum FigureType {
         this.type = type;
     }
 
-    /** Фигуры будут записываться в доску как их тип + этот коэффициент */
-    public static int getColorCoeff(final Color color) {
-        return color == Color.WHITE ? 0 : 100;
+    /** @return id тип пустой клетки на доске (совместим с PeSTO) */
+    public static int getEmptyValue() {
+        return 12;
     }
 }
