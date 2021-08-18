@@ -29,7 +29,13 @@ public class Main {
                 new SpecificFactory(new AttackBotFactory(), "Атакующий_Бот");
 
         final Tournament tournament =
-                new Tournament(conf.getNumberGame(), qbotFactory, lobotFactory, nukebotFactory);
+                new Tournament(
+                        conf.getNumberGame(),
+                        qbotFactory,
+                        lobotFactory,
+                        nukebotFactory,
+                        randombotFactory,
+                        attackbotFactory);
         try {
             tournament.runMegaBattle();
         } catch (final InterruptedException e) {

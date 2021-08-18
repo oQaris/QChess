@@ -103,7 +103,8 @@ public class StaticPositionMatrixEvaluation implements Evaluation {
                     (figure.getCurrentPosition().column
                                     - ((1 - inverse) / 2) * (Board.STD_BOARD_SIZE - 1))
                             * inverse;
-            final int cur = (coef * (val + figureFieldMap.get(figure.figureType)[rowCoord][columnCoord]));
+            final int cur =
+                    (coef * (val + figureFieldMap.get(figure.figureType)[rowCoord][columnCoord]));
             result += cur;
         }
         return result;
