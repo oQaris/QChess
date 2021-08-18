@@ -94,7 +94,7 @@ public class RatingELO {
         return sb.toString();
     }
 
-    public void saveELO() throws IOException {
+    public synchronized void saveELO() throws IOException {
         try (final BufferedWriter writer =
                 Files.newBufferedWriter(
                         newContents,
