@@ -12,7 +12,7 @@ public class QBotFactory implements BotFactory {
     public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
         return new QNegamaxTTBot.Builder(gs, myColor)
                 .setStrategy(new PestoStrategy())
-                .setDepth(5)
+                .setDepth(3)
                 .withTT()
                 .build();
     }

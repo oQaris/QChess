@@ -18,7 +18,7 @@ public class Strategy {
     private final boolean onMonteCarlo;
 
     public Strategy() {
-        this(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 5, false);
+        this(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 3, false);
     }
 
     public Strategy(final Evaluation evaluation, final TraversalAlgorithm algorithm,
