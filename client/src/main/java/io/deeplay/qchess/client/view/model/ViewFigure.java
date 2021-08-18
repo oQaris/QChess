@@ -20,14 +20,14 @@ public class ViewFigure {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ViewFigure that = (ViewFigure) o;
+        final ViewFigure that = (ViewFigure) o;
         return Objects.equals(color, that.color) && type == that.type;
     }
 

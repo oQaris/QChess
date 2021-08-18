@@ -48,7 +48,6 @@ public class MainFrame {
                         frame.dispose();
                     }
                 });
-        //startButton.setFocusPainted(false);
         frame.add(startButton);
         frame.setVisible(true);
     }

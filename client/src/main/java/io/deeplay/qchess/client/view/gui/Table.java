@@ -114,7 +114,7 @@ public class Table extends Frame {
             frame.addKeyListener(
                     new KeyAdapter() {
                         @Override
-                        public void keyReleased(KeyEvent e) {
+                        public void keyReleased(final KeyEvent e) {
                             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                                 if (ClientController.isMyStep()) {
                                     ClientController.botMove();
@@ -157,8 +157,8 @@ public class Table extends Frame {
     }
 
     private void initFigureArtMap() {
-        for(ViewColor viewColor : ViewColor.values()) {
-            for(ViewFigureType viewFigureType : ViewFigureType.values()) {
+        for(final ViewColor viewColor : ViewColor.values()) {
+            for(final ViewFigureType viewFigureType : ViewFigureType.values()) {
                 figureArtMap.put(new ViewFigure(viewColor.toString(), viewFigureType), null);
             }
         }
@@ -166,7 +166,7 @@ public class Table extends Frame {
 
     private void loadArts() {
         initFigureArtMap();
-        for(ViewFigure viewFigure : figureArtMap.keySet()) {
+        for(final ViewFigure viewFigure : figureArtMap.keySet()) {
             final File file = new File(getFigureImagesPath(figureImagesPath, viewFigure));
             try (final InputStream png =
                 file.exists() && file.canRead()
@@ -180,10 +180,7 @@ public class Table extends Frame {
                     new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
                 figureArtMap.put(viewFigure, icon);
 
-            } catch (final IOException | NullPointerException | IllegalArgumentException e) {
-                // logger + what do i can do?
-                e.printStackTrace();
-            }
+            } catch (final IOException | NullPointerException | IllegalArgumentException e) { }
         }
     }
 
