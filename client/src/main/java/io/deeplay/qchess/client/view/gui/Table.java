@@ -39,6 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 public class Table extends Frame {
+
     private static final int BOARD_SIZE = 8;
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
@@ -66,18 +67,22 @@ public class Table extends Frame {
 
     // TODO: получать путь из конфига
     // TODO: нужно сделать пути до картинок в конфиге
-    /** Обычный путь на файлы, лежащие рядом с .jar */
+    /**
+     * Обычный путь на файлы, лежащие рядом с .jar
+     */
     private static final String figureImagesPath = "./art/figures";
-    /** Обычный путь на файлы, лежащие рядом с .jar */
+    /**
+     * Обычный путь на файлы, лежащие рядом с .jar
+     */
     private static final String iconPath = "./art/other/icon.png";
 
     private static final String[] figures = {"Ферзь", "Ладья", "Конь", "Слон"};
     private final String figureStyle;
     private final Set<Integer> taggedCells = new HashSet<>();
+    private final Map<ViewFigure, ImageIcon> figureArtMap = new HashMap<>();
     private BoardPanel boardPanel;
     private boolean myColor;
     private int clickedCell;
-    private final Map<ViewFigure, ImageIcon> figureArtMap = new HashMap<>();
 
     public Table(final String figureStyle, final boolean myColor, final MainFrame mf) {
         this.figureStyle = figureStyle;
@@ -92,9 +97,9 @@ public class Table extends Frame {
         frame.setLocationRelativeTo(null);
         final File file = new File(iconPath);
         try (final InputStream png =
-                file.exists() && file.canRead()
-                        ? new FileInputStream(file)
-                        : getClass().getResourceAsStream(JAR_iconPath)) {
+            file.exists() && file.canRead()
+                ? new FileInputStream(file)
+                : getClass().getResourceAsStream(JAR_iconPath)) {
             final BufferedImage image = ImageIO.read(png);
             frame.setIconImage(image);
         } catch (final IOException | NullPointerException | IllegalArgumentException e) {
@@ -112,16 +117,16 @@ public class Table extends Frame {
 
         if (mf.getMyPlayerType() != PlayerType.USER) {
             frame.addKeyListener(
-                    new KeyAdapter() {
-                        @Override
-                        public void keyReleased(final KeyEvent e) {
-                            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                if (ClientController.isMyStep()) {
-                                    ClientController.botMove();
-                                }
+                new KeyAdapter() {
+                    @Override
+                    public void keyReleased(final KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            if (ClientController.isMyStep()) {
+                                ClientController.botMove();
                             }
                         }
-                    });
+                    }
+                });
         }
     }
 
@@ -157,8 +162,8 @@ public class Table extends Frame {
     }
 
     private void initFigureArtMap() {
-        for(final ViewColor viewColor : ViewColor.values()) {
-            for(final ViewFigureType viewFigureType : ViewFigureType.values()) {
+        for (final ViewColor viewColor : ViewColor.values()) {
+            for (final ViewFigureType viewFigureType : ViewFigureType.values()) {
                 figureArtMap.put(new ViewFigure(viewColor.toString(), viewFigureType), null);
             }
         }
@@ -166,7 +171,7 @@ public class Table extends Frame {
 
     private void loadArts() {
         initFigureArtMap();
-        for(final ViewFigure viewFigure : figureArtMap.keySet()) {
+        for (final ViewFigure viewFigure : figureArtMap.keySet()) {
             final File file = new File(getFigureImagesPath(figureImagesPath, viewFigure));
             try (final InputStream png =
                 file.exists() && file.canRead()
@@ -180,7 +185,8 @@ public class Table extends Frame {
                     new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
                 figureArtMap.put(viewFigure, icon);
 
-            } catch (final IOException | NullPointerException | IllegalArgumentException e) { }
+            } catch (final IOException | NullPointerException | IllegalArgumentException ignore) {
+            }
         }
     }
 
@@ -195,6 +201,7 @@ public class Table extends Frame {
     }
 
     private class BoardPanel extends JPanel {
+
         final List<CellPanel> boardCells;
 
         BoardPanel() {
@@ -230,13 +237,14 @@ public class Table extends Frame {
             if (ClientController.isCheck(myColor)) {
                 cell = ClientController.getKingCell(myColor);
                 boardCells.get(cell.getRow() * BOARD_SIZE + cell.getColumn()).cellColor =
-                        attackCellColor;
+                    attackCellColor;
                 boardCells.get(cell.getRow() * BOARD_SIZE + cell.getColumn()).assignCellColor();
             }
         }
     }
 
     private class CellPanel extends JPanel {
+
         private final int cellId;
         private final BoardPanel boardPanel;
         private Color cellColor;
@@ -248,9 +256,9 @@ public class Table extends Frame {
             setPreferredSize(Table.CELL_PANEL_DIMENSION);
 
             cellColor =
-                    (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
-                            ? Table.lightCellColor
-                            : Table.darkCellColor;
+                (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
+                    ? Table.lightCellColor
+                    : Table.darkCellColor;
 
             assignCellColor();
             assignCellFigureIcon();
@@ -258,118 +266,118 @@ public class Table extends Frame {
 
             if (mf.getMyPlayerType() == PlayerType.USER) {
                 addMouseListener(
-                        new MouseAdapter() {
-                            @Override
-                            public void mousePressed(final MouseEvent e) {
-                                // TODO: Refactor this method to reduce its Cognitive Complexity
-                                if (isLeftMouseButton(e) && ClientController.isMyStep()) {
-                                    boolean twoClick = false;
-                                    if (ClientController.checkFigure(
-                                            cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
-                                        if (clickedCell != -1) {
-                                            twoClick = clickedCell == cellId;
-                                            clearColorOnBoard();
+                    new MouseAdapter() {
+                        @Override
+                        public void mousePressed(final MouseEvent e) {
+                            // TODO: Refactor this method to reduce its Cognitive Complexity
+                            if (isLeftMouseButton(e) && ClientController.isMyStep()) {
+                                boolean twoClick = false;
+                                if (ClientController.checkFigure(
+                                    cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
+                                    if (clickedCell != -1) {
+                                        twoClick = clickedCell == cellId;
+                                        clearColorOnBoard();
+                                    }
+                                    if (clickedCell != cellId && !twoClick) {
+                                        setColorOnBoard();
+                                    }
+                                } else if (taggedCells.contains(cellId)) {
+                                    // move
+                                    final int action =
+                                        ClientController.tryMakeMove(
+                                            clickedCell / BOARD_SIZE,
+                                            clickedCell % BOARD_SIZE,
+                                            cellId / BOARD_SIZE,
+                                            cellId % BOARD_SIZE);
+                                    if (action > 0) {
+                                        Object turnFigure = null;
+                                        if (action == 2) {
+                                            turnFigure =
+                                                JOptionPane.showInputDialog(
+                                                    frame,
+                                                    "Выберите фигуру для замены :",
+                                                    "Выбор фигуры",
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,
+                                                    figures,
+                                                    figures[0]);
+                                            // Диалоговое окно вывода сообщения
+                                            JOptionPane.showMessageDialog(
+                                                frame,
+                                                turnFigure,
+                                                "Оповещение",
+                                                JOptionPane.INFORMATION_MESSAGE);
                                         }
-                                        if (clickedCell != cellId && !twoClick) {
-                                            setColorOnBoard();
+                                        try {
+                                            ClientController.makeMove(
+                                                clickedCell / BOARD_SIZE,
+                                                clickedCell % BOARD_SIZE,
+                                                cellId / BOARD_SIZE,
+                                                cellId % BOARD_SIZE,
+                                                turnFigure);
+                                        } catch (final ClientException clientException) {
+                                            clientException.printStackTrace();
                                         }
-                                    } else if (taggedCells.contains(cellId)) {
-                                        // move
-                                        final int action =
-                                                ClientController.tryMakeMove(
-                                                        clickedCell / BOARD_SIZE,
-                                                        clickedCell % BOARD_SIZE,
-                                                        cellId / BOARD_SIZE,
-                                                        cellId % BOARD_SIZE);
-                                        if (action > 0) {
-                                            Object turnFigure = null;
-                                            if (action == 2) {
-                                                turnFigure =
-                                                        JOptionPane.showInputDialog(
-                                                                frame,
-                                                                "Выберите фигуру для замены :",
-                                                                "Выбор фигуры",
-                                                                JOptionPane.QUESTION_MESSAGE,
-                                                                null,
-                                                                figures,
-                                                                figures[0]);
-                                                // Диалоговое окно вывода сообщения
-                                                JOptionPane.showMessageDialog(
-                                                        frame,
-                                                        turnFigure,
-                                                        "Оповещение",
-                                                        JOptionPane.INFORMATION_MESSAGE);
-                                            }
-                                            try {
-                                                ClientController.makeMove(
-                                                        clickedCell / BOARD_SIZE,
-                                                        clickedCell % BOARD_SIZE,
-                                                        cellId / BOARD_SIZE,
-                                                        cellId % BOARD_SIZE,
-                                                        turnFigure);
-                                            } catch (final ClientException clientException) {
-                                                clientException.printStackTrace();
-                                            }
 
-                                            boardPanel.boardCells.get(clickedCell).drawCell();
-                                            thisCellPanel.drawCell();
-                                            if (action == 4) {
-                                                boardPanel.drawBoard();
-                                            }
-
-                                            if (action == 3) {
-                                                final int coeff = myColor ? BOARD_SIZE : 1;
-                                                for (int i = BOARD_SIZE * (coeff - 1);
-                                                        i < BOARD_SIZE * coeff;
-                                                        i++) {
-                                                    boardPanel.boardCells.get(i).drawCell();
-                                                }
-                                            }
-                                            boardPanel.validate();
-                                            boardPanel.repaint();
-                                            clearColorOnBoard();
-                                        } else if (action == 0) {
-                                            clearColorOnBoard();
+                                        boardPanel.boardCells.get(clickedCell).drawCell();
+                                        thisCellPanel.drawCell();
+                                        if (action == 4) {
+                                            boardPanel.drawBoard();
                                         }
+
+                                        if (action == 3) {
+                                            final int coeff = myColor ? BOARD_SIZE : 1;
+                                            for (int i = BOARD_SIZE * (coeff - 1);
+                                                i < BOARD_SIZE * coeff;
+                                                i++) {
+                                                boardPanel.boardCells.get(i).drawCell();
+                                            }
+                                        }
+                                        boardPanel.validate();
+                                        boardPanel.repaint();
+                                        clearColorOnBoard();
+                                    } else if (action == 0) {
+                                        clearColorOnBoard();
                                     }
                                 }
                             }
+                        }
 
-                            @Override
-                            public void mouseEntered(final MouseEvent e) {
-                                if (ClientController.isMyStep()) {
-                                    if (thisCellPanel.getBackground() == chooseCellColor) {
-                                        thisCellPanel.setBackground(chooseHoverCellColor);
-                                    } else if (thisCellPanel.getBackground()
-                                            == quietPossibleCellColor) {
-                                        thisCellPanel.setBackground(quietPossibleHoverCellColor);
-                                    } else if (thisCellPanel.getBackground() == attackCellColor) {
-                                        thisCellPanel.setBackground(attackHoverCellColor);
-                                    } else if (ClientController.checkFigure(
-                                            cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
-                                        thisCellPanel.setBackground(hoverCellColor);
-                                    }
+                        @Override
+                        public void mouseEntered(final MouseEvent e) {
+                            if (ClientController.isMyStep()) {
+                                if (thisCellPanel.getBackground() == chooseCellColor) {
+                                    thisCellPanel.setBackground(chooseHoverCellColor);
+                                } else if (thisCellPanel.getBackground()
+                                    == quietPossibleCellColor) {
+                                    thisCellPanel.setBackground(quietPossibleHoverCellColor);
+                                } else if (thisCellPanel.getBackground() == attackCellColor) {
+                                    thisCellPanel.setBackground(attackHoverCellColor);
+                                } else if (ClientController.checkFigure(
+                                    cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
+                                    thisCellPanel.setBackground(hoverCellColor);
                                 }
                             }
+                        }
 
-                            @Override
-                            public void mouseExited(final MouseEvent e) {
-                                if (ClientController.isMyStep()) {
-                                    if (thisCellPanel.getBackground() == chooseHoverCellColor) {
-                                        thisCellPanel.setBackground(chooseCellColor);
-                                    } else if (thisCellPanel.getBackground()
-                                            == quietPossibleHoverCellColor) {
-                                        thisCellPanel.setBackground(quietPossibleCellColor);
-                                    } else if (thisCellPanel.getBackground()
-                                            == attackHoverCellColor) {
-                                        thisCellPanel.setBackground(attackCellColor);
-                                    } else if (ClientController.checkFigure(
-                                            cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
-                                        assignCellColor();
-                                    }
+                        @Override
+                        public void mouseExited(final MouseEvent e) {
+                            if (ClientController.isMyStep()) {
+                                if (thisCellPanel.getBackground() == chooseHoverCellColor) {
+                                    thisCellPanel.setBackground(chooseCellColor);
+                                } else if (thisCellPanel.getBackground()
+                                    == quietPossibleHoverCellColor) {
+                                    thisCellPanel.setBackground(quietPossibleCellColor);
+                                } else if (thisCellPanel.getBackground()
+                                    == attackHoverCellColor) {
+                                    thisCellPanel.setBackground(attackCellColor);
+                                } else if (ClientController.checkFigure(
+                                    cellId / BOARD_SIZE, cellId % BOARD_SIZE, myColor)) {
+                                    assignCellColor();
                                 }
                             }
-                        });
+                        }
+                    });
             }
             validate();
         }
@@ -377,7 +385,7 @@ public class Table extends Frame {
         private void assignCellFigureIcon() {
             removeAll();
             final ViewFigure figure =
-                    ClientController.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
+                ClientController.getFigure(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             if (figure != null) {
                 final JLabel label = new JLabel(figureArtMap.get(figure));
                 removeAll();
@@ -392,9 +400,9 @@ public class Table extends Frame {
 
         private void drawCell() {
             cellColor =
-                    (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
-                            ? Table.lightCellColor
-                            : Table.darkCellColor;
+                (cellId / BOARD_SIZE + cellId % BOARD_SIZE) % 2 == 0
+                    ? Table.lightCellColor
+                    : Table.darkCellColor;
             assignCellColor();
             assignCellFigureIcon();
             validate();
@@ -413,17 +421,17 @@ public class Table extends Frame {
             clickedCell = cellId;
             setBackground(chooseHoverCellColor);
             final Set<ViewCell> cellList =
-                    ClientController.getAllMoves(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
+                ClientController.getAllMoves(cellId / BOARD_SIZE, cellId % BOARD_SIZE);
             taggedCells.add(cellId);
             if (!cellList.isEmpty()) {
                 for (final ViewCell cell : cellList) {
                     final int id = cell.getRow() * BOARD_SIZE + cell.getColumn();
                     taggedCells.add(id);
                     boardPanel
-                            .boardCells
-                            .get(id)
-                            .setBackground(
-                                    cell.isAttack() ? attackCellColor : quietPossibleCellColor);
+                        .boardCells
+                        .get(id)
+                        .setBackground(
+                            cell.isAttack() ? attackCellColor : quietPossibleCellColor);
                 }
             }
         }
