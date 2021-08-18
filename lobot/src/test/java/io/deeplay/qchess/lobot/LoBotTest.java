@@ -1,6 +1,5 @@
 package io.deeplay.qchess.lobot;
 
-import io.deeplay.qchess.core.TimeWrapper;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -61,12 +60,12 @@ public class LoBotTest {
 
         for (int i = 1; i <= GAME_COUNT; i++) {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            final TimeWrapper firstPlayer = new TimeWrapper(new LoBot(roomSettings, Color.WHITE,
+            final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 4,
-                    true)));
-            final TimeWrapper secondPlayer = new TimeWrapper(new LoBot(roomSettings, Color.BLACK,
+                    true));
+            final Player secondPlayer = new LoBot(roomSettings, Color.BLACK,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 4,
-                    false)));
+                    false));
 
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -81,8 +80,6 @@ public class LoBotTest {
                 e.printStackTrace();
             }
             logger.info("Game {} complete", i);
-            logger.info("First player time. Max: {}, Median: {}, Mode: {}\n", firstPlayer.getMode(), firstPlayer.getMedian(), firstPlayer.getMode());
-            logger.info("Second player time. Max: {}, Median: {}, Mode: {}\n", secondPlayer.getMode(), secondPlayer.getMedian(), secondPlayer.getMode());
         }
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
         logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
@@ -126,11 +123,11 @@ public class LoBotTest {
 
         for (int i = 1; i <= GAME_COUNT; i++) {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
-                new Strategy(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 5, false));
-            final Player secondPlayer = new LoBot(roomSettings, Color.BLACK,
+            final TimeWrapper firstPlayer = new TimeWrapper(new LoBot(roomSettings, Color.WHITE,
+                new Strategy(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 5, false)));
+            final TimeWrapper secondPlayer = new TimeWrapper(new LoBot(roomSettings, Color.BLACK,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 5,
-                    false));
+                    false)));
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
                 game.run();
@@ -144,6 +141,9 @@ public class LoBotTest {
                 e.printStackTrace();
             }
             logger.info("Game {} complete", i);
+            logger.info("First player time. Max: {}, Median: {}, Mode: {}\n", firstPlayer.getMax(), firstPlayer.getMedian(), firstPlayer.getMode());
+            logger.info("Second player time. Max: {}, Median: {}, Mode: {}\n", secondPlayer.getMax(), secondPlayer.getMedian(), secondPlayer.getMode());
+
         }
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
         logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
