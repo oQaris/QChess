@@ -12,10 +12,12 @@ import io.deeplay.qchess.lobot.evaluation.FiguresCostSumEvaluation;
 import io.deeplay.qchess.lobot.evaluation.PestoEvaluation;
 import io.deeplay.qchess.lobot.evaluation.StaticPositionMatrixEvaluation;
 import java.util.Arrays;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Ignore
 public class LoBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LoBotTest.class);

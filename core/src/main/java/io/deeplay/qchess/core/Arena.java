@@ -55,7 +55,6 @@ public class Arena {
         final ExecutorService executor =
                 Executors.newFixedThreadPool(Math.min(countProc, countGame));*/
 
-
         stats.startTracking();
         for (int i = 1; i <= countGame; i++) {
             // executor.execute(
