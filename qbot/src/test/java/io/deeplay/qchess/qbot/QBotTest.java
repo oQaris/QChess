@@ -22,8 +22,10 @@ import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
 import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
+@Ignore
 class QBotTest {
     private void setKings(final Cell whitePos, final Cell blackPos, final GameSettings gs)
             throws ChessException {

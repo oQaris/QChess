@@ -28,6 +28,12 @@
       <scope>test</scope>
       <version>5.7.2</version>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>

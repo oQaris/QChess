@@ -10,10 +10,13 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-public class History {
+public class History implements Iterable<BoardState> {
+    /** Среднее из максимальных число ходов за 1 партию */
     private static final int AVERAGE_MAXIMUM_MOVES = 100;
+
     private static final Map<FigureType, Character> NOTATION = new EnumMap<>(FigureType.class);
 
     static {
@@ -30,10 +33,11 @@ public class History {
 
     private final GameSettings gameSettings;
     private final Map<BoardState, Integer> repetitionsMap;
-    /** using like a stack */
+    /** Используется как стек */
     private final Deque<BoardState> recordsList;
 
     private Move lastMove;
+    /** Двигалась ли фигура до последнего хода (фигура, которая совершила этот последний ход) */
     private boolean hasMovedBeforeLastMove;
     /** Исключая пешку при взятии на проходе */
     private Figure removedFigure;
@@ -48,6 +52,10 @@ public class History {
     /** Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки */
     private int minBoardStateToSave;
 
+    /**
+     * Родитель текущей истории или null, если текущая история является корнем (обычно это история
+     * основной партии, не симуляции бота)
+     */
     private History parentHistory;
 
     public History(final GameSettings gameSettings) {
@@ -105,36 +113,78 @@ public class History {
         addRecord(lastMove);
     }
 
+    /**
+     * @return true, если фигура двигалась до последнего хода (фигура, которая совершила этот
+     *     последний ход)
+     */
     public boolean isHasMovedBeforeLastMove() {
         return hasMovedBeforeLastMove;
     }
 
+    /**
+     * Устанавливает, двигалась ли фигура до последнего хода (фигура, которая совершила этот
+     * последний ход)
+     */
     public void setHasMovedBeforeLastMove(final boolean hasMoved) {
         hasMovedBeforeLastMove = hasMoved;
     }
 
+    /** @return последняя взятая фигура или null, если последний ход не был атакующим */
     public Figure getRemovedFigure() {
         return removedFigure;
     }
 
+    /** Устанавливает последнюю взятую фигуру */
     public void setRemovedFigure(final Figure removedFigure) {
         this.removedFigure = removedFigure;
     }
 
-    public void checkAndAddPeaceMoveCount(final Move move) {
+    /**
+     * Добавляет 1 к мирным ходам, если ход move не был ходом пешки или взятием. Также очищает
+     * историю, если возможно
+     *
+     * @param move сделанный ход
+     * @param moveFigureType тип фигуры, которой был сделан ход
+     * @param removedFigure фигура, которую взяли или null, если ход не атакующий
+     */
+    public void checkAndAddPeaceMoveCount(
+            final Move move, final FigureType moveFigureType, final Figure removedFigure) {
         switch (move.getMoveType()) {
             case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK:
                 if (parentHistory == null) clearHistory(minBoardStateToSave);
+                peaceMoveCount = 0;
+                break;
             case ATTACK:
+                if (parentHistory == null) {
+                    if (removedFigure.figureType == FigureType.PAWN
+                            || moveFigureType == FigureType.PAWN) clearHistory(minBoardStateToSave);
+                }
                 peaceMoveCount = 0;
                 break;
             default:
-                if (gameSettings.board.getFigureUgly(move.getTo()).figureType == FigureType.PAWN) {
+                if (moveFigureType == FigureType.PAWN) {
                     if (parentHistory == null) clearHistory(minBoardStateToSave);
                     peaceMoveCount = 0;
                 } else ++peaceMoveCount;
                 break;
         }
+    }
+
+    /**
+     * @param move ход, после которого проверяется на возможность очищения
+     * @param moveFigureType тип фигуры, которой нужно походить
+     * @param removedFigure фигура, которую возьмут или null, если ход не атакующий
+     * @return true, если история очистится после хода move
+     */
+    public boolean willHistoryClear(
+            final Move move, final FigureType moveFigureType, final Figure removedFigure) {
+        return parentHistory == null
+                && switch (move.getMoveType()) {
+                    case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK -> true;
+                    case ATTACK -> removedFigure.figureType == FigureType.PAWN
+                            || moveFigureType == FigureType.PAWN;
+                    default -> moveFigureType == FigureType.PAWN;
+                };
     }
 
     /**
@@ -172,7 +222,7 @@ public class History {
         final StringBuilder rec = new StringBuilder(70);
 
         rec.append(getConvertingFigurePosition());
-        rec.append(' ').append(isWhiteMove ? 'w' : 'b');
+        rec.append(' ').append(isWhiteMove ? 'b' : 'w');
 
         final String castlingPossibility = getCastlingPossibility();
         if (!"".equals(castlingPossibility)) rec.append(' ').append(castlingPossibility);
@@ -215,6 +265,7 @@ public class History {
         return getCastlingPossibility(Color.WHITE) + getCastlingPossibility(Color.BLACK);
     }
 
+    /** @return Строка - часть записи отвечающая, можно ли использовать рокировки */
     private String getCastlingPossibility(final Color color) throws ChessError {
         String res = "";
         if (color == Color.WHITE && isWhiteCastlingPossibility == 0) return res;
@@ -249,6 +300,7 @@ public class History {
         return result.toString();
     }
 
+    /** @return число ходов без взятия и хода пешки */
     public int getPeaceMoveCount() {
         return peaceMoveCount;
     }
@@ -274,6 +326,7 @@ public class History {
                 + (parentHistory == null ? 0 : parentHistory.getRepetitions(boardState));
     }
 
+    /** @return последний ход */
     public Move getLastMove() {
         return lastMove;
     }
@@ -315,5 +368,11 @@ public class History {
         isBlackCastlingPossibility = boardState.isBlackCastlingPossibility;
         recordsList.push(boardState);
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
+    }
+
+    /** @return итератор от конца истории в начало */
+    @Override
+    public Iterator<BoardState> iterator() {
+        return recordsList.iterator();
     }
 }

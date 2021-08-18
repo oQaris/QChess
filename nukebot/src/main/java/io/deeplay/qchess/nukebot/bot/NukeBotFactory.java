@@ -5,7 +5,6 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.BotFactory;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.PestoEvaluation;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 import io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl.ParallelExecutorsSearch;
@@ -33,7 +32,7 @@ public class NukeBotFactory implements BotFactory {
         final int maxDepth = 3;
         gs.history.setMinBoardStateToSave(maxDepth);
 
-        final EvaluationFunc evaluationFunc = MatrixEvaluation::figurePositionHeuristics;
+        final EvaluationFunc evaluationFunc = PestoEvaluation::pestoHeuristic;
         final SearchFunc deepSearch =
                 new ParallelExecutorsSearch(gs, color, evaluationFunc, maxDepth);
 

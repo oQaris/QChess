@@ -72,9 +72,10 @@ public abstract class SearchAlgorithm implements Runnable {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         // Проверка на ничью должна быть после проверок на пат и мат
-        if (gs.endGameDetector.isDraw()) return 0;
+        if (gs.endGameDetector.isDraw()) return -depth; // расширяем ничью - чем глубже, тем лучше
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
-        return evaluationFunc.getHeuristics(gs, myColor);
+        final int est = evaluationFunc.getHeuristics(gs, myColor);
+        return est > 0 ? est : est - maxDepth - 1; // расширяем значения для ничьи
     }
 }

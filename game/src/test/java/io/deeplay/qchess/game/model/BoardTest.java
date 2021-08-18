@@ -127,7 +127,7 @@ public class BoardTest {
     @Test
     public void testBoardStringConstructor1() throws ChessError {
         final String placement = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        final String expected = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq";
+        final String expected = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq";
         gameSettings = new GameSettings(placement);
 
         final History history = new History(gameSettings);
@@ -138,7 +138,7 @@ public class BoardTest {
     @Test
     public void testBoardStringConstructor2() throws ChessError, ChessException {
         final String placement = "4k3/ppp2ppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        final String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQ a3";
+        final String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR w KQ a3";
         gameSettings = new GameSettings(placement);
 
         final History history = new History(gameSettings);

@@ -13,10 +13,12 @@ import io.deeplay.qchess.lobot.strategy.StaticPositionMatrixEvaluateStrategy;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Ignore
 public class LoBotTest {
     private static final Logger logger = LoggerFactory.getLogger(LoBotTest.class);
     private static final int GAME_COUNT = 10;

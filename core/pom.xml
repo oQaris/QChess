@@ -75,7 +75,7 @@
       <version>0.0.1</version>
     </dependency>
     <dependency>
-      <artifactId>QChess-nukebot</artifactId>
+      <artifactId>QChess-nuke-bot</artifactId>
       <groupId>io.deeplay</groupId>
       <scope>compile</scope>
       <version>0.0.1</version>

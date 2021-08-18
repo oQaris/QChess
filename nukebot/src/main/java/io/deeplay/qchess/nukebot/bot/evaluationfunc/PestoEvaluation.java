@@ -125,7 +125,7 @@ public class PestoEvaluation {
             side2move = 1;
             otherSide = 0;
         }
-        final int[] board = gs.board.fastSnapshot();
+        final int[] board = gs.board.fastSnapshotReference();
 
         // Вычисление каждой фигуры
         for (int sq = 0; sq < 64; ++sq) {
