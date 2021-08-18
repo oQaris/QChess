@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.model.Move;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,7 +15,7 @@ public class ClusterService {
     private static final BiFunction<ClusterPoint, ClusterPoint, Integer> distFunc = (cp1, cp2) -> Math
         .abs(cp1.getValue() - cp2.getValue());
 
-    public static List<Move> getClusteredMoves(final Set<MovePoint> evaluationSet, final int clusterCount, final int eps) {
+    public static List<Move> getClusteredMovesSequential(final Set<MovePoint> evaluationSet, final int clusterCount, final int eps) {
         final List<MovePoint> list = new ArrayList<>(evaluationSet);
         sequentialClustering(list, clusterCount, eps);
         return formClusters(list).stream().map(MovePoint::getMove).collect(Collectors.toList());
@@ -26,6 +27,25 @@ public class ClusterService {
         set.addAll(points);
         return set;
     }
+
+    public static List<Move> getClusteredMovesDBSCAN(final Set<MovePoint> evaluationSet, final int minPts, final int eps) {
+        DBSCAN(evaluationSet, minPts, eps);
+        return formClustersDBSCAN(new ArrayList<>(evaluationSet)).stream().map(MovePoint::getMove).collect(Collectors.toList());
+    }
+    private static <T extends ClusterPoint> Set<T> formClustersDBSCAN(final List<T> points) {
+        Collections.shuffle(points);
+        int i = -2;
+        for(final T point : points) {
+            if(point.getMark() == -1) {
+                point.setMark(i);
+                i--;
+            }
+        }
+        final Set<T> set = new TreeSet<>(Comparator.comparingInt(ClusterPoint::getMark));
+        set.addAll(points);
+        return set;
+    }
+
 
     /**
      * @param points лист ClusterPoint
@@ -63,26 +83,22 @@ public class ClusterService {
     }
 
     // -1 - noise, 0 - undefined
-    @Deprecated
-    public static void DBSCAN(final Set<ClusterPoint> DB, final int minPts, final double eps) {
+    public static <T extends ClusterPoint> void DBSCAN(final Set<T> DB, final int minPts, final int eps) {
         int C = 1;                                                  /* Счётчик кластеров */
         for (final ClusterPoint P : DB) {
             if (P.getMark() != 0) {
                 continue;                          /* Точка была просмотрена во внутреннем цикле */
             }
-            List<ClusterPoint> N = RangeQuery(DB, P, eps);          /* Находим соседей */
+            final List<T> N = RangeQuery(DB, P, eps);          /* Находим соседей */
             if (N.size() < minPts) {                                /* Проверка плотности */
                 P.setMark(-1);                                      /* Помечаем как шум */
                 continue;
             }
             ++C;                                                    /* следующая метка кластера */
             P.setMark(C);                                           /* Помечаем начальную точку */
-            final Set<ClusterPoint> S = N
-                .stream()
-                .filter(cp -> !cp.equals(P))
-                .collect(Collectors.toSet());                       /* Соседи для расширения */
-            System.err.println(P + " <--> " + S);
-            // TODO вылетает Exception из-за добавления в S
+            N.remove(P);
+                                                                        /* Соседи для расширения */
+            final Set<ClusterPoint> S = new HashSet<>(N);
             for (final ClusterPoint Q : S) {                        /* Обрабатываем каждую зачаточную точку */
                 if (Q.getMark() == -1) {
                     Q.setMark(C);                                   /* Заменяем метку Шум на Край */
@@ -91,23 +107,23 @@ public class ClusterService {
                     continue;                      /* Была просмотрена */
                 }
                 Q.setMark(C);                                       /* Помечаем соседа */
-                N = RangeQuery(DB, Q, eps);                         /* Находим соседей */
-                if (N.size() >= minPts) {                           /* Проверяем плотность */
-                    S.addAll(
-                        N);                                    /* Добавляем соседей в набор зачаточных точек */
+                final List<T> N1 = RangeQuery(DB, Q, eps);                         /* Находим соседей */
+                if (N1.size() >= minPts) {                           /* Проверяем плотность */
+                    N.addAll(
+                        N1);                                    /* Добавляем соседей в набор зачаточных точек */
                 }
+                N.remove(Q);
             }
         }
     }
 
-    @Deprecated
-    private static List<ClusterPoint> RangeQuery(final Set<ClusterPoint> set, final ClusterPoint Q,
-        final double eps) {
+    private static <T extends ClusterPoint> List<T> RangeQuery(final Set<T> set, final ClusterPoint Q,
+        final int eps) {
         final BiFunction<ClusterPoint, ClusterPoint, Integer> distFunc = (cp1, cp2) -> Math
             .abs(cp1.getValue() - cp2.getValue());
-        final List<ClusterPoint> neighbors = new ArrayList<>();
+        final List<T> neighbors = new ArrayList<>();
 
-        for (final ClusterPoint P : set) {
+        for (final T P : set) {
             if (distFunc.apply(Q, P) < eps) {
                 neighbors.add(P);
             }

@@ -291,7 +291,7 @@ public class LoBot extends RemotePlayer {
 
         final List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        final List<Move> clusterMoves = this.depth - depth > 2? ClusterService.getClusteredMoves(moves.stream().map(move -> {
+        final List<Move> clusterMoves = depth > 0? ClusterService.getClusteredMovesDBSCAN(moves.stream().map(move -> {
             int evaluate = 0;
             try {
                 roomSettings.moveSystem.move(move);
@@ -301,8 +301,8 @@ public class LoBot extends RemotePlayer {
                 chessError.printStackTrace();
             }
             return new MovePoint(evaluate, 0, move);
-        }).collect(Collectors.toSet()), 10, 10) : moves;
-
+        }).collect(Collectors.toSet()), 2, 5) : moves;
+        //System.err.println(clusterMoves.size() + "  " + moves.size());
         int bestMoveValue = color == currentColor ? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;
         for (final Move move : clusterMoves) {
             final int alphaForLambda = alpha;

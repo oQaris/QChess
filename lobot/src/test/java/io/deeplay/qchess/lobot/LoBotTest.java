@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public class LoBotTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LoBotTest.class);
-    private static final int GAME_COUNT = 1;
+    private static final int GAME_COUNT = 8;
 
     @Test
     public void testGame() {
@@ -94,9 +94,9 @@ public class LoBotTest {
         for (int i = 1; i <= GAME_COUNT; i++) {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final TimeWrapper firstPlayer = new TimeWrapper(new LoBot(roomSettings, Color.WHITE,
-                new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.CLUSTERMINIMAX, 5, false)));
+                new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.CLUSTERMINIMAX, 8, false)));
             final TimeWrapper secondPlayer = new TimeWrapper(new LoBot(roomSettings, Color.BLACK,
-                new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 3,
+                new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 5,
                     false)));
             //final Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
@@ -114,7 +114,7 @@ public class LoBotTest {
             logger.info("Game {} complete", i);
             logger.info("First player time. Max: {}, Median: {}, Mode: {}\n", firstPlayer.getMax(), firstPlayer.getMedian(), firstPlayer.getMode());
             logger.info("Second player time. Max: {}, Median: {}, Mode: {}\n", secondPlayer.getMax(), secondPlayer.getMedian(), secondPlayer.getMode());
-
+            logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
         }
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
         logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
