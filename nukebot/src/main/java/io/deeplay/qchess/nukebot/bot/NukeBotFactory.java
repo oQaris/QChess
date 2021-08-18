@@ -29,7 +29,7 @@ public class NukeBotFactory implements BotFactory {
         MDC.put("time", time);
         ++lastBotId;
 
-        final int maxDepth = 3;
+        final int maxDepth = 5;
         gs.history.setMinBoardStateToSave(maxDepth);
 
         final EvaluationFunc evaluationFunc = PestoEvaluation::pestoHeuristic;
