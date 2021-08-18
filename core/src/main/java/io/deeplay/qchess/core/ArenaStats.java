@@ -121,6 +121,10 @@ public class ArenaStats {
                 passedGame,
                 timeGameInSec / 60,
                 timeGameInSec % 60);
+        logger.warn(
+                "Среднее время игры: {} min {} sec",
+                (timeGameInSec / passedGame) / 60,
+                (timeGameInSec / passedGame) % 60);
         logger.warn("Всего ничьих: {}", drawWithPMC + drawWithRep + drawWithNEM);
         logger.warn("\tПравило 50-ти ходов:      {}", drawWithPMC);
         logger.warn("\tС повторением позиций:    {}", drawWithRep);

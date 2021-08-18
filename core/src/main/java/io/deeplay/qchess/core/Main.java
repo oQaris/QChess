@@ -23,7 +23,7 @@ public class Main {
         final SpecificFactory nukebotFactory =
                 new SpecificFactory(new NukeBotFactory(), conf.getNukebotName());
         final SpecificFactory attackbotFactory =
-                new SpecificFactory(new AttackBotFactory(), conf.getNukebotName());
+                new SpecificFactory(new AttackBotFactory(), "");
 
         final Tournament tournament =
                 new Tournament(

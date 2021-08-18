@@ -37,4 +37,14 @@ public abstract class QBot extends RemotePlayer {
     }
 
     abstract List<Move> getTopMoves() throws ChessError;
+
+    abstract static class Builder {
+        abstract Builder setDepth(final int depth);
+
+        abstract Builder setStrategy(final Strategy strategy);
+
+        abstract Builder withTT();
+
+        abstract QBot build();
+    }
 }

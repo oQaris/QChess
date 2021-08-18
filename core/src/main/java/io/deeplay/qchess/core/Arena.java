@@ -27,7 +27,15 @@ public class Arena {
     private final SpecificFactory firstFactory;
     private final SpecificFactory secondFactory;
     private final ArenaStats stats = new ArenaStats(logger, optionalLogs);
-    private final RatingELO rating = new RatingELO();
+    private final static RatingELO rating = new RatingELO();
+
+    static {
+        try {
+            rating.pullELO();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Arena(
             final SpecificFactory firstFactory,
@@ -46,7 +54,7 @@ public class Arena {
         /*final int countProc = Runtime.getRuntime().availableProcessors();
         final ExecutorService executor =
                 Executors.newFixedThreadPool(Math.min(countProc, countGame));*/
-        rating.pullELO();
+
 
         stats.startTracking();
         for (int i = 1; i <= countGame; i++) {
@@ -73,7 +81,7 @@ public class Arena {
 
         stats.showResults();
         logger.info("{}", rating);
-        rating.saveELO();
+        //rating.saveELO();
     }
 
     private static class Game implements Runnable {
