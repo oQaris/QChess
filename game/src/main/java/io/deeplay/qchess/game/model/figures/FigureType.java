@@ -12,15 +12,13 @@ public enum FigureType {
         "PAWN", "KNIGHT", "BISHOP", "ROOK", "QUEEN", "KING"
     };
 
+    /** id тип пустой клетки на доске (совместим с PeSTO) */
+    public static final int EMPTY_TYPE = 12;
+
     /** id тип фигуры. Нужен для быстрого вычисления состояния доски */
     public final int type;
 
     FigureType(final int type) {
         this.type = type;
-    }
-
-    /** @return id тип пустой клетки на доске (совместим с PeSTO) */
-    public static int getEmptyValue() {
-        return 12;
     }
 }
