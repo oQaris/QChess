@@ -7,7 +7,7 @@
     </encoder>
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>DEBUG</level>
+      <level>INFO</level>
     </filter>
 
     <target>System.out</target>
@@ -47,6 +47,24 @@
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>INFO</level>
     </filter>
+  </appender>
+
+  <!-- Для вывода результатов игр с сервера -->
+  <appender class="ch.qos.logback.classic.sift.SiftingAppender" name="SIFTER">
+    <discriminator>
+      <defaultValue>ALL</defaultValue>
+      <key>path</key>
+    </discriminator>
+
+    <sift>
+      <appender class="ch.qos.logback.core.FileAppender" name="FILE-${path}">
+        <encoder>
+          <pattern>%msg%n</pattern>
+        </encoder>
+
+        <file>target/logs/rooms/${path}.log</file>
+      </appender>
+    </sift>
   </appender>
 
   <!-- DEBUG -->

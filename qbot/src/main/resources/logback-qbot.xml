@@ -1,0 +1,89 @@
+<configuration>
+
+  <!-- Вывод на консоль -->
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+    <encoder>
+      <pattern>[%d{HH:mm:ss.SSS}] %level [%thread] "%logger{30}" - %msg%n</pattern>
+    </encoder>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+
+    <target>System.out</target>
+  </appender>
+
+  <!-- Для отладки игры -->
+  <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE-PARTIAL-STREAM">
+    <append>true</append>
+
+    <encoder>
+      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
+    </encoder>
+
+    <file>logs/qchess-stream-part.log</file>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>logs/parts/qchess-stream-part.%i.log.gz</fileNamePattern>
+      <maxIndex>3</maxIndex>
+      <minIndex>1</minIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>15MB</maxFileSize>
+    </triggeringPolicy>
+  </appender>
+
+  <!-- Для вывода результатов игр локально -->
+  <appender class="ch.qos.logback.core.FileAppender" name="GAME-STATISTICS">
+    <append>false</append>
+
+    <encoder>
+      <pattern>[%thread] %msg%n</pattern>
+    </encoder>
+
+    <file>logs/qchess-statistics.log</file>
+  </appender>
+
+  <!-- DEBUG -->
+  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-DEBUG">
+    <append>false</append>
+
+    <encoder>
+      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
+    </encoder>
+
+    <file>logs/qchess-last-session-debug.log</file>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+  </appender>
+
+  <!-- INFO -->
+  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-INFO">
+    <append>false</append>
+
+    <encoder>
+      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
+    </encoder>
+
+    <file>logs/qchess-last-session-info.log</file>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+  </appender>
+
+  <logger level="debug" name="io.deeplay.qchess.game.Selfplay">
+    <appender-ref ref="GAME-STATISTICS"/>
+  </logger>
+
+  <logger level="debug" name="io.deeplay.qchess.qbot">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE-PARTIAL-STREAM"/>
+    <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
+    <appender-ref ref="FILE-LAST-SESSION-INFO"/>
+  </logger>
+
+</configuration>

@@ -2,6 +2,8 @@ package io.deeplay.qchess.nukebot.bot;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
+import io.deeplay.qchess.game.player.BotFactory;
+import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.PestoEvaluation;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
@@ -10,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-public class NukeBotFactory {
+public class NukeBotFactory implements BotFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(NukeBotFactory.class);
 
@@ -44,5 +46,11 @@ public class NukeBotFactory {
                 color,
                 deepSearch.maxDepth);
         return nukeBot;
+    }
+
+    @Override
+    public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
+        // todo учитывать name
+        return getNukeBot(gs, myColor);
     }
 }

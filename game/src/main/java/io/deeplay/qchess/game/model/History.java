@@ -64,14 +64,15 @@ public class History implements Iterable<BoardState> {
         recordsList = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
     }
 
-    /** Создает новую историю с ссылкой на предыдущую */
+    /** Создает новую историю со ссылкой на предыдущую */
     public History(
             final History history, final GameSettings gameSettings, final int averageMaxMoves) {
         this.gameSettings = gameSettings;
         repetitionsMap = new HashMap<>(averageMaxMoves + 2); // +2 extra moves (ну мало ли что)
         recordsList = new ArrayDeque<>(averageMaxMoves + 2);
         parentHistory = history;
-        recordsList.push(history.recordsList.peek());
+        final BoardState boardState = history.recordsList.peek();
+        recordsList.push(boardState != null ? boardState : newBoardState());
         restore();
     }
 
@@ -84,25 +85,26 @@ public class History implements Iterable<BoardState> {
         this.lastMove = lastMove;
         isWhiteMove = !isWhiteMove;
 
-        final int[] boardSnapshot = gameSettings.board.fastSnapshot();
-
         isWhiteCastlingPossibility = gameSettings.board.isCastlingPossible(Color.WHITE);
         isBlackCastlingPossibility = gameSettings.board.isCastlingPossible(Color.BLACK);
 
-        final BoardState boardState =
-                new BoardState(
-                        boardSnapshot,
-                        gameSettings.board.hashCode(),
-                        lastMove,
-                        peaceMoveCount,
-                        hasMovedBeforeLastMove,
-                        removedFigure,
-                        isWhiteMove,
-                        isWhiteCastlingPossibility,
-                        isBlackCastlingPossibility);
+        final BoardState boardState = newBoardState();
 
         recordsList.push(boardState);
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
+    }
+
+    private BoardState newBoardState() {
+        return new BoardState(
+                gameSettings.board.fastSnapshot(),
+                gameSettings.board.hashCode(),
+                lastMove,
+                peaceMoveCount,
+                hasMovedBeforeLastMove,
+                removedFigure,
+                isWhiteMove,
+                isWhiteCastlingPossibility,
+                isBlackCastlingPossibility);
     }
 
     /** Добавляет запись в историю, но не меняет цвет игрока, который будет делать следующий ход */
@@ -332,15 +334,7 @@ public class History implements Iterable<BoardState> {
     /** Отменяет последний ход в истории */
     public void undo() {
         final BoardState lastBoardState = recordsList.pop();
-        final BoardState prevLastBoardState = recordsList.peek();
-        if (prevLastBoardState == null) return;
-        hasMovedBeforeLastMove = prevLastBoardState.hasMovedBeforeLastMove;
-        removedFigure = prevLastBoardState.removedFigure;
-        lastMove = prevLastBoardState.lastMove;
-        peaceMoveCount = prevLastBoardState.peaceMoveCount;
-        isWhiteMove = prevLastBoardState.isWhiteMove;
-        isWhiteCastlingPossibility = prevLastBoardState.isWhiteCastlingPossibility;
-        isBlackCastlingPossibility = prevLastBoardState.isBlackCastlingPossibility;
+        restore();
         final Integer boardStateCount = repetitionsMap.remove(lastBoardState);
         if (boardStateCount != null && boardStateCount > 1)
             repetitionsMap.put(lastBoardState, boardStateCount - 1);
