@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.MDC;
 
 public class Tournament {
     final int numGamesWithEach;
@@ -26,11 +25,6 @@ public class Tournament {
                 final int finalJ = j;
                 executor.execute(
                         () -> {
-                            MDC.put(
-                                    "tournament",
-                                    factories[finalI].getBotName()
-                                            + "_VS_"
-                                            + factories[finalJ].getBotName());
                             try {
                                 new Arena(factories[finalI], factories[finalJ], numGamesWithEach)
                                         .battle();

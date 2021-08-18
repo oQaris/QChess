@@ -20,11 +20,6 @@
       <key>tournament</key>
     </discriminator>
 
-    <discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
-      <defaultValue>GAME</defaultValue>
-      <key>game</key>
-    </discriminator>
-
     <sift>
       <appender class="ch.qos.logback.core.FileAppender" name="FILE-${tournament}-${game}">
         <append>false</append>
@@ -33,7 +28,7 @@
           <pattern>%msg%n</pattern>
         </encoder>
 
-        <file>logs/${tournament}/${game}-qchess-statistics.log</file>
+        <file>logs/${tournament}-qchess-statistics.log</file>
       </appender>
     </sift>
   </appender>
@@ -53,7 +48,7 @@
           <pattern>%msg%n</pattern>
         </encoder>
 
-        <file>logs/${tournament}/match-results.log</file>
+        <file>logs/${tournament}-match-results.log</file>
       </appender>
     </sift>
   </appender>

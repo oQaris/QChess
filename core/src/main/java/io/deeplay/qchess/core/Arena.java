@@ -108,9 +108,13 @@ public class Arena {
             final TimeWrapper secondPlayer =
                     new TimeWrapper(secondFactory.create(gs, myColor.inverse()));
             try {
-                /*MDC.put("tournament",
-                firstFactory.getBotName() + "_VS_" + secondFactory.getBotName());*/
-                MDC.put("game", Integer.toString(curTask.incrementAndGet()));
+                MDC.put(
+                        "tournament",
+                        firstFactory.getBotName()
+                                + "_VS_"
+                                + secondFactory.getBotName()
+                                + "/"
+                                + curTask.incrementAndGet());
                 final Selfplay game = new Selfplay(gs, firstPlayer, secondPlayer);
                 game.run();
             } catch (final ChessError e) {

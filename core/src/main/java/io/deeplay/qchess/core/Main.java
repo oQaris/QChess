@@ -15,7 +15,6 @@ public class Main {
         final String logback = conf.getLogback() + ArenaSettings.DEFAULT_LOGBACK_NAME;
         System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, logback);
 
-        // todo Надо реализовать свои
         final SpecificFactory qbotFactory =
                 new SpecificFactory(new QBotFactory(), conf.getQbotName());
         final SpecificFactory lobotFactory =
