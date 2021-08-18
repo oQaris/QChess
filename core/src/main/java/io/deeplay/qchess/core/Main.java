@@ -12,7 +12,7 @@ import io.deeplay.qchess.qbot.QBotFactory;
 import java.io.IOException;
 
 public class Main {
-    public static void main(final String[] args) throws IOException, ConfigException {
+    /*public static void main(final String[] args) throws IOException, ConfigException {
         final ArenaSettings conf = new ArenaSettings();
         final String logback = conf.getLogback() + ArenaSettings.DEFAULT_LOGBACK_NAME;
         System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, logback);
@@ -36,6 +36,34 @@ public class Main {
                         nukebotFactory,
                         randombotFactory,
                         attackbotFactory);
+        try {
+            tournament.runMegaBattle();
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    public static void main(final String[] args) throws IOException, ConfigException {
+
+        final SpecificFactory qbotFactory =
+            new SpecificFactory(new QBotFactory(), "NegaTT-tt-5-Pesto");
+        final SpecificFactory lobotFactory =
+            new SpecificFactory(new LobotFactory(), "Lobot");
+        final SpecificFactory nukebotFactory =
+            new SpecificFactory(new NukeBotFactory(), "Nukebot");
+        final SpecificFactory randombotFactory =
+            new SpecificFactory(new RandomBotFactory(), "Randombot");
+        final SpecificFactory attackbotFactory =
+            new SpecificFactory(new AttackBotFactory(), "Attackbot");
+
+        final Tournament tournament =
+            new Tournament(
+                4,
+                qbotFactory,
+                lobotFactory,
+                nukebotFactory,
+                randombotFactory,
+                attackbotFactory);
         try {
             tournament.runMegaBattle();
         } catch (final InterruptedException e) {

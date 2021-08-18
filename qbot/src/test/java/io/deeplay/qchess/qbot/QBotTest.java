@@ -46,6 +46,9 @@ class QBotTest {
     }
 
     @Test
+    void testTime() throws ChessError {}
+
+    @Test
     void testFirstStep() throws ChessError {
         final GameSettings game = new GameSettings(BoardFilling.STANDARD);
         final QNegamaxTTBot bot1 = new QNegamaxTTBot(game, Color.WHITE, 3);

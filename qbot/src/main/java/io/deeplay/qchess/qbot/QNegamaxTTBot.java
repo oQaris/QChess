@@ -38,6 +38,7 @@ public class QNegamaxTTBot extends QBot {
             final boolean ttEnable) {
         super(roomSettings, color, searchDepth, strategy, "NegaMaxBot");
         this.ttEnable = ttEnable;
+        history.setMinBoardStateToSave(MAX_DEPTH);
     }
 
     public QNegamaxTTBot(
@@ -62,8 +63,22 @@ public class QNegamaxTTBot extends QBot {
      *
      * @param moves Исходный список ходов.
      */
-    private void orderMoves(final List<Move> moves, final GameSettings gs) {
-        moves.sort(order);
+    private void orderMoves(final List<Move> moves, final GameSettings gs, final int coef) {
+        moves.sort(
+                Comparator.comparingInt(
+                        m -> {
+                            return m.getMoveType().importantLevel;
+                            /*int res = 0;
+                            try {
+                                gs.moveSystem.move(m);
+                                res = coef * strategy.evaluateBoard(gs.board);
+                                gs.moveSystem.undoMove();
+                                return res;
+                            } catch (final ChessError e) {
+                                e.printStackTrace();
+                            }
+                            return res;*/
+                        }));
     }
 
     public int getCountFindingTT() {
@@ -75,7 +90,7 @@ public class QNegamaxTTBot extends QBot {
         final List<Move> topMoves = new ArrayList<>();
         int maxGrade = Integer.MIN_VALUE;
         final List<Move> allMoves = ms.getAllPreparedMoves(color);
-        orderMoves(allMoves, roomSettings);
+        orderMoves(allMoves, roomSettings, color == Color.WHITE ? 1 : -1);
         for (final Move move : allMoves) {
             final int curGrade = root(move);
             if (curGrade > maxGrade) {
@@ -88,6 +103,74 @@ public class QNegamaxTTBot extends QBot {
             }
         }
         return topMoves;
+    }
+
+    @Override
+    public Move getNextMove() throws ChessError {
+        final MoveWrapper bestMove = new MoveWrapper();
+        negamax(new GameSettings(roomSettings, MAX_DEPTH), depth, Integer.MIN_VALUE, Strategy.MAX_EST, color, bestMove);
+        return bestMove.move;
+    }
+
+    private int negamax(
+            final GameSettings gs,
+            final int curDepth,
+            int alpha,
+            final int beta,
+            final Color curColor,
+            final MoveWrapper bestMove)
+            throws ChessError {
+        /*final int alphaOrig = alpha;
+        final BoardState boardState = gs.history.getLastBoardState();
+        final TTEntry entry = table.find(boardState);*/
+
+        /*// todo сделать что то с entry.depth == curDepth
+        if (ttEnable && entry != null && entry.depth == curDepth && curDepth != depth) {
+            countFindingTT++;
+            if (entry.flag == EXACT) return entry.value;
+            else if (entry.flag == LOWERBOUND) alpha = max(alpha, entry.value);
+            else if (entry.flag == UPPERBOUND) beta = min(beta, entry.value);
+            if (alpha >= beta) return entry.value;
+        }*/
+
+        final int coef = curColor == Color.WHITE ? 1 : -1;
+        if (curDepth == 0) {
+            return coef * strategy.evaluateBoard(gs.board);
+        }
+
+        final List<Move> allMoves = gs.moveSystem.getAllPreparedMoves(curColor);
+        // Если терминальный узел
+        final EndGameType gameResult = gs.endGameDetector.updateEndGameStatus(allMoves, curColor);
+        if (gameResult != EndGameType.NOTHING) {
+            return coef * strategy.gradeIfTerminalNode(gameResult, curDepth);
+        }
+
+        orderMoves(allMoves, gs, coef);
+        int value = Integer.MIN_VALUE;
+
+        for (final Move move : allMoves) {
+            gs.moveSystem.move(move);
+            value =
+                    max(
+                            value,
+                            -negamax(
+                                    gs, curDepth - 1, -beta, -alpha, curColor.inverse(), bestMove));
+            gs.moveSystem.undoMove();
+            if (value > alpha) {
+                alpha = value;
+                if (curDepth == depth) bestMove.move = move;
+            }
+            if (alpha >= beta) break;
+        }
+
+        /*final Flag flag;
+        if (value <= alphaOrig) flag = UPPERBOUND;
+        else if (value >= beta) flag = LOWERBOUND;
+        else flag = EXACT;
+
+        table.store(new TTEntry(value, curDepth, flag), boardState);*/
+
+        return value;
     }
 
     /** Точка входа в негамакс после выполнения виртуального хода */
@@ -138,7 +221,7 @@ public class QNegamaxTTBot extends QBot {
             return coef * strategy.gradeIfTerminalNode(gameResult, curDepth);
         }
 
-        orderMoves(allMoves, gs);
+        orderMoves(allMoves, gs, coef);
         int value = Integer.MIN_VALUE;
 
         for (final Move move : allMoves) {
@@ -157,6 +240,10 @@ public class QNegamaxTTBot extends QBot {
         table.store(new TTEntry(value, curDepth, flag), boardState);
 
         return value;
+    }
+
+    static class MoveWrapper {
+        public Move move;
     }
 
     public static class Builder extends QBot.Builder {
