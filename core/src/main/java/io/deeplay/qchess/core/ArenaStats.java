@@ -11,6 +11,13 @@ import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.STALEMAT
 import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +109,7 @@ public class ArenaStats {
      * Вызывается обычно в конце всех игр, но можно вызвать и в процессе (запишет в логи результаты
      * на текущий момент)
      */
-    synchronized void showResults() {
+    synchronized void showResults(final String outputFile) {
         final long timeGameInSec = (System.currentTimeMillis() - startTime) / 1000;
         final int drawWithPMC =
                 gameResultsBlack.get(DRAW_WITH_PEACE_MOVE_COUNT)
@@ -115,44 +122,68 @@ public class ArenaStats {
                         + gameResultsWhite.get(DRAW_WITH_NOT_ENOUGH_MATERIAL);
 
         final int passedGame = countGame.get();
-        logger.warn("{}<---------------------------------------->", System.lineSeparator());
-        logger.warn(
-                "Время на {} игр: {} min {} sec",
-                passedGame,
-                timeGameInSec / 60,
-                timeGameInSec % 60);
-        logger.warn(
-                "Среднее время игры: {} min {} sec",
-                (timeGameInSec / passedGame) / 60,
-                (timeGameInSec / passedGame) % 60);
-        logger.warn("Всего ничьих: {}", drawWithPMC + drawWithRep + drawWithNEM);
-        logger.warn("\tПравило 50-ти ходов:      {}", drawWithPMC);
-        logger.warn("\tС повторением позиций:    {}", drawWithRep);
-        logger.warn("\tПри недостатке материала: {}", drawWithNEM);
-        logger.warn(
-                "\tПатов первому игроку:     {}",
-                gameResultsBlack.get(STALEMATE_TO_BLACK)
-                        + gameResultsWhite.get(STALEMATE_TO_WHITE));
-        logger.warn(
-                "\tПатов второму игроку:     {}",
-                gameResultsBlack.get(STALEMATE_TO_WHITE)
-                        + gameResultsWhite.get(STALEMATE_TO_BLACK));
-        logger.warn(
-                "Матов первому игроку: {}",
-                gameResultsBlack.get(CHECKMATE_TO_BLACK)
-                        + gameResultsWhite.get(CHECKMATE_TO_WHITE));
-        logger.warn(
-                "Матов второму игроку: {}",
-                gameResultsBlack.get(CHECKMATE_TO_WHITE)
-                        + gameResultsWhite.get(CHECKMATE_TO_BLACK));
-        logger.warn("");
-        logger.warn(
-                "Средне-медианное время хода первого игрока:\t{}",
-                meanMedianFirst.get() / passedGame);
-        logger.warn("Максимальное время хода первого игрока:\t{}", maxFirst.get());
-        logger.warn(
-                "Средне-медианное время хода второго игрока:\t{}",
-                meanMedianSecond.get() / passedGame);
-        logger.warn("Максимальное время хода второго игрока:\t{}", maxSecond.get());
+        // logger.warn("{}<---------------------------------------->", System.lineSeparator());
+        try (final BufferedWriter writer =
+                Files.newBufferedWriter(
+                        Path.of("results/" + outputFile + ".temp"),
+                        StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING)) {
+
+            writer.append(
+                    String.format(
+                            "Время на %s игр: %s min %s sec\n",
+                            passedGame, timeGameInSec / 60, timeGameInSec % 60));
+            writer.append(
+                    String.format(
+                            "Среднее время игры: %s min %s sec\n",
+                            (timeGameInSec / passedGame) / 60, (timeGameInSec / passedGame) % 60));
+            writer.append(
+                    String.format("Всего ничьих: %s\n", drawWithPMC + drawWithRep + drawWithNEM));
+            writer.append(String.format("\tПравило 50-ти ходов:      %s\n", drawWithPMC));
+            writer.append(String.format("\tС повторением позиций:    %s\n", drawWithRep));
+            writer.append(String.format("\tПри недостатке материала: %s\n", drawWithNEM));
+            writer.append(
+                    String.format(
+                            "\tПатов первому игроку:     %s\n",
+                            gameResultsBlack.get(STALEMATE_TO_BLACK)
+                                    + gameResultsWhite.get(STALEMATE_TO_WHITE)));
+            writer.append(
+                    String.format(
+                            "\tПатов второму игроку:     %s\n",
+                            gameResultsBlack.get(STALEMATE_TO_WHITE)
+                                    + gameResultsWhite.get(STALEMATE_TO_BLACK)));
+            writer.append(
+                    String.format(
+                            "Матов первому игроку: %s\n",
+                            gameResultsBlack.get(CHECKMATE_TO_BLACK)
+                                    + gameResultsWhite.get(CHECKMATE_TO_WHITE)));
+            writer.append(
+                    String.format(
+                            "Матов второму игроку: %s\n",
+                            gameResultsBlack.get(CHECKMATE_TO_WHITE)
+                                    + gameResultsWhite.get(CHECKMATE_TO_BLACK)));
+            writer.append(
+                    String.format(
+                            "Средне-медианное время хода первого игрока:\t%s\n",
+                            meanMedianFirst.get() / passedGame));
+            writer.append(
+                    String.format("Максимальное время хода первого игрока:\t%s\n", maxFirst.get()));
+            writer.append(
+                    String.format(
+                            "Средне-медианное время хода второго игрока:\t%s\n",
+                            meanMedianSecond.get() / passedGame));
+            writer.append(
+                    String.format(
+                            "Максимальное время хода второго игрока:\t%s\n", maxSecond.get()));
+
+            Files.move(
+                    Path.of("results/" + outputFile + ".temp"),
+                    Path.of("results/" + outputFile),
+                    StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.ATOMIC_MOVE);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
     }
 }

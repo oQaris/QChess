@@ -27,7 +27,7 @@ public class Arena {
     private final SpecificFactory firstFactory;
     private final SpecificFactory secondFactory;
     private final ArenaStats stats = new ArenaStats(logger, optionalLogs);
-    private final static RatingELO rating = new RatingELO();
+    private static final RatingELO rating = new RatingELO();
 
     static {
         try {
@@ -78,9 +78,9 @@ public class Arena {
         // executor.shutdown();
         // executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 
-        stats.showResults();
+        stats.showResults(firstFactory.getBotName() + "_VS_" + secondFactory.getBotName());
         logger.info("{}", rating);
-        //rating.saveELO();
+        // rating.saveELO();
     }
 
     private static class Game implements Runnable {
@@ -136,7 +136,7 @@ public class Arena {
 
             final double firstPlayerFactor = getFactor(firstPlayer.getColor(), gameResult);
             rating.updateELO(firstPlayer.getName(), secondPlayer.getName(), firstPlayerFactor);
-            stats.showResults();
+            stats.showResults(firstFactory.getBotName() + "_VS_" + secondFactory.getBotName());
             try {
                 rating.saveELO();
             } catch (final IOException e) {
