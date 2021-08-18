@@ -1,7 +1,5 @@
 package io.deeplay.qchess.game.model.figures;
 
-import io.deeplay.qchess.game.model.Color;
-
 public enum FigureType {
     PAWN(0),
     KNIGHT(1),
@@ -21,12 +19,8 @@ public enum FigureType {
         this.type = type;
     }
 
-    /** Фигуры будут записываться в доску этим значением */
-    public int getPestoValue(final Color color) {
-        return 2 * type + (color == Color.WHITE ? 0 : 1);
-    }
-
-    public static int getEmptyPestoValue() {
+    /** @return id тип пустой клетки на доске (совместим с PeSTO) */
+    public static int getEmptyValue() {
         return 12;
     }
 }

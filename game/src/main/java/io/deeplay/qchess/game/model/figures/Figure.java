@@ -122,8 +122,9 @@ public abstract class Figure {
 
     public abstract boolean isAttackedCell(GameSettings settings, Cell cell);
 
-    public int getPestoValue() {
-        return figureType.getPestoValue(color);
+    /** @return id типа фигуры (совместим с PeSTO) */
+    public int getValue() {
+        return 2 * figureType.type + (color == Color.WHITE ? 0 : 1);
     }
 
     @Override
