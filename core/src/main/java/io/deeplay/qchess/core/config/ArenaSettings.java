@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class ArenaSettings {
     public static final String JAR_CONFIG_PATH = "/arena_configuration.conf";
     public static final String DEFAULT_CONFIG_PATH = "./arena_configuration.conf";
-    public static final String DEFAULT_LOGBACK_NAME = "logback-arena.xml";
+    public static final String DEFAULT_LOGBACK_NAME = "logback.xml";
 
     private static final Logger logger = LoggerFactory.getLogger(ArenaSettings.class);
 
