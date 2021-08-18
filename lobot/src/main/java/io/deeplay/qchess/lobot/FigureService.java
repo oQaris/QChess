@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FigureService {
+
     private static final Map<FigureType, Character> charFigureMap = new HashMap<>();
     private static final Map<Character, Integer> intCharMap = new HashMap<>();
     private static final Map<FigureType, Integer> figureValMap = new HashMap<>();

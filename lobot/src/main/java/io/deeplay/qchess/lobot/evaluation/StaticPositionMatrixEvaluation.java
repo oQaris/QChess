@@ -1,5 +1,6 @@
-package io.deeplay.qchess.lobot.strategy;
+package io.deeplay.qchess.lobot.evaluation;
 
+import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.figures.Figure;
@@ -8,7 +9,8 @@ import io.deeplay.qchess.lobot.FigureService;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StaticPositionMatrixEvaluateStrategy implements EvaluateStrategy {
+public class StaticPositionMatrixEvaluation implements Evaluation {
+
     private final int[][] pawnEvaluate = {
         {0, 0, 0, 0, 0, 0, 0, 0},
         {10, 10, 10, 10, 10, 10, 10, 10},
@@ -77,7 +79,7 @@ public class StaticPositionMatrixEvaluateStrategy implements EvaluateStrategy {
 
     private final Map<FigureType, int[][]> figureFieldMap = new HashMap<>();
 
-    public StaticPositionMatrixEvaluateStrategy() {
+    public StaticPositionMatrixEvaluation() {
         figureFieldMap.put(FigureType.PAWN, pawnEvaluate);
         figureFieldMap.put(FigureType.ROOK, rookEvaluate);
         figureFieldMap.put(FigureType.KNIGHT, knightEvaluate);
@@ -87,9 +89,9 @@ public class StaticPositionMatrixEvaluateStrategy implements EvaluateStrategy {
     }
 
     @Override
-    public int evaluateBoard(final Board board, final Color color) {
+    public int evaluateBoard(final GameSettings gameSettings, final Color color) {
         int result = 0;
-        for (final Figure figure : board.getAllFigures()) {
+        for (final Figure figure : gameSettings.board.getAllFigures()) {
             final int coef = (figure.getColor() == color) ? 1 : -1;
             final int inverse = figure.getColor() == Color.WHITE ? 1 : -1;
             final int val = FigureService.convertFigureToVal(figure);
@@ -101,8 +103,7 @@ public class StaticPositionMatrixEvaluateStrategy implements EvaluateStrategy {
                     (figure.getCurrentPosition().column
                                     - ((1 - inverse) / 2) * (Board.STD_BOARD_SIZE - 1))
                             * inverse;
-            final int cur =
-                    (coef * (val + figureFieldMap.get(figure.figureType)[rowCoord][columnCoord]));
+            final int cur = (coef * (val + figureFieldMap.get(figure.figureType)[rowCoord][columnCoord]));
             result += cur;
         }
         return result;

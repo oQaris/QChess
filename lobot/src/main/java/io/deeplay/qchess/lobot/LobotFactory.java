@@ -9,7 +9,7 @@ public class LobotFactory implements BotFactory {
 
     @Override
     public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
-        // todo учитывать name
+        // todo реализовать
         return new LoBot(gs, myColor);
     }
 }
