@@ -17,6 +17,8 @@ import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.slf4j.Logger;
@@ -87,7 +89,7 @@ public class QNegamaxTTBot extends QBot {
 
     @Override
     public List<Move> getTopMoves() throws ChessError {
-        final List<Move> topMoves = new ArrayList<>();
+        /*final List<Move> topMoves = new ArrayList<>();
         int maxGrade = Integer.MIN_VALUE;
         final List<Move> allMoves = ms.getAllPreparedMoves(color);
         orderMoves(allMoves, roomSettings, color == Color.WHITE ? 1 : -1);
@@ -102,14 +104,10 @@ public class QNegamaxTTBot extends QBot {
                 topMoves.add(move);
             }
         }
-        return topMoves;
-    }
-
-    @Override
-    public Move getNextMove() throws ChessError {
+        return topMoves;*/
         final MoveWrapper bestMove = new MoveWrapper();
-        negamax(new GameSettings(roomSettings, MAX_DEPTH), depth, Integer.MIN_VALUE, Strategy.MAX_EST, color, bestMove);
-        return bestMove.move;
+        negamax(new GameSettings(roomSettings, MAX_DEPTH), depth+1, Integer.MIN_VALUE, Strategy.MAX_EST, color, bestMove);
+        return Collections.singletonList(bestMove.move);
     }
 
     private int negamax(
@@ -125,7 +123,7 @@ public class QNegamaxTTBot extends QBot {
         final TTEntry entry = table.find(boardState);*/
 
         /*// todo сделать что то с entry.depth == curDepth
-        if (ttEnable && entry != null && entry.depth == curDepth && curDepth != depth) {
+        if (ttEnable && entry != null && entry.depth == curDepth && curDepth != depth+1) {
             countFindingTT++;
             if (entry.flag == EXACT) return entry.value;
             else if (entry.flag == LOWERBOUND) alpha = max(alpha, entry.value);
@@ -158,7 +156,7 @@ public class QNegamaxTTBot extends QBot {
             gs.moveSystem.undoMove();
             if (value > alpha) {
                 alpha = value;
-                if (curDepth == depth) bestMove.move = move;
+                if (curDepth == depth+1) bestMove.move = move;
             }
             if (alpha >= beta) break;
         }
