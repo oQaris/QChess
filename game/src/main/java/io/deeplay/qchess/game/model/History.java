@@ -220,7 +220,7 @@ public class History implements Iterable<BoardState> {
         final StringBuilder rec = new StringBuilder(70);
 
         rec.append(getConvertingFigurePosition());
-        rec.append(' ').append(isWhiteMove ? 'w' : 'b');
+        rec.append(' ').append(isWhiteMove ? 'b' : 'w');
 
         final String castlingPossibility = getCastlingPossibility();
         if (!"".equals(castlingPossibility)) rec.append(' ').append(castlingPossibility);

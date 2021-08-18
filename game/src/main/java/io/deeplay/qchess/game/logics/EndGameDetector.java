@@ -236,7 +236,7 @@ public class EndGameDetector {
     public boolean isCheck(final Color color) {
         final Cell kingCell = gs.board.findKingCell(color);
         if (kingCell == null) return false;
-        return Board.isAttackedCell(gs, kingCell, color.inverse());
+        return Board.isAttackedCell(gs.board, kingCell, color.inverse());
     }
 
     public enum EndGameType {

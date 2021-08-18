@@ -35,7 +35,7 @@ public class Board {
         boardSize = size;
         cells = new Figure[boardSize][boardSize];
         cellsType = new int[boardSize * boardSize];
-        for (int i = 0; i < 64; ++i) cellsType[i] = FigureType.getEmptyValue();
+        for (int i = 0; i < 64; ++i) cellsType[i] = FigureType.EMPTY_TYPE;
         try {
             fill(fillingType);
         } catch (final ChessException e) {
@@ -104,10 +104,9 @@ public class Board {
     }
 
     /** @return true, если клетка cell атакуется цветом color */
-    public static boolean isAttackedCell(
-            final GameSettings settings, final Cell cell, final Color color) {
-        for (final Figure f : settings.board.getFigures(color))
-            if (f.isAttackedCell(settings, cell)) return true;
+    public static boolean isAttackedCell(final Board board, final Cell cell, final Color color) {
+        for (final Figure f : board.getFigures(color))
+            if (f.isAttackedCell(board, cell)) return true;
         return false;
     }
 
@@ -491,7 +490,7 @@ public class Board {
         cells[cell.row][cell.column] = null;
 
         final int i = cell.row * 8 + cell.column;
-        final int newValue = FigureType.getEmptyValue();
+        final int newValue = FigureType.EMPTY_TYPE;
         cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
         cellsType[i] = newValue;
 
@@ -508,7 +507,7 @@ public class Board {
         cells[cell.row][cell.column] = null;
 
         final int i = cell.row * 8 + cell.column;
-        final int newValue = FigureType.getEmptyValue();
+        final int newValue = FigureType.EMPTY_TYPE;
         cellsTypeHash += GameMath.hash64Coeff[i] * (newValue - cellsType[i]);
         cellsType[i] = newValue;
 

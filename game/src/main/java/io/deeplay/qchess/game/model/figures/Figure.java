@@ -137,8 +137,8 @@ public abstract class Figure {
         return result;
     }
 
-    /** @return true, если клетка cell на доске settings.board атакуется этой фигурой */
-    public abstract boolean isAttackedCell(GameSettings settings, Cell cell);
+    /** @return true, если клетка cell на доске board атакуется этой фигурой */
+    public abstract boolean isAttackedCell(Board board, Cell cell);
 
     /** @return id типа фигуры (совместим с PeSTO) */
     public int getValue() {
