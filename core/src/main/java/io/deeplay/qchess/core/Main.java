@@ -3,6 +3,7 @@ package io.deeplay.qchess.core;
 import ch.qos.logback.classic.util.ContextInitializer;
 import io.deeplay.qchess.core.config.ArenaSettings;
 import io.deeplay.qchess.core.config.ConfigException;
+import io.deeplay.qchess.game.player.AttackBot.AttackBotFactory;
 import io.deeplay.qchess.game.player.BotFactory.SpecificFactory;
 import io.deeplay.qchess.lobot.LobotFactory;
 import io.deeplay.qchess.nukebot.bot.NukeBotFactory;
@@ -21,9 +22,16 @@ public class Main {
                 new SpecificFactory(new LobotFactory(), conf.getLobotName());
         final SpecificFactory nukebotFactory =
                 new SpecificFactory(new NukeBotFactory(), conf.getNukebotName());
+        final SpecificFactory attackbotFactory =
+                new SpecificFactory(new AttackBotFactory(), conf.getNukebotName());
 
         final Tournament tournament =
-                new Tournament(conf.getNumberGame(), qbotFactory, /*lobotFactory,*/ nukebotFactory);
+                new Tournament(
+                        conf.getNumberGame(),
+                        qbotFactory,
+                        lobotFactory,
+                        nukebotFactory,
+                        attackbotFactory);
         try {
             tournament.runMegaBattle();
         } catch (final InterruptedException e) {

@@ -32,7 +32,7 @@ public class LoBot extends RemotePlayer {
         evaluation = strategy.getEvaluation();
         depth = strategy.getDepth();
         algorithm = getAlgorithm(strategy.getAlgorithm());
-        roomSettings.history.setMinBoardStateToSave(100);
+        history.setMinBoardStateToSave(100);
         onMonteCarlo = strategy.getOnMonteCarlo();
     }
 

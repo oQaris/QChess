@@ -12,15 +12,14 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +27,8 @@ public class QNegamaxTTBot extends QBot {
     private static final Logger logger = LoggerFactory.getLogger(QNegamaxTTBot.class);
     private final TranspositionTable table = new TranspositionTable();
     private final boolean ttEnable;
+    private final Comparator<Move> order =
+            Comparator.comparing(m -> m.getMoveType().importantLevel);
     private int countFindingTT = 0;
 
     public QNegamaxTTBot(
@@ -62,8 +63,8 @@ public class QNegamaxTTBot extends QBot {
      *
      * @param moves Исходный список ходов.
      */
-    private static void orderMoves(final List<Move> moves) {
-        moves.sort((m1, m2) -> m2.getMoveType().importantLevel - m1.getMoveType().importantLevel);
+    private void orderMoves(final List<Move> moves, final GameSettings gs) {
+        moves.sort(order);
     }
 
     public int getCountFindingTT() {
@@ -71,20 +72,11 @@ public class QNegamaxTTBot extends QBot {
     }
 
     @Override
-    public Move getNextMove() throws ChessError {
-        final List<Move> topMoves = getTopMoves();
-        final Move move = topMoves.get(new Random().nextInt(topMoves.size()));
-        if (board.getFigureUgly(move.getTo()) != null
-                || board.getFigureUgly(move.getFrom()).figureType == FigureType.PAWN) table.clear();
-        return move;
-    }
-
-    @Override
     public List<Move> getTopMoves() throws ChessError {
         final List<Move> topMoves = new ArrayList<>();
         int maxGrade = Integer.MIN_VALUE;
         final List<Move> allMoves = ms.getAllPreparedMoves(color);
-        QNegamaxTTBot.orderMoves(allMoves);
+        orderMoves(allMoves, roomSettings);
         for (final Move move : allMoves) {
             final int curGrade = root(move);
             if (curGrade > maxGrade) {
@@ -147,7 +139,7 @@ public class QNegamaxTTBot extends QBot {
             return coef * strategy.gradeIfTerminalNode(gameResult, curDepth);
         }
 
-        QNegamaxTTBot.orderMoves(allMoves);
+        orderMoves(allMoves, gs);
         int value = Integer.MIN_VALUE;
 
         for (final Move move : allMoves) {
