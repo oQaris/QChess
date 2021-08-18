@@ -1,8 +1,7 @@
-package io.deeplay.qchess.core;
+package io.deeplay.qchess.game.player;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.game.player.RemotePlayer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;

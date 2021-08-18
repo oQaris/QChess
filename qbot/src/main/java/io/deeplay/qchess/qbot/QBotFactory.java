@@ -13,6 +13,7 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.reflections8.Reflections;
 
 public class QBotFactory implements BotFactory {
+    public static final String SEPARATOR = "-";
 
     private <T> Class<? extends T> getSubClassWithMinLD(
             final Class<T> superClass, final String name) {
@@ -23,40 +24,30 @@ public class QBotFactory implements BotFactory {
                                 Comparator.comparingInt(
                                         cls ->
                                                 distance.apply(
-                                                        cls.getSimpleName()
-                                                                .toLowerCase(Locale.ROOT),
-                                                        name)))
-                        .get();
+                                                        normalize(cls.getSimpleName()), name)))
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "У класса "
+                                                        + superClass.getName()
+                                                        + " отсутствуют наследники"));
     }
 
     @Override
     public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
-        final String[] tokens = name.split("-");
+        final String[] tokens = name.split(SEPARATOR);
         if (tokens.length == 0)
             throw new IllegalArgumentException("Должен быть указан хотя бы тип бота");
-        final String type = tokens[0].toLowerCase(Locale.ROOT);
 
-        final QBot.Builder builder;
-        try {
-            builder =
-                    (QBot.Builder)
-                            Arrays.stream(getSubClassWithMinLD(QBot.class, type).getClasses())
-                                    .filter(bld -> bld.getSuperclass() == QBot.Builder.class)
-                                    .findFirst()
-                                    .get()
-                                    .getConstructor(GameSettings.class, Color.class)
-                                    .newInstance(gs, myColor);
-        } catch (final InstantiationException
-                | NoSuchMethodException
-                | InvocationTargetException
-                | IllegalAccessException e) {
-            throw new IllegalArgumentException(
-                    "В классе-наследнике должен быть реализован QBot.Builder");
-        }
+        final String botType = normalize(tokens[0]);
+        final QBot.Builder builder = parseAndCreateBuilder(botType, gs, myColor);
 
         for (final String str : tokens) {
-            final String token = str.strip().toLowerCase(Locale.ROOT);
+            final String token = normalize(str);
+
+            // Число устанавливает глубину
             if (isNumber(token)) builder.setDepth(Integer.parseInt(token));
+            // "tt" включает таблицы транспонирования
             else if (token.equals("tt")) builder.withTT();
             else {
                 try {
@@ -69,17 +60,36 @@ public class QBotFactory implements BotFactory {
                         | IllegalAccessException
                         | InvocationTargetException
                         | NoSuchMethodException e) {
-                    throw new IllegalArgumentException("Ошибка при создании бота");
+                    throw new IllegalArgumentException("Ошибка при установке стратегии");
                 }
             }
         }
-        final QBot bot = builder.build();
-        /*System.out.println(bot.getClass());
-        System.out.println(bot.depth);
-        System.out.println(bot.strategy);
-        System.out.println(
-                bot instanceof QNegamaxTTBot ? ((QNegamaxTTBot) bot).ttEnable : "not_supported");*/
-        return bot;
+        return builder.build();
+    }
+
+    private QBot.Builder parseAndCreateBuilder(
+            final String botType, final GameSettings gs, final Color myColor) {
+        try {
+            return (QBot.Builder)
+                    Arrays.stream(getSubClassWithMinLD(QBot.class, botType).getClasses())
+                            .filter(bld -> bld.getSuperclass() == QBot.Builder.class)
+                            .findFirst()
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalArgumentException(
+                                                    "В классе-наследнике должен быть реализован QBot.Builder"))
+                            .getConstructor(GameSettings.class, Color.class)
+                            .newInstance(gs, myColor);
+        } catch (final InstantiationException
+                | NoSuchMethodException
+                | InvocationTargetException
+                | IllegalAccessException e) {
+            throw new IllegalArgumentException("Ошибка при создании бота");
+        }
+    }
+
+    private String normalize(final String origin) {
+        return origin.strip().toLowerCase(Locale.ROOT);
     }
 
     private boolean isNumber(final String str) {

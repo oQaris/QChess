@@ -11,6 +11,7 @@ import static io.deeplay.qchess.game.logics.EndGameDetector.EndGameType.STALEMAT
 import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.game.player.TimeWrapper;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

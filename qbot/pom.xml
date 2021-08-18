@@ -36,13 +36,13 @@
     </dependency>
     <!-- Для фабрики бота -->
     <dependency>
-      <groupId>net.oneandone.reflections8</groupId>
       <artifactId>reflections8</artifactId>
+      <groupId>net.oneandone.reflections8</groupId>
       <version>0.11.5</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
+      <groupId>org.apache.commons</groupId>
       <version>1.9</version>
     </dependency>
 

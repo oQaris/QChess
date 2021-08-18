@@ -15,7 +15,6 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
-import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,8 +24,8 @@ import org.slf4j.LoggerFactory;
 
 public class QNegamaxTTBot extends QBot {
     private static final Logger logger = LoggerFactory.getLogger(QNegamaxTTBot.class);
-    private final TranspositionTable table = new TranspositionTable();
     public final boolean ttEnable;
+    private final TranspositionTable table = new TranspositionTable();
     private final Comparator<Move> order =
             Comparator.comparing(m -> m.getMoveType().importantLevel);
     private int countFindingTT = 0;

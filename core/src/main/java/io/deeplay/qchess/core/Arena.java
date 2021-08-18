@@ -8,6 +8,7 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.BotFactory.SpecificFactory;
 import io.deeplay.qchess.game.player.RemotePlayer;
+import io.deeplay.qchess.game.player.TimeWrapper;
 import io.deeplay.qchess.qbot.QNegamaxTTBot;
 import java.io.IOException;
 import java.util.Map;
@@ -23,10 +24,6 @@ public class Arena {
             Map.of(
                     "NegaMaxBot",
                     bot -> "Обращений к ТТ: " + ((QNegamaxTTBot) bot).getCountFindingTT());
-    private final int countGame;
-    private final SpecificFactory firstFactory;
-    private final SpecificFactory secondFactory;
-    private final ArenaStats stats = new ArenaStats(logger, optionalLogs);
     private static final RatingELO rating = new RatingELO();
 
     static {
@@ -36,6 +33,11 @@ public class Arena {
             e.printStackTrace();
         }
     }
+
+    private final int countGame;
+    private final SpecificFactory firstFactory;
+    private final SpecificFactory secondFactory;
+    private final ArenaStats stats = new ArenaStats(logger, optionalLogs);
 
     public Arena(
             final SpecificFactory firstFactory,
