@@ -1,5 +1,6 @@
 package io.deeplay.qchess.core;
 
+import ch.qos.logback.classic.util.ContextInitializer;
 import io.deeplay.qchess.core.config.ArenaSettings;
 import io.deeplay.qchess.core.config.ConfigException;
 import io.deeplay.qchess.game.player.BotFactory.SpecificFactory;
@@ -11,7 +12,8 @@ import java.io.IOException;
 public class Main {
     public static void main(final String[] args) throws IOException, ConfigException {
         final ArenaSettings conf = new ArenaSettings();
-        // System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, conf.getLogback());
+        final String logback = conf.getLogback() + ArenaSettings.DEFAULT_LOGBACK_NAME;
+        System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, logback);
 
         // todo Надо реализовать свои
         final SpecificFactory qbotFactory =

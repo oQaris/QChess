@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class ArenaSettings {
     public static final String JAR_CONFIG_PATH = "/arena_configuration.conf";
     public static final String DEFAULT_CONFIG_PATH = "./arena_configuration.conf";
-    public static final String DEFAULT_LOGBACK_NAME = "logback.xml";
+    public static final String DEFAULT_LOGBACK_NAME = "logback-arena.xml";
 
     private static final Logger logger = LoggerFactory.getLogger(ArenaSettings.class);
 
@@ -47,8 +47,7 @@ public class ArenaSettings {
             final Properties property = new Properties();
 
             property.load(config);
-            final String logStr = property.getProperty("arena.logback");
-            // logback = ConfigService.validatePath(logStr != null ? logStr : DEFAULT_LOGBACK_NAME);
+            logback = ConfigService.validatePath(property.getProperty("arena.logback"));
             numberGame = ConfigService.validateNumberGame(property.getProperty("arena.numberGame"));
             qbotName = property.getProperty("arena.qbot");
             lobotName = property.getProperty("arena.lobot");
