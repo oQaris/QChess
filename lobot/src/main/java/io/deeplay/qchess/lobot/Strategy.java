@@ -16,20 +16,18 @@ public class Strategy {
     private final TraversalAlgorithm algorithm;
     private final int depth;
     private final boolean onMonteCarlo;
-    private final int clusterEpsilon;
 
     public Strategy() {
-        this(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 2, false, 0);
+        this(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 2, false);
     }
 
     public Strategy(final Evaluation evaluation, final TraversalAlgorithm algorithm,
         final int depth,
-        final boolean onMonteCarlo, final int clusterEpsilon) {
+        final boolean onMonteCarlo) {
         this.evaluation = evaluation;
         this.algorithm = algorithm;
         this.depth = depth;
         this.onMonteCarlo = onMonteCarlo;
-        this.clusterEpsilon = clusterEpsilon;
     }
 
     public static int getTerminalEvaluation(final Color color, final EndGameType endGameType) {
@@ -118,9 +116,5 @@ public class Strategy {
 
     public boolean getOnMonteCarlo() {
         return onMonteCarlo;
-    }
-
-    public int getClusterEpsilon() {
-        return clusterEpsilon;
     }
 }

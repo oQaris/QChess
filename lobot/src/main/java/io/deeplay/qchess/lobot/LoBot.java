@@ -22,7 +22,6 @@ public class LoBot extends RemotePlayer {
     private final int depth;
     private final ChessMoveFunc<Integer> algorithm;
     private final boolean onMonteCarlo;
-    private final int clusterEpsilon;
 
     public LoBot(final GameSettings roomSettings, final Color color) {
         this(roomSettings, color, new Strategy());
@@ -35,7 +34,6 @@ public class LoBot extends RemotePlayer {
         algorithm = getAlgorithm(strategy.getAlgorithm());
         roomSettings.history.setMinBoardStateToSave(100);
         onMonteCarlo = strategy.getOnMonteCarlo();
-        clusterEpsilon = strategy.getClusterEpsilon();
     }
 
     private ChessMoveFunc<Integer> getAlgorithm(final TraversalAlgorithm traversal) {

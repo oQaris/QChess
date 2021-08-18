@@ -1,5 +1,6 @@
 package io.deeplay.qchess.lobot;
 
+import io.deeplay.qchess.core.TimeWrapper;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -30,10 +31,10 @@ public class LoBotTest {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.NEGASCOUT, 2,
-                    false, 0));
+                    false));
             final Player secondPlayer = new LoBot(roomSettings, Color.BLACK,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 2,
-                    false, 0));
+                    false));
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
                 game.run();
@@ -60,12 +61,12 @@ public class LoBotTest {
 
         for (int i = 1; i <= GAME_COUNT; i++) {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
-            final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
+            final TimeWrapper firstPlayer = new TimeWrapper(new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 4,
-                    true, 0));
-            final Player secondPlayer = new LoBot(roomSettings, Color.BLACK,
+                    true)));
+            final TimeWrapper secondPlayer = new TimeWrapper(new LoBot(roomSettings, Color.BLACK,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 4,
-                    false, 0));
+                    false)));
 
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -80,6 +81,8 @@ public class LoBotTest {
                 e.printStackTrace();
             }
             logger.info("Game {} complete", i);
+            logger.info("First player time. Max: {}, Median: {}, Mode: {}\n", firstPlayer.getMode(), firstPlayer.getMedian(), firstPlayer.getMode());
+            logger.info("Second player time. Max: {}, Median: {}, Mode: {}\n", secondPlayer.getMode(), secondPlayer.getMedian(), secondPlayer.getMode());
         }
         logger.info("Time: {}\n", System.currentTimeMillis() - startTime);
         logger.info("Draw: {}; Blackwin: {}; Whitewin: {}", results[0], results[1], results[2]);
@@ -95,7 +98,7 @@ public class LoBotTest {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(),
-                    TraversalAlgorithm.NEGAMAXALPHABETA, 4, false, 0));
+                    TraversalAlgorithm.NEGAMAXALPHABETA, 4, false));
             final Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -124,10 +127,10 @@ public class LoBotTest {
         for (int i = 1; i <= GAME_COUNT; i++) {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
-                new Strategy(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 2, false, 0));
+                new Strategy(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 5, false));
             final Player secondPlayer = new LoBot(roomSettings, Color.BLACK,
-                new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 2,
-                    false, 0));
+                new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 5,
+                    false));
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
                 game.run();
@@ -156,7 +159,7 @@ public class LoBotTest {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.NEGAMAX, 2,
-                    false, 0));
+                    false));
             final Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -186,10 +189,9 @@ public class LoBotTest {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.NEGASCOUT, 4,
-                    false, 0));
+                    false));
             final Player secondPlayer = new LoBot(roomSettings, Color.BLACK,
-                new Strategy(new FiguresCostSumEvaluation(), TraversalAlgorithm.MINIMAX, 2, false,
-                    0));
+                new Strategy(new FiguresCostSumEvaluation(), TraversalAlgorithm.MINIMAX, 2, false));
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
                 game.run();
@@ -218,7 +220,7 @@ public class LoBotTest {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 4,
-                    false, 0));
+                    false));
             final Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -248,7 +250,7 @@ public class LoBotTest {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.EXPECTIMAX, 2,
-                    false, 0));
+                    false));
             final Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);
@@ -278,7 +280,7 @@ public class LoBotTest {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final Player firstPlayer = new LoBot(roomSettings, Color.WHITE,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 4,
-                    false, 0));
+                    false));
             final Player secondPlayer = new RandomBot(roomSettings, Color.BLACK);
             try {
                 final Selfplay game = new Selfplay(roomSettings, firstPlayer, secondPlayer);

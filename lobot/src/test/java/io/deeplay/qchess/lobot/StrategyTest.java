@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class StrategyTest {
 
+    @Ignore
     @Test
     public void testDBSCAN() {
         final List<Integer> list = Arrays.asList(1, 2, 3, 114, 115, 116, 117, 288, 289, 500);
