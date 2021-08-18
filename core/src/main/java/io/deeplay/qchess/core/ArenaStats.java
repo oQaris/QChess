@@ -125,7 +125,7 @@ public class ArenaStats {
         // logger.warn("{}<---------------------------------------->", System.lineSeparator());
         try (final BufferedWriter writer =
                 Files.newBufferedWriter(
-                        Path.of("results/" + outputFile + ".temp"),
+                        Path.of(outputFile + ".temp"),
                         StandardCharsets.UTF_8,
                         StandardOpenOption.CREATE,
                         StandardOpenOption.TRUNCATE_EXISTING)) {
@@ -176,10 +176,15 @@ public class ArenaStats {
             writer.append(
                     String.format(
                             "Максимальное время хода второго игрока:\t%s\n", maxSecond.get()));
+            writer.flush();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
 
+        try {
             Files.move(
-                    Path.of("results/" + outputFile + ".temp"),
-                    Path.of("results/" + outputFile),
+                    Path.of(outputFile + ".temp"),
+                    Path.of(outputFile),
                     StandardCopyOption.REPLACE_EXISTING,
                     StandardCopyOption.ATOMIC_MOVE);
         } catch (final IOException e) {
