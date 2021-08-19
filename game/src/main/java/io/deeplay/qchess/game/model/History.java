@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class History implements Iterable<BoardState> {
+public class History {
     /** Среднее из максимальных число ходов за 1 партию */
     private static final int AVERAGE_MAXIMUM_MOVES = 100;
 
@@ -171,23 +171,6 @@ public class History implements Iterable<BoardState> {
     }
 
     /**
-     * @param move ход, после которого проверяется на возможность очищения
-     * @param moveFigureType тип фигуры, которой нужно походить
-     * @param removedFigure фигура, которую возьмут или null, если ход не атакующий
-     * @return true, если история очистится после хода move
-     */
-    public boolean willHistoryClear(
-            final Move move, final FigureType moveFigureType, final Figure removedFigure) {
-        return parentHistory == null
-                && switch (move.getMoveType()) {
-                    case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK -> true;
-                    case ATTACK -> removedFigure.figureType == FigureType.PAWN
-                            || moveFigureType == FigureType.PAWN;
-                    default -> moveFigureType == FigureType.PAWN;
-                };
-    }
-
-    /**
      * Устанавливает минимум состояний доски в истории ходов, которое необходимо сохранить после
      * чистки
      */
@@ -215,7 +198,7 @@ public class History implements Iterable<BoardState> {
 
     /**
      * @return текущая доска в записи FEN
-     * @deprecated TODO: неправильно работает и не используется
+     * @deprecated не до конца работает и используется только в логгере
      */
     @Deprecated
     public String getBoardToStringForsythEdwards() throws ChessError {
@@ -368,11 +351,5 @@ public class History implements Iterable<BoardState> {
         isBlackCastlingPossibility = boardState.isBlackCastlingPossibility;
         recordsList.push(boardState);
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
-    }
-
-    /** @return итератор от конца истории в начало */
-    @Override
-    public Iterator<BoardState> iterator() {
-        return recordsList.iterator();
     }
 }

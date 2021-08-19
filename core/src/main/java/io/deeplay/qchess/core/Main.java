@@ -58,12 +58,12 @@ public class Main {
 
         final Tournament tournament =
             new Tournament(
-                4,
-                qbotFactory,
+                3,
+                //qbotFactory,
                 lobotFactory,
-                nukebotFactory,
+                nukebotFactory/*,
                 randombotFactory,
-                attackbotFactory);
+                attackbotFactory*/);
         try {
             tournament.runMegaBattle();
         } catch (final InterruptedException e) {

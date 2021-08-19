@@ -16,23 +16,21 @@ import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class QNegamaxTTBot extends QBot {
-    private static final Logger logger = LoggerFactory.getLogger(QNegamaxTTBot.class);
+public class QNegamaxBot extends QBot {
+    private static final Logger logger = LoggerFactory.getLogger(QNegamaxBot.class);
     public final boolean ttEnable;
     private final TranspositionTable table = new TranspositionTable();
     private final Comparator<Move> order =
             Comparator.comparing(m -> m.getMoveType().importantLevel);
     private int countFindingTT = 0;
 
-    public QNegamaxTTBot(
+    public QNegamaxBot(
             final GameSettings roomSettings,
             final Color color,
             final int searchDepth,
@@ -43,7 +41,7 @@ public class QNegamaxTTBot extends QBot {
         history.setMinBoardStateToSave(MAX_DEPTH);
     }
 
-    public QNegamaxTTBot(
+    public QNegamaxBot(
             final GameSettings roomSettings,
             final Color color,
             final int searchDepth,
@@ -51,12 +49,11 @@ public class QNegamaxTTBot extends QBot {
         this(roomSettings, color, searchDepth, new PestoStrategy(), ttEnable);
     }
 
-    public QNegamaxTTBot(
-            final GameSettings roomSettings, final Color color, final int searchDepth) {
+    public QNegamaxBot(final GameSettings roomSettings, final Color color, final int searchDepth) {
         this(roomSettings, color, searchDepth, new PestoStrategy(), true);
     }
 
-    public QNegamaxTTBot(final GameSettings roomSettings, final Color color) {
+    public QNegamaxBot(final GameSettings roomSettings, final Color color) {
         this(roomSettings, color, 3);
     }
 
@@ -106,7 +103,13 @@ public class QNegamaxTTBot extends QBot {
         }
         return topMoves;*/
         final MoveWrapper bestMove = new MoveWrapper();
-        negamax(new GameSettings(roomSettings, MAX_DEPTH), depth+1, Integer.MIN_VALUE, Strategy.MAX_EST, color, bestMove);
+        negamax(
+                new GameSettings(roomSettings, MAX_DEPTH),
+                depth + 1,
+                Integer.MIN_VALUE,
+                Integer.MAX_VALUE,
+                color,
+                bestMove);
         return Collections.singletonList(bestMove.move);
     }
 
@@ -114,22 +117,22 @@ public class QNegamaxTTBot extends QBot {
             final GameSettings gs,
             final int curDepth,
             int alpha,
-            final int beta,
+            int beta,
             final Color curColor,
             final MoveWrapper bestMove)
             throws ChessError {
-        /*final int alphaOrig = alpha;
+        final int alphaOrig = alpha;
         final BoardState boardState = gs.history.getLastBoardState();
-        final TTEntry entry = table.find(boardState);*/
+        final TTEntry entry = table.find(boardState);
 
-        /*// todo сделать что то с entry.depth == curDepth
-        if (ttEnable && entry != null && entry.depth == curDepth && curDepth != depth+1) {
+        // todo сделать что то с entry.depth == curDepth
+        if (ttEnable && entry != null && entry.depth == curDepth && curDepth != depth + 1) {
             countFindingTT++;
             if (entry.flag == EXACT) return entry.value;
             else if (entry.flag == LOWERBOUND) alpha = max(alpha, entry.value);
             else if (entry.flag == UPPERBOUND) beta = min(beta, entry.value);
             if (alpha >= beta) return entry.value;
-        }*/
+        }
 
         final int coef = curColor == Color.WHITE ? 1 : -1;
         if (curDepth == 0) {
@@ -156,17 +159,17 @@ public class QNegamaxTTBot extends QBot {
             gs.moveSystem.undoMove();
             if (value > alpha) {
                 alpha = value;
-                if (curDepth == depth+1) bestMove.move = move;
+                if (curDepth == depth + 1) bestMove.move = move;
             }
             if (alpha >= beta) break;
         }
 
-        /*final Flag flag;
+        final Flag flag;
         if (value <= alphaOrig) flag = UPPERBOUND;
         else if (value >= beta) flag = LOWERBOUND;
         else flag = EXACT;
 
-        table.store(new TTEntry(value, curDepth, flag), boardState);*/
+        table.store(new TTEntry(value, curDepth, flag), boardState);
 
         return value;
     }
@@ -275,8 +278,8 @@ public class QNegamaxTTBot extends QBot {
         }
 
         @Override
-        public QNegamaxTTBot build() {
-            return new QNegamaxTTBot(gameSettings, color, depth, strategy, ttEnable);
+        public QNegamaxBot build() {
+            return new QNegamaxBot(gameSettings, color, depth, strategy, ttEnable);
         }
     }
 }

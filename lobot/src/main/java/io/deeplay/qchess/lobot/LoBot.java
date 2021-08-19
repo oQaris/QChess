@@ -65,6 +65,7 @@ public class LoBot extends RemotePlayer {
         final List<Move> moves = ms.getAllPreparedMoves(color);
         int bestMove = Integer.MIN_VALUE;
         final List<Move> bestMoves = new ArrayList<>();
+        roomSettings = new GameSettings(roomSettings, 100);
 
         for (final Move move : moves) {
             final int value = roomSettings.moveSystem.virtualMove(move, algorithm);
