@@ -28,7 +28,6 @@ public class MainFrame {
         UIManager.put("RadioButton.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
     }
 
-
     public void createStartFrame() {
         final JFrame frame = new JFrame("Начало");
         frame.setSize(new Dimension(200, 200));
