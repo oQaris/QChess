@@ -33,7 +33,7 @@ fun update(file: File) {
                 val fromTo = chnks[1].drop(1).take(5).split("-")
                 val moveType = chnks[1].drop(8).takeWhile { it != ')' }
                 val move =
-                    Move(MoveType.valueOf(moveType), Cell.parse(fromTo[0]), Cell.parse(fromTo[1]))
+                        Move(MoveType.valueOf(moveType), Cell.parse(fromTo[0]), Cell.parse(fromTo[1]))
                 if (move.moveType == MoveType.TURN_INTO || move.moveType == MoveType.TURN_INTO_ATTACK) {
                     val turnInto = chnks[1].dropLast(8).takeLastWhile { !it.isWhitespace() }
                     move.turnInto = FigureType.valueOf(turnInto)
@@ -53,49 +53,51 @@ private val newContents = toReplace.resolveSibling("temp_profile.json")
 
 fun main() {
     File("C:\\Users\\admin\\Desktop\\Internship\\arch\\logs").listFiles()
-        ?.forEach { dir ->
-            if (dir.isDirectory) {
-                println("Директория ${dir.name}:")
-                dir.listFiles()?.forEach {
-                    println("Парсится файл ${it.name}")
-                    update(it)
+            ?.forEach { dir ->
+                if (dir.isDirectory) {
+                    println("Директория ${dir.name}:")
+                    dir.listFiles()?.forEach {
+                        println("Парсится файл ${it.name}")
+                        update(it)
+                    }
                 }
             }
-        }
     profiles.forEach { (t, u) ->
         println(
-            "$t:\n${
-                u.states.map { (k, v) -> "${k.padEnd(64)} -> ${v.map { entry -> entry.key.toStr() + " = " + entry.value }}" }
-                    .joinToString("\n")
-            }"
+                "$t:\n${
+                    u.states.map { (k, v) -> "${k.padEnd(64)} -> ${v.map { entry -> entry.key.toStr() + " = " + entry.value }}" }
+                            .joinToString("\n")
+                }"
         )
     }
     println("Идёт сохранение в файл...")
     Files.newBufferedWriter(
-        newContents,
-        StandardCharsets.UTF_8,
-        StandardOpenOption.CREATE,
-        StandardOpenOption.TRUNCATE_EXISTING
+            newContents,
+            StandardCharsets.UTF_8,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING
     ).use { writer -> Gson().toJson(profiles, writer) }
     println("Перемещение...")
     Files.move(
-        newContents,
-        toReplace,
-        StandardCopyOption.REPLACE_EXISTING,
-        StandardCopyOption.ATOMIC_MOVE
+            newContents,
+            toReplace,
+            StandardCopyOption.REPLACE_EXISTING,
+            StandardCopyOption.ATOMIC_MOVE
     )
     println("Успешно!")
+
+    saveAll()
 }
 
 fun Move.toStr(): String {
     val sb =
-        StringBuilder()
-            .append(from)
-            .append("-")
-            .append(to)
+            StringBuilder()
+                    .append(from)
+                    .append("-")
+                    .append(to)
     return when (moveType) {
         MoveType.TURN_INTO, MoveType.TURN_INTO_ATTACK -> sb.append("->")
-            .append(turnInto)
+                .append(turnInto)
         else -> sb
     }.toString()
 }

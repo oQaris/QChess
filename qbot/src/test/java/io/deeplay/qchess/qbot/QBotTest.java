@@ -1,7 +1,6 @@
 package io.deeplay.qchess.qbot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -94,7 +93,7 @@ class QBotTest {
         final List<Move> moves1 = bot.getTopMoves();
 
         final Move expected = new Move(MoveType.QUIET_MOVE, Cell.parse("c6"), Cell.parse("h6"));
-        //assertTrue(moves1.contains(expected));
+        // assertTrue(moves1.contains(expected));
 
         game.moveSystem.move(expected);
         game.moveSystem.move(new Move(MoveType.QUIET_MOVE, Cell.parse("b8"), Cell.parse("a8")));
@@ -102,7 +101,8 @@ class QBotTest {
         final List<Move> moves2 = bot.getTopMoves();
         assertEquals(1, moves2.size());
 
-        assertEquals(new Move(MoveType.QUIET_MOVE, Cell.parse("h6"), Cell.parse("h8")), moves2.get(0));
+        assertEquals(
+                new Move(MoveType.QUIET_MOVE, Cell.parse("h6"), Cell.parse("h8")), moves2.get(0));
     }
 
     @Test

@@ -2,7 +2,6 @@ package io.deeplay.qchess.qbot;
 
 import io.deeplay.qchess.game.model.BoardState;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TranspositionTable {

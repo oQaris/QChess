@@ -1,7 +1,5 @@
 package io.deeplay.qchess.core;
 
-import ch.qos.logback.classic.util.ContextInitializer;
-import io.deeplay.qchess.core.config.ArenaSettings;
 import io.deeplay.qchess.core.config.ConfigException;
 import io.deeplay.qchess.game.player.AttackBot.AttackBotFactory;
 import io.deeplay.qchess.game.player.BotFactory.SpecificFactory;
@@ -46,24 +44,22 @@ public class Main {
     public static void main(final String[] args) throws IOException, ConfigException {
 
         final SpecificFactory qbotFactory =
-            new SpecificFactory(new QBotFactory(), "NegaTT-tt-5-Pesto");
-        final SpecificFactory lobotFactory =
-            new SpecificFactory(new LobotFactory(), "Lobot");
-        final SpecificFactory nukebotFactory =
-            new SpecificFactory(new NukeBotFactory(), "Nukebot");
+                new SpecificFactory(new QBotFactory(), "NegaTT-tt-5-Pesto");
+        final SpecificFactory lobotFactory = new SpecificFactory(new LobotFactory(), "Lobot");
+        final SpecificFactory nukebotFactory = new SpecificFactory(new NukeBotFactory(), "Nukebot");
         final SpecificFactory randombotFactory =
-            new SpecificFactory(new RandomBotFactory(), "Randombot");
+                new SpecificFactory(new RandomBotFactory(), "Randombot");
         final SpecificFactory attackbotFactory =
-            new SpecificFactory(new AttackBotFactory(), "Attackbot");
+                new SpecificFactory(new AttackBotFactory(), "Attackbot");
 
         final Tournament tournament =
-            new Tournament(
-                3,
-                //qbotFactory,
-                lobotFactory,
-                nukebotFactory/*,
-                randombotFactory,
-                attackbotFactory*/);
+                new Tournament(
+                        3,
+                        // qbotFactory,
+                        lobotFactory,
+                        nukebotFactory /*,
+                                       randombotFactory,
+                                       attackbotFactory*/);
         try {
             tournament.runMegaBattle();
         } catch (final InterruptedException e) {
