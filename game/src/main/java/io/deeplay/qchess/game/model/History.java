@@ -150,15 +150,8 @@ public class History implements Iterable<BoardState> {
     public void checkAndAddPeaceMoveCount(
             final Move move, final FigureType moveFigureType, final Figure removedFigure) {
         switch (move.getMoveType()) {
-            case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK:
+            case ATTACK, TURN_INTO, TURN_INTO_ATTACK, EN_PASSANT:
                 if (parentHistory == null) clearHistory(minBoardStateToSave);
-                peaceMoveCount = 0;
-                break;
-            case ATTACK:
-                if (parentHistory == null) {
-                    if (removedFigure.figureType == FigureType.PAWN
-                            || moveFigureType == FigureType.PAWN) clearHistory(minBoardStateToSave);
-                }
                 peaceMoveCount = 0;
                 break;
             default:
@@ -180,9 +173,7 @@ public class History implements Iterable<BoardState> {
             final Move move, final FigureType moveFigureType, final Figure removedFigure) {
         return parentHistory == null
                 && switch (move.getMoveType()) {
-                    case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK -> true;
-                    case ATTACK -> removedFigure.figureType == FigureType.PAWN
-                            || moveFigureType == FigureType.PAWN;
+                    case ATTACK, TURN_INTO, TURN_INTO_ATTACK, EN_PASSANT -> true;
                     default -> moveFigureType == FigureType.PAWN;
                 };
     }
