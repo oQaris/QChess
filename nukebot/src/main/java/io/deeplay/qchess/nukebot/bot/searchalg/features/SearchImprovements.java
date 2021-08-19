@@ -15,7 +15,7 @@ public abstract class SearchImprovements {
         allMoves.sort(movesPriority);
     }
 
-    /** @return отсортированный поток по убыванию (макс. жертва - мин. агрессор) */
+    /** @return отсортированный итератор по убыванию (макс. жертва - мин. агрессор) */
     public static Iterator<Move> MVV_LVA_attack_sort(final Board board, final List<Move> allMoves) {
         // TODO: добавить оценку позиции (?)
         // TODO: переделать на ArrayList

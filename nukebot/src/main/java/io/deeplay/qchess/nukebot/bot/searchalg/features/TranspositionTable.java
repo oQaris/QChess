@@ -9,7 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class TranspositionTable {
 
-    private final Map<BoardState, TTEntry> entries = new ConcurrentHashMap<>(500000);
+    private static final int MAX_NODES = 1000000;
+
+    private final Map<BoardState, TTEntry> entries = new ConcurrentHashMap<>(MAX_NODES);
 
     /** @return вхождение состояния игры или null, если такое состояние еще не встречалось */
     public TTEntry find(final BoardState boardState) {
@@ -17,7 +19,7 @@ public class TranspositionTable {
     }
 
     /**
-     * Кладет результат во вхождение, если оно есть, иначе создает новое и помещает в ТТ
+     * Создает новое вхождение и добавляет его в ТТ, либо заменяет, если оно уже есть
      *
      * @param allMoves все возможные текущие ходы
      * @param result лучшая оценка
