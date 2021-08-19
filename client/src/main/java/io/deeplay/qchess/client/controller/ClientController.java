@@ -16,6 +16,7 @@ import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionD
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.FindGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.AcceptConnectionDTO;
 import io.deeplay.qchess.clientserverconversation.service.SerializationService;
+import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
@@ -292,5 +293,9 @@ public class ClientController {
     /** @return клетка короля цвета color */
     public static ViewCell getKingCell(final boolean color) {
         return GameGUIAdapter.getKingCell(color);
+    }
+
+    public static boolean isEndGame() {
+        return GameDAO.getGameSettings().endGameDetector.getGameResult() != EndGameType.NOTHING;
     }
 }
