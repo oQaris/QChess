@@ -291,7 +291,7 @@ public class LoBot extends RemotePlayer {
 
         final List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        final List<Move> clusterMoves = depth > 0? ClusterService.getClusteredMovesDBSCAN(moves.stream().map(move -> {
+        final List<Move> clusterMoves = (this.depth - depth) > 1? ClusterService.getClusteredMovesDBSCAN(moves.stream().map(move -> {
             int evaluate = 0;
             try {
                 roomSettings.moveSystem.move(move);

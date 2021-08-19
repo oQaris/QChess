@@ -94,7 +94,7 @@ public class LoBotTest {
         for (int i = 1; i <= GAME_COUNT; i++) {
             final GameSettings roomSettings = new GameSettings(Board.BoardFilling.STANDARD);
             final TimeWrapper firstPlayer = new TimeWrapper(new LoBot(roomSettings, Color.WHITE,
-                new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.CLUSTERMINIMAX, 8, false)));
+                new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.CLUSTERMINIMAX, 7, false)));
             final TimeWrapper secondPlayer = new TimeWrapper(new LoBot(roomSettings, Color.BLACK,
                 new Strategy(new StaticPositionMatrixEvaluation(), TraversalAlgorithm.MINIMAX, 5,
                     false)));
