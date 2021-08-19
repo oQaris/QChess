@@ -1,9 +1,13 @@
 package io.deeplay.qchess.logparser;
 
 import io.deeplay.qchess.lobot.profiler.Profile;
-import java.io.BufferedInputStream;
+import io.deeplay.qchess.lobot.profiler.ProfileService;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Parser {
     private final ParseMode parseMode;
@@ -21,25 +25,65 @@ public class Parser {
         profile = new Profile();
     }
 
-    public void profilesUpdate(final File directory) throws ParseException {
-        profilesUpdate(directory, -1);
+    public void profileUpdate(final File directory) throws ParseException {
+        profileUpdate(directory, Integer.MIN_VALUE);
     }
 
-    public void profilesUpdate(final File directory, final int logsCount) throws ParseException {
+    public void profileUpdate(final File directory, final int logsCount) throws ParseException {
         if(!directory.isDirectory()) {
             throw new ParseException(ParseErrorCode.WRONG_DIRECTORY);
         }
-
-        final InputStream inputStream = openDirectory(directory);
-        parseLogs(inputStream, logsCount);
-        //saveProfile();
+        if(logsCount < 1 && logsCount != Integer.MIN_VALUE) {
+            throw new ParseException(ParseErrorCode.WRONG_LOGS_COUNT);
+        }
+        final List<File> logFiles = getAllLogFiles(directory, logsCount);
+        parseLogs(logFiles);
+        ProfileService.saveProfile(profile);
     }
 
-    private InputStream openDirectory(final File directory) {
-        final BufferedInputStream bis = null;
-        return bis;
+    private List<File> getAllLogFiles(final File directory, int logsCount) {
+        final List<File> result = new LinkedList<>();
+        final File[] files = directory.listFiles();
+        if(files != null && files.length > 0) {
+            for (final File file : files) {
+                if (file.isDirectory()) {
+                    final List<File> subDirectoryFileList = getAllLogFiles(file, logsCount);
+                    result.addAll(subDirectoryFileList);
+                    logsCount -= subDirectoryFileList.size();
+                } else {
+                    result.add(file);
+                    logsCount--;
+                }
+                if(logsCount < 0 && logsCount != Integer.MIN_VALUE) {
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
-    private void parseLogs(final InputStream inputStream, final int logsCount) {
+    private void parseLogs(final List<File> logFiles) throws ParseException {
+        for(final File file : logFiles) {
+            try (final BufferedReader is = new BufferedReader(new FileReader(file))) {
+                String line = is.readLine();
+                String move = null;
+                while (line != null) {
+                    if(line.startsWith("WHITE") || line.startsWith("BLACK")) {
+                        move = line;
+                    } else if(move != null) {
+                        if(line.startsWith("FEN")) {
+                            addToProfile(move, line);
+                        }
+                        move = null;
+                    }
+                    line = is.readLine();
+                }
+            } catch (final IOException e) {
+                throw new ParseException(ParseErrorCode.FILE_OPEN_ERROR);
+            }
+        }
+    }
+
+    private void addToProfile(final String move, final String line) {
     }
 }
