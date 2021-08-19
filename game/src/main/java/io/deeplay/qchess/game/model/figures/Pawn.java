@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
@@ -19,7 +20,7 @@ public class Pawn extends Figure {
         final List<Move> result = new ArrayList<>(4);
 
         final Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
-        addShortAndLongMove(settings, forwardShift, result);
+        addShortAndLongMove(settings.board, forwardShift, result);
 
         final Move leftSpecialMove =
                 getSpecialMove(settings, position.createAdd(forwardShift).shift(new Cell(-1, 0)));
@@ -32,24 +33,24 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
+    public boolean isAttackedCell(final Board board, final Cell cell) {
         final Cell forwardShift = color == Color.WHITE ? new Cell(0, -1) : new Cell(0, 1);
         final Cell shifted = position.createAdd(forwardShift).shift(new Cell(-1, 0));
         return shifted.equals(cell) || shifted.shift(new Cell(2, 0)).equals(cell);
     }
 
     private void addShortAndLongMove(
-            final GameSettings settings, final Cell forwardShift, final List<Move> result) {
+            final Board board, final Cell forwardShift, final List<Move> result) {
         final Cell move = position.createAdd(forwardShift);
-        if (settings.board.isEmptyCell(move)) {
+        if (board.isEmptyCell(move)) {
             result.add(
                     new Move(
-                            isTurnInto(move, settings) ? MoveType.TURN_INTO : MoveType.QUIET_MOVE,
+                            isTurnInto(move, board) ? MoveType.TURN_INTO : MoveType.QUIET_MOVE,
                             position,
                             move));
 
             final Cell longMove = move.createAdd(forwardShift);
-            if (!wasMoved && settings.board.isEmptyCell(longMove))
+            if (!wasMoved && board.isEmptyCell(longMove))
                 result.add(new Move(MoveType.LONG_MOVE, position, longMove));
         }
     }
@@ -57,7 +58,7 @@ public class Pawn extends Figure {
     private Move getSpecialMove(final GameSettings settings, final Cell attack) {
         final boolean isEnPassant = isPawnEnPassant(settings, attack);
         if (settings.board.isEnemyFigureOn(color, attack) || isEnPassant) {
-            if (isTurnInto(attack, settings)) {
+            if (isTurnInto(attack, settings.board)) {
                 return new Move(MoveType.TURN_INTO_ATTACK, position, attack);
             } else {
                 return new Move(
@@ -91,7 +92,7 @@ public class Pawn extends Figure {
         return cellDoubleDown.equals(prevMove.getFrom());
     }
 
-    private boolean isTurnInto(final Cell end, final GameSettings settings) {
-        return end.row == (color == Color.WHITE ? 0 : settings.board.boardSize - 1);
+    private boolean isTurnInto(final Cell end, final Board board) {
+        return end.row == (color == Color.WHITE ? 0 : board.boardSize - 1);
     }
 }

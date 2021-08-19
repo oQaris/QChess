@@ -29,6 +29,7 @@ public class MoveSystem {
     private final Board board;
     private final History history;
     private final EndGameDetector egd;
+    /** Этот предыдущий ход используется, если последний ход не записывался в историю */
     private Move prevMoveIfRecordNotUse;
 
     public MoveSystem(final GameSettings gs) {
@@ -38,13 +39,22 @@ public class MoveSystem {
         egd = gs.endGameDetector;
     }
 
+    /**
+     * Делает ход move без проверок, записывая его в историю и изменяя сторону цвета в истории
+     *
+     * @return удаленная фигура или null, если ни одну фигуру не взяли
+     */
     public Figure move(final Move move) throws ChessError {
         return move(move, true, true);
     }
 
     /**
-     * Делает ход без проверок
+     * Делает ход без проверок, записывая его в историю, если указано useHistoryRecord, и изменяя
+     * сторону цвета в истории, если указано changeMoveSideInRecord (полезно для null-move
+     * heuristic)
      *
+     * @param useHistoryRecord записывать ли ход в историю
+     * @param changeMoveSideInRecord изменять ли сторону цвета в истории
      * @return удаленная фигура или null, если ни одну фигуру не взяли
      */
     public Figure move(
@@ -117,7 +127,7 @@ public class MoveSystem {
             moveFigure.wasMoved = true;
             history.setRemovedFigure(removedFigure);
             if (useHistoryRecord) {
-                history.checkAndAddPeaceMoveCount(move);
+                history.checkAndAddPeaceMoveCount(move, moveFigure.figureType, removedFigure);
                 if (changeMoveSideInRecord) history.addRecord(move);
                 else history.addRecordButNotChangeMoveSide(move);
             } else prevMoveIfRecordNotUse = move;
@@ -129,11 +139,18 @@ public class MoveSystem {
         }
     }
 
+    /** Берет последний ход из истории и отменяет его без проверок */
     public void undoMove() throws ChessError {
         undoMove(true);
     }
 
-    /** Отменяет последний ход без проверок */
+    /**
+     * Берет последний ход из истории, если указано useHistoryRecord, иначе из кеша
+     * (prevMoveIfRecordNotUse), и отменяет его без проверок
+     *
+     * @param useHistoryRecord брать ли последний ход из истории или взять его из кеша
+     *     (prevMoveIfRecordNotUse)
+     */
     public void undoMove(final boolean useHistoryRecord) throws ChessError {
         final Move move = useHistoryRecord ? history.getLastMove() : prevMoveIfRecordNotUse;
         final boolean hasMoved = history.isHasMovedBeforeLastMove();
@@ -202,7 +219,10 @@ public class MoveSystem {
         }
     }
 
-    /** @param move корректный ход */
+    /**
+     * @param move корректный ход
+     * @return true, если ход move легальный
+     */
     private boolean isCorrectVirtualMove(final Move move) throws ChessError, ChessException {
         logger.trace("Начата проверка виртуального хода {}", move);
         final Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
@@ -240,8 +260,8 @@ public class MoveSystem {
 
     /**
      * @param color цвет фигур
-     * @return все возможные ходы
-     * @deprecated Использовать только внутри движка. Для своих целей лучше использовать {@link
+     * @return все возможные ходы без явного указания превращения пешки (будет указано null)
+     * @deprecated Оставлен только для совместимости. Для своих целей лучше использовать {@link
      *     #getAllPreparedMoves(Color color)}
      */
     @Deprecated
@@ -324,7 +344,7 @@ public class MoveSystem {
         return res;
     }
 
-    /** @return true если ход корректный */
+    /** @return true, если ход легальный */
     public boolean isCorrectMove(final Move move) throws ChessError {
         try {
             return move != null

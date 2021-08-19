@@ -5,7 +5,6 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.GAME_RESULT_ERROR
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_FILLING_BOARD;
 
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
@@ -31,10 +30,17 @@ public class Selfplay {
         if (firstPlayer.getColor() == secondPlayer.getColor())
             throw new IllegalArgumentException("Должны быть разные цвета!");
         this.roomSettings = roomSettings;
-        this.firstPlayer = firstPlayer;
-        this.secondPlayer = secondPlayer;
-        currentPlayerToMove = firstPlayer.getColor() == Color.WHITE ? firstPlayer : secondPlayer;
-        if (firstPlayer instanceof RemotePlayer && secondPlayer instanceof RemotePlayer) {
+        if (firstPlayer.getColor() == Color.WHITE) {
+            this.firstPlayer = firstPlayer;
+            this.secondPlayer = secondPlayer;
+        } else {
+            this.firstPlayer = secondPlayer;
+            this.secondPlayer = firstPlayer;
+        }
+        currentPlayerToMove = this.firstPlayer;
+        if (logger.isDebugEnabled()
+                && firstPlayer instanceof RemotePlayer
+                && secondPlayer instanceof RemotePlayer) {
             logger.debug("За белых играет:  {}", ((RemotePlayer) currentPlayerToMove).getName());
             logger.debug(
                     "За чёрных играет: {}",
@@ -52,6 +58,9 @@ public class Selfplay {
         }
     }
 
+    /**
+     * @return ход без проверок из from в to типа type (если это превращение, turnInto будет null)
+     */
     public static Move createMove(final String from, final String to, final String type) {
         return new Move(MoveType.valueOf(type), Cell.parse(from), Cell.parse(to));
     }
@@ -79,19 +88,22 @@ public class Selfplay {
         return currentPlayerToMove;
     }
 
+    /** @return первый игрок (белый) */
     public Player getFirstPlayer() {
         return firstPlayer;
     }
 
+    /** @return первый игрок (черный) */
     public Player getSecondPlayer() {
         return secondPlayer;
     }
 
+    /** @return true, если текущий игрок ходит своей фигурой */
     private boolean isCorrectPlayerColor(final Move move) {
         try {
-            return roomSettings.board.getFigure(move.getFrom()).getColor()
+            return roomSettings.board.getFigureUgly(move.getFrom()).getColor()
                     == currentPlayerToMove.getColor();
-        } catch (final ChessException | NullPointerException e) {
+        } catch (final ArrayIndexOutOfBoundsException | NullPointerException e) {
             return false;
         }
     }

@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
@@ -18,7 +19,7 @@ public class Knight extends Figure {
     }
 
     @Override
-    public boolean isAttackedCell(final GameSettings settings, final Cell cell) {
+    public boolean isAttackedCell(final Board board, final Cell cell) {
         for (final Cell c : Figure.knightMove) if (position.createAdd(c).equals(cell)) return true;
         return false;
     }
