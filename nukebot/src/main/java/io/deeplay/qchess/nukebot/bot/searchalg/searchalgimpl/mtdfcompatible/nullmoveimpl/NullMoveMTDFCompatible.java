@@ -40,7 +40,7 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
          */
     }
 
-    protected boolean isNonCapture(final Move move) {
+    protected boolean isNotCapture(final Move move) {
         return switch (move.getMoveType()) {
             case ATTACK, TURN_INTO_ATTACK, EN_PASSANT -> false;
             default -> true;

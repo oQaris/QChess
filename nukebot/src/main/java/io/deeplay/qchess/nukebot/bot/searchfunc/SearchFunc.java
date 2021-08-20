@@ -8,7 +8,7 @@ import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 
 public abstract class SearchFunc {
 
-    public static final long TIME_TO_MOVE = 5000;
+    public static final long TIME_TO_MOVE = 225000;
 
     public final EvaluationFunc evaluationFunc;
     public final Color myColor;

@@ -44,25 +44,50 @@ public abstract class SearchAlgorithm implements Runnable {
 
     public int getEvaluation(final List<Move> allMoves, final boolean isMyMove, final int depth)
             throws ChessError {
+        return getEvaluation(allMoves, true, isMyMove, depth);
+    }
+
+    /**
+     * @param probablyAllMoves возможно все ходы
+     * @param areExactAllMoves true, если probablyAllMoves - точно все ходы, иначе
+     *     probablyAttackMoves - возможно не все ходы
+     * @param isMyMove true, если сейчас ход максимизирующего игрока
+     * @param depth текущая глубина (без вычитания 1)
+     */
+    public int getEvaluation(
+            final List<Move> probablyAllMoves,
+            final boolean areExactAllMoves,
+            final boolean isMyMove,
+            final int depth)
+            throws ChessError {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         final Color enemyColor = myColor.inverse();
-        if (isMyMove) { // allMoves are mine
-            if (gs.endGameDetector.isStalemate(allMoves))
-                return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
+        if (isMyMove) { // probablyAllMoves are mine
+            boolean isStalemateToMe = probablyAllMoves.isEmpty();
+            // Если поставлен пат, но не факт, что мы посмотрели все ходы, нужно пересчитать:
+            if (isStalemateToMe && !areExactAllMoves) {
+                isStalemateToMe = gs.endGameDetector.isStalemate(myColor);
+            }
+            if (isStalemateToMe) return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
 
             if (gs.endGameDetector.isStalemate(enemyColor)) {
                 if (gs.endGameDetector.isCheck(enemyColor)) {
                     return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
                 }
-                return 0;
+                return -depth; // расширяем ничью - чем глубже, тем лучше
             }
-        } else { // allMoves are enemy's
-            if (gs.endGameDetector.isStalemate(allMoves)) {
+        } else { // probablyAllMoves are enemy's
+            boolean isStalemateToEnemy = probablyAllMoves.isEmpty();
+            // Если поставлен пат, но не факт, что мы посмотрели все ходы, нужно пересчитать:
+            if (isStalemateToEnemy && !areExactAllMoves) {
+                isStalemateToEnemy = gs.endGameDetector.isStalemate(enemyColor);
+            }
+            if (isStalemateToEnemy) {
                 if (gs.endGameDetector.isCheck(enemyColor)) {
                     return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
                 }
-                return 0;
+                return -depth; // расширяем ничью - чем глубже, тем лучше
             }
 
             if (gs.endGameDetector.isStalemate(myColor))

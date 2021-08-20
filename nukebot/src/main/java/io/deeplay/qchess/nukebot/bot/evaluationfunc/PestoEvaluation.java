@@ -116,6 +116,18 @@ public class PestoEvaluation {
         int gamePhase = 0;
         final int[] mg = {0, 0};
         final int[] eg = {0, 0};
+        final int[] board = gs.board.fastSnapshotReference();
+
+        // Вычисление каждой фигуры
+        for (int sq = 0; sq < 64; ++sq) {
+            final int pc = board[sq];
+            if (pc != FigureType.EMPTY_TYPE) {
+                mg[pc & 1] += mg_table[pc][sq];
+                eg[pc & 1] += eg_table[pc][sq];
+                gamePhase += gamephaseInc[pc];
+            }
+        }
+
         final int side2move;
         final int otherSide;
         if (myColor == Color.WHITE) {
@@ -125,18 +137,6 @@ public class PestoEvaluation {
             side2move = 1;
             otherSide = 0;
         }
-        final int[] board = gs.board.fastSnapshotReference();
-
-        // Вычисление каждой фигуры
-        for (int sq = 0; sq < 64; ++sq) {
-            final int pc = board[sq];
-            if (pc != 12) { // 12 - пустая клетка
-                mg[pc & 1] += mg_table[pc][sq];
-                eg[pc & 1] += eg_table[pc][sq];
-                gamePhase += gamephaseInc[pc];
-            }
-        }
-
         // Вычисление фазы игры
         final int mgScore = mg[side2move] - mg[otherSide];
         final int egScore = eg[side2move] - eg[otherSide];

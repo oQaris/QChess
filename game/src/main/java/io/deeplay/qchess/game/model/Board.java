@@ -14,7 +14,6 @@ import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.service.NotationService;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,7 +138,7 @@ public class Board {
      */
     public List<Move> getAllPreparedMoves(final GameSettings gs, final Color color)
             throws ChessError {
-        final List<Move> allMoves = new LinkedList<>();
+        final List<Move> allMoves = new ArrayList<>(64);
         for (int i = 0; i < 8; ++i) {
             if (i == 1 || i == 6) { // на линиях 2 и 7 - кандидаты (пешки) на превращение
                 for (final Figure figure : cells[i])

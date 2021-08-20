@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+// TODO: сделать интерфейс
 public class TranspositionTable {
 
     private static final int MAX_NODES = 1000000;
@@ -35,7 +36,18 @@ public class TranspositionTable {
             final int alfaOrigin,
             final int betaOrigin,
             final int depth) {
-        final TTEntry entry = new TTEntry(allMoves, depth);
+        store(allMoves, null, result, boardState, alfaOrigin, betaOrigin, depth);
+    }
+
+    public void store(
+            final List<Move> allMoves,
+            final List<Move> attackMoves,
+            final int result,
+            final BoardState boardState,
+            final int alfaOrigin,
+            final int betaOrigin,
+            final int depth) {
+        final TTEntry entry = new TTEntry(allMoves, attackMoves, depth);
 
         if (result <= alfaOrigin) entry.upperBound = result;
         if (result >= betaOrigin) entry.lowerBound = result;
@@ -48,12 +60,14 @@ public class TranspositionTable {
     public static class TTEntry {
 
         public List<Move> allMoves;
+        public List<Move> attackMoves;
         public int lowerBound = EvaluationFunc.MIN_ESTIMATION;
         public int upperBound = EvaluationFunc.MAX_ESTIMATION;
         public int depth;
 
-        public TTEntry(final List<Move> allMoves, final int depth) {
+        public TTEntry(final List<Move> allMoves, final List<Move> attackMoves, final int depth) {
             this.allMoves = allMoves;
+            this.attackMoves = attackMoves;
             this.depth = depth;
         }
     }

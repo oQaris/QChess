@@ -71,14 +71,15 @@ Search, реализующий [Null-Move Heuristic](https://www.chessprogrammin
 - [ ] [Delta Pruning](https://www.chessprogramming.org/Delta_Pruning) - улучшение quiesce
 - [ ] [SEE](https://www.chessprogramming.org/Static_Exchange_Evaluation) - улучшение quiesce
 - [ ] [Guard Heuristic](https://www.chessprogramming.org/Guard_Heuristic) - улучшение quiesce
-- [ ] [History Heuristic](https://www.chessprogramming.org/History_Heuristic) - улучшение quiesce
-- [ ] [Relative History Heuristic](https://www.chessprogramming.org/Relative_History_Heuristic)
+- [x] [History Heuristic](https://www.chessprogramming.org/History_Heuristic) - улучшение quiesce
+- [x] [Relative History Heuristic](https://www.chessprogramming.org/Relative_History_Heuristic)
 - [ ] [LMR](https://www.chessprogramming.org/Late_Move_Reductions)
 - [x] Iterative deepening ([MTDF](https://en.wikipedia.org/wiki/MTD(f)))
 - [ ] [Parity Pruning](https://www.chessprogramming.org/Parity_Pruning)
 - [ ] Aspiration Search
 - [x] [Aspiration Windows](https://www.chessprogramming.org/Aspiration_Windows)
-- [ ] [Scoring Root Moves](https://www.chessprogramming.org/Ronald_de_Man#ScoringRootMoves)
+- [ ] [Scoring Root Moves](https://www.chessprogramming.org/Ronald_de_Man#ScoringRootMoves) -
+  небольшая рандомизация
 - [ ] Улучшения для снижения Horizon effect
 - [ ] [ProbCut](https://www.chessprogramming.org/ProbCut)
 - [ ] [Multi-Cut](https://www.chessprogramming.org/Multi-Cut)
