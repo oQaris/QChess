@@ -1,20 +1,23 @@
 package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl;
 
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.DOUBLE_QUEEN_MINUS_PAWN_COST;
 import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.QUARTER_PAWN_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.QUEEN_COST;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable.TTEntry;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 /** Лучший из лучших */
 public class UltimateQuintessence extends NullMoveMTDFCompatible {
@@ -157,7 +160,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             SearchImprovements.allSort(
                     gs.board, allMoves, moveHistory, butterfly, isMyMove ? MY_SIDE : ENEMY_SIDE);
 
-        // --------------- PVS с расширенным окном --------------- //
+        // --------------- PVS --------------- //
 
         boolean doResearch;
         do { // если будет обнаружена позиция Цугцванга, повторить поиск с начальной глубиной:
@@ -166,7 +169,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             if (resultUpdater.isInvalidMoveVersion(moveVersion))
                 return EvaluationFunc.MIN_ESTIMATION;
 
-            final Iterator<Move> it = allMoves.iterator();
+            final ListIterator<Move> it = allMoves.listIterator();
             Move move = it.next();
 
             // first move:
@@ -201,24 +204,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                     }
                 }
 
-                // --------------- Альтернативный Relative History Heuristic --------------- //
-
-                /*if (beta <= est) {
-                    // Эвристика истории:
-                    final int side2move = isMyMove ? MY_SIDE : ENEMY_SIDE;
-                    moveHistory[side2move][move.getFrom().toSquare()][move.getTo().toSquare()] +=
-                            1 << depth;
-                    // Эвристика бабочки:
-                    while (it.hasPrevious()) {
-                        move = it.previous();
-                        if (isNonCapture(move)) {
-                            butterfly[side2move][move.getFrom().toSquare()][
-                                            move.getTo().toSquare()] +=
-                                    1 << depth;
-                        }
-                    }
-                    return beta;
-                }*/
+                // --------------- PVS --------------- //
 
                 move = it.next();
                 gs.moveSystem.move(move);
@@ -317,11 +303,20 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
+        final boolean isNotEndgame = gs.board.isNotEndgame();
+
         for (final Move move : probablyAttackMoves) {
             if (!areAttackMovesOrElseAll) {
                 if (isNotCapture(move)) continue;
                 attackMoves.add(move);
             }
+
+            // --------------- Delta Pruning --------------- //
+
+            int delta = QUEEN_COST;
+            if (isNotEndgame
+                    && gs.board.getFigureUgly(move.getFrom()).figureType == FigureType.PAWN)
+                delta = DOUBLE_QUEEN_MINUS_PAWN_COST;
 
             gs.moveSystem.move(move);
             final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1);
@@ -330,6 +325,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             if (resultUpdater.isInvalidMoveVersion(moveVersion))
                 return EvaluationFunc.MIN_ESTIMATION;
 
+            if (isNotEndgame && score < alfa - delta) return alfa;
             if (score >= beta) {
                 alfa = beta;
                 break;

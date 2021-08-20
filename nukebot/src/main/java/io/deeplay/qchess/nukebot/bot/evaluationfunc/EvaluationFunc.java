@@ -13,6 +13,9 @@ public interface EvaluationFunc {
     int PAWN_COST = 100;
     int QUARTER_PAWN_COST = PAWN_COST / 4;
 
+    int QUEEN_COST = 900;
+    int DOUBLE_QUEEN_MINUS_PAWN_COST = 2 * (QUEEN_COST - PAWN_COST);
+
     /** @return значение, которое необходимо увеличивать игроку с цветом color */
     int getHeuristics(GameSettings gs, Color myColor) throws ChessError;
 }

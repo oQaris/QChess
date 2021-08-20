@@ -68,10 +68,10 @@ Search, реализующий [Null-Move Heuristic](https://www.chessprogrammin
 - [x] [Verified Null-Move](https://arxiv.org/abs/0808.1125)
 - [x] Функция оценивания [quiesce](https://www.chessprogramming.org/Quiescence_Search) + ТТ
 - [x] Сортировка ходов [MVV-LVA](https://www.chessprogramming.org/MVV-LVA) - улучшение quiesce
-- [ ] [Delta Pruning](https://www.chessprogramming.org/Delta_Pruning) - улучшение quiesce
+- [x] [Delta Pruning](https://www.chessprogramming.org/Delta_Pruning) - улучшение quiesce
 - [ ] [SEE](https://www.chessprogramming.org/Static_Exchange_Evaluation) - улучшение quiesce
 - [ ] [Guard Heuristic](https://www.chessprogramming.org/Guard_Heuristic) - улучшение quiesce
-- [x] [History Heuristic](https://www.chessprogramming.org/History_Heuristic) - улучшение quiesce
+- [ ] [History Heuristic](https://www.chessprogramming.org/History_Heuristic) - улучшение quiesce
 - [x] [Relative History Heuristic](https://www.chessprogramming.org/Relative_History_Heuristic)
 - [ ] [LMR](https://www.chessprogramming.org/Late_Move_Reductions)
 - [x] Iterative deepening ([MTDF](https://en.wikipedia.org/wiki/MTD(f)))

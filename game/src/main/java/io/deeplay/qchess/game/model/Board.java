@@ -327,15 +327,21 @@ public class Board {
     /** @return количество фигур на доске цвета color */
     public int getFigureCount(final Color color) {
         int count = 0;
-        for (int yl = 0, yr = boardSize - 1; yl < yr; ++yl, --yr) {
-            for (int xl = 0, xr = boardSize - 1; xl < xr; ++xl, --xr) {
-                if (cells[yl][xl] != null && cells[yl][xl].getColor() == color) ++count;
-                if (cells[yl][xr] != null && cells[yl][xr].getColor() == color) ++count;
-                if (cells[yr][xl] != null && cells[yr][xl].getColor() == color) ++count;
-                if (cells[yr][xr] != null && cells[yr][xr].getColor() == color) ++count;
-            }
-        }
+        final int colorType = color == Color.WHITE ? 0 : 1;
+        for (int sq = 0; sq < 64; ++sq)
+            if (cellsType[sq] != FigureType.EMPTY_TYPE && (cellsType[sq] & 1) == colorType) ++count;
         return count;
+    }
+
+    /** @return true, если сейчас скорее всего не эндшпиль */
+    public boolean isNotEndgame() {
+        int count = 0;
+        for (int sq = 0; sq < 64; ++sq)
+            if (cellsType[sq] != FigureType.EMPTY_TYPE) {
+                ++count;
+                if (count > 10) return true;
+            }
+        return false;
     }
 
     /** @return фигура короля цвета color или null, если король не найден */
