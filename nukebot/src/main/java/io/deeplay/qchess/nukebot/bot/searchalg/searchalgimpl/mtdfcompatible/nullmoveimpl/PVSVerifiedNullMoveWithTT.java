@@ -29,7 +29,7 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
 
     @Override
     public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
-        return -pvs(false, -beta, -alfa, depth, true);
+        return -pvs(false, -beta, -alfa, depth, true, false);
     }
 
     @Override
@@ -42,14 +42,21 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
                             maxDepth,
-                            true);
+                            true,
+                            false);
             resultUpdater.updateResult(mainMove, est, maxDepth, moveVersion);
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }
     }
 
-    private int pvs(final boolean isMyMove, int alfa, int beta, int depth, boolean verify)
+    private int pvs(
+            final boolean isMyMove,
+            int alfa,
+            int beta,
+            int depth,
+            boolean verify,
+            boolean isPrevNullMove)
             throws ChessError {
         final BoardState boardState = gs.history.getLastBoardState();
         final TTEntry entry = table.find(boardState);
@@ -75,7 +82,8 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
         int estimation;
 
         final boolean isAllowNullMove =
-                isAllowNullMove(isMyMove ? myColor : enemyColor) && (!verify || depth > 1);
+                isAllowNullMove(isMyMove ? myColor : enemyColor, isPrevNullMove)
+                        && (!verify || depth > 1);
         boolean failHigh = false;
 
         if (isAllowNullMove) {
@@ -87,7 +95,8 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
             final Move nullMove = enemyMoves.get(0);
             // null-move:
             gs.moveSystem.move(nullMove, true, false);
-            estimation = -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify);
+            estimation =
+                    -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify, true);
             gs.moveSystem.undoMove();
             if (estimation >= beta) {
                 if (verify) {
@@ -103,7 +112,7 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
         // Если будет обнаружена позиция Цугцванга, повторить поиск с начальной глубиной:
         do {
             // first move:
-            estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1, verify);
+            estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1, verify, isPrevNullMove);
             if (estimation > alfa) alfa = estimation;
             gs.moveSystem.undoMove();
 
@@ -111,9 +120,9 @@ public class PVSVerifiedNullMoveWithTT extends NullMoveMTDFCompatible {
                 move = it.next();
                 gs.moveSystem.move(move);
                 // null-window search:
-                estimation = -pvs(!isMyMove, -alfa - 1, -alfa, depth - 1, verify);
+                estimation = -pvs(!isMyMove, -alfa - 1, -alfa, depth - 1, verify, isPrevNullMove);
                 if (alfa < estimation && estimation < beta)
-                    estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1, verify);
+                    estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1, verify, isPrevNullMove);
                 gs.moveSystem.undoMove();
                 if (estimation > alfa) alfa = estimation;
             }

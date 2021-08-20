@@ -12,8 +12,6 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
 
     public static final int DEPTH_REDUCTION = 2;
 
-    protected boolean isPrevNullMove;
-
     protected NullMoveMTDFCompatible(
             final TranspositionTable table,
             final ResultUpdater resultUpdater,
@@ -26,7 +24,7 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
         super(table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
-    protected boolean isAllowNullMove(final Color color) {
+    protected boolean isAllowNullMove(final Color color, final boolean isPrevNullMove) {
         final Color enemyColor = color.inverse();
         return !isPrevNullMove
                 && !gs.endGameDetector.isStalemate(enemyColor)
@@ -40,5 +38,12 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
          *  3. Осталось мало материала на доске
          *  4. Число ходов превышает.
          */
+    }
+
+    protected boolean isNonCapture(final Move move) {
+        return switch (move.getMoveType()) {
+            case ATTACK, TURN_INTO_ATTACK, EN_PASSANT -> false;
+            default -> true;
+        };
     }
 }

@@ -29,7 +29,7 @@ public class PVSNullMoveWithTT extends NullMoveMTDFCompatible {
 
     @Override
     public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
-        return -pvs(false, -beta, -alfa, depth);
+        return -pvs(false, -beta, -alfa, depth, false);
     }
 
     @Override
@@ -41,14 +41,17 @@ public class PVSNullMoveWithTT extends NullMoveMTDFCompatible {
                             false,
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
-                            maxDepth);
+                            maxDepth,
+                            false);
             resultUpdater.updateResult(mainMove, est, maxDepth, moveVersion);
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }
     }
 
-    private int pvs(final boolean isMyMove, int alfa, int beta, final int depth) throws ChessError {
+    private int pvs(
+            final boolean isMyMove, int alfa, int beta, final int depth, boolean isPrevNullMove)
+            throws ChessError {
         final BoardState boardState = gs.history.getLastBoardState();
         final TranspositionTable.TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
@@ -72,7 +75,8 @@ public class PVSNullMoveWithTT extends NullMoveMTDFCompatible {
         Move move = it.next();
         int estimation;
 
-        final boolean isAllowNullMove = isAllowNullMove(isMyMove ? myColor : enemyColor);
+        final boolean isAllowNullMove =
+                isAllowNullMove(isMyMove ? myColor : enemyColor, isPrevNullMove);
         if (isAllowNullMove) {
             isPrevNullMove = true;
             // TODO: слишком медленно
@@ -82,14 +86,14 @@ public class PVSNullMoveWithTT extends NullMoveMTDFCompatible {
             final Move nullMove = enemyMoves.get(0);
             // null-move:
             gs.moveSystem.move(nullMove, true, false);
-            estimation = -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1);
+            estimation = -pvs(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, true);
             gs.moveSystem.undoMove();
             if (estimation >= beta) return beta;
         } else isPrevNullMove = false;
 
         // first move:
         gs.moveSystem.move(move);
-        estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1);
+        estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1, isPrevNullMove);
         if (estimation > alfa) alfa = estimation;
         gs.moveSystem.undoMove();
 
@@ -97,9 +101,9 @@ public class PVSNullMoveWithTT extends NullMoveMTDFCompatible {
             move = it.next();
             gs.moveSystem.move(move);
             // null-window search:
-            estimation = -pvs(!isMyMove, -alfa - 1, -alfa, depth - 1);
+            estimation = -pvs(!isMyMove, -alfa - 1, -alfa, depth - 1, isPrevNullMove);
             if (alfa < estimation && estimation < beta)
-                estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1);
+                estimation = -pvs(!isMyMove, -beta, -alfa, depth - 1, isPrevNullMove);
             gs.moveSystem.undoMove();
             if (estimation > alfa) alfa = estimation;
         }
