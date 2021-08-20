@@ -140,7 +140,6 @@ public class LoBot extends RemotePlayer {
         }
 
         final List<Move> moves = ms.getAllPreparedMoves(currentColor);
-        //System.err.println(moves.size());
 
         final EndGameType endGameType = egd.updateEndGameStatus();
         egd.revertEndGameStatus();
@@ -302,7 +301,6 @@ public class LoBot extends RemotePlayer {
             }
             return new MovePoint(evaluate, 0, move);
         }).collect(Collectors.toSet()), 2, 5) : moves;
-        //System.err.println(clusterMoves.size() + "  " + moves.size());
         int bestMoveValue = color == currentColor ? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;
         for (final Move move : clusterMoves) {
             final int alphaForLambda = alpha;
