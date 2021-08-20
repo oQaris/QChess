@@ -17,6 +17,7 @@
     <module>game</module>
     <module>core</module>
     <module>lobot</module>
+    <module>logparser</module>
   </modules>
 
   <properties>
