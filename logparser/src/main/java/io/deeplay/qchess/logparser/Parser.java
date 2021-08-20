@@ -1,5 +1,8 @@
 package io.deeplay.qchess.logparser;
 
+import io.deeplay.qchess.game.model.Cell;
+import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.lobot.profiler.Profile;
 import io.deeplay.qchess.lobot.profiler.ProfileService;
 import java.io.BufferedReader;
@@ -8,8 +11,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Parser {
+    private final Pattern moveCellPattern = Pattern.compile("[a-h][1-8]-[a-h][1-8]");
+    private final Pattern moveTypePattern = Pattern.compile("\\([A-Z_]+\\)");
     private final ParseMode parseMode;
     private final Profile profile;
 
@@ -84,6 +91,30 @@ public class Parser {
         }
     }
 
-    private void addToProfile(final String move, final String line) {
+    private void addToProfile(final String moveLine, final String fenLine) throws ParseException {
+        final Move move = moveParse(moveLine);
+        final String fen = fenParse(fenLine);
+        //profile.add(fen, move);
+        System.out.printf("{%s} -> {%s}\n", fen, move);
     }
+
+    private Move moveParse(final String moveLine) throws ParseException {
+        final String moveCellStr = moveComponentParse(moveLine, moveCellPattern);
+        final String moveTypeStr = moveComponentParse(moveLine, moveTypePattern);
+        
+        return new Move(MoveType.valueOf(moveTypeStr.substring(1, moveTypeStr.length() - 1)), Cell.parse(moveCellStr.substring(0, 2)), Cell.parse(moveCellStr.substring(3)));
+    }
+
+    private String moveComponentParse(final String moveLine, final Pattern pattern) throws ParseException {
+        final Matcher matcher = pattern.matcher(moveLine);
+        if(!matcher.find()) {
+            throw new ParseException(ParseErrorCode.REGEX_ERROR);
+        }
+        return moveLine.substring(matcher.start(), matcher.end());
+    }
+
+    private String fenParse(final String fenStr) {
+        return fenStr.substring(5);
+    }
+
 }
