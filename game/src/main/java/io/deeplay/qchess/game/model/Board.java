@@ -333,17 +333,6 @@ public class Board {
         return count;
     }
 
-    /** @return true, если сейчас скорее всего не эндшпиль */
-    public boolean isNotEndgame() {
-        int count = 0;
-        for (int sq = 0; sq < 64; ++sq)
-            if (cellsType[sq] != FigureType.EMPTY_TYPE) {
-                ++count;
-                if (count > 10) return true;
-            }
-        return false;
-    }
-
     /** @return фигура короля цвета color или null, если король не найден */
     public Figure findKing(final Color color) {
         return color == Color.WHITE
