@@ -230,6 +230,21 @@ public class Board {
         return false;
     }
 
+    /**
+     * @return разность между количеством псевдо-легальных ходов. Для цвета positiveColor с плюсом
+     */
+    public int getDiffPseudoLegalMovesCount(final GameSettings gs, final Color positiveColor) {
+        int diff = 0;
+        for (final Figure[] figures : cells)
+            for (final Figure figure : figures) {
+                if (figure != null) {
+                    if (figure.getColor() == positiveColor) diff += figure.getAllMoves(gs).size();
+                    else diff -= figure.getAllMoves(gs).size();
+                }
+            }
+        return diff;
+    }
+
     /** Заполняет доску расстановкой fillingType */
     private void fill(final BoardFilling fillingType) throws ChessException {
         logger.debug("Начато заполнение {} доски", fillingType);
