@@ -4,16 +4,14 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
-import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
+import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 
-public abstract class NullMoveMTDFCompatible extends MTDFSearch {
+public abstract class NullMove extends SearchAlgorithm {
 
-    public static final int DEPTH_REDUCTION = 3;
+    public static final int DEPTH_REDUCTION = 2;
 
-    protected NullMoveMTDFCompatible(
-            final TranspositionTable table,
+    protected NullMove(
             final ResultUpdater resultUpdater,
             final Move mainMove,
             final int moveVersion,
@@ -21,18 +19,16 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
+        super(resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
     protected boolean isAllowNullMove(
             final Color color,
-            final boolean isPrevNullMove,
             final boolean isCheckToColor,
-            final boolean isCheckToEnemyColor) {
-        final Color enemyColor = color.inverse();
-        return !isPrevNullMove
-                && !gs.endGameDetector.isStalemate(enemyColor, table)
-                && gs.board.getFigureCount(enemyColor) > 9
+            final boolean isCheckToEnemyColor,
+            final boolean isStalemateToCurrentEnemy) {
+        return !isStalemateToCurrentEnemy
+                && gs.board.getFigureCount(color.inverse()) > 9
                 && !isCheckToColor
                 && !isCheckToEnemyColor;
         /*
@@ -45,11 +41,12 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
     }
 
     protected boolean isAllowNullMove(final Color color, final boolean isPrevNullMove) {
-        return isAllowNullMove(
-                color,
-                isPrevNullMove,
-                gs.endGameDetector.isCheck(color),
-                gs.endGameDetector.isCheck(color.inverse()));
+        return !isPrevNullMove
+                && isAllowNullMove(
+                        color,
+                        gs.endGameDetector.isCheck(color),
+                        gs.endGameDetector.isCheck(color.inverse()),
+                        gs.endGameDetector.isStalemate(color.inverse()));
     }
 
     protected boolean isNotCapture(final Move move) {

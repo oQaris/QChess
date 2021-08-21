@@ -120,4 +120,16 @@ public abstract class SearchAlgorithm implements Runnable {
 
         return evaluationFunc.getHeuristics(gs, myColor) + checkBonus;
     }
+
+    @FunctionalInterface
+    public interface SearchAlgConstructor {
+        SearchAlgorithm newInstance(
+                ResultUpdater resultUpdater,
+                Move mainMove,
+                int moveVersion,
+                GameSettings gs,
+                Color color,
+                EvaluationFunc evaluationFunc,
+                int maxDepth);
+    }
 }

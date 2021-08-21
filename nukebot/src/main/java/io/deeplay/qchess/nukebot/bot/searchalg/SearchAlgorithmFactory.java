@@ -24,7 +24,7 @@ public abstract class SearchAlgorithmFactory {
                 resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
-    public static MTDFSearch getMTDFCompatibleAlgorithm(
+    public static UltimateQuintessence getMTDFCompatibleAlgorithm(
             final TranspositionTable table,
             final ResultUpdater resultUpdater,
             final Move mainMove,

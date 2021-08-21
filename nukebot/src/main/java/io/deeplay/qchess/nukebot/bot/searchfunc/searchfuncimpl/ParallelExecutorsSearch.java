@@ -9,6 +9,7 @@ import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithmFactory;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
 import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl.UltimateQuintessence;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 import java.util.List;
@@ -60,7 +61,7 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
 
         for (final Move move : allMoves) {
             final GameSettings gsParallel = new GameSettings(gs, maxDepth);
-            final MTDFSearch searchAlgorithm =
+            final UltimateQuintessence searchAlgorithm =
                     SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
                             table,
                             this,

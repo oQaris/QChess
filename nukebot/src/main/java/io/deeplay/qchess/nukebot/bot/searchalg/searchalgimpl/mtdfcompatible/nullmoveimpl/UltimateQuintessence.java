@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /** Лучший из лучших */
-public class UltimateQuintessence extends NullMoveMTDFCompatible {
+public class UltimateQuintessence extends WithTT {
 
     private static final int LMR_REDUCE_ONE = 6;
     private static final int LMR_REDUCE_TWO = 32;
@@ -34,10 +34,10 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         super(table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
-    @Override
+    /*@Override
     public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
         return -uq(false, -beta, -alfa, depth, true, false);
-    }
+    }*/
 
     @Override
     public void run() {
@@ -119,11 +119,16 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         final boolean isCheckToOtherSide = isMyMove ? isCheckToEnemy : isCheckToMe;
 
         final boolean isAllowNullMove =
-                isAllowNullMove(
+                !isPrevNullMove
+                        && isAllowNullMove(
                                 isMyMove ? myColor : enemyColor,
-                                isPrevNullMove,
                                 isCheckToThisSide,
-                                isCheckToOtherSide)
+                                isCheckToOtherSide,
+                                entry != null
+                                        ? gs.endGameDetector.isStalemate(
+                                                isMyMove ? enemyColor : myColor, table)
+                                        : gs.endGameDetector.isStalemate(
+                                                isMyMove ? enemyColor : myColor))
                         && (!verify || depth > 1);
         boolean failHigh = false;
 

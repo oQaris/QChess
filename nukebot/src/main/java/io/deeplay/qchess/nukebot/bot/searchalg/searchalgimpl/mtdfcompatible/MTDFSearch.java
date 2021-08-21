@@ -57,4 +57,17 @@ public abstract class MTDFSearch extends SearchAlgorithm {
 
     public abstract int alfaBetaWithTT(final int alfa, final int beta, final int depth)
             throws ChessError;
+
+    @FunctionalInterface
+    public interface MTDFConstructor {
+        MTDFSearch newInstance(
+                TranspositionTable table,
+                ResultUpdater resultUpdater,
+                Move mainMove,
+                int moveVersion,
+                GameSettings gs,
+                Color color,
+                EvaluationFunc evaluationFunc,
+                int maxDepth);
+    }
 }

@@ -11,6 +11,16 @@ import io.deeplay.qchess.nukebot.bot.NukeBotFactory.NukeBotSettings.SearchEnum;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.MatrixEvaluation;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.PestoEvaluation;
+import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm.SearchAlgConstructor;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.MinimaxAlfaBetaPruning;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.NegaScoutAlfaBetaPruning;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.NegamaxAlfaBetaPruning;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch.MTDFConstructor;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MinimaxWithTT;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.NegaScoutWithTT;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl.PVSNullMoveWithTT;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl.PVSVerifiedNullMoveWithTT;
+import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl.UltimateQuintessence;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc.SearchFuncConstructor;
 import io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl.LinearSearch;
@@ -71,6 +81,11 @@ public class NukeBotFactory implements BotFactory {
         private final int maxDepth = 3;
         private final EvaluationEnum evaluation = EvaluationEnum.Pesto;
         private final SearchEnum search = SearchEnum.Parallel;
+        private final SimpleSearchAlgEnum simpleAlgorithm = SimpleSearchAlgEnum.Minimax;
+        private final MTDFSearchAlgEnum MTDFCompatibleAlgorithm =
+                MTDFSearchAlgEnum.UltimateQuintessence;
+        private final boolean useSimpleOrElseMTDFCompatible = false;
+        private final boolean useMTDFsIterativeDeepening = false;
 
         public static String getStandardSettings() {
             return gson.toJson(new NukeBotSettings());
@@ -97,6 +112,32 @@ public class NukeBotFactory implements BotFactory {
 
             SearchEnum(final SearchFuncConstructor searchFunc) {
                 this.searchFunc = searchFunc;
+            }
+        }
+
+        public enum SimpleSearchAlgEnum {
+            Minimax(MinimaxAlfaBetaPruning::new),
+            Negamax(NegamaxAlfaBetaPruning::new),
+            Negascout(NegaScoutAlfaBetaPruning::new);
+
+            public final SearchAlgConstructor searchAlg;
+
+            SimpleSearchAlgEnum(final SearchAlgConstructor searchAlg) {
+                this.searchAlg = searchAlg;
+            }
+        }
+
+        public enum MTDFSearchAlgEnum {
+            MinimaxTT(MinimaxWithTT::new),
+            NegascoutTT(NegaScoutWithTT::new),
+            PVSNullMoveTT(PVSNullMoveWithTT::new),
+            PVSVerifiedNullMoveTT(PVSVerifiedNullMoveWithTT::new),
+            UltimateQuintessence(UltimateQuintessence::new);
+
+            public final MTDFConstructor mtdfSearchAlg;
+
+            MTDFSearchAlgEnum(final MTDFConstructor mtdfSearchAlg) {
+                this.mtdfSearchAlg = mtdfSearchAlg;
             }
         }
     }

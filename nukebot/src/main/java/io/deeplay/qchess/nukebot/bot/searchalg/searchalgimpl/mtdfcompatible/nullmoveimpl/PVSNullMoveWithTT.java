@@ -13,7 +13,7 @@ import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.Iterator;
 import java.util.List;
 
-public class PVSNullMoveWithTT extends NullMoveMTDFCompatible {
+public class PVSNullMoveWithTT extends WithTT {
 
     public PVSNullMoveWithTT(
             final TranspositionTable table,
@@ -27,10 +27,10 @@ public class PVSNullMoveWithTT extends NullMoveMTDFCompatible {
         super(table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
-    @Override
+    /*@Override
     public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
         return -pvs(false, -beta, -alfa, depth, false);
-    }
+    }*/
 
     @Override
     public void run() {
