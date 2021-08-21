@@ -186,10 +186,6 @@ public class Board {
         return allMoves;
     }
 
-    public boolean isHasAnyCorrectMove(final GameSettings gs, final Color color) throws ChessError {
-        return isHasAnyCorrectMove(gs, color, null);
-    }
-
     /**
      * @param gs нужен для получения ходов пешек и проверки на шах после хода
      * @return true, если у игрока цвета color нет корректных ходов (поставлен пат)
