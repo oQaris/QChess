@@ -77,7 +77,7 @@ Search, реализующий [Null-Move Heuristic](https://www.chessprogrammin
 - [x] Iterative deepening ([MTDF](https://en.wikipedia.org/wiki/MTD(f)))
 - [ ] [Parity Pruning](https://www.chessprogramming.org/Parity_Pruning)
 - [ ] Aspiration Search
-- [x] [Aspiration Windows](https://www.chessprogramming.org/Aspiration_Windows)
+- [ ] [Aspiration Windows](https://www.chessprogramming.org/Aspiration_Windows)
 - [ ] [Scoring Root Moves](https://www.chessprogramming.org/Ronald_de_Man#ScoringRootMoves) -
   небольшая рандомизация
 - [ ] Улучшения для снижения Horizon effect

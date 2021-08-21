@@ -2,7 +2,6 @@ package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nul
 
 import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.DOUBLE_QUEEN_MINUS_PAWN_COST;
 import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_QUEEN_COST;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.QUARTER_PAWN_COST;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -100,8 +99,10 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         final boolean isAllowNullMove =
-                isAllowNullMove(isMyMove ? myColor : enemyColor, isPrevNullMove)
-                        && (!verify || depth > 1);
+                entry != null && entry.isAllowNullMove != 0
+                        ? entry.isAllowNullMove == 1
+                        : (isAllowNullMove(isMyMove ? myColor : enemyColor, isPrevNullMove)
+                                && (!verify || depth > 1));
         boolean failHigh = false;
 
         if (isAllowNullMove) {
@@ -116,15 +117,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             // null-move:
             gs.moveSystem.move(nullMove);
 
-            // aspiration window:
+            // null-window search:
             final int est =
-                    -uq(
-                            isMyMove,
-                            -beta - QUARTER_PAWN_COST,
-                            -beta + QUARTER_PAWN_COST,
-                            depth - DEPTH_REDUCTION - 1,
-                            verify,
-                            true);
+                    -uq(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify, true);
 
             gs.moveSystem.undoMove();
 
@@ -183,16 +178,16 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                     alfa = beta;
                     break;
                 } /*else {
-                    // Эвристика бабочки:
-                    if (isNotCapture(move)) {
-                        final int side2move = isMyMove ? MY_SIDE : ENEMY_SIDE;
-                        table.addButterfly(
-                                side2move,
-                                move.getFrom().toSquare(),
-                                move.getTo().toSquare(),
-                                1 << depth);
-                    }
-                }*/
+                      // Эвристика бабочки:
+                      if (isNotCapture(move)) {
+                          final int side2move = isMyMove ? MY_SIDE : ENEMY_SIDE;
+                          table.addButterfly(
+                                  side2move,
+                                  move.getFrom().toSquare(),
+                                  move.getTo().toSquare(),
+                                  1 << depth);
+                      }
+                  }*/
 
                 // --------------- PVS --------------- //
 
@@ -221,7 +216,15 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Кеширование результата в ТТ --------------- //
 
-        table.store(allMoves, null, alfa, boardState, alfaOrigin, betaOrigin, depth);
+        table.store(
+                allMoves,
+                null,
+                isAllowNullMove ? 1 : 2,
+                alfa,
+                boardState,
+                alfaOrigin,
+                betaOrigin,
+                depth);
 
         return alfa;
     }
@@ -321,7 +324,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Кеширование результата в ТТ --------------- //
 
-        table.store(allMoves, attackMoves, alfa, boardState, alfaOrigin, betaOrigin, depth);
+        table.store(allMoves, attackMoves, 0, alfa, boardState, alfaOrigin, betaOrigin, depth);
 
         return alfa;
     }
