@@ -5,9 +5,9 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm;
 import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithmFactory;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
-import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 import java.util.List;
@@ -42,11 +42,10 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
         theBestEstimation = EvaluationFunc.MIN_ESTIMATION;
 
         for (final Move move : allMoves) {
-            final MTDFSearch searchAlgorithm =
-                    SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
+            final SearchAlgorithm searchAlgorithm =
+                    SearchAlgorithmFactory.getSearchAlgorithm(
                             this, move, 0, gs, myColor, evaluationFunc, maxDepth);
 
-            // searchAlgorithm.MTDFStart(0, maxDepth);
             searchAlgorithm.run();
         }
 

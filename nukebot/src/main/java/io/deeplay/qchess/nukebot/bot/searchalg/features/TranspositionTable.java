@@ -12,7 +12,50 @@ public class TranspositionTable {
 
     private static final int MAX_NODES = 1000000;
 
+    /** [Сторона, чей ход] -> [откуда] -> [куда] */
+    // private final AtomicInteger[][][] moveHistory = new AtomicInteger[2][64][64];
+    private final int[][][] moveHistory = new int[2][64][64];
+    /** [Сторона, чей ход] -> [откуда] -> [куда] */
+    // private final AtomicInteger[][][] butterfly = new AtomicInteger[2][64][64];
+    private final int[][][] butterfly = new int[2][64][64];
+    /** Хранит вхождения игровых состояний */
     private final Map<BoardState, TTEntry> entries = new ConcurrentHashMap<>(MAX_NODES);
+
+    {
+        for (int color = 0; color < 2; ++color)
+            for (int y = 0; y < 64; ++y)
+                for (int x = 0; x < 64; ++x) {
+                    // moveHistory[color][y][x] = new AtomicInteger(1);
+                    // butterfly[color][y][x] = new AtomicInteger(1);
+                    moveHistory[color][y][x] = 1;
+                    butterfly[color][y][x] = 1;
+                }
+    }
+
+    /* TODO:
+     *  AtomicInteger почти останавливает вычисления к середине игры, тем не менее требуются
+     *  дополнительные тесты
+     */
+
+    public void addMoveHistory(final int color, final int y, final int x, final int value) {
+        // moveHistory[color][y][x].addAndGet(value);
+        moveHistory[color][y][x] += value;
+    }
+
+    public int getMoveHistory(final int color, final int y, final int x) {
+        // return moveHistory[color][y][x].get();
+        return moveHistory[color][y][x];
+    }
+
+    public void addButterfly(final int color, final int y, final int x, final int value) {
+        // butterfly[color][y][x].addAndGet(value);
+        butterfly[color][y][x] += value;
+    }
+
+    public int getButterfly(final int color, final int y, final int x) {
+        // return butterfly[color][y][x].get();
+        return butterfly[color][y][x];
+    }
 
     /** @return вхождение состояния игры или null, если такое состояние еще не встречалось */
     public TTEntry find(final BoardState boardState) {

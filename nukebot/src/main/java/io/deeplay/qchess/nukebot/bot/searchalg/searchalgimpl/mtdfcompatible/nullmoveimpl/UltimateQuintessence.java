@@ -1,8 +1,8 @@
 package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl;
 
 import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.DOUBLE_QUEEN_MINUS_PAWN_COST;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.QUARTER_PAWN_COST;
 import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_QUEEN_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.QUARTER_PAWN_COST;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -24,20 +24,6 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
     private static final int MY_SIDE = 1;
     private static final int ENEMY_SIDE = 0;
-
-    /** [Сторона, чей ход][откуда][куда] */
-    private final int[][][] moveHistory = new int[2][64][64];
-    /** [Сторона, чей ход][откуда][куда] */
-    private final int[][][] butterfly = new int[2][64][64];
-
-    {
-        for (int i = 0; i < 2; ++i)
-            for (int y = 0; y < 64; ++y)
-                for (int x = 0; x < 64; ++x) {
-                    moveHistory[i][y][x] = 1;
-                    butterfly[i][y][x] = 1;
-                }
-    }
 
     public UltimateQuintessence(
             final TranspositionTable table,
@@ -123,8 +109,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             // TODO: слишком медленно
             final List<Move> enemyMoves =
                     gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
-            SearchImprovements.allSort(
-                    gs.board, enemyMoves, moveHistory, butterfly, isMyMove ? ENEMY_SIDE : MY_SIDE);
+            SearchImprovements.allSorts(
+                    gs.board, enemyMoves, table, isMyMove ? ENEMY_SIDE : MY_SIDE);
             final Move nullMove = enemyMoves.get(0);
 
             // null-move:
@@ -157,8 +143,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         // --------------- Сортировка по приоритетам --------------- //
 
         if (entry == null || entry.allMoves == null)
-            SearchImprovements.allSort(
-                    gs.board, allMoves, moveHistory, butterfly, isMyMove ? MY_SIDE : ENEMY_SIDE);
+            SearchImprovements.allSorts(gs.board, allMoves, table, isMyMove ? MY_SIDE : ENEMY_SIDE);
 
         // --------------- PVS --------------- //
 
@@ -187,22 +172,27 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
                 if (beta <= est) {
                     // Эвристика истории:
-                    if (isNotCapture(move)) {
+                    /*if (isNotCapture(move)) {
                         final int side2move = isMyMove ? MY_SIDE : ENEMY_SIDE;
-                        moveHistory[side2move][move.getFrom().toSquare()][
-                                        move.getTo().toSquare()] +=
-                                1 << depth;
-                    }
+                        table.addMoveHistory(
+                                side2move,
+                                move.getFrom().toSquare(),
+                                move.getTo().toSquare(),
+                                1 << depth);
+                    }*/
                     alfa = beta;
                     break;
-                } else {
+                } /*else {
                     // Эвристика бабочки:
                     if (isNotCapture(move)) {
                         final int side2move = isMyMove ? MY_SIDE : ENEMY_SIDE;
-                        butterfly[side2move][move.getFrom().toSquare()][move.getTo().toSquare()] +=
-                                1 << depth;
+                        table.addButterfly(
+                                side2move,
+                                move.getFrom().toSquare(),
+                                move.getTo().toSquare(),
+                                1 << depth);
                     }
-                }
+                }*/
 
                 // --------------- PVS --------------- //
 
@@ -292,12 +282,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         // --------------- Проведение взятий до потери пульса --------------- //
 
         if (!areAttackMovesOrElseAll) {
-            SearchImprovements.allSort(
-                    gs.board,
-                    probablyAttackMoves,
-                    moveHistory,
-                    butterfly,
-                    isMyMove ? MY_SIDE : ENEMY_SIDE);
+            SearchImprovements.allSorts(
+                    gs.board, probablyAttackMoves, table, isMyMove ? MY_SIDE : ENEMY_SIDE);
             if (allMoves == null) allMoves = probablyAttackMoves;
         }
 

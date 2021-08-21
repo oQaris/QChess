@@ -25,6 +25,7 @@ public abstract class SearchAlgorithmFactory {
     }
 
     public static MTDFSearch getMTDFCompatibleAlgorithm(
+            final TranspositionTable table,
             final ResultUpdater resultUpdater,
             final Move mainMove,
             final int moveVersion,
@@ -32,7 +33,6 @@ public abstract class SearchAlgorithmFactory {
             final Color color,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        final TranspositionTable table = new TranspositionTable();
         return new UltimateQuintessence(
                 table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }

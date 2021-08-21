@@ -6,7 +6,6 @@ import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 public abstract class SearchImprovements {
 
@@ -19,51 +18,24 @@ public abstract class SearchImprovements {
         allMoves.sort(movesPriority);
     }
 
-    /** @return отсортированный итератор по убыванию (макс. жертва - мин. агрессор) */
-    public static Stream<Move> MVV_LVA_sort(final Board board, final Stream<Move> allMoves) {
-        return allMoves.sorted(
-                Comparator.comparingInt(
-                        m -> {
-                            final Figure from = board.getFigureUgly(m.getFrom());
-                            final Figure to = board.getFigureUgly(m.getTo());
-                            return to == null
-                                    ? FigureType.EMPTY_TYPE
-                                    : from.figureType.type - to.figureType.type;
-                        }));
-    }
-
-    /** Сортирует ходы на основе эвристики истории и бабочки */
-    public static Stream<Move> relativeHistorySort(
-            final Stream<Move> allMoves,
-            final int[][][] moveHistory,
-            final int[][][] butterfly,
-            final int color) {
-        return allMoves.sorted(
-                Comparator.<Move>comparingInt(
-                                m ->
-                                        HISTORY_SCALE
-                                                * moveHistory[color][m.getFrom().toSquare()][
-                                                        m.getTo().toSquare()]
-                                                / butterfly[color][m.getFrom().toSquare()][
-                                                        m.getTo().toSquare()])
-                        .reversed());
-    }
-
-    public static void allSort(
+    /** Сортирует ходы на основе эвристики истории, бабочки и MVV-LVA */
+    public static void allSorts(
             final Board board,
             final List<Move> allMoves,
-            final int[][][] moveHistory,
-            final int[][][] butterfly,
+            final TranspositionTable table,
             final int color) {
+        /*final double[][] relativeHistoryValues = new double[64][64];
+        for (final Move move : allMoves) {
+            final int from = move.getFrom().toSquare();
+            final int to = move.getTo().toSquare();
+            relativeHistoryValues[from][to] =
+                (double) table.getButterfly(color, from, to)
+                            / (table.getMoveHistory(color, from, to) << HISTORY_SCALE);
+        }
+
         final Comparator<Move> relativeHistory =
-                Comparator.<Move>comparingInt(
-                                m ->
-                                        HISTORY_SCALE
-                                                * moveHistory[color][m.getFrom().toSquare()][
-                                                        m.getTo().toSquare()]
-                                                / butterfly[color][m.getFrom().toSquare()][
-                                                        m.getTo().toSquare()])
-                        .reversed();
+                Comparator.comparingDouble(
+                        m -> relativeHistoryValues[m.getFrom().toSquare()][m.getTo().toSquare()]);*/
         final Comparator<Move> MVV_LVA =
                 Comparator.comparingInt(
                         m -> {
@@ -75,42 +47,8 @@ public abstract class SearchImprovements {
                         });
         allMoves.sort(
                 (m1, m2) -> {
-                    final int s1 = relativeHistory.compare(m1, m2);
-                    if (s1 != 0) return s1;
-                    final int s2 = MVV_LVA.compare(m1, m2);
-                    if (s2 != 0) return s2;
-                    return movesPriority.compare(m1, m2);
-                });
-    }
-
-    public static Stream<Move> allSort(
-            final Board board,
-            final Stream<Move> allMoves,
-            final int[][][] moveHistory,
-            final int[][][] butterfly,
-            final int color) {
-        final Comparator<Move> relativeHistory =
-                Comparator.<Move>comparingInt(
-                                m ->
-                                        HISTORY_SCALE
-                                                * moveHistory[color][m.getFrom().toSquare()][
-                                                        m.getTo().toSquare()]
-                                                / butterfly[color][m.getFrom().toSquare()][
-                                                        m.getTo().toSquare()])
-                        .reversed();
-        final Comparator<Move> MVV_LVA =
-                Comparator.comparingInt(
-                        m -> {
-                            final Figure from = board.getFigureUgly(m.getFrom());
-                            final Figure to = board.getFigureUgly(m.getTo());
-                            return to == null
-                                    ? FigureType.EMPTY_TYPE
-                                    : from.figureType.type - to.figureType.type;
-                        });
-        return allMoves.sorted(
-                (m1, m2) -> {
-                    final int s1 = relativeHistory.compare(m1, m2);
-                    if (s1 != 0) return s1;
+                    /*final int s1 = relativeHistory.compare(m1, m2);
+                    if (s1 != 0) return s1;*/
                     final int s2 = MVV_LVA.compare(m1, m2);
                     if (s2 != 0) return s2;
                     return movesPriority.compare(m1, m2);
