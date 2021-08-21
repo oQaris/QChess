@@ -21,12 +21,9 @@ import java.util.List;
 /** Лучший из лучших */
 public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
-    private static final int MY_SIDE = 1;
-    private static final int ENEMY_SIDE = 0;
-
-    private static final int LMR_REDUCE_ONE = 4;
-    private static final int LMR_REDUCE_TWO = 8;
-    private static final int LMR_REDUCE_THREE = 16;
+    private static final int LMR_REDUCE_ONE = 6;
+    private static final int LMR_REDUCE_TWO = 14;
+    private static final int LMR_REDUCE_THREE = 32;
 
     public UltimateQuintessence(
             final TranspositionTable table,
@@ -127,8 +124,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
             final List<Move> enemyMoves =
                     gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
-            SearchImprovements.allSorts(
-                    gs.board, enemyMoves, table, isMyMove ? ENEMY_SIDE : MY_SIDE);
+            SearchImprovements.allSorts(gs.board, enemyMoves);
             final Move nullMove = enemyMoves.get(0);
 
             // null-move:
@@ -155,7 +151,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         // --------------- Сортировка по приоритетам --------------- //
 
         if (entry == null || entry.allMoves == null)
-            SearchImprovements.allSorts(gs.board, allMoves, table, isMyMove ? MY_SIDE : ENEMY_SIDE);
+            SearchImprovements.allSorts(gs.board, allMoves);
 
         // --------------- PVS --------------- //
 
@@ -183,31 +179,10 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
             while (it.hasNext()) {
 
-                // --------------- Relative History Heuristic --------------- //
-
                 if (beta <= est) {
-                    // Эвристика истории:
-                    /*if (isNotCapture(move)) {
-                        final int side2move = isMyMove ? MY_SIDE : ENEMY_SIDE;
-                        table.addMoveHistory(
-                                side2move,
-                                move.getFrom().toSquare(),
-                                move.getTo().toSquare(),
-                                1 << depth);
-                    }*/
                     alfa = beta;
                     break;
-                } /*else {
-                      // Эвристика бабочки:
-                      if (isNotCapture(move)) {
-                          final int side2move = isMyMove ? MY_SIDE : ENEMY_SIDE;
-                          table.addButterfly(
-                                  side2move,
-                                  move.getFrom().toSquare(),
-                                  move.getTo().toSquare(),
-                                  1 << depth);
-                      }
-                  }*/
+                }
 
                 ++countNotFail;
 
@@ -221,9 +196,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                                 && countNotFail >= LMR_REDUCE_ONE
                                 && isAllowLMR(move);
                 if (isAllowLMR) {
-                    depth = initDepth - 1;
-                    if (countNotFail >= LMR_REDUCE_TWO) depth = initDepth - 2;
                     if (countNotFail >= LMR_REDUCE_THREE) depth = initDepth - 3;
+                    else if (countNotFail >= LMR_REDUCE_TWO) depth = initDepth - 2;
+                    else depth = initDepth - 1;
                 }
 
                 gs.moveSystem.move(move);
@@ -278,7 +253,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         final BoardState boardState = gs.history.getLastBoardState();
         final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
-            if (entry.lowerBound >= beta) return entry.lowerBound;
+            if (entry.lowerBound >= beta) return beta;
             if (entry.upperBound <= alfa) return entry.upperBound;
             if (entry.lowerBound > alfa) alfa = entry.lowerBound;
             if (entry.upperBound < beta) beta = entry.upperBound;
@@ -320,8 +295,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         // --------------- Проведение взятий до потери пульса --------------- //
 
         if (!areAttackMovesOrElseAll) {
-            SearchImprovements.allSorts(
-                    gs.board, probablyAttackMoves, table, isMyMove ? MY_SIDE : ENEMY_SIDE);
+            SearchImprovements.allSorts(gs.board, probablyAttackMoves);
             if (allMoves == null) allMoves = probablyAttackMoves;
         }
 
@@ -371,7 +345,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         for (int sq = 0; sq < 64; ++sq)
             if (board[sq] != FigureType.EMPTY_TYPE) {
                 ++count;
-                if (count > 10) return true;
+                if (count > 16) return true;
             }
         return false;
     }

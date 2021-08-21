@@ -71,7 +71,6 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
                             evaluationFunc,
                             maxDepth);
 
-            // executor.execute(() -> searchAlgorithm.MTDFStart(0, maxDepth));
             executor.execute(searchAlgorithm);
         }
         executor.shutdown();

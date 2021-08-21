@@ -12,30 +12,12 @@ public abstract class SearchImprovements {
     public static final Comparator<Move> movesPriority =
             Comparator.<Move>comparingInt(m -> m.getMoveType().importantLevel).reversed();
 
-    private static final int HISTORY_SCALE = 1;
-
     public static void prioritySort(final List<Move> allMoves) {
         allMoves.sort(movesPriority);
     }
 
     /** Сортирует ходы на основе эвристики истории, бабочки и MVV-LVA */
-    public static void allSorts(
-            final Board board,
-            final List<Move> allMoves,
-            final TranspositionTable table,
-            final int color) {
-        /*final double[][] relativeHistoryValues = new double[64][64];
-        for (final Move move : allMoves) {
-            final int from = move.getFrom().toSquare();
-            final int to = move.getTo().toSquare();
-            relativeHistoryValues[from][to] =
-                (double) table.getButterfly(color, from, to)
-                            / (table.getMoveHistory(color, from, to) << HISTORY_SCALE);
-        }
-
-        final Comparator<Move> relativeHistory =
-                Comparator.comparingDouble(
-                        m -> relativeHistoryValues[m.getFrom().toSquare()][m.getTo().toSquare()]);*/
+    public static void allSorts(final Board board, final List<Move> allMoves) {
         final Comparator<Move> MVV_LVA =
                 Comparator.comparingInt(
                         m -> {
@@ -47,10 +29,8 @@ public abstract class SearchImprovements {
                         });
         allMoves.sort(
                 (m1, m2) -> {
-                    /*final int s1 = relativeHistory.compare(m1, m2);
-                    if (s1 != 0) return s1;*/
-                    final int s2 = MVV_LVA.compare(m1, m2);
-                    if (s2 != 0) return s2;
+                    final int s1 = MVV_LVA.compare(m1, m2);
+                    if (s1 != 0) return s1;
                     return movesPriority.compare(m1, m2);
                 });
     }
