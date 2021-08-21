@@ -31,7 +31,7 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
             final boolean isCheckToEnemyColor) {
         final Color enemyColor = color.inverse();
         return !isPrevNullMove
-                && !gs.endGameDetector.isStalemate(enemyColor)
+                && !gs.endGameDetector.isStalemate(enemyColor, table)
                 && gs.board.getFigureCount(enemyColor) > 9
                 && !isCheckToColor
                 && !isCheckToEnemyColor;

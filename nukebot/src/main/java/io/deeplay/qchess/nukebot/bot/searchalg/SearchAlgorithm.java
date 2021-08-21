@@ -5,6 +5,7 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.List;
 
@@ -50,7 +51,8 @@ public abstract class SearchAlgorithm implements Runnable {
                 allMoves,
                 true,
                 isMyMove,
-                depth);
+                depth,
+                null);
     }
 
     /**
@@ -66,7 +68,8 @@ public abstract class SearchAlgorithm implements Runnable {
             final List<Move> probablyAllMoves,
             final boolean areExactAllMoves,
             final boolean isMyMove,
-            final int depth)
+            final int depth,
+            final TranspositionTable table)
             throws ChessError {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
@@ -79,14 +82,14 @@ public abstract class SearchAlgorithm implements Runnable {
             boolean isStalemateToMe = probablyAllMoves.isEmpty();
             // Если поставлен пат, но не факт, что мы посмотрели все ходы, нужно пересчитать:
             if (isStalemateToMe && !areExactAllMoves) {
-                isStalemateToMe = gs.endGameDetector.isStalemate(myColor);
+                isStalemateToMe = gs.endGameDetector.isStalemate(myColor, table);
             }
             if (isStalemateToMe) {
                 if (isCheckToMe) return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
                 return checkBonus - depth;
             }
 
-            if (gs.endGameDetector.isStalemate(enemyColor)) {
+            if (gs.endGameDetector.isStalemate(enemyColor, table)) {
                 if (isCheckToEnemy) return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
                 return checkBonus - depth; // расширяем ничью - чем глубже, тем лучше
             }
@@ -94,14 +97,14 @@ public abstract class SearchAlgorithm implements Runnable {
             boolean isStalemateToEnemy = probablyAllMoves.isEmpty();
             // Если поставлен пат, но не факт, что мы посмотрели все ходы, нужно пересчитать:
             if (isStalemateToEnemy && !areExactAllMoves) {
-                isStalemateToEnemy = gs.endGameDetector.isStalemate(enemyColor);
+                isStalemateToEnemy = gs.endGameDetector.isStalemate(enemyColor, table);
             }
             if (isStalemateToEnemy) {
                 if (isCheckToEnemy) return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
                 return checkBonus - depth; // расширяем ничью - чем глубже, тем лучше
             }
 
-            if (gs.endGameDetector.isStalemate(myColor)) {
+            if (gs.endGameDetector.isStalemate(myColor, table)) {
                 if (isCheckToMe) return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
                 return checkBonus - depth;
             }

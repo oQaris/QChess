@@ -301,7 +301,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                             allMoves != null ? allMoves : probablyAttackMoves,
                             allMoves != null || !areAttackMovesOrElseAll,
                             isMyMove,
-                            depth);
+                            depth,
+                            table);
             if (!isMyMove) standPat = -standPat;
 
             if (standPat >= beta) return beta;
