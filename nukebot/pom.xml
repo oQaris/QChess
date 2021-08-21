@@ -50,6 +50,7 @@
     <dependency>
       <artifactId>logback-classic</artifactId>
       <groupId>ch.qos.logback</groupId>
+      <scope>test</scope>
       <version>1.2.3</version>
     </dependency>
     <!-- QChess modules -->

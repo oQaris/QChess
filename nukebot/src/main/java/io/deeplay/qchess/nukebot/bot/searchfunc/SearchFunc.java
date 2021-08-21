@@ -13,7 +13,6 @@ public abstract class SearchFunc {
     public final EvaluationFunc evaluationFunc;
     public final Color myColor;
     public final int maxDepth;
-
     protected final GameSettings gs;
 
     protected SearchFunc(
@@ -33,4 +32,10 @@ public abstract class SearchFunc {
     }
 
     public abstract Move findBest() throws ChessError;
+
+    @FunctionalInterface
+    public interface SearchFuncConstructor {
+        SearchFunc newInstance(
+                GameSettings gs, Color color, EvaluationFunc evaluationFunc, int maxDepth);
+    }
 }
