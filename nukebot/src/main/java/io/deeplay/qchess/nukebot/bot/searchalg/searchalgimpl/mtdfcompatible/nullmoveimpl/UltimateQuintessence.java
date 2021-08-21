@@ -89,8 +89,11 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         // --------------- Получение всех ходов из ТТ или создание новых --------------- //
 
         final List<Move> allMoves;
-        if (entry != null && entry.allMoves != null) allMoves = entry.allMoves;
-        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor, table);
+        if (entry != null) {
+            if (entry.allMoves != null) allMoves = entry.allMoves;
+            else // если есть вхождение, значит скорее всего есть и следующие
+            allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor, table);
+        } else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
         // --------------- Условие выхода из рекурсии --------------- //
 
@@ -127,13 +130,13 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         if (isAllowNullMove) {
             isPrevNullMove = true;
 
-            final List<Move> enemyMoves =
-                    gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor, table);
+            final List<Move> enemyMoves = // скорее всего в ТТ нет проверок на шах
+                    gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
             SearchImprovements.allSorts(gs.board, enemyMoves);
             final Move nullMove = enemyMoves.get(0);
 
             // null-move:
-            gs.moveSystem.move(nullMove);
+            gs.moveSystem.move(nullMove, true, false);
 
             // null-window search:
             final int est =
@@ -276,7 +279,10 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         final List<Move> probablyAttackMoves =
                 areAttackMovesOrElseAll
                         ? attackMoves
-                        : gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor, table);
+                        : (entry == null // если вхождения нет, значит скорее всего нет и следующих
+                                ? gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor)
+                                : gs.board.getAllPreparedMoves(
+                                        gs, isMyMove ? myColor : enemyColor, table));
 
         final boolean isCheckToWhite =
                 entry != null && entry.isCheckToWhite != 0
