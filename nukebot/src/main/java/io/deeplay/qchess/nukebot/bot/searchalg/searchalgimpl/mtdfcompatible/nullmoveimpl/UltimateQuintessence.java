@@ -14,15 +14,19 @@ import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable.TTEntry;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 /** Лучший из лучших */
 public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
     private static final int MY_SIDE = 1;
     private static final int ENEMY_SIDE = 0;
+
+    private static final int LMR_REDUCE_ONE = 4;
+    private static final int LMR_REDUCE_TWO = 8;
+    private static final int LMR_REDUCE_THREE = 16;
 
     public UltimateQuintessence(
             final TranspositionTable table,
@@ -57,6 +61,12 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }
+    }
+
+    /** @return true, если разрешено сократить глубину для хода move */
+    private boolean isAllowLMR(final Move move) {
+        return isNotCapture(move)
+                && gs.board.getFigureUgly(move.getFrom()).figureType != FigureType.PAWN;
     }
 
     public int uq(
@@ -98,16 +108,23 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
+        final boolean isCheckToMe =
+                entry != null && entry.isCheck != 0
+                        ? entry.isCheck == 1
+                        : gs.endGameDetector.isCheck(myColor);
         final boolean isAllowNullMove =
                 entry != null && entry.isAllowNullMove != 0
                         ? entry.isAllowNullMove == 1
-                        : (isAllowNullMove(isMyMove ? myColor : enemyColor, isPrevNullMove)
+                        : (isAllowNullMove(
+                                        isMyMove ? myColor : enemyColor,
+                                        isPrevNullMove,
+                                        isCheckToMe)
                                 && (!verify || depth > 1));
         boolean failHigh = false;
 
         if (isAllowNullMove) {
             isPrevNullMove = true;
-            // TODO: слишком медленно
+
             final List<Move> enemyMoves =
                     gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
             SearchImprovements.allSorts(
@@ -142,6 +159,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- PVS --------------- //
 
+        final int initDepth = depth;
+        int countNotFail = 0;
+
         boolean doResearch;
         do { // если будет обнаружена позиция Цугцванга, повторить поиск с начальной глубиной:
             doResearch = false;
@@ -149,7 +169,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             if (resultUpdater.isInvalidMoveVersion(moveVersion))
                 return EvaluationFunc.MIN_ESTIMATION;
 
-            final ListIterator<Move> it = allMoves.listIterator();
+            final Iterator<Move> it = allMoves.iterator();
             Move move = it.next();
 
             // first move:
@@ -189,9 +209,23 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                       }
                   }*/
 
+                ++countNotFail;
+
                 // --------------- PVS --------------- //
 
                 move = it.next();
+
+                final boolean isAllowLMR =
+                        depth != maxDepth
+                                && !isCheckToMe
+                                && countNotFail >= LMR_REDUCE_ONE
+                                && isAllowLMR(move);
+                if (isAllowLMR) {
+                    depth = initDepth - 1;
+                    if (countNotFail >= LMR_REDUCE_TWO) depth = initDepth - 2;
+                    if (countNotFail >= LMR_REDUCE_THREE) depth = initDepth - 3;
+                }
+
                 gs.moveSystem.move(move);
 
                 // null-window search:
@@ -220,6 +254,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                 allMoves,
                 null,
                 isAllowNullMove ? 1 : 2,
+                isCheckToMe ? 1 : 2,
                 alfa,
                 boardState,
                 alfaOrigin,
@@ -324,7 +359,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Кеширование результата в ТТ --------------- //
 
-        table.store(allMoves, attackMoves, 0, alfa, boardState, alfaOrigin, betaOrigin, depth);
+        table.store(allMoves, attackMoves, 0, 0, alfa, boardState, alfaOrigin, betaOrigin, depth);
 
         return alfa;
     }

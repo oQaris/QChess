@@ -79,19 +79,20 @@ public class TranspositionTable {
             final int alfaOrigin,
             final int betaOrigin,
             final int depth) {
-        store(allMoves, null, 0, result, boardState, alfaOrigin, betaOrigin, depth);
+        store(allMoves, null, 0, 0, result, boardState, alfaOrigin, betaOrigin, depth);
     }
 
     public void store(
             final List<Move> allMoves,
             final List<Move> attackMoves,
             final int isAllowNullMove,
+            final int isCheck,
             final int result,
             final BoardState boardState,
             final int alfaOrigin,
             final int betaOrigin,
             final int depth) {
-        final TTEntry entry = new TTEntry(allMoves, attackMoves, depth, isAllowNullMove);
+        final TTEntry entry = new TTEntry(allMoves, attackMoves, depth, isAllowNullMove, isCheck);
 
         if (result <= alfaOrigin) entry.upperBound = result;
         if (result >= betaOrigin) entry.lowerBound = result;
@@ -106,6 +107,7 @@ public class TranspositionTable {
         public List<Move> allMoves;
         public List<Move> attackMoves;
         public int isAllowNullMove;
+        public int isCheck;
         public int lowerBound = EvaluationFunc.MIN_ESTIMATION;
         public int upperBound = EvaluationFunc.MAX_ESTIMATION;
         public int depth;
@@ -114,11 +116,13 @@ public class TranspositionTable {
                 final List<Move> allMoves,
                 final List<Move> attackMoves,
                 final int depth,
-                final int isAllowNullMove) {
+                final int isAllowNullMove,
+                final int isCheck) {
             this.allMoves = allMoves;
             this.attackMoves = attackMoves;
             this.depth = depth;
             this.isAllowNullMove = isAllowNullMove;
+            this.isCheck = isCheck;
         }
     }
 }

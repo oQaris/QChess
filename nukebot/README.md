@@ -73,7 +73,7 @@ Search, реализующий [Null-Move Heuristic](https://www.chessprogrammin
 - [ ] [Guard Heuristic](https://www.chessprogramming.org/Guard_Heuristic) - улучшение quiesce
 - [ ] [History Heuristic](https://www.chessprogramming.org/History_Heuristic) - улучшение quiesce
 - [x] [Relative History Heuristic](https://www.chessprogramming.org/Relative_History_Heuristic)
-- [ ] [LMR](https://www.chessprogramming.org/Late_Move_Reductions)
+- [x] [LMR](https://www.chessprogramming.org/Late_Move_Reductions)
 - [x] Iterative deepening ([MTDF](https://en.wikipedia.org/wiki/MTD(f)))
 - [ ] [Parity Pruning](https://www.chessprogramming.org/Parity_Pruning)
 - [ ] Aspiration Search

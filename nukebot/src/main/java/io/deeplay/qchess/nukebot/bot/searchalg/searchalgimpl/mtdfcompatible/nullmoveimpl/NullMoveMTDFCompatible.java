@@ -10,7 +10,7 @@ import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 
 public abstract class NullMoveMTDFCompatible extends MTDFSearch {
 
-    public static final int DEPTH_REDUCTION = 2;
+    public static final int DEPTH_REDUCTION = 3;
 
     protected NullMoveMTDFCompatible(
             final TranspositionTable table,
@@ -24,12 +24,13 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
         super(table, resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
     }
 
-    protected boolean isAllowNullMove(final Color color, final boolean isPrevNullMove) {
+    protected boolean isAllowNullMove(
+            final Color color, final boolean isPrevNullMove, final boolean isCheckToMe) {
         final Color enemyColor = color.inverse();
         return !isPrevNullMove
                 && !gs.endGameDetector.isStalemate(enemyColor)
                 && gs.board.getFigureCount(enemyColor) > 8
-                && !gs.endGameDetector.isCheck(color)
+                && !isCheckToMe
                 && !gs.endGameDetector.isCheck(enemyColor);
         /*
          * TODO: (улучшить) null-move запрещен, если выполнено одно из следующих условий:
@@ -38,6 +39,10 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
          *  3. Осталось мало материала на доске
          *  4. Число ходов превышает.
          */
+    }
+
+    protected boolean isAllowNullMove(final Color color, final boolean isPrevNullMove) {
+        return isAllowNullMove(color, isPrevNullMove, gs.endGameDetector.isCheck(color));
     }
 
     protected boolean isNotCapture(final Move move) {
