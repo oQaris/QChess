@@ -47,7 +47,7 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
     public Move findBest() throws ChessError {
         final long startTime = System.currentTimeMillis();
 
-        final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
+        final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor, table);
         SearchImprovements.prioritySort(allMoves);
 
         theBestEstimation = EvaluationFunc.MIN_ESTIMATION;

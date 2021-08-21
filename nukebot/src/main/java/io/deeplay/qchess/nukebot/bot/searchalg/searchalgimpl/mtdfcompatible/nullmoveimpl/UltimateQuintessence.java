@@ -90,7 +90,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         final List<Move> allMoves;
         if (entry != null && entry.allMoves != null) allMoves = entry.allMoves;
-        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor, table);
 
         // --------------- Условие выхода из рекурсии --------------- //
 
@@ -128,7 +128,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             isPrevNullMove = true;
 
             final List<Move> enemyMoves =
-                    gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
+                    gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor, table);
             SearchImprovements.allSorts(gs.board, enemyMoves);
             final Move nullMove = enemyMoves.get(0);
 
@@ -276,7 +276,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         final List<Move> probablyAttackMoves =
                 areAttackMovesOrElseAll
                         ? attackMoves
-                        : gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+                        : gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor, table);
 
         final boolean isCheckToWhite =
                 entry != null && entry.isCheckToWhite != 0
