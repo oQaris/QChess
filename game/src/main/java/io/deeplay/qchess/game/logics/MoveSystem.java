@@ -6,6 +6,7 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_WAS_KILLED_I
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.features.ITranspositionTable;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
@@ -319,13 +320,18 @@ public class MoveSystem {
 
     /**
      * @param move корректный ход
+     * @param table ТТ или null
      * @return true, если после хода нет шаха королю цвета той фигуры, которой был сделан ход
      */
-    public boolean isCorrectVirtualMoveSilence(final Move move) throws ChessError {
+    public boolean isCorrectVirtualMoveSilence(final Move move, final ITranspositionTable table)
+            throws ChessError {
         final Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
-        move(move, false, true);
-        final boolean isCheck = egd.isCheck(figureToMove);
-        undoMove(false);
+        move(move);
+        final boolean isCheck;
+        if (table != null)
+            isCheck = table.isCheckTo(gs, gs.history.getLastBoardState(), figureToMove);
+        else isCheck = egd.isCheck(figureToMove);
+        undoMove();
         return !isCheck;
     }
 
