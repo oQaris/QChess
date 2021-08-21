@@ -44,7 +44,13 @@ public abstract class SearchAlgorithm implements Runnable {
 
     public int getEvaluation(final List<Move> allMoves, final boolean isMyMove, final int depth)
             throws ChessError {
-        return getEvaluation(allMoves, true, isMyMove, depth);
+        return getEvaluation(
+                gs.endGameDetector.isCheck(myColor),
+                gs.endGameDetector.isCheck(enemyColor),
+                allMoves,
+                true,
+                isMyMove,
+                depth);
     }
 
     /**
@@ -55,6 +61,8 @@ public abstract class SearchAlgorithm implements Runnable {
      * @param depth текущая глубина (без вычитания 1)
      */
     public int getEvaluation(
+            final boolean isCheckToMe,
+            final boolean isCheckToEnemy,
             final List<Move> probablyAllMoves,
             final boolean areExactAllMoves,
             final boolean isMyMove,
@@ -62,8 +70,6 @@ public abstract class SearchAlgorithm implements Runnable {
             throws ChessError {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        final boolean isCheckToEnemy = gs.endGameDetector.isCheck(enemyColor);
-        final boolean isCheckToMe = gs.endGameDetector.isCheck(myColor);
         final int checkBonus;
         if (isCheckToMe) checkBonus = -EvaluationFunc.KING_COST;
         else if (isCheckToEnemy) checkBonus = EvaluationFunc.KING_COST;

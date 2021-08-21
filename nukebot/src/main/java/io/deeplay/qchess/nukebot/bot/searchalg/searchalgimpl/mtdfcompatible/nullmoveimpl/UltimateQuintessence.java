@@ -109,7 +109,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         final boolean isCheckToEnemyColor =
                 entry != null && entry.isCheckToColor != 0
                         ? entry.isCheckToColor == 1
-                        : gs.endGameDetector.isCheck(isMyMove ? myColor : enemyColor);
+                        : gs.endGameDetector.isCheck(isMyMove ? enemyColor : myColor);
         final boolean isAllowNullMove =
                 isAllowNullMove(
                                 isMyMove ? myColor : enemyColor,
@@ -273,6 +273,24 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                         ? attackMoves
                         : gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
+        final boolean isCheckToColor =
+                entry != null && entry.isCheckToColor != 0
+                        ? entry.isCheckToColor == 1
+                        : gs.endGameDetector.isCheck(isMyMove ? myColor : enemyColor);
+        final boolean isCheckToEnemyColor =
+                entry != null && entry.isCheckToColor != 0
+                        ? entry.isCheckToColor == 1
+                        : gs.endGameDetector.isCheck(isMyMove ? enemyColor : myColor);
+        final boolean isCheckToMe;
+        final boolean isCheckToEnemy;
+        if (isMyMove) {
+            isCheckToMe = isCheckToColor;
+            isCheckToEnemy = isCheckToEnemyColor;
+        } else {
+            isCheckToMe = isCheckToEnemyColor;
+            isCheckToEnemy = isCheckToColor;
+        }
+
         // --------------- Условие выхода из рекурсии --------------- //
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
@@ -280,6 +298,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         {
             int standPat =
                     getEvaluation(
+                            isCheckToMe,
+                            isCheckToEnemy,
                             allMoves != null ? allMoves : probablyAttackMoves,
                             allMoves != null || !areAttackMovesOrElseAll,
                             isMyMove,
@@ -325,7 +345,16 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         // --------------- Кеширование результата в ТТ --------------- //
 
         table.store(
-                allMoves, attackMoves, 0, 0, 0, alfa, boardState, alfaOrigin, betaOrigin, depth);
+                allMoves,
+                attackMoves,
+                0,
+                isCheckToColor ? 1 : 2,
+                isCheckToEnemyColor ? 1 : 2,
+                alfa,
+                boardState,
+                alfaOrigin,
+                betaOrigin,
+                depth);
 
         return alfa;
     }
