@@ -1,61 +1,22 @@
 package io.deeplay.qchess.nukebot.bot.searchalg.features;
 
+import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.features.ITranspositionTable;
 import io.deeplay.qchess.game.model.BoardState;
+import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-// TODO: сделать интерфейс
-public class TranspositionTable {
+// TODO: сделать и использовать везде интерфейс
+public class TranspositionTable implements ITranspositionTable {
 
     private static final int MAX_NODES = 1000000;
 
-    /** [Сторона, чей ход] -> [откуда] -> [куда] */
-    // private final AtomicInteger[][][] moveHistory = new AtomicInteger[2][64][64];
-    private final int[][][] moveHistory = new int[2][64][64];
-    /** [Сторона, чей ход] -> [откуда] -> [куда] */
-    // private final AtomicInteger[][][] butterfly = new AtomicInteger[2][64][64];
-    private final int[][][] butterfly = new int[2][64][64];
     /** Хранит вхождения игровых состояний */
     private final Map<BoardState, TTEntry> entries = new ConcurrentHashMap<>(MAX_NODES);
-
-    {
-        for (int color = 0; color < 2; ++color)
-            for (int y = 0; y < 64; ++y)
-                for (int x = 0; x < 64; ++x) {
-                    // moveHistory[color][y][x] = new AtomicInteger(1);
-                    // butterfly[color][y][x] = new AtomicInteger(1);
-                    moveHistory[color][y][x] = 1;
-                    butterfly[color][y][x] = 1;
-                }
-    }
-
-    /* TODO:
-     *  AtomicInteger почти останавливает вычисления к середине игры, тем не менее требуются
-     *  дополнительные тесты
-     */
-
-    public void addMoveHistory(final int color, final int y, final int x, final int value) {
-        // moveHistory[color][y][x].addAndGet(value);
-        moveHistory[color][y][x] += value;
-    }
-
-    public int getMoveHistory(final int color, final int y, final int x) {
-        // return moveHistory[color][y][x].get();
-        return moveHistory[color][y][x];
-    }
-
-    public void addButterfly(final int color, final int y, final int x, final int value) {
-        // butterfly[color][y][x].addAndGet(value);
-        butterfly[color][y][x] += value;
-    }
-
-    public int getButterfly(final int color, final int y, final int x) {
-        // return butterfly[color][y][x].get();
-        return butterfly[color][y][x];
-    }
 
     /** @return вхождение состояния игры или null, если такое состояние еще не встречалось */
     public TTEntry find(final BoardState boardState) {
@@ -110,13 +71,22 @@ public class TranspositionTable {
         entries.put(boardState, entry);
     }
 
+    @Override
+    public boolean isCheckTo(
+            final GameSettings gs, final BoardState boardState, final Color color) {
+        final TTEntry entry = entries.get(boardState);
+        if (entry == null) return gs.endGameDetector.isCheck(color);
+        if (color == Color.WHITE) return entry.isCheckToWhite == 1;
+        return entry.isCheckToBlack == 1;
+    }
+
     public static class TTEntry {
 
         public List<Move> allMoves;
         public List<Move> attackMoves;
         public int isAllowNullMove;
-        public int isCheckToColor;
-        public int isCheckToEnemyColor;
+        public int isCheckToWhite;
+        public int isCheckToBlack;
         public int lowerBound = EvaluationFunc.MIN_ESTIMATION;
         public int upperBound = EvaluationFunc.MAX_ESTIMATION;
         public int depth;
@@ -126,14 +96,14 @@ public class TranspositionTable {
                 final List<Move> attackMoves,
                 final int depth,
                 final int isAllowNullMove,
-                final int isCheckToColor,
-                final int isCheckToEnemyColor) {
+                final int isCheckToWhite,
+                final int isCheckToBlack) {
             this.allMoves = allMoves;
             this.attackMoves = attackMoves;
             this.depth = depth;
             this.isAllowNullMove = isAllowNullMove;
-            this.isCheckToColor = isCheckToColor;
-            this.isCheckToEnemyColor = isCheckToEnemyColor;
+            this.isCheckToWhite = isCheckToWhite;
+            this.isCheckToBlack = isCheckToBlack;
         }
     }
 }

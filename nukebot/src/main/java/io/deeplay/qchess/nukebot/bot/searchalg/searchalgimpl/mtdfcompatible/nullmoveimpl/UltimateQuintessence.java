@@ -102,20 +102,25 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        final boolean isCheckToColor =
-                entry != null && entry.isCheckToColor != 0
-                        ? entry.isCheckToColor == 1
-                        : gs.endGameDetector.isCheck(isMyMove ? myColor : enemyColor);
-        final boolean isCheckToEnemyColor =
-                entry != null && entry.isCheckToColor != 0
-                        ? entry.isCheckToColor == 1
-                        : gs.endGameDetector.isCheck(isMyMove ? enemyColor : myColor);
+        final boolean isCheckToWhite =
+                entry != null && entry.isCheckToWhite != 0
+                        ? entry.isCheckToWhite == 1
+                        : gs.endGameDetector.isCheck(Color.WHITE);
+        final boolean isCheckToBlack =
+                entry != null && entry.isCheckToBlack != 0
+                        ? entry.isCheckToBlack == 1
+                        : gs.endGameDetector.isCheck(Color.BLACK);
+        final boolean isCheckToMe = myColor == Color.WHITE ? isCheckToWhite : isCheckToBlack;
+        final boolean isCheckToEnemy = enemyColor == Color.WHITE ? isCheckToWhite : isCheckToBlack;
+        final boolean isCheckToThisSide = isMyMove ? isCheckToMe : isCheckToEnemy;
+        final boolean isCheckToOtherSide = isMyMove ? isCheckToEnemy : isCheckToMe;
+
         final boolean isAllowNullMove =
                 isAllowNullMove(
                                 isMyMove ? myColor : enemyColor,
                                 isPrevNullMove,
-                                isCheckToColor,
-                                isCheckToEnemyColor)
+                                isCheckToThisSide,
+                                isCheckToOtherSide)
                         && (!verify || depth > 1);
         boolean failHigh = false;
 
@@ -192,7 +197,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
                 final boolean isAllowLMR =
                         depth != maxDepth
-                                && !isCheckToColor
+                                && !isCheckToThisSide
                                 && countNotFail >= LMR_REDUCE_ONE
                                 && isAllowLMR(move);
                 if (isAllowLMR) {
@@ -229,8 +234,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                 allMoves,
                 null,
                 isAllowNullMove ? 1 : 2,
-                isCheckToColor ? 1 : 2,
-                isCheckToEnemyColor ? 1 : 2,
+                isCheckToWhite ? 1 : 2,
+                isCheckToBlack ? 1 : 2,
                 alfa,
                 boardState,
                 alfaOrigin,
@@ -273,23 +278,16 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                         ? attackMoves
                         : gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
-        final boolean isCheckToColor =
-                entry != null && entry.isCheckToColor != 0
-                        ? entry.isCheckToColor == 1
-                        : gs.endGameDetector.isCheck(isMyMove ? myColor : enemyColor);
-        final boolean isCheckToEnemyColor =
-                entry != null && entry.isCheckToColor != 0
-                        ? entry.isCheckToColor == 1
-                        : gs.endGameDetector.isCheck(isMyMove ? enemyColor : myColor);
-        final boolean isCheckToMe;
-        final boolean isCheckToEnemy;
-        if (isMyMove) {
-            isCheckToMe = isCheckToColor;
-            isCheckToEnemy = isCheckToEnemyColor;
-        } else {
-            isCheckToMe = isCheckToEnemyColor;
-            isCheckToEnemy = isCheckToColor;
-        }
+        final boolean isCheckToWhite =
+                entry != null && entry.isCheckToWhite != 0
+                        ? entry.isCheckToWhite == 1
+                        : gs.endGameDetector.isCheck(Color.WHITE);
+        final boolean isCheckToBlack =
+                entry != null && entry.isCheckToBlack != 0
+                        ? entry.isCheckToBlack == 1
+                        : gs.endGameDetector.isCheck(Color.BLACK);
+        final boolean isCheckToMe = myColor == Color.WHITE ? isCheckToWhite : isCheckToBlack;
+        final boolean isCheckToEnemy = enemyColor == Color.WHITE ? isCheckToWhite : isCheckToBlack;
 
         // --------------- Условие выхода из рекурсии --------------- //
 
@@ -348,8 +346,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                 allMoves,
                 attackMoves,
                 0,
-                isCheckToColor ? 1 : 2,
-                isCheckToEnemyColor ? 1 : 2,
+                isCheckToWhite ? 1 : 2,
+                isCheckToBlack ? 1 : 2,
                 alfa,
                 boardState,
                 alfaOrigin,
