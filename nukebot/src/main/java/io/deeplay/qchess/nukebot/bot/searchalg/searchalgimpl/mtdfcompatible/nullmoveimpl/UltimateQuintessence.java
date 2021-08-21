@@ -2,7 +2,7 @@ package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nul
 
 import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.DOUBLE_QUEEN_MINUS_PAWN_COST;
 import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.QUARTER_PAWN_COST;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.QUEEN_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_QUEEN_COST;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
@@ -303,7 +303,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        final boolean isNotEndgame = gs.board.isNotEndgame();
+        final boolean isNotEndgame = isNotEndgame();
 
         for (final Move move : probablyAttackMoves) {
             if (!areAttackMovesOrElseAll) {
@@ -313,7 +313,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
             // --------------- Delta Pruning --------------- //
 
-            int delta = QUEEN_COST;
+            int delta = MG_QUEEN_COST;
             if (isNotEndgame
                     && gs.board.getFigureUgly(move.getFrom()).figureType == FigureType.PAWN)
                 delta = DOUBLE_QUEEN_MINUS_PAWN_COST;
@@ -338,5 +338,17 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         table.store(allMoves, attackMoves, alfa, boardState, alfaOrigin, betaOrigin, depth);
 
         return alfa;
+    }
+
+    /** @return true, если сейчас скорее всего не эндшпиль */
+    public boolean isNotEndgame() {
+        int count = 0;
+        final int[] board = gs.board.fastSnapshotReference();
+        for (int sq = 0; sq < 64; ++sq)
+            if (board[sq] != FigureType.EMPTY_TYPE) {
+                ++count;
+                if (count > 10) return true;
+            }
+        return false;
     }
 }
