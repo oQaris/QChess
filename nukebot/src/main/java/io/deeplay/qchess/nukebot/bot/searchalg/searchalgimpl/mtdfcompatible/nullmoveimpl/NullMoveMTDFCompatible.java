@@ -25,13 +25,16 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
     }
 
     protected boolean isAllowNullMove(
-            final Color color, final boolean isPrevNullMove, final boolean isCheckToMe) {
+            final Color color,
+            final boolean isPrevNullMove,
+            final boolean isCheckToColor,
+            final boolean isCheckToEnemyColor) {
         final Color enemyColor = color.inverse();
         return !isPrevNullMove
                 && !gs.endGameDetector.isStalemate(enemyColor)
-                && gs.board.getFigureCount(enemyColor) > 8
-                && !isCheckToMe
-                && !gs.endGameDetector.isCheck(enemyColor);
+                && gs.board.getFigureCount(enemyColor) > 9
+                && !isCheckToColor
+                && !isCheckToEnemyColor;
         /*
          * TODO: (улучшить) null-move запрещен, если выполнено одно из следующих условий:
          *  1. Противник имеет только короля и пешки
@@ -42,7 +45,11 @@ public abstract class NullMoveMTDFCompatible extends MTDFSearch {
     }
 
     protected boolean isAllowNullMove(final Color color, final boolean isPrevNullMove) {
-        return isAllowNullMove(color, isPrevNullMove, gs.endGameDetector.isCheck(color));
+        return isAllowNullMove(
+                color,
+                isPrevNullMove,
+                gs.endGameDetector.isCheck(color),
+                gs.endGameDetector.isCheck(color.inverse()));
     }
 
     protected boolean isNotCapture(final Move move) {

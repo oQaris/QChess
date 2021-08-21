@@ -1,8 +1,5 @@
 package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl;
 
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.DOUBLE_QUEEN_MINUS_PAWN_COST;
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_QUEEN_COST;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.BoardState;
@@ -22,8 +19,8 @@ import java.util.List;
 public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
     private static final int LMR_REDUCE_ONE = 6;
-    private static final int LMR_REDUCE_TWO = 14;
-    private static final int LMR_REDUCE_THREE = 32;
+    private static final int LMR_REDUCE_TWO = 32;
+    private static final int LMR_REDUCE_THREE = 64;
 
     public UltimateQuintessence(
             final TranspositionTable table,
@@ -105,18 +102,21 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        final boolean isCheckToMe =
-                entry != null && entry.isCheck != 0
-                        ? entry.isCheck == 1
-                        : gs.endGameDetector.isCheck(myColor);
+        final boolean isCheckToColor =
+                entry != null && entry.isCheckToColor != 0
+                        ? entry.isCheckToColor == 1
+                        : gs.endGameDetector.isCheck(isMyMove ? myColor : enemyColor);
+        final boolean isCheckToEnemyColor =
+                entry != null && entry.isCheckToColor != 0
+                        ? entry.isCheckToColor == 1
+                        : gs.endGameDetector.isCheck(isMyMove ? myColor : enemyColor);
         final boolean isAllowNullMove =
-                entry != null && entry.isAllowNullMove != 0
-                        ? entry.isAllowNullMove == 1
-                        : (isAllowNullMove(
-                                        isMyMove ? myColor : enemyColor,
-                                        isPrevNullMove,
-                                        isCheckToMe)
-                                && (!verify || depth > 1));
+                isAllowNullMove(
+                                isMyMove ? myColor : enemyColor,
+                                isPrevNullMove,
+                                isCheckToColor,
+                                isCheckToEnemyColor)
+                        && (!verify || depth > 1);
         boolean failHigh = false;
 
         if (isAllowNullMove) {
@@ -192,7 +192,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
                 final boolean isAllowLMR =
                         depth != maxDepth
-                                && !isCheckToMe
+                                && !isCheckToColor
                                 && countNotFail >= LMR_REDUCE_ONE
                                 && isAllowLMR(move);
                 if (isAllowLMR) {
@@ -229,7 +229,8 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                 allMoves,
                 null,
                 isAllowNullMove ? 1 : 2,
-                isCheckToMe ? 1 : 2,
+                isCheckToColor ? 1 : 2,
+                isCheckToEnemyColor ? 1 : 2,
                 alfa,
                 boardState,
                 alfaOrigin,
@@ -301,20 +302,11 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        final boolean isNotEndgame = isNotEndgame();
-
         for (final Move move : probablyAttackMoves) {
             if (!areAttackMovesOrElseAll) {
                 if (isNotCapture(move)) continue;
                 attackMoves.add(move);
             }
-
-            // --------------- Delta Pruning --------------- //
-
-            int delta = MG_QUEEN_COST;
-            if (isNotEndgame
-                    && gs.board.getFigureUgly(move.getFrom()).figureType == FigureType.PAWN)
-                delta = DOUBLE_QUEEN_MINUS_PAWN_COST;
 
             gs.moveSystem.move(move);
             final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1);
@@ -323,7 +315,6 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
             if (resultUpdater.isInvalidMoveVersion(moveVersion))
                 return EvaluationFunc.MIN_ESTIMATION;
 
-            if (isNotEndgame && score < alfa - delta) return alfa;
             if (score >= beta) {
                 alfa = beta;
                 break;
@@ -333,20 +324,9 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Кеширование результата в ТТ --------------- //
 
-        table.store(allMoves, attackMoves, 0, 0, alfa, boardState, alfaOrigin, betaOrigin, depth);
+        table.store(
+                allMoves, attackMoves, 0, 0, 0, alfa, boardState, alfaOrigin, betaOrigin, depth);
 
         return alfa;
-    }
-
-    /** @return true, если сейчас скорее всего не эндшпиль */
-    public boolean isNotEndgame() {
-        int count = 0;
-        final int[] board = gs.board.fastSnapshotReference();
-        for (int sq = 0; sq < 64; ++sq)
-            if (board[sq] != FigureType.EMPTY_TYPE) {
-                ++count;
-                if (count > 16) return true;
-            }
-        return false;
     }
 }

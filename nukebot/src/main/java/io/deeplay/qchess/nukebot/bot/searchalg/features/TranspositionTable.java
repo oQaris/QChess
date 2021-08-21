@@ -79,20 +79,28 @@ public class TranspositionTable {
             final int alfaOrigin,
             final int betaOrigin,
             final int depth) {
-        store(allMoves, null, 0, 0, result, boardState, alfaOrigin, betaOrigin, depth);
+        store(allMoves, null, 0, 0, 0, result, boardState, alfaOrigin, betaOrigin, depth);
     }
 
     public void store(
             final List<Move> allMoves,
             final List<Move> attackMoves,
             final int isAllowNullMove,
-            final int isCheck,
+            final int isCheckToColor,
+            final int isCheckToEnemyColor,
             final int result,
             final BoardState boardState,
             final int alfaOrigin,
             final int betaOrigin,
             final int depth) {
-        final TTEntry entry = new TTEntry(allMoves, attackMoves, depth, isAllowNullMove, isCheck);
+        final TTEntry entry =
+                new TTEntry(
+                        allMoves,
+                        attackMoves,
+                        depth,
+                        isAllowNullMove,
+                        isCheckToColor,
+                        isCheckToEnemyColor);
 
         if (result <= alfaOrigin) entry.upperBound = result;
         if (result >= betaOrigin) entry.lowerBound = result;
@@ -107,7 +115,8 @@ public class TranspositionTable {
         public List<Move> allMoves;
         public List<Move> attackMoves;
         public int isAllowNullMove;
-        public int isCheck;
+        public int isCheckToColor;
+        public int isCheckToEnemyColor;
         public int lowerBound = EvaluationFunc.MIN_ESTIMATION;
         public int upperBound = EvaluationFunc.MAX_ESTIMATION;
         public int depth;
@@ -117,12 +126,14 @@ public class TranspositionTable {
                 final List<Move> attackMoves,
                 final int depth,
                 final int isAllowNullMove,
-                final int isCheck) {
+                final int isCheckToColor,
+                final int isCheckToEnemyColor) {
             this.allMoves = allMoves;
             this.attackMoves = attackMoves;
             this.depth = depth;
             this.isAllowNullMove = isAllowNullMove;
-            this.isCheck = isCheck;
+            this.isCheckToColor = isCheckToColor;
+            this.isCheckToEnemyColor = isCheckToEnemyColor;
         }
     }
 }
