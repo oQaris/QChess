@@ -18,10 +18,14 @@ import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
+import io.deeplay.qchess.game.player.ConsolePlayer;
+import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
 import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
@@ -40,14 +44,20 @@ class QBotTest {
     }
 
     QBot getTestedBot(final GameSettings game, final Color myColor, final int depth) {
-        return new QNegamaxBot.Builder(game, myColor)
-                .setStrategy(new SimpleStrategy())
-                .setDepth(depth)
-                .withTT()
-                .build();
+        return new QExpectimaxBot(game, myColor, depth, new SimpleStrategy());
     }
 
     @Test
+    void testWithRand() throws ChessError {
+        final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
+        final RandomBot bot1 = new RandomBot(gameSettings, Color.WHITE);
+        final QBot bot2 = new QExpectimaxBot(gameSettings, Color.BLACK, 3);
+
+        final Selfplay game = new Selfplay(gameSettings, bot1, bot2);
+        game.run();
+
+        assertEquals(EndGameType.CHECKMATE_TO_WHITE, gameSettings.endGameDetector.getGameResult());
+    }
     void testExpectimax() throws ChessError {
         final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
         final AttackBot bot1 = new AttackBot(gameSettings, Color.WHITE);
@@ -63,8 +73,8 @@ class QBotTest {
     @Disabled
     void testFirstStep() throws ChessError {
         final GameSettings game = new GameSettings(BoardFilling.STANDARD);
-        final QNegamaxBot bot1 = new QNegamaxBot(game, Color.WHITE, 3);
-        final QMinimaxBot bot2 = new QMinimaxBot(game, Color.WHITE, 3);
+        final QBot bot1 = new QExpectimaxBot(game, Color.WHITE, 3);
+        final QBot bot2 = new QMinimaxBot(game, Color.WHITE, 3);
         assertEquals(bot1.getTopMoves(), bot2.getTopMoves());
 
         game.moveSystem.move(new Move(MoveType.QUIET_MOVE, Cell.parse("e2"), Cell.parse("e4")));
