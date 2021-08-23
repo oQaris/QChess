@@ -10932,7 +10932,7 @@
 29 | r1bqk1nr/pppp1ppp/8/2b1p3/8/4PP2/PPP2KPP/RNB2BNR w kq | d4-c5 (QUIET_MOVE), 1
 29 | r1bqk2r/pppp1ppp/4pn2/8/P1P3n1/N7/1PQPPP1P/2B1KBNR w Kkq | e5-g4 (ATTACK), 1
 29 | r2qkbnr/p1p1pppp/2Bp4/8/8/2N1P2N/PPPP1PPP/R1BQK2R b KQkq | b5-c6 (ATTACK), 1
-29 | r1b1kbnr/pppp1ppp/2n5/8/Q1P4q/P3P3/1P1P3P/RNBK1BNq w kq | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+29 | r1b1kbnr/pppp1ppp/2n5/8/Q1P4q/P3P3/1P1P3P/RNBK1BNq w kq | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | 2rqk1nr/1pp2ppp/3b4/1p2n3/1Pp2pb1/P4N2/R2PP1PP/2BQ1BKR w k | d5-c4 (ATTACK), 1
 29 | 3k1bnr/4p1pp/rp1pBp2/p1pN3Q/3P4/4PN2/PP1P1PPP/R1B2RK1 b | c3-d4 (ATTACK), 1
 29 | 2rqkbnr/ppp1pppp/2n1b3/4B3/P7/3P1p2/2P2PPP/RNQ1KB1R w KQk | e4-f3 (ATTACK), 1
@@ -11391,7 +11391,7 @@
 29 | rnbqkbr1/5p1p/2p1pn1p/8/1pP1p3/Np4P1/PP1PBP2/1RB1K1NR w Kq | a4-b3 (ATTACK), 1
 29 | rnb1k2r/ppqp2pp/5p1B/2P1p3/1N2P3/8/PPP2PPP/R2QKBNR b KQkq | c1-h6 (ATTACK), 1
 29 | r1Bqkb1r/p2ppp1p/1pp4n/6N1/3P4/P1N1P3/1PP2PPP/R1BQK2R b KQkq | a6-c8 (ATTACK), 1
-29 | rnb2bnQ/1pk2p1p/2ppp3/p7/2B5/2N2N2/PPPP1PPP/R1BQK2R b KQ | g7-h8 (TURN_INTO_ATTACK) turn into null, 1
+29 | rnb2bnQ/1pk2p1p/2ppp3/p7/2B5/2N2N2/PPPP1PPP/R1BQK2R b KQ | g7-h8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | r2qkb1r/ppp1pppp/4bn2/3p4/6P1/3PP2P/P2P1P2/RNBQK1NR w KQkq | c8-e6 (QUIET_MOVE), 1
 29 | rnbqkb1r/pp1p1ppp/4pn2/8/P7/3K3P/1PP2pP1/RNBQ1BNR w kq | e3-f2 (ATTACK), 1
 29 | r1bq1rk1/pp1p1ppp/2p4n/2n1p3/4P3/5P2/PBPP1KPP/R2Q1BNR w | b3-c5 (ATTACK), 1
@@ -11870,7 +11870,7 @@
 29 | r3kb1r/1pp1ppp1/p1n2n1p/P4b2/7P/1p1P4/1qP1PPPN/R2QKB1R w KQkq | d4-b2 (ATTACK), 1
 29 | r1bqkbnr/2Pnp1pp/p7/1B3p1Q/8/2N5/PPPP1PPP/R1B1K1NR b KQkq | d1-h5 (QUIET_MOVE), 1
 29 | r1b2rk1/ppp2pp1/2n1pn2/3q3P/1b6/1P2P2P/P1PP1P2/R1BQKBNR w K | d8-d5 (ATTACK), 1
-29 | r1bq1rk1/p2n1pp1/3bpn2/1ppp4/8/PQPP3P/1P1KP1PR/RN3Bq1 w | f2-g1 (TURN_INTO_ATTACK) turn into null, 1
+29 | r1bq1rk1/p2n1pp1/3bpn2/1ppp4/8/PQPP3P/1P1KP1PR/RN3Bq1 w | f2-g1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | rnb1kbnr/pppp1pp1/4p3/6N1/8/8/PPPPPPPP/R1BQKB1R b KQkq | e4-g5 (ATTACK), 1
 29 | 1rbq3r/ppppkpp1/3b3n/3BpN1Q/4P3/8/PPPP1PPP/R1B2RK1 b | h4-f5 (QUIET_MOVE), 1
 29 | r1bqkbnr/pppp1ppp/7B/4p3/2P5/8/PP2PPPP/nN2KBNR w Kkq | b3-a1 (ATTACK), 1
@@ -11892,7 +11892,7 @@
 29 | 2b1k1nr/1pp2ppp/2n1p3/1r1p4/1p1P3q/4PP1P/P1P2bPR/RNB2KN1 w k | a5-b5 (ATTACK), 1
 29 | r2qkbnr/2pbp2p/p4pp1/2Np4/2pN1B2/7P/PP2PPP1/R2QKB1R b KQkq | f3-d4 (ATTACK), 1
 29 | r3kb1r/pppb1pp1/5n1p/2Ppp3/8/NP1P2P1/P2PBP1P/q1BQR1K1 w kq e6 | e7-e5 (LONG_MOVE), 1
-29 | r1b1k1nr/pppp1ppp/2n2q2/1Bb5/8/P1P2Q1N/1P4PP/RNBq1K1R w kq | d2-d1 (TURN_INTO) turn into null, 1
+29 | r1b1k1nr/pppp1ppp/2n2q2/1Bb5/8/P1P2Q1N/1P4PP/RNBq1K1R w kq | d2-d1 (TURN_INTO) turn into QUEEN, 1
 29 | rnbqk2r/pppppp2/7b/1B5p/4N3/4P2P/PPPP1PP1/R1BQK2R b KQkq | c3-e4 (ATTACK), 1
 29 | r1qk1b2/pppnp1p1/5nNp/1N1p1B2/8/4P3/PPPP1PPP/R1BQ1RK1 b | d3-f5 (ATTACK), 1
 29 | r1bqkbnr/ppppp1pp/2n5/8/2P4P/7B/PP1PpP2/RNBQK2R w KQkq | f3-e2 (ATTACK), 1
@@ -12173,7 +12173,7 @@
 29 | rnbqk2r/ppppbppp/8/4p3/P7/1PP5/2P2PPP/R1BQKBNR w KQkq | f8-e7 (QUIET_MOVE), 1
 29 | r1bqkb1r/pppp1ppp/8/8/2n1n3/5N2/PP1PPKPP/RNBQ1BR1 w kq | f6-e4 (QUIET_MOVE), 1
 29 | r1bqk2r/pppp1ppp/8/3p4/1bP2Pn1/1P5N/P3P1PP/nNBK1B1R w kq | e6-d5 (ATTACK), 1
-29 | r1bqr1k1/1ppp1ppp/2n1p2n/4b3/P7/2N4P/2PPPPP1/q1BQKB1R w | a2-a1 (TURN_INTO) turn into null, 1
+29 | r1bqr1k1/1ppp1ppp/2n1p2n/4b3/P7/2N4P/2PPPPP1/q1BQKB1R w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 29 | Bn3b2/p1p1kpr1/q3pn1p/3p2pP/3P4/PPN1P2N/1BP2PP1/R2QK2R b KQ | c1-b2 (QUIET_MOVE), 1
 29 | rn3b2/pp1kpNpp/1qp2n2/3p4/8/2N1P3/PPPPBPPP/R1BQK2R b KQ | h8-f7 (QUIET_MOVE), 1
 29 | Bn1qkb1r/4ppn1/3p3p/ppp3p1/6R1/P1NPPN2/1PPB1PP1/R2QK3 b Qk | e4-a8 (ATTACK), 1
@@ -12298,7 +12298,7 @@
 29 | r1b1kbnr/pp1p1Npp/1q6/8/1Pp1P3/2N5/1PPP1PPP/R1BQKB1R b KQkq | e5-f7 (ATTACK), 1
 29 | rnbqkb2/pppp2p1/6Bp/4p3/4p3/2N2N2/PPPP1PPP/R1BQK2R b KQq | h7-g6 (QUIET_MOVE), 1
 29 | r1bq1rk1/pppp1ppp/2n1pn2/8/1PP5/P2PPP2/3K1bP1/RN1Q1BN1 w | h4-f2 (QUIET_MOVE), 1
-29 | r1bqkb1r/pp1pppp1/5n1p/8/PP2P3/2Pn1P2/1Q1K2PP/RN3qNR w kq | e2-f1 (TURN_INTO_ATTACK) turn into null, 1
+29 | r1bqkb1r/pp1pppp1/5n1p/8/PP2P3/2Pn1P2/1Q1K2PP/RN3qNR w kq | e2-f1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | rn1qkbnr/p2ppp1p/P7/2p3B1/3P4/2NBP3/1PP2PPP/R2QK1NR b KQkq | b5-a6 (ATTACK), 1
 29 | 1nbq1rk1/1ppp1ppp/3bpn2/8/2P3P1/P6P/1r1PPP2/RN1QKBNR w KQ | e8-g8 (SHORT_CASTLING), 1
 29 | r1bqkb1r/pp1pnppp/8/1p2p3/P2PP3/7P/nPPN1PP1/3QK1NR w Kkq | c1-a2 (QUIET_MOVE), 1
@@ -12704,7 +12704,7 @@
 29 | rnQ1kb1r/3ppp2/2p3pp/pp6/3P4/P1NBP3/1PP2PPP/R1B1K1NR b KQkq | c7-c8 (ATTACK), 1
 29 | r2qkbnr/p1p1pppp/p7/3p4/1n6/3PP3/PPP2P1P/RNBb1KNR w kq | g4-d1 (ATTACK), 1
 29 | r1bqk2r/p1p2ppp/p1pbpn2/4n3/2P5/7P/1P1PPPP1/1NB1KBNR w Kkq | d7-c6 (ATTACK), 1
-29 | r1bq1bnQ/pp1nk2p/2ppp3/7Q/3P4/2N5/PPP2PPP/R1B1KBNR b KQ | g7-h8 (TURN_INTO_ATTACK) turn into null, 1
+29 | r1bq1bnQ/pp1nk2p/2ppp3/7Q/3P4/2N5/PPP2PPP/R1B1KBNR b KQ | g7-h8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | rn1k1bnr/1pp1pppp/8/p4P2/1P1P4/2N5/1PP2PPP/R1BQKBNR b KQ | e4-f5 (ATTACK), 1
 29 | rnb1k2r/pp1p1ppp/2p1pn2/8/3P4/P1q3P1/P3PP1P/1RBQKBNR w Kkq | a5-c3 (ATTACK), 1
 29 | r1b1kbnr/pp1p1p1p/4pNp1/2P5/8/5N2/1PPPPPPP/R1BQKB1R b KQkq | e4-f6 (ATTACK), 1
@@ -12718,7 +12718,7 @@
 29 | r2qkbr1/ppp1ppp1/2np3p/5P2/8/2NP1N1P/PPP2P2/R1BQKB1R b KQq | g4-f5 (ATTACK), 1
 29 | 2b1k1nr/1pp1bppp/r1np4/2q1p3/4P3/P1N2PP1/1P1P3P/R1BQK1NR w KQk | a8-a6 (ATTACK), 1
 29 | 2bqkb1r/1pp1pppp/1rnp4/3n4/8/P4PPB/2PPP2P/R1BQK1NR w KQk | d7-d6 (QUIET_MOVE), 1
-29 | r1bq1rk1/ppp1nppp/2n5/2bp4/2P3P1/PPN1P2P/1B1P1P2/R2qK2R w KQ | e2-d1 (TURN_INTO_ATTACK) turn into null, 1
+29 | r1bq1rk1/ppp1nppp/2n5/2bp4/2P3P1/PPN1P2P/1B1P1P2/R2qK2R w KQ | e2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | r1bqkb1r/ppp2ppp/8/3p3P/P2PnP2/4P3/1Pn2KP1/RNB2BNR w kq | f6-e4 (QUIET_MOVE), 1
 29 | r1bqkbnr/p1p2p2/p3p2p/3P2p1/8/2N5/PPPPNPPP/R1BQ1RK1 b kq | e4-d5 (ATTACK), 1
 29 | rnb1kbnr/1pN1p1pp/3p1p2/p7/8/4PN2/PPPP1PPP/R1BQK2R b KQkq | b5-c7 (ATTACK), 1
@@ -12848,7 +12848,7 @@
 29 | r2qk2r/ppp2ppp/5n2/2b1p3/3np2P/1PB5/P2PbPP1/RNQ1KBR1 w Qkq | g4-e2 (ATTACK), 1
 29 | 2bqkb1N/rp1ppp2/p6n/2pN3p/8/3BP3/PPPP1PPP/R1BQ1RK1 b | g6-h8 (ATTACK), 1
 29 | r1bq1b1r/1pk1p1pp/2pp4/p1P2P2/5B2/2N2N1P/PPP1BPP1/2RQ1RK1 b | d4-c5 (ATTACK), 1
-29 | rnbqkb1r/ppp2ppp/5n2/3p4/8/2PP3P/PP1QPP2/RNB1KB1q w Qkq | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+29 | rnbqkb1r/ppp2ppp/5n2/3p4/8/2PP3P/PP1QPP2/RNB1KB1q w Qkq | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | Qnbqkb1r/2ppppp1/p6p/1p6/3N4/2N1P3/PPP2PPP/R1B1KB1R b KQk | d2-e3 (ATTACK), 1
 29 | r1bqk1nr/pppp1ppp/2n5/4P3/P7/1P6/1bPPP1PP/R2QKBNR w KQkq | c1-b2 (QUIET_MOVE), 1
 29 | r1bqkbnr/2p1pp1p/1pP5/p5N1/2B5/4N3/PPPP1PPP/R1BQ1RK1 b k | f3-g5 (ATTACK), 1
@@ -13235,7 +13235,7 @@
 29 | 1n3bnN/r1kb2pp/pppp4/4p3/8/2NBPQ2/PPPP1PPP/R1B2RK1 b | d1-f3 (QUIET_MOVE), 1
 29 | rnbqkr2/1pppbp1Q/5p2/p3p3/4N3/5N2/PPPP1PPP/R1B1KB1R b KQq | c3-e4 (QUIET_MOVE), 1
 29 | r1b1k2r/ppppqppp/8/P7/Pb1n1p2/5PP1/2PPP2P/1NBQKB1R w Kkq | d8-e7 (QUIET_MOVE), 1
-29 | Q1b1kbnr/2p2ppp/2np4/p3p3/7N/2N5/1PPPPPPP/R1BQKB1R b KQk | a7-a8 (TURN_INTO) turn into null, 1
+29 | Q1b1kbnr/2p2ppp/2np4/p3p3/7N/2N5/1PPPPPPP/R1BQKB1R b KQk | a7-a8 (TURN_INTO) turn into QUEEN, 1
 29 | r1bqkb1r/ppp2ppp/8/3pn3/4n3/8/PPPPK1PP/RNBQ1BNR w kq | c6-e5 (ATTACK), 1
 29 | 5bnr/1pN1pk1p/r2pBp2/p1p3p1/3P4/4PN2/PPP2PPP/R1BQK2R b KQ | d7-e6 (QUIET_MOVE), 1
 29 | rn2k1nr/ppp2ppp/4b3/2b1p3/P1pqP3/5P2/1P1P2PP/1NBQKBR1 w kq | d8-d4 (QUIET_MOVE), 1
@@ -13285,7 +13285,7 @@
 29 | r1bqk1nr/pppppp2/6p1/2P4p/8/P1NBPN2/1PP2PPP/R2QK2R b KQq | f1-d3 (QUIET_MOVE), 1
 29 | r2qkbnr/p1ppp1pp/Rp3p2/8/1P1PP3/2N5/1PP2PPP/2BQK1NR b Kkq | a1-a6 (ATTACK), 1
 29 | rnbq1rk1/pp1p1ppp/7n/3pp3/1b5P/3P4/PPPNPP2/2RQK1NR w K | e8-g8 (SHORT_CASTLING), 1
-29 | r2q1bNr/1bppk1p1/p7/1p5p/1nP1N3/5N2/PP2PPPP/R1BQKB1R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+29 | r2q1bNr/1bppk1p1/p7/1p5p/1nP1N3/5N2/PP2PPPP/R1BQKB1R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 29 | N1b1kbnr/pp2pppp/2n5/2p5/4P3/8/PPPP1PPP/R1BQKBNR b KQ | b6-a8 (ATTACK), 1
 29 | Nnbqk2r/1p1p1ppp/p1pQ1n2/2P1N3/8/8/PPP1PPPP/R1B1KB1R b KQ | b6-a8 (ATTACK), 1
 29 | r2q1bnr/4kppp/2Np4/pB2p3/1p6/4PN2/PPPP1PPP/R1BQK2R b KQ | b8-c6 (QUIET_MOVE), 1
@@ -13338,7 +13338,7 @@
 29 | 1n2kb2/pqp3pp/1p1p1pn1/3Bp3/4P3/2N2N2/PPPP1PPP/R1BQK2R b KQ | g8-d5 (QUIET_MOVE), 1
 29 | r1bBkbr1/1p1p1ppp/p1p5/nB1NN3/4P3/3P4/PPP2PPP/R2QK2R b KQq | f6-d8 (ATTACK), 1
 29 | r1b1kbnr/pppp1ppp/8/8/1P1n1p2/5K2/P1PPP1Pq/RNBQ1BR1 w kq | c6-d4 (QUIET_MOVE), 1
-29 | r1bqkb1r/ppp2ppp/4pn2/4P3/3n4/N2P2P1/P1P2PQP/q1B1KB1R w Kkq | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+29 | r1bqkb1r/ppp2ppp/4pn2/4P3/3n4/N2P2P1/P1P2PQP/q1B1KB1R w Kkq | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | rnbqkb1r/pp4pp/5n2/3pp3/4p3/PP2P2P/3P1PP1/RNBQKB1R w KQkq | c6-d5 (ATTACK), 1
 29 | r1b1Nbnr/4p2p/3p2pk/pp3p2/3P4/3BPN2/PPP2PPP/R1BQ1RK1 b | c7-e8 (ATTACK), 1
 29 | r1b1kbnr/ppp2ppp/2n5/3qP3/8/1P6/P1P1PPPP/RNB1KBNR w KQkq | d8-d5 (ATTACK), 2
@@ -13383,7 +13383,7 @@
 29 | r2qkb1r/pppnpppp/4b3/3p4/6P1/3PPQ1P/P2P1P2/RNB1K1NR w KQkq | f6-d7 (QUIET_MOVE), 1
 29 | r1bqkbr1/p4pp1/n2pp3/1BpN3p/4P2P/8/PPPP1PP1/R1BQK2R b KQq | f1-b5 (ATTACK), 1
 29 | r1bqkb2/ppppppp1/2n2n2/5r2/8/1P1P2PN/P1PKP2P/RN1Q1B1R w q | f2-f5 (QUIET_MOVE), 1
-29 | r2qkbnr/ppp2ppp/2n5/3p1b2/4P3/PP5P/R1P2PP1/1q1QKBNR w Kkq | b2-b1 (TURN_INTO) turn into null, 1
+29 | r2qkbnr/ppp2ppp/2n5/3p1b2/4P3/PP5P/R1P2PP1/1q1QKBNR w Kkq | b2-b1 (TURN_INTO) turn into QUEEN, 1
 29 | r1b1kbnr/ppp2ppp/8/3qP3/3n3P/8/PPP1PPP1/RNB1KBNR w KQkq | c6-d4 (QUIET_MOVE), 1
 29 | rnbqkbnr/1ppp1pp1/4p3/8/1p2P1P1/8/P1PP3P/RNBQKBNR w KQkq | e7-e6 (QUIET_MOVE), 1
 29 | r1bqkbr1/pp1ppp2/2n2p1p/2P5/8/4BN2/PPP1PPPP/R2QKB1R b KQq | c1-e3 (QUIET_MOVE), 1
@@ -13605,7 +13605,7 @@
 29 | r1b1k1nr/1ppp3p/n2bP1p1/pB6/N6N/8/PPPPQPPP/R1B1K2R b KQkq | f3-h4 (ATTACK), 1
 29 | 3qkb1r/prp1pppp/2n2n2/P2p4/5PP1/N1P5/1P1PP2P/R1B1KBNb w Qk | e4-h1 (ATTACK), 1
 29 | r1bqkb1r/pppp1ppp/4p3/8/P1B1n3/N1P5/1P1P1PPP/2nQK1NR w Kkq | f6-e4 (ATTACK), 1
-29 | r1b1kbnr/pppp1ppp/2n5/8/7q/1P1QP3/P1PPK2P/RNB2BNq w kq | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+29 | r1b1kbnr/pppp1ppp/2n5/8/7q/1P1QP3/P1PPK2P/RNB2BNq w kq | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | rnb1kb1r/pppp1ppp/8/8/5pn1/7B/PPPPPq1P/RNBQK2R w KQkq | h4-f2 (ATTACK), 1
 29 | r1bqkb2/ppp1pp1Q/6p1/n2p4/8/2N1PN2/PPPP1PPP/R1B1KB1R b KQq | g1-f3 (QUIET_MOVE), 1
 29 | rn1qkb2/1p3p1Q/p1ppbp1p/6p1/3P4/2N1B3/PPP1PPPP/2R1KB1R b Kq | e4-h7 (QUIET_MOVE), 1
@@ -13873,7 +13873,7 @@
 29 | r3k1nr/ppp2ppp/2n5/2bpp3/7q/PQPP4/1P1BPP1P/RN2KB1R w KQkq | d6-c5 (QUIET_MOVE), 1
 29 | B2qkbnr/3p1ppp/ppp1p3/8/4P3/2N5/PPPP1PPP/R1BQK1NR b KQk | b7-a8 (ATTACK), 1
 29 | rn2kbn1/pp1bpp2/2p3p1/3pN3/3P3p/2N5/PPP1PPPP/R2QKB1R b KQq | f3-e5 (ATTACK), 1
-29 | r4rk1/pppb1ppp/2n3n1/2b1p3/2P3Pq/P3PP2/1P1P2KP/RNBq1R2 w | e2-d1 (TURN_INTO_ATTACK) turn into null, 1
+29 | r4rk1/pppb1ppp/2n3n1/2b1p3/2P3Pq/P3PP2/1P1P2KP/RNBq1R2 w | e2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | 2rqkb1r/ppp2ppp/4pn2/8/1np2P1P/3PP1P1/P1PK4/R1B1QBNb w k | e4-h1 (ATTACK), 1
 29 | r1bqk2r/pppp1ppp/4nn2/2b5/2P1P3/2P4N/P2KBPPP/RNBR4 w kq | b4-c5 (QUIET_MOVE), 1
 29 | r1bqkbnr/p1p1pp2/n6p/3R2p1/8/2N2N2/1PPPPPPP/2BQKB1R b Kkq | b5-d5 (ATTACK), 1
@@ -14004,7 +14004,7 @@
 29 | r1bqk1nr/ppp2ppp/2n5/4p3/1b6/1P1P4/P2QKPPP/RNB2BNR w kq | f8-b4 (QUIET_MOVE), 1
 29 | r1bqk2r/pppp1ppp/2n1p3/8/3Pn1P1/5N2/P1PbPP1P/RN2KB1R w KQkq | c3-d2 (ATTACK), 1
 29 | rnbq1b1r/p1ppNBpp/1pk4n/8/2N5/4P3/PPP2PPP/R1BQK2R b KQ | d5-e7 (QUIET_MOVE), 1
-29 | rnbqkb1Q/1p1ppn1p/p7/2p4Q/8/2N5/PPPP1PPP/R1B1KBNR b KQq | g7-h8 (TURN_INTO_ATTACK) turn into null, 1
+29 | rnbqkb1Q/1p1ppn1p/p7/2p4Q/8/2N5/PPPP1PPP/R1B1KBNR b KQq | g7-h8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | rnb1kb1r/p1q2ppp/2pp1n2/8/2pP4/2P3P1/PP2PP1P/R2QKBNR w KQkq | e7-d6 (ATTACK), 1
 29 | B2qkbnr/p2bppp1/n6p/3p4/4P3/P1N2N2/1PPP1PPP/R1BQK2R b KQk | c6-a8 (ATTACK), 1
 29 | r3kb1r/ppp1pppp/2n2n2/3q1b2/5P2/2P1P3/PP1P2PP/RNB2KNR w kq | b8-c6 (QUIET_MOVE), 1
@@ -14014,7 +14014,7 @@
 29 | 1n1qkbnr/3ppppp/pp6/3B4/2p5/2N2N2/PPPP1PPP/R1BQK2R b KQk | a8-d5 (QUIET_MOVE), 1
 29 | 2rqkb1r/pp1npppp/2p2n2/8/3PpP2/N1P4b/PP4PP/R1BK1B1R w k | e6-h3 (ATTACK), 1
 29 | rn1qkb1r/pp2pp1p/2pp3n/6B1/8/2NP1N1P/PPP1PP2/R2QKB1R b KQkq | c1-g5 (ATTACK), 1
-29 | rnbqk2r/pp1p1pbp/5np1/2p5/8/2P3P1/PP1PPPKP/R1Bq2NR w kq | c2-d1 (TURN_INTO_ATTACK) turn into null, 1
+29 | rnbqk2r/pp1p1pbp/5np1/2p5/8/2P3P1/PP1PPPKP/R1Bq2NR w kq | c2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | 2BNkbnr/2pnp1pp/1p6/p2p1p2/4P3/2N5/PPPP1PPP/R1BQK2R b KQk | a6-c8 (ATTACK), 1
 29 | 2bqkbnr/rppppppp/8/8/2P5/7N/PP1PPPPP/nNBK1B1R w k | c2-a1 (ATTACK), 1
 29 | rnb1k1n1/pp1p1ppr/2p2q1p/8/8/2PNN3/PP1BPPPP/R2QKB1R b KQq | c2-c3 (QUIET_MOVE), 1
@@ -14029,7 +14029,7 @@
 29 | r1b1kb1r/ppp2ppp/2n1p3/8/3q2P1/4p2N/PPPNPP1P/R1BK1B1R w kq | e4-e3 (QUIET_MOVE), 1
 29 | rnb1k3/p4ppr/2p1p2p/Pp2B3/3PP3/b1NB1N2/P1P2PPP/1R1Q1RK1 b q | a1-b1 (QUIET_MOVE), 1
 29 | r2qkb1r/pppb1ppp/2n5/4P3/P3n2P/8/1PP1PPP1/RNB1KBNR w KQkq | c8-d7 (ATTACK), 1
-29 | r1bq1rk1/pppp1ppp/2n2n2/8/1b6/3PP2P/PPPN1PP1/1RBqK2R w K | e2-d1 (TURN_INTO_ATTACK) turn into null, 1
+29 | r1bq1rk1/pppp1ppp/2n2n2/8/1b6/3PP2P/PPPN1PP1/1RBqK2R w K | e2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 29 | r2qkbnr/ppp2ppp/2n5/4p3/P3p3/N6P/1PPP1P1P/R1BQKB1R w KQkq | d5-e4 (ATTACK), 1
 29 | rn1qk1n1/pp1b1pB1/4p3/2ppN1p1/2P5/3P3P/PP1NPPBP/R2QK2R b KQq | h8-g7 (ATTACK), 1
 29 | r1bqk2r/ppp2ppp/2n1p1n1/3p4/P1P5/1P1P1N2/3bPPPP/2B1KB1R w Kkq | c3-d2 (ATTACK), 1
@@ -14173,7 +14173,7 @@
 28 | 3qk2r/1bppn3/p1n1ppp1/p6p/4P3/P1NP1N1P/1BP1QPP1/3R1RK1 b k | h2-h3 (QUIET_MOVE), 1
 28 | rnb1kr2/1ppp3p/p4B2/2PN1p2/3Pp3/8/P1P1PPPP/R2QKBNR b KQ | d8-f6 (QUIET_MOVE), 1
 28 | 2q1kbnr/p1p1pppp/8/3p1b2/3P4/2N1PN2/PPP1QPPP/R1B1K2R b KQk | g1-f3 (QUIET_MOVE), 1
-28 | 2bqkbnr/1ppppppp/2n5/rB6/6P1/4P2N/P1P1KP1P/R1rQ3R w k | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+28 | 2bqkbnr/1ppppppp/2n5/rB6/6P1/4P2N/P1P1KP1P/R1rQ3R w k | d2-c1 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r1bqk2r/1ppp1pbp/p4pp1/3N4/5B2/8/PPP1PPPP/2RQKB1R b Kq | c3-d5 (QUIET_MOVE), 1
 28 | r2qkb2/1bp2pp1/p1n1pnr1/3p4/3P3P/1PP1P3/P4PP1/RN2KBNR w KQq | a7-a6 (QUIET_MOVE), 1
 28 | r1bq1rk1/pp1pnppp/2n1p3/8/8/P3P1P1/P1PP1P1P/R1BQK1NR w KQ | b8-c6 (ATTACK), 1
@@ -14436,7 +14436,7 @@
 28 | r1b2rk1/pppp1ppp/2n1pn2/2b5/4P3/2PB1P2/PPQP3q/RNB1K3 w | e8-g8 (SHORT_CASTLING), 1
 28 | r1b1k1r1/pp1p1pbp/2p5/2N3p1/B3P3/8/PPPPNPPP/R1BQ1RK1 b q | c3-e2 (QUIET_MOVE), 1
 28 | r1b1kbnr/pppp1ppp/8/3N2N1/3p4/1P6/1PP1PPPP/R2QKB1R b KQkq | a2-b3 (ATTACK), 1
-28 | r1Rq1bnr/p1p1kpp1/4p3/7p/8/2N5/1PPPPPPP/R1BQKBNR b KQ | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1Rq1bnr/p1p1kpp1/4p3/7p/8/2N5/1PPPPPPP/R1BQKBNR b KQ | d7-c8 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r1b1k2r/pppp1ppp/3b1nq1/4p3/1PP3P1/P3nP2/3P3P/1NBK1B1R w kq | c2-e3 (ATTACK), 1
 28 | 5knr/1p1p1p2/p1N1p1p1/2p3bp/2P5/3BPN2/PP1P1PPP/R1BQR1K1 b | a7-c6 (ATTACK), 1
 28 | rn1N1bn1/p3pBpr/2p3kp/4P3/3p2P1/5N2/PPPP1PP1/R1BQK2R b KQ | c4-f7 (ATTACK), 1
@@ -14493,7 +14493,7 @@
 28 | rnb2rk1/pppp1ppp/4p3/5nq1/8/P1PP4/P3PPPP/R3KBNR w KQ | h4-g5 (ATTACK), 1
 28 | r2qk2r/ppp2ppp/2n5/3ppb2/1bPP4/8/PP1N1PPP/R1B1KnR1 w Qkq | g3-f1 (ATTACK), 1
 28 | 2b1k1nr/2qpp1b1/2p2pp1/p6p/2P1N3/4BN2/PP2PPPP/2RQKB1R b Kk | a7-e3 (QUIET_MOVE), 1
-28 | rnbqkb1r/pp1p1ppp/4pn2/8/P7/3K3P/1PPN2P1/R1BQ1BqR w kq | f2-g1 (TURN_INTO_ATTACK) turn into null, 1
+28 | rnbqkb1r/pp1p1ppp/4pn2/8/P7/3K3P/1PPN2P1/R1BQ1BqR w kq | f2-g1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | r2qkb1r/ppp2ppp/2n5/3p4/4p1nP/PPP1P3/1B1P1P2/RN1K1B1R w kq | f6-g4 (QUIET_MOVE), 1
 28 | 2rqkbnr/1pp1pp2/6p1/p2NN2p/3PP3/8/PPPB1PPP/R2Q1RK1 b k | f3-e5 (ATTACK), 1
 28 | rnbq1bnr/1p5p/p2k4/2pP1Bp1/8/5NN1/PP1P1PPP/R1BQR1K1 b | d3-f5 (ATTACK), 1
@@ -14584,7 +14584,7 @@
 28 | 1r1qkb1r/1pp2ppp/2n4n/p3p2P/2pP2bR/2P1P3/PP1K1P2/R4BN1 w k | c8-g4 (ATTACK), 1
 28 | r1q1kbnr/p2P1p2/1ppp2pp/3N4/4P3/4BN2/PPP2PPP/R2Q1RK1 b q | e6-d7 (ATTACK), 1
 28 | rn1qkb1r/p1pppppp/8/8/P5n1/8/1PPPPP1P/RNBQK1Nb w Qkq | b7-h1 (ATTACK), 1
-28 | rnbqkbQ1/ppp1p3/3p3p/8/8/2N2N2/PPPP1PPP/R1BQKB1R b KQq | h7-g8 (TURN_INTO_ATTACK) turn into null, 1
+28 | rnbqkbQ1/ppp1p3/3p3p/8/8/2N2N2/PPPP1PPP/R1BQKB1R b KQq | h7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | r1bq1rk1/pppp1ppp/8/4p2n/2PnP3/1P1P3P/P4PPR/bN2K1N1 w | f4-h5 (ATTACK), 1
 28 | rn1qkbnr/p1pppp1p/8/1N4B1/3P4/8/PPP1PPBP/R2QK1NR b KQkq | f1-g2 (ATTACK), 1
 28 | 1nb3nQ/rpkp3p/4pp2/p1p5/4P3/P1N2N2/1PPP1PPP/R1B1KB1R b KQ | g7-h8 (ATTACK), 1
@@ -14800,14 +14800,14 @@
 28 | 2rqkbnr/ppp1pppp/8/3P4/6P1/8/PPnP1P1P/RNB1KBNR w KQk | d4-c2 (ATTACK), 1
 28 | r1b1kb1r/p1ppnp2/2n5/1B4pp/4P3/5N2/PPPP1PPP/R1BQK2R b KQkq | f1-b5 (ATTACK), 1
 28 | rn1qk1nr/ppp2ppp/8/3p4/3p4/5P1b/PbP1P1PP/RN1QKB1R w KQkq | a3-b2 (QUIET_MOVE), 1
-28 | r1bqkb1r/ppp2ppp/1nn1p2B/8/4P2P/3P4/PPP2P2/RN1QK2q w Qkq | h2-h1 (TURN_INTO) turn into null, 1
+28 | r1bqkb1r/ppp2ppp/1nn1p2B/8/4P2P/3P4/PPP2P2/RN1QK2q w Qkq | h2-h1 (TURN_INTO) turn into QUEEN, 1
 28 | 2b1k1nr/1p1p1ppp/2npp3/q7/3P1P2/6PP/PrP1P3/RN1QKBNR w KQk | d8-a5 (QUIET_MOVE), 1
 28 | 1nb1kbnr/1ppp1ppp/8/4r3/2P1q3/6P1/P2PP2P/RNBQKBNR w KQk | h4-e4 (QUIET_MOVE), 1
 28 | 2bk1bnr/2p1p2p/1p4p1/p1Pp1pN1/8/3BP3/PPP2PPP/R1BQK2R b KQ | d4-c5 (ATTACK), 1
-28 | rnRk1bnr/pp3p1p/4p1p1/1B6/8/2N2N2/PPPP1PPP/R1BQK2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+28 | rnRk1bnr/pp3p1p/4p1p1/1B6/8/2N2N2/PPPP1PPP/R1BQK2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r2qkbnr/ppp1pppp/8/8/2P2P2/4P2P/PP1P2P1/nbBK1BNR w kq | f5-b1 (ATTACK), 1
 28 | rn1qkbnr/1Rp4p/p5p1/3Bpp2/8/2N1PN2/1PPP1PPP/2BQK2R b Kkq | b3-b7 (ATTACK), 1
-28 | r1bqkbnr/pppp1ppp/2n5/8/4P3/3P4/PPPK4/RNB1QBrR w kq | h2-g1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bqkbnr/pppp1ppp/2n5/8/4P3/3P4/PPPK4/RNB1QBrR w kq | h2-g1 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r2qkbnr/ppp2ppp/2n5/3pp3/P4P2/2Pb3P/1P1P1KP1/2BQ2NR w kq e6 | e7-e5 (LONG_MOVE), 1
 28 | r1bqk2r/ppp2ppp/2n1p1nb/3p4/P1P5/1P1P1N1P/4PPP1/3K1B1R w kq | c1-h6 (QUIET_MOVE), 1
 28 | 1N2kbr1/p1p1pppp/1p3n2/3p4/3P4/2N1P3/PPP2PPP/R1BQKB1R b KQ | c6-b8 (ATTACK), 1
@@ -14900,8 +14900,8 @@
 28 | r2q1bnr/p2pk3/Pp2ppQp/2P5/4P3/BPN5/2P2PPP/R3KBNR b KQ | b5-a6 (ATTACK), 1
 28 | r2qkbnr/1pp2pp1/4b2p/1p2p3/3np3/7P/PPP2PP1/RNB2KNR w kq | c6-d4 (ATTACK), 1
 28 | r1bq1bnr/ppppk1pp/4p3/4N1B1/3QN3/8/PPP2PPP/R3KB1R b KQ | c1-g5 (QUIET_MOVE), 1
-28 | r2qkbnr/ppp2ppp/2n5/P2pN3/3P3P/7b/1PP2PP1/RNB1Kq2 w Qkq | e2-f1 (TURN_INTO_ATTACK) turn into null, 1
-28 | rnbq1bBr/4k2p/1pp3p1/p7/8/2NB1N2/PPPP1PPP/R1BQK2R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+28 | r2qkbnr/ppp2ppp/2n5/P2pN3/3P3P/7b/1PP2PP1/RNB1Kq2 w Qkq | e2-f1 (TURN_INTO_ATTACK) turn into QUEEN, 1
+28 | rnbq1bBr/4k2p/1pp3p1/p7/8/2NB1N2/PPPP1PPP/R1BQK2R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into BISHOP, 1
 28 | r1bqkbnr/p2ppp1p/2n5/2Q3B1/8/2N5/PPP1PPPP/R3KBNR b KQkq | d5-c5 (ATTACK), 1
 28 | Nnbk1b1r/p2pp1pp/5p1n/1Bp5/8/4PN2/PPPP1PPR/R1BQK3 b Q | f1-b5 (ATTACK), 1
 28 | r1bqkbnr/p2pp1p1/6B1/1N5p/1p6/4PN2/1PPP1PPP/R1BQK2R b KQkq | f5-g6 (QUIET_MOVE), 1
@@ -15067,7 +15067,7 @@
 28 | r1b1kb1r/2p2pp1/ppn1p2p/2Pq4/3P4/4BN2/PP2QPPP/R3KB1R w KQkq | b7-b6 (QUIET_MOVE), 94
 28 | r1b3nQ/ppknp3/2p2p1p/3p2p1/3N4/P1N5/1PP1PPPP/R1B1KB1R b KQ | f3-d4 (ATTACK), 1
 28 | r2qkb1r/p1pBp2p/3p3n/5pB1/1P1P4/2N1PN2/1PP2PPP/R2QK2R b KQkq | b5-d7 (ATTACK), 1
-28 | r2qkbnr/1pp2ppp/p1n1b3/8/1P2p3/P1B2NPP/3P1P2/RN1rK2R w KQkq | c2-d1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r2qkbnr/1pp2ppp/p1n1b3/8/1P2p3/P1B2NPP/3P1P2/RN1rK2R w KQkq | c2-d1 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r1bqk1nr/pppp1ppp/8/3pb3/8/8/PPPP1PPP/R1BQKB1R w KQkq | e6-d5 (ATTACK), 1
 28 | r1b2rk1/pppp1ppp/2n2n2/8/1b3P2/3PP2q/PPP1BP2/1RBQ1KR1 w | h1-h3 (QUIET_MOVE), 4
 28 | r3kbnr/pppb3p/4P1p1/1B3pB1/3P4/2N2N2/PPP2PPP/R2QK2R b KQ | d5-e6 (ATTACK), 1
@@ -15234,7 +15234,7 @@
 28 | r2qkbnr/pppb1ppp/8/2Ppp3/P2P3P/8/1P2P1P1/RNB1KB1n w kq | f2-h1 (ATTACK), 1
 28 | 1n1k3r/p2p1pb1/bp2PN1n/7p/2N3p1/8/PPP1PPPP/R1BQKB1R b KQ | d5-f6 (ATTACK), 1
 28 | rn2kb1r/2p1ppp1/7n/pp1NNP1R/3P4/4P3/PPP2PP1/R1BQKB2 b Qkq | c3-d5 (ATTACK), 1
-28 | r1bqk2r/pppp1pb1/2n1p2p/8/P2Pn2N/1PN5/2P1QP1P/R3KB1q w Qkq | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bqk2r/pppp1pb1/2n1p2p/8/P2Pn2N/1PN5/2P1QP1P/R3KB1q w Qkq | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | r1bq1rk1/pp1p1ppp/5n2/2n2p2/1b6/1P2K1P1/P1P1P2P/RNQ2BNR w | a6-c5 (QUIET_MOVE), 1
 28 | r1bq1rk1/ppp2ppp/1n3n2/4b3/8/P1P1P3/1P1P1PPP/RNB1KB1R w KQ | d6-e5 (ATTACK), 1
 28 | 2rq1rk1/ppp2ppp/4b3/8/1b1nn1P1/1P5P/PBPPBP1R/R2QK1N1 w Q | f6-e4 (ATTACK), 1
@@ -15265,7 +15265,7 @@
 28 | r1bqk1nr/pppp1ppp/2n5/8/2P5/1P6/P2PP1Pb/RNBQKBR1 w Qkq | f4-h2 (ATTACK), 1
 28 | rnb1kbr1/1p1p1ppQ/p1p1p3/8/2BP4/2P1P3/P1P2PPP/R1B1K1NR b KQq | f5-h7 (ATTACK), 1
 28 | 2bqkb1r/1ppppp1p/n6p/p7/3PP3/2N2N2/PPP2PPP/R2QK2R b KQk | g1-f3 (QUIET_MOVE), 1
-28 | r1b1kbnr/pppp1ppp/2n5/8/N6q/6P1/PPP1K2P/R1nQ1BNR w kq | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1b1kbnr/pppp1ppp/2n5/8/N6q/6P1/PPP1K2P/R1nQ1BNR w kq | d2-c1 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 28 | r1bqkb1r/p2p1pp1/p1p2n2/7p/3P4/P1N2N2/1PP2PPP/R1BQ1RK1 b kq | e3-d4 (ATTACK), 1
 28 | rnq1kbnr/p1pp2p1/4pp1p/3NN2Q/2B2R2/8/1PPP1PPP/2B2RK1 b | d1-h5 (QUIET_MOVE), 1
 28 | r1bqk2r/pp1p1ppp/2p5/4p3/Pb6/2nP1BPP/2n1PP2/R1B1K1NR w Kkq | d4-c2 (ATTACK), 1
@@ -15414,7 +15414,7 @@
 28 | rnb1kb1r/pppp1ppp/8/4p1B1/6n1/PP6/2P1P2P/qN1QKBNR w kq | d4-a1 (ATTACK), 1
 28 | r1bn1rk1/ppppqppp/4p3/1P5P/3nPP2/N1bP2P1/P1P2K2/2B4Q w | a1-c3 (QUIET_MOVE), 1
 28 | r1bq1k1r/2ppnQ1p/1pn2N2/4N1p1/1p1PP3/8/PP3PPP/R1B1KB1R b KQ | h5-f7 (ATTACK), 1
-28 | rnbqkbnr/pp2pppp/2p5/8/8/5P2/PPP3PP/RNBqKB1R w KQkq | e2-d1 (TURN_INTO_ATTACK) turn into null, 1
+28 | rnbqkbnr/pp2pppp/2p5/8/8/5P2/PPP3PP/RNBqKB1R w KQkq | e2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | r1b1k3/ppppqpp1/2n1pn1r/8/P2P4/N1P4P/1P2PPP1/3QKBNR w Kq | h8-h6 (ATTACK), 1
 28 | r1bqk2r/pppn1ppp/8/4P3/1bP1p1PP/8/P2PB3/RNBnK1NR w KQkq | e3-d1 (ATTACK), 1
 28 | r1bq1rk1/1pp3pp/p2p1p2/3N1P2/3P4/P4B2/PBP2PPP/R2QK1NR b KQ | c1-b2 (QUIET_MOVE), 1
@@ -15484,7 +15484,7 @@
 28 | r1bqkbB1/1p1pppp1/8/p3N2p/3pN3/8/PPPP1PPP/R1BQK2R b KQq | f3-e5 (QUIET_MOVE), 1
 28 | r2q1rk1/pppb1ppp/4pn2/3p4/5P2/3PB3/PP2P1PP/n2KNBNR w | e8-g8 (SHORT_CASTLING), 1
 28 | r1bqk2r/pppp1ppp/8/4n3/4np2/7P/PP1PP1PR/RNB1KBb1 w Qkq | c6-e5 (ATTACK), 1
-28 | rnb2Qnr/pppp1p2/3kp3/7N/2B5/1PN5/P1PP1PPP/R1BQ1RK1 b | g7-f8 (TURN_INTO_ATTACK) turn into null, 1
+28 | rnb2Qnr/pppp1p2/3kp3/7N/2B5/1PN5/P1PP1PPP/R1BQ1RK1 b | g7-f8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | r1b2b1r/1pqp1kp1/p1n2n1p/4p3/8/2P5/PP1PPPPP/R1BQKB1R w KQ e6 | e7-e5 (LONG_MOVE), 1
 28 | 2r1r1k1/1bp1qp2/2n1pn1p/p2p4/3P3P/1PP2PbN/PK2P1P1/RN3B1R w | d8-e7 (QUIET_MOVE), 1
 28 | r1bqkb1r/ppp2ppp/8/3p3P/P2P1P2/4P3/1Pn2KP1/RNB2BNn w kq | g3-h1 (ATTACK), 1
@@ -15520,7 +15520,7 @@
 28 | r1b2b1r/ppqp1kp1/2n1pn1p/8/3P4/8/PPP1PPPP/RN1QKB1R w KQ | e8-f7 (ATTACK), 1
 28 | r1bq1rk1/p1p2ppp/p4n2/3p4/1b1n4/5PP1/1P1NP1BP/R1BQK1NR w KQ | b7-a6 (ATTACK), 1
 28 | r1bq1rk1/1pp1bpp1/p1n1p2p/2P1N3/3P4/2Q1B3/PP3PPP/3RKB1R w K | e8-g8 (SHORT_CASTLING), 3
-28 | r1bRkbnr/3np2p/p5p1/1B3p1Q/8/2N5/PPPP1PPP/R1B1K1NR b KQkq | c7-d8 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bRkbnr/3np2p/p5p1/1B3p1Q/8/2N5/PPPP1PPP/R1B1K1NR b KQkq | c7-d8 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r1b1kbnr/ppp1pppp/2n5/8/8/1P2PNP1/P2P1P1P/1qBQKB1R w Kkq | a1-b1 (ATTACK), 1
 28 | r1bqk3/1p1p1p1B/p1p1p2p/2P3p1/2P1N1P1/P4N2/1P1P1PP1/R1BQ1RK1 b q | d4-c5 (ATTACK), 1
 28 | rn1qkb1r/pb1pp1pp/2p2p2/8/7n/2P1P3/PP1PKP1P/RNB2B1R w kq | f3-h4 (QUIET_MOVE), 1
@@ -15545,7 +15545,7 @@
 28 | r1b1kb1r/ppp1pppp/5n2/8/2p2P2/nP4P1/P2PP2P/qN1K1BNR w kq | c2-a3 (ATTACK), 1
 28 | r1bqk1nr/pppp1ppp/2n5/4b3/P7/1P6/2PPP1PP/RQ2KBNR w KQkq | b2-e5 (ATTACK), 1
 28 | rnq2bnr/p1pppkpp/5p2/3N4/5R2/5N2/1PPPBPPP/2BQ1RK1 b | e1-g1 (SHORT_CASTLING), 1
-28 | r1bqkbnr/1pp1pppp/2n5/8/1p2PP2/P2P2P1/2P4P/qN1QK1NR w Kkq | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bqkbnr/1pp1pppp/2n5/8/1p2PP2/P2P2P1/2P4P/qN1QK1NR w Kkq | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | 1nb1k2r/rpppnp1p/4p3/2P1N1p1/p5P1/5R2/1P1PPPBP/2BQ1RK1 b | e3-f3 (QUIET_MOVE), 1
 28 | rn3bnr/3kpQp1/1ppp3p/pN6/3N4/4P3/PPPP1PPP/R1B2RK1 b | f3-f7 (ATTACK), 1
 28 | r2qk2r/1pp2ppp/p1nbpn2/3b4/3P4/P2BP3/1P3PPP/RNB1K2R w KQkq | f8-d6 (QUIET_MOVE), 1
@@ -15563,7 +15563,7 @@
 28 | r1bqk2r/pp1p1ppp/3bpn2/4n3/4P1P1/P1P5/3P1P1P/RNBQ1K1R w kq | c4-e5 (QUIET_MOVE), 1
 28 | 2r1kb2/2p1ppp1/p1pq1n2/P2p1b2/6r1/2PPPNP1/1P3P1P/RNB1K2R w | e6-f5 (QUIET_MOVE), 1
 28 | r1bqk2r/pppp1ppp/5n2/4p3/3n3P/3P4/P1PBPPP1/Q3KBNR w Kkq | c6-d4 (QUIET_MOVE), 1
-28 | r2qkb1r/ppp2ppp/2n1bn2/4p3/P6P/3P4/N1Q1PPP1/q1B1KB1R w Kkq | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r2qkb1r/ppp2ppp/2n1bn2/4p3/P6P/3P4/N1Q1PPP1/q1B1KB1R w Kkq | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | rnbqk1nr/3ppp1p/1p5B/p7/3NP3/2N5/PPP2PPP/R2QKB1R b KQkq | g5-h6 (ATTACK), 1
 28 | r1bqkb1r/1pp1ppp1/2n2n1p/8/1p1P1BP1/P6P/2P1pP2/RN2KB1R w KQkq | f3-e2 (ATTACK), 1
 28 | 1nbqkbnr/1ppp1ppp/8/8/2B1rp1P/8/P1PP2P1/RNBQK1NR w KQk | e5-e4 (ATTACK), 1
@@ -15602,7 +15602,7 @@
 28 | rnb2b1r/1p2p1pp/pq3pk1/3B4/3PP1PN/4B3/PPP2PP1/R2QK2R b KQ | f3-h4 (QUIET_MOVE), 1
 28 | r1b1kbnr/ppp2ppp/8/4n3/1P2q3/8/P1PPP1PP/1RBQKBNR w Kkq | d5-e4 (QUIET_MOVE), 1
 28 | r3kbnr/ppp2ppp/8/3pp3/2q5/3nPPPb/PP1PK2P/RN1Q3R w kq | g4-c4 (ATTACK), 1
-28 | r1bqk1nr/pppp1pp1/7p/4b3/1P2N3/Pn3P2/3BP1PP/2n1KBNR w Kkq | c2-c1 (TURN_INTO) turn into null, 1
+28 | r1bqk1nr/pppp1pp1/7p/4b3/1P2N3/Pn3P2/3BP1PP/2n1KBNR w Kkq | c2-c1 (TURN_INTO) turn into KNIGHT, 1
 28 | r3kb1r/ppp1pppp/2n2nbq/3p4/6P1/2PP4/PP1KP3/RN1Q1BN1 w kq | h4-h6 (ATTACK), 1
 28 | rnbqk1Q1/ppp4p/3pp1p1/5p2/8/2P1PN2/PPP2PPP/R1B1KB1R b KQq | h8-g8 (ATTACK), 1
 28 | r1b1k2r/pppp1ppp/2n5/8/5pP1/1P1P4/P1P1Pq1P/RNBK1BNn w kq | h4-f2 (QUIET_MOVE), 1
@@ -15789,7 +15789,7 @@
 28 | r2qk2r/pppb1pp1/2n2n2/4p3/2P1p1p1/NP1P4/P2K1PPP/R1B2B1R w kq | d5-e4 (ATTACK), 1
 28 | r1bq1rk1/pp2nppp/2p1p3/2p5/2P3n1/PP1P4/R3PP1b/1NBQK1N1 w | e5-h2 (ATTACK), 1
 28 | 2bq1b2/1p1k2rp/2pp1p1n/p5p1/2BBP3/2N2N1P/PPP2PP1/R2Q1RK1 b | a7-d4 (QUIET_MOVE), 1
-28 | r1bqkbnr/1ppppppp/8/4n3/P7/4P3/2PPKPPP/1qBQ1B1R w kq | a2-b1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bqkbnr/1ppppppp/8/4n3/P7/4P3/2PPKPPP/1qBQ1B1R w kq | a2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | rnb2b1r/1pppkNp1/p3pnBp/8/8/8/PPPP1PPP/R1BQ1RK1 b | e5-f7 (QUIET_MOVE), 1
 28 | rn1qkb1r/ppp2ppp/8/3p4/3P1pbP/1P3N2/P1P1P3/RN1QKB1R w KQkq | e5-f4 (ATTACK), 1
 28 | r1bNkb2/p2pp1B1/2p3p1/1p1N3p/3nP3/3P4/PPP2PPP/R2QKB1R b KQq | f7-d8 (ATTACK), 1
@@ -15827,7 +15827,7 @@
 28 | r1b2bnr/n1qppBpp/5p1k/p7/4R2Q/4P3/1PPP1PPP/2B1K1NR b K | g4-h4 (QUIET_MOVE), 1
 28 | r3kb1r/ppp2ppp/2n5/3p4/4p1nP/PPPPPq2/1B2KP2/RN3B1R w kq | f6-f3 (QUIET_MOVE), 1
 28 | r1bqk3/pppp1pp1/2n1pn1r/8/8/P1PP1N2/P3PPPP/R2QKB1R w KQq | h8-h6 (ATTACK), 1
-28 | 2rq1rk1/1ppb1pp1/2nbp2p/3p4/P4P1P/4PNP1/1B2Kn2/RN1q1BR1 w | d2-d1 (TURN_INTO) turn into null, 1
+28 | 2rq1rk1/1ppb1pp1/2nbp2p/3p4/P4P1P/4PNP1/1B2Kn2/RN1q1BR1 w | d2-d1 (TURN_INTO) turn into QUEEN, 1
 28 | r1bqr3/1ppp1kpp/2nbp1n1/8/4P3/P1PP3N/1P3PPP/RN1K1B1R w | a7-a8 (QUIET_MOVE), 1
 28 | 1rb2rk1/pppp1pp1/5q1p/4p3/1n6/3PP1PP/PPP1BP2/R2QK1NR w KQ | d8-f6 (ATTACK), 1
 28 | N2k2nr/1B2pp1p/3p2pb/p1p2b2/8/4PN1P/PPPP1PP1/R1BQ1RK1 b | h2-h3 (QUIET_MOVE), 1
@@ -15922,7 +15922,7 @@
 28 | 1nbqkb1B/Npppp2p/5p2/8/p2P4/5N2/PPP1PPPP/R2QKB1R b KQ | g1-f3 (QUIET_MOVE), 1
 28 | r1bq1rk1/ppp2pp1/2n2n1p/3p3P/3P1B2/P7/P1P1P1P1/R2QKBNR w KQ | h7-h6 (QUIET_MOVE), 1
 28 | 5b1r/2Qbk1p1/p1pppnBp/B4p2/2PP4/4PNNP/PP3PP1/3R1RK1 b | d2-a5 (QUIET_MOVE), 1
-28 | r1bqk1Qr/p2pp3/np5b/3N4/2p5/5N2/PPPP1PPP/R1BQKB1R b KQkq | h7-g8 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bqk1Qr/p2pp3/np5b/3N4/2p5/5N2/PPPP1PPP/R1BQKB1R b KQkq | h7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | rn1R1bnr/ppp1pppp/4k3/8/8/2N2N2/PPPPPPP1/R1BQKB2 b Q | d5-d8 (ATTACK), 1
 28 | rn2k2r/p1ppnp1p/P4q2/4P1p1/1N6/2P1P3/1P3PPP/R1BQKBNR b KQkq | d4-e5 (ATTACK), 1
 28 | r1bq1rk1/pp3ppp/2p1pn2/3p2N1/8/4P3/PPPP1PPP/R1BQK2R b KQ | f3-g5 (QUIET_MOVE), 56
@@ -16002,7 +16002,7 @@
 28 | r2qkb1r/ppp1pppp/3p4/1Nn1n3/6b1/5N2/PP1PKP1P/R1BQ3R w kq | c6-e5 (QUIET_MOVE), 1
 28 | r2qkb1r/p2n1ppp/p1p1p3/3p4/8/2N1P2P/PPPP1PP1/R1BQ1RK1 b kq | e1-g1 (SHORT_CASTLING), 1
 28 | rnb1kb1r/pppp1pp1/6p1/4p3/1P4n1/2P5/P1KPP2P/RNB2qNR w kq | h7-g6 (ATTACK), 1
-28 | rn1Q1knr/1b1p3p/5p2/p2Np1pQ/4P3/8/P1PP1PPP/R1B1KBNR b KQ | c7-d8 (TURN_INTO_ATTACK) turn into null, 1
+28 | rn1Q1knr/1b1p3p/5p2/p2Np1pQ/4P3/8/P1PP1PPP/R1B1KBNR b KQ | c7-d8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | 2b1kb1r/1pp1ppp1/r1n2n1p/3q4/5P2/2P4P/PPQP2P1/RNB1K1NR w KQk | d8-d5 (ATTACK), 1
 28 | r4rk1/pp1b1ppp/4pn2/3p4/3n4/N1bPqPP1/P3P2P/R2QKBNR w | b4-c3 (ATTACK), 1
 28 | rn1q1rk1/ppp2pp1/5n1p/3pp1N1/PbP5/2NPP1P1/1P3P1P/2B1K2b w | g2-h1 (ATTACK), 1
@@ -16114,7 +16114,7 @@
 28 | 1n3bn1/1pNb1Np1/3p2k1/p3pp1p/2B5/4P3/PPPP1PPP/R1BQ1RK1 b | d3-c4 (QUIET_MOVE), 1
 28 | rn1qkbr1/pNpppppp/8/1B6/8/5N2/PPPP1PPP/R1BQK2R b KQq | c5-b7 (ATTACK), 1
 28 | r1bqk2r/ppp2ppp/4pn2/3p4/5P2/3PBN2/PP1KP1PP/n4BNR w kq | c2-a1 (ATTACK), 1
-28 | rnbk1bQr/p1p3pp/1p6/2q5/2B5/2N2N2/PPPP1PPP/R1BQK2R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+28 | rnbk1bQr/p1p3pp/1p6/2q5/2B5/2N2N2/PPPP1PPP/R1BQK2R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | 2r1kbnr/ppq1pppp/4b3/2p5/6P1/3PP3/PPQ2P1P/RNB1KBR1 w Qk | d8-c7 (QUIET_MOVE), 1
 28 | rnbk1bB1/pp1pp3/7r/2p2PNp/P7/8/P1PP1PPP/R1BQK1NR b KQ | e4-g5 (ATTACK), 1
 28 | r1b1kb1r/ppp2pp1/2n1p2p/2P5/3Pq3/5N2/PP3PPP/R1BQKB1R w KQkq | f5-e4 (QUIET_MOVE), 116
@@ -16375,7 +16375,7 @@
 28 | r3kb1r/ppp2ppp/5q2/3pn3/6n1/1P1PP1P1/P1PB3P/RN2KBNR w KQkq | d8-f6 (QUIET_MOVE), 1
 28 | 2bqk1nr/rpp2ppp/2n5/4p3/3p4/2PPb3/PP1N2PP/R1KQ1BNR w k | d5-d4 (QUIET_MOVE), 1
 28 | r1b1k2r/pppp1ppp/2nb1n2/8/8/3PPP1q/PPP1BP2/R1BQK1R1 w Qkq | g8-f6 (QUIET_MOVE), 1
-28 | r1bqkb1r/pppp1ppp/2n2n2/8/P7/2P5/1P2BPPP/R1rQ1KNR w kq | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bqkb1r/pppp1ppp/2n2n2/8/P7/2P5/1P2BPPP/R1rQ1KNR w kq | d2-c1 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r3kbnr/ppp2ppp/2n1b3/3q4/8/4P3/PPP2PPP/RNB1KBNR w KQkq | c8-e6 (ATTACK), 1
 28 | r2qkbnr/p1pppppp/8/8/PPP2P1P/6P1/2nPPK2/1NB2BNb w kq | a1-c2 (QUIET_MOVE), 1
 28 | 3qk1nr/pp2ppbp/2p5/2PpB3/8/2NP1N2/PPP2PPP/2RQKB1R b Kk | b8-e5 (QUIET_MOVE), 1
@@ -16405,7 +16405,7 @@
 28 | rn1qkbnr/ppp2ppp/8/8/3p4/3P3P/PP2PP1P/RNBQKB1R w KQkq | e5-d4 (ATTACK), 1
 28 | rn1qk2r/pp2nppp/2b5/2b1p3/8/2P1PQ2/PP1P1PPP/R1B1K1NR w KQkq | d7-c6 (QUIET_MOVE), 1
 28 | rnb1k2r/ppq2ppp/3bpn2/3p4/R7/5N1P/2PPPPP1/2BQKB1R w Kkq | b4-d6 (QUIET_MOVE), 1
-28 | r1Rq1knr/1pp3p1/p1nb3p/8/2B5/2N2N2/PPPP1PPP/R1BQK2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1Rq1knr/1pp3p1/p1nb3p/8/2B5/2N2N2/PPPP1PPP/R1BQK2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r1bq1rk1/pppp1ppp/8/n7/1bp5/R4N2/1P1nPPPP/2BQKB1R w K | e4-d2 (ATTACK), 1
 28 | 2rqkb2/2p1ppp1/p1p1bn2/3p4/P5r1/2P1PNP1/1P1P1P1P/RNB1K2R w | a8-c8 (QUIET_MOVE), 1
 28 | 1rbq4/pppkb3/n2pppN1/7R/3PP1n1/P1NBB3/1PP2PP1/R2QK3 b Q | h1-h5 (ATTACK), 1
@@ -16510,7 +16510,7 @@
 28 | rnq1k1nr/2p1bppp/p2Pp3/8/3P4/2N1BN2/PPP2PPP/R2Q1RK1 b kq | e5-d6 (ATTACK), 1
 28 | r1bq1rk1/pppp1ppp/2n1p3/8/8/2bPPBP1/P1P2P1P/1RB1K1NR w | b4-c3 (ATTACK), 1
 28 | 2r1k1nr/1pp2ppp/3b4/1p2n3/1Pp2pbq/P7/R2PP1PP/2BQ1BKR w k | d8-h4 (ATTACK), 1
-28 | N2q1bnr/p1pkp2p/8/3p1ppQ/8/2N1P3/1PPP1PPP/R1B1KBNR b KQ | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+28 | N2q1bnr/p1pkp2p/8/3p1ppQ/8/2N1P3/1PPP1PPP/R1B1KBNR b KQ | b7-a8 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 28 | r4b2/pb3NpN/np1kp3/1Bpp4/7p/4P3/PPPP1PPP/R1BQK2R b KQ | e5-f7 (ATTACK), 1
 28 | rnbqkb1r/1ppppppp/8/8/4n1P1/P3P3/2PK1P1P/R1BQ1BNR w kq | f6-e4 (QUIET_MOVE), 1
 28 | rnbqk2r/1ppp1p1p/p4p2/8/3P4/P1NQ4/P1P1PPPP/R3KBNR b KQkq | b2-a3 (ATTACK), 1
@@ -16574,7 +16574,7 @@
 28 | rnbk1b1r/1pqppQ2/2p5/p4PB1/2NP4/2N5/PPP2PPP/R3KB1R b KQ | e4-f5 (ATTACK), 1
 28 | N2k1bnr/pp5p/n1pp2p1/4pP2/2BP2Q1/1N6/PPP2PPP/R1B2RK1 b | e4-f5 (ATTACK), 1
 28 | 6nr/pbN1kpp1/1pn1p2p/3p4/8/P6N/PBPPPPPP/R2QKB1R b KQ | c1-b2 (QUIET_MOVE), 1
-28 | r1bqkbnr/ppppp1pp/2n5/8/2P4P/5P1B/PP1P4/RNBqK2R w KQkq | e2-d1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bqkbnr/ppppp1pp/2n5/8/2P4P/5P1B/PP1P4/RNBqK2R w KQkq | e2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | rn3rk1/1ppb1ppp/p2b1q2/4p3/8/1PP1P1P1/PB1P1P1P/RN2K1NR w KQ | c8-d7 (ATTACK), 1
 28 | rnbqkb1r/p2ppp1p/5n2/2P3B1/R7/2N5/1PP1PPPP/3QKBNR b Kkq | d4-c5 (ATTACK), 1
 28 | rnbqk2r/ppp2ppn/1b6/3p4/3P4/P5P1/1P2PP1P/RNB1KBNR w KQkq | f6-h7 (ATTACK), 1
@@ -16648,7 +16648,7 @@
 28 | rnb1kbnr/ppp1p1pp/8/2N2p2/3Q4/8/PPP2PPP/R1B1KBNR b KQkq | e4-c5 (QUIET_MOVE), 1
 28 | rnb1kbnB/pp3Q2/2p1p3/3p1p2/3PP3/2N5/PPP2PPP/R3KBNR b KQq | h5-f7 (ATTACK), 1
 28 | r1b2rk1/1ppp1ppp/2nbp3/1p6/1P6/P1NPPqP1/2P2P1P/1RB1K2R w | f6-f3 (ATTACK), 1
-28 | rQb1k2r/p2pnp1p/1pp5/6p1/8/P1N2N2/1PP1PPPP/R1BQKB1R b KQkq | c7-b8 (TURN_INTO_ATTACK) turn into null, 1
+28 | rQb1k2r/p2pnp1p/1pp5/6p1/8/P1N2N2/1PP1PPPP/R1BQKB1R b KQkq | c7-b8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | 3rr1k1/1ppb1pp1/p3pb1p/2Pq4/P2P1B2/1n3N1P/1P3PP1/2RQKB1R w K | a5-b3 (QUIET_MOVE), 1
 28 | r1bk1bnr/pppp2p1/2B2p2/7p/4P3/2N5/PPPP1PPP/R1BQK2R b KQ | b5-c6 (ATTACK), 1
 28 | r1b1kbnr/ppp1pppp/8/4q3/8/3P1P1P/PPP1KP1R/RNB2BN1 w kq | d5-e5 (QUIET_MOVE), 1
@@ -16707,7 +16707,7 @@
 28 | r1b1k1nr/pp4pp/n2Qp3/1Bp2p2/1P2P3/2N2N2/1PP2PPP/R1B1K2R b KQkq | f1-b5 (QUIET_MOVE), 1
 28 | r1b1kb1r/pp1p1ppp/4p3/2p5/P1P1n1P1/1P1nP2N/1RKP1P1P/1N3q2 w kq | c1-d3 (QUIET_MOVE), 1
 28 | r1bq1rk1/ppp2pp1/4nn2/7p/4pPP1/N5bP/PPP1K1B1/R1B3NR w h6 | h7-h5 (LONG_MOVE), 1
-28 | 2bqkb1R/rppp1n1p/2n5/1B6/p3N2N/4P3/PPP2PPP/R1BQ1RK1 b | g7-h8 (TURN_INTO_ATTACK) turn into null, 1
+28 | 2bqkb1R/rppp1n1p/2n5/1B6/p3N2N/4P3/PPP2PPP/R1BQ1RK1 b | g7-h8 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r1bq1rk1/pppp1ppp/2n1pn2/8/1PP5/P2PPP2/R2K2P1/1N1Q1Bb1 w | f2-g1 (ATTACK), 1
 28 | r1bqk1nr/pppp1ppp/8/8/4p3/1P2P3/P1PP1PPP/bNB1KBR1 w kq | e5-a1 (ATTACK), 1
 28 | r1b1kbnr/pppp1p1p/6p1/n5N1/3QP3/2N5/PPP2PPP/R3KB1R b KQkq | d1-d4 (ATTACK), 1
@@ -16829,7 +16829,7 @@
 28 | r1bk1br1/pppp1ppp/8/4NN2/8/3BP3/PPPP1PPP/R1BQK2R b KQ | f3-e5 (ATTACK), 1
 28 | rnbqkbnr/p1ppp3/6Qp/1B6/3PN3/8/PPP2PPP/R1B1K1NR b KQkq | h5-g6 (ATTACK), 1
 28 | r3kbnr/pppq1p1p/4p3/3P2p1/8/2N5/PPPP1PPP/R1BQK1NR b KQkq | e4-d5 (ATTACK), 1
-28 | r1Nb1k1r/p1p3p1/1p5n/1B2pp1p/4P3/P1N2N2/1BPP1PPP/R2QK2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1Nb1k1r/p1p3p1/1p5n/1B2pp1p/4P3/P1N2N2/1BPP1PPP/R2QK2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 28 | 1rbk1bnN/p2ppQp1/2p4p/1p3p2/1P6/2N1P3/1PPP1PPR/R1B1KB2 b Q | h5-f7 (QUIET_MOVE), 1
 28 | r2qkb1r/ppp2p1p/2n3p1/4p1P1/4b2P/1PP5/P2PP3/RNBQK1NR w KQkq | f5-e4 (ATTACK), 1
 28 | r2q1rk1/pppb1p1p/4pn1p/2Pp4/3P1P2/P1N4N/1Pn1PKPP/5B1R w | c8-d7 (QUIET_MOVE), 1
@@ -16991,7 +16991,7 @@
 28 | r1bqkbnr/p1p1p1p1/1pQ5/5P1p/8/P1N5/1PPP1PPP/R1B1K1NR b KQkq | f3-c6 (ATTACK), 1
 28 | r1b1kbnr/ppp2ppp/8/3qP1B1/7P/8/PPn1PPP1/RN2KBNR w KQkq | d4-c2 (ATTACK), 1
 28 | 5knr/1p1p4/p3p1p1/2p1Npbp/2P5/3BPN2/PP1P1PPP/R1BQR1K1 b | c6-e5 (QUIET_MOVE), 1
-28 | r2qkb1r/1pp1pppp/5n2/3p4/1PP1PPb1/5nP1/3P3P/RqBK1BR1 w kq | a2-b1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r2qkb1r/1pp1pppp/5n2/3p4/1PP1PPb1/5nP1/3P3P/RqBK1BR1 w kq | a2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | r2qkb1r/1Ppppppp/7n/8/R3P3/2N5/1PPP1PPP/2BQKBNR b Kkq | a6-b7 (ATTACK), 1
 28 | 2bqk3/rp1p1p1B/p1pNp2p/2P3p1/2P3P1/P4N2/1P1P1PP1/R1BQ1RK1 b | e4-d6 (QUIET_MOVE), 1
 28 | 2b1k1nr/1pp2ppp/1rn1p3/1N1p4/Pp1P4/4PP1P/2P2qPR/R1B2Kb1 w k | h4-f2 (QUIET_MOVE), 1
@@ -17068,7 +17068,7 @@
 28 | r1b1kb1r/ppp1ppp1/2n4p/3q4/8/3P1N2/PPP2PPP/R1BQKB1R w KQkq | b8-c6 (QUIET_MOVE), 116
 28 | r1b1kb1r/ppp1pppp/2n2n2/3p4/1P5P/PQPP1P2/2K1Pq2/RNB5 w kq | g1-f2 (QUIET_MOVE), 1
 28 | r3kb1r/1pp1ppp1/p1n2n1p/P4b2/7P/1p1P4/2PQPPPN/q3KB1R w Kkq | c3-a1 (ATTACK), 1
-28 | r1bqkb1r/1pp2ppp/2n2n2/3pp3/3P2P1/3Q1N1P/P1P1PP2/q3KB1R w Kkq | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+28 | r1bqkb1r/1pp2ppp/2n2n2/3pp3/3P2P1/3Q1N1P/P1P1PP2/q3KB1R w Kkq | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | 1r1qkb1r/p1p1pp1p/p2p1np1/8/8/2N1PR2/PPPPNPP1/R1BQK3 b Qk | h3-f3 (QUIET_MOVE), 1
 28 | rnb1k1nr/p2pq2p/1p1NP1p1/2P5/3Q4/4B3/PPP2PPP/R3KBNR b KQkq | e4-d6 (QUIET_MOVE), 1
 28 | rn3rk1/ppp1qppp/5n2/3pp3/8/NPP4P/P2PPP1P/2RQKB1R w K | d8-e7 (QUIET_MOVE), 1
@@ -17155,7 +17155,7 @@
 28 | rnb1k1nr/p1pp1ppp/4p3/1B6/3PP3/P1N5/P1P2KPP/R1BQ2NR b kq | e1-f2 (ATTACK), 1
 28 | 1nbqkb1r/1ppp1ppp/4pn2/8/8/6PP/P1P1PP2/RNBrKBNR w k | d4-d1 (ATTACK), 1
 28 | r1b1k1nr/p2p1pp1/npp1p2p/4N3/3PP3/P1N5/2P2PPP/R2QKB1R b KQkq | f3-e5 (ATTACK), 1
-28 | 1r1Qkbnr/pp3ppp/8/4p2b/3Q4/P1N5/1PP1PPPP/R1B1KBNR b KQk | c7-d8 (TURN_INTO_ATTACK) turn into null, 1
+28 | 1r1Qkbnr/pp3ppp/8/4p2b/3Q4/P1N5/1PP1PPPP/R1B1KBNR b KQk | c7-d8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 28 | rnb1k1nr/1p1p1ppp/2p1p3/p6R/3P4/R1N2N2/1PP1PPP1/2BQKB2 b kq | a1-a3 (ATTACK), 1
 28 | r1bq1rk1/pppp1ppp/5n2/4p2P/nPPbP3/P4P2/3K2P1/R3Q1NR w | c3-a4 (QUIET_MOVE), 1
 28 | rnb2br1/pp1kpppp/8/2Np4/8/4PN2/PPPP1PPP/R1BQK2R b KQ | e4-c5 (ATTACK), 1
@@ -17246,7 +17246,7 @@
 28 | rnbq1kn1/3pp1p1/8/ppN2p1p/3P4/8/PPP1PPPP/R1BQKB1R b KQ d3 | d2-d4 (LONG_MOVE), 1
 28 | 4kb2/pBp3pp/np1p1pn1/4p3/4P3/2N2N2/PPPP1PPP/R1BQK2R b KQ | d5-b7 (ATTACK), 1
 28 | 1n1qkbn1/N1pp1ppr/1p5p/p3N3/4B3/8/PPPP1PPP/R1BQ1RK1 b | d3-e4 (ATTACK), 1
-28 | rnRk2r1/ppp1bppp/5n2/1B6/8/2N2N2/PPPP1PPP/R1BQK2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+28 | rnRk2r1/ppp1bppp/5n2/1B6/8/2N2N2/PPPP1PPP/R1BQK2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into ROOK, 1
 28 | r2qkb1r/1pp2ppp/p1n2n2/4p3/P1b5/3P1PP1/1P2P2P/2BQKBNR w Kkq | a2-c4 (ATTACK), 1
 28 | rnb1kb1r/pppp1ppp/4p3/4P3/P7/3K1P2/1PPP1nP1/R1BQ1Bq1 w kq | h1-f2 (QUIET_MOVE), 1
 28 | Q1bqk1nr/p1pp1ppp/n7/1B2p3/8/R1N1PN2/1PPP1PPP/2B1K2R b Kk | f1-b5 (ATTACK), 1
@@ -17413,7 +17413,7 @@
 27 | r1b3N1/ppp2p1p/n2k4/3pp3/1P1P3B/4P3/PP3PPP/R2QKBNR b KQ | c3-b4 (ATTACK), 1
 27 | rn1qk2r/pppb1ppp/4p3/8/4n3/1PP5/P1P2PPP/R1B1KBNR w KQkq | c8-d7 (ATTACK), 1
 27 | 4kb1r/2ppnppp/bp2p3/p7/3PN1Q1/8/PPPP1PPP/R1B1K2R b KQk | d1-g4 (QUIET_MOVE), 1
-27 | rnQ3nr/ppp1k1pp/8/8/q7/P1N3P1/P1PP1P1P/R1BQKBNR b KQ | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnQ3nr/ppp1k1pp/8/8/q7/P1N3P1/P1PP1P1P/R1BQKBNR b KQ | d7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r3kb1r/ppp1pppp/2n3bq/3p4/6n1/2PP4/PPK1P3/RN1Q1BN1 w kq | f6-g4 (ATTACK), 1
 27 | r1bk1bnr/3np2p/p5p1/1B3p2/8/2N2Q2/PPPP1PPP/R1B1K1NR b KQ | h5-f3 (QUIET_MOVE), 1
 27 | r2qkb1r/pp3p1p/B1ppp2p/8/3PP3/2N2N1P/PPP2P2/R2QK2R b KQkq | f1-a6 (ATTACK), 1
@@ -17471,7 +17471,7 @@
 27 | rn2k2r/ppp2ppp/8/3pp2b/P6q/3P1Pn1/2P4P/b1BQKBNR w kq | e4-g3 (ATTACK), 1
 27 | r3k2r/ppp2ppp/2b2n2/2P1p3/2P1P3/P2q3P/3PNPP1/nNB1K2R w Kkq | d8-d3 (ATTACK), 1
 27 | r1bqkb1r/2p1pppp/p1n5/8/4p2P/5N2/PPPP1PP1/R1BQK2R w KQkq | d5-e4 (ATTACK), 1
-27 | R2qkbr1/2pppppp/7n/8/R3P3/2N5/1PPP1PPP/2BQKBNR b K | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+27 | R2qkbr1/2pppppp/7n/8/R3P3/2N5/1PPP1PPP/2BQKBNR b K | b7-a8 (TURN_INTO_ATTACK) turn into ROOK, 1
 27 | r2qkb1r/pp3ppp/5n2/1p1pn3/4P3/6PB/PPPP3P/R1BQK2R w KQkq | g8-f6 (QUIET_MOVE), 1
 27 | rnbqk1r1/pppp1p1p/4p2p/3n4/3P3P/P6R/P1P1PP2/R3KBN1 w Qq | h8-g8 (QUIET_MOVE), 1
 27 | r1bqk1nr/pppp1p1p/7B/4N3/7p/2N5/PPP1PPP1/R2QKB1R b KQkq | c1-h6 (ATTACK), 1
@@ -17483,7 +17483,7 @@
 27 | 3qk1n1/3np1br/2B2ppp/p2N4/3PP3/4BN2/PPP2PPP/R2Q1RK1 b | c1-e3 (QUIET_MOVE), 1
 27 | r1b2rk1/1pp2pp1/4pb1p/pBP4q/QN1P4/4B2P/PP3PP1/3R1RK1 w | a6-a5 (QUIET_MOVE), 2
 27 | Nnb2bnr/p2k1ppp/1p2p3/8/8/8/PPPP1PPP/R1BQKBNR b KQ | c7-a8 (ATTACK), 1
-27 | r1bqkbnr/ppp1pppp/8/1n6/6PP/1P2B3/P4P2/RN1qK1NR w KQkq | c2-d1 (TURN_INTO_ATTACK) turn into null, 1
+27 | r1bqkbnr/ppp1pppp/8/1n6/6PP/1P2B3/P4P2/RN1qK1NR w KQkq | c2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r1bq1rk1/pppp1ppp/2n1p3/8/3P2P1/8/P1P1PP1P/R1BK1BNR w | b8-c6 (QUIET_MOVE), 1
 27 | r3kb1r/ppp2ppp/6q1/3pn3/6b1/P1PP4/1P2P2P/RNBK1BNR w kq | c6-e5 (ATTACK), 1
 27 | rnbq1b2/1pp1k3/p3pPQ1/8/3p4/2N2N2/PPPP1PPP/R1B1KB1R b KQ | f5-f6 (QUIET_MOVE), 1
@@ -17542,7 +17542,7 @@
 27 | r2q1r2/pppbbppk/2n1p3/8/2PP2nP/7R/PP2PP2/RNB1K1N1 w Q | g8-h7 (ATTACK), 1
 27 | r3kb1r/p1qp1p1p/npp1pN2/8/8/P3P2P/1PPP1PP1/R1BQK2R b KQkq | e4-f6 (QUIET_MOVE), 1
 27 | rnb1kb2/p3p1pQ/8/Pppp1P2/3P4/2NBB3/P1P2PPP/R3K1NR b KQ | b4-a5 (ATTACK), 1
-27 | R2q1b1r/2pk1ppp/3pp3/p4n2/4P3/2N5/PPP2PPP/R1BQK1NR b KQ | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+27 | R2q1b1r/2pk1ppp/3pp3/p4n2/4P3/2N5/PPP2PPP/R1BQK1NR b KQ | b7-a8 (TURN_INTO_ATTACK) turn into ROOK, 1
 27 | 2bqk1nr/1ppp1ppp/2n5/4p3/5P2/N1P5/P1P1P1PP/R2rKBNR w KQk | d5-d1 (ATTACK), 1
 27 | rn2kbQ1/pppbpp1p/6p1/8/4p3/2N5/PPP2PPP/R1B1KBNR b KQq | h8-g8 (ATTACK), 1
 27 | r1b1k2r/pppp1ppp/4pn2/6q1/1R1bP3/3P1PP1/P5KP/4nBNR w kq | c2-e1 (QUIET_MOVE), 1
@@ -17646,7 +17646,7 @@
 27 | rn1k1bnr/ppp1pppp/8/1N6/3N4/8/PPPP1PPP/R1BQ1RK1 b | e1-g1 (SHORT_CASTLING), 1
 27 | r1b1kb1r/pp1p1pp1/4q2p/2p5/2P1n2P/6P1/PP1PBP1K/RNBQ4 w kq | f6-e4 (QUIET_MOVE), 1
 27 | r1b1k2r/ppp2ppp/4p3/2bp4/Pn4n1/N3P3/1R1PKq1P/2B2BNR w kq | h4-f2 (ATTACK), 1
-27 | r2qkb1r/pp2pppp/2p1bn2/7P/6P1/P2P1P1B/1P2KP2/R1qQ3R w kq | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+27 | r2qkb1r/pp2pppp/2p1bn2/7P/6P1/P2P1P1B/1P2KP2/R1qQ3R w kq | d2-c1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r1bqk1nr/p1p2p2/2Np2pp/p2N4/4P3/R7/1PPP1PPP/2BQK2R b Kkq | e5-c6 (QUIET_MOVE), 1
 27 | r1bqkb1r/pppp2pp/4p3/1P6/3PP1pP/8/P2K1P2/nNB2BNR w kq | e7-e6 (QUIET_MOVE), 1
 27 | rnb4r/2ppkpp1/p4n1p/bp1P4/8/PB3N2/1PP2PPP/R1B2RK1 w | e8-e7 (ATTACK), 115
@@ -17776,7 +17776,7 @@
 27 | 6r1/1BN1pkb1/2p2p2/p2p1Pp1/1p1P3p/4BN2/PPP2PPP/2RQ1RK1 b | a6-b7 (QUIET_MOVE), 1
 27 | N1bk1bnr/3n1Npp/p2p4/1p2p3/8/4P3/PPPP1PPP/R1BQK2R b KQ | g5-f7 (ATTACK), 1
 27 | r3kbnr/3Np1p1/1p5p/p1p2p2/8/4P1N1/PPPP1PPP/R1BQK2R b KQkq | e5-d7 (ATTACK), 1
-27 | R1Qq2nr/3pk1b1/2p3pp/1P2pp2/4P3/2NB1N2/1P1P1PPP/2BQR1K1 b | b7-c8 (TURN_INTO_ATTACK) turn into null, 1
+27 | R1Qq2nr/3pk1b1/2p3pp/1P2pp2/4P3/2NB1N2/1P1P1PPP/2BQR1K1 b | b7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r1b3n1/ppp1kp1p/2n1p1p1/8/2P4N/P1B1P3/P3PPPP/R2QKB1R b KQ | h8-c3 (QUIET_MOVE), 1
 27 | rnb1k1nr/pppp1ppp/3bp3/8/8/P1PP4/4PPPP/2q1KBNR w kq | c2-c1 (ATTACK), 1
 27 | r1bqk1nr/pppp1ppp/2n5/8/P5Pb/1P6/2PPP2P/1Q2KBNR w Kkq | f6-h4 (QUIET_MOVE), 1
@@ -17855,7 +17855,7 @@
 27 | r1bqkb1Q/2pp1p2/1pn2N2/p3p3/2P5/3B1N2/PP1P1PPP/R1B1K2R b KQq | e4-f6 (ATTACK), 1
 27 | rnb2b1Q/1p1pkp1N/7p/p7/2p5/4PN2/PPP2PPP/R1BQKB1R b KQ | f6-h7 (QUIET_MOVE), 1
 27 | 1rb3k1/1ppq2p1/2n1prB1/3p2N1/p1nP4/P1P3BP/1PQ2PP1/1R2K2R w K | a8-b8 (QUIET_MOVE), 1
-27 | rn2k1R1/pb1p1p2/2pBp1pp/1p6/3P4/2NB1N1P/PRPQ1PP1/4K2R b Kq | g7-g8 (TURN_INTO) turn into null, 1
+27 | rn2k1R1/pb1p1p2/2pBp1pp/1p6/3P4/2NB1N1P/PRPQ1PP1/4K2R b Kq | g7-g8 (TURN_INTO) turn into ROOK, 1
 27 | r2q1b1r/p1pkp2p/3p3n/5pB1/1P1P4/2N1PN1P/1PP2PP1/R2QK2R b KQ | h2-h3 (QUIET_MOVE), 1
 27 | 1nbknb1r/1p2pQpp/1N1p4/p7/8/4P3/PPPP1PPP/R1B1K1NR b KQ | f3-f7 (ATTACK), 1
 27 | 2bk4/rpqp4/2pNpQ2/p1P1N1pp/2P1B1P1/P7/1P1P1PP1/R1B2RK1 b | f7-f6 (QUIET_MOVE), 1
@@ -17877,7 +17877,7 @@
 27 | Nnbk1br1/pp4p1/3p1P2/5pBp/4P3/8/PPP2PPP/R2QKBNR b KQ | e5-f6 (ATTACK), 1
 27 | 2b1k2r/rppp1ppp/2n1pq2/8/5n2/P1PP4/2P1PPPP/3RKBNR w Kk | d8-f6 (QUIET_MOVE), 1
 27 | r2k1b1r/pp2nNpp/n2P4/1Bp1B3/3P4/2N4P/PPP2P1P/R2Q1RK1 b | g5-f7 (ATTACK), 1
-27 | rnb2r2/1p3ppk/2pb1n1p/p2p4/PP5P/R1P5/2KPP3/1NB2qNq w | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnb2r2/1p3ppk/2pb1n1p/p2p4/PP5P/R1P5/2KPP3/1NB2qNq w | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | 3qkbnr/1pp1pppp/2n5/5br1/P7/2pP4/R3PPPP/B2QKB1R w Kk | d4-c3 (ATTACK), 1
 27 | 1n3bnr/3Nkpp1/p1p1p3/3p3p/3P4/3BP3/PPP1NPPP/R1B2RK1 b | b6-d7 (ATTACK), 1
 27 | r1b1k2r/pp1p1ppp/4pn2/8/2Pn1q2/8/PPK1PPPP/RN3BNR w kq | c6-d4 (ATTACK), 1
@@ -17928,7 +17928,7 @@
 27 | rnb1kb1r/1p2n2p/pB1p1p2/8/4N3/8/PPP1PPPP/R2QKBNR b KQkq | c3-e4 (QUIET_MOVE), 1
 27 | r2qk2r/1pp1bppp/3p1n2/4pb2/2P3P1/2pPB2P/P3PP1n/R2K1B2 w kq | b4-c3 (ATTACK), 1
 27 | 3k1b2/p5pp/1p1p1p2/2pNp3/2B1Pn2/3P1N2/PPP2PPP/R1BQ1RK1 b | d2-d3 (QUIET_MOVE), 1
-27 | r1bqk2r/pp1p1pp1/2n1pn2/3Q4/1P1p1b2/N1P2P2/P3P2P/1R2KB1q w kq | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+27 | r1bqk2r/pp1p1pp1/2n1pn2/3Q4/1P1p1b2/N1P2P2/P3P2P/1R2KB1q w kq | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | rn1qk1nr/p3p2p/1pp2p2/3p4/3P1N2/2N1P1P1/PPP2P1P/R2QK2R b KQkq | h3-f4 (ATTACK), 1
 27 | r1b3k1/1ppq2p1/2n1p1B1/3p4/p1nP1r1B/P1P2N1P/1PQ2PP1/1R2K2R w K | f8-f4 (QUIET_MOVE), 1
 27 | Bn3bnN/3k1Q2/p3p2p/2pp1pp1/5P2/2N5/PPPP1PPP/R1B1K2R b KQ | h5-f7 (QUIET_MOVE), 1
@@ -17968,7 +17968,7 @@
 27 | N1bk1b1r/p7/1p1p1p2/4pPpp/1PB5/5N2/PPQP1PPP/R1B2RK1 b | e4-f5 (ATTACK), 1
 27 | r1b1k2r/pppp1ppp/5n2/2b5/6q1/P7/1PPP2PP/RNB1KBNR w kq | g8-f6 (QUIET_MOVE), 1
 27 | 3qkb1r/1Q2ppp1/rp5n/p2p3p/3P1N2/P3BN1R/1P2PPP1/2KR1B2 b k | h1-h3 (ATTACK), 1
-27 | r1bq1rk1/pppp1ppp/2n5/2b5/2P3n1/P2P4/1P1KP2P/RNQ2Bq1 w | f2-g1 (TURN_INTO_ATTACK) turn into null, 1
+27 | r1bq1rk1/pppp1ppp/2n5/2b5/2P3n1/P2P4/1P1KP2P/RNQ2Bq1 w | f2-g1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | rnb3qr/3p2kp/pp3p2/2p1p2Q/2P1B3/4P3/PP1P1PPP/R1B1K2R b KQ | d3-e4 (QUIET_MOVE), 1
 27 | rnQNkbnr/p1N1p2p/1p6/6p1/3PPB2/8/PPP2PPP/R3KB1R b KQ | d5-c7 (ATTACK), 1
 27 | rn2k1n1/3b1pB1/pp2p3/2pP4/3P3p/2NB1N1P/PPP2PP1/R2QR1K1 b q | h8-g7 (ATTACK), 1
@@ -18027,7 +18027,7 @@
 27 | 2bqkb1r/1p1p1ppp/3p1n2/2p1n3/7P/4P3/1PPP1PP1/r1BQK1NR w Kk | e7-d6 (ATTACK), 1
 27 | r1b2bkr/1pq3p1/2n2n1p/1p1pp3/6P1/2P5/P2PPP1P/R1BQKB1R w KQ | a6-b5 (ATTACK), 1
 27 | r1b1kb1r/pppp1ppp/4p2n/8/3n4/7P/PPP1PPP1/RN2KB1R w KQkq | g8-h6 (ATTACK), 1
-27 | rnQq3r/1pp2kp1/p7/2Nn3p/8/5N2/PPPP1PPP/R1BQKB1R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnQq3r/1pp2kp1/p7/2Nn3p/8/5N2/PPPP1PPP/R1BQKB1R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r1bk1bnr/1pp2Q2/p1np2pp/8/B3N3/4BN2/PPP2PPP/R4RK1 b | d5-f7 (QUIET_MOVE), 1
 27 | 1n1qkbnr/2ppp2p/b5p1/p3N3/4N3/5Q2/PPPP1PPP/R1B1K2R b KQk | d1-f3 (QUIET_MOVE), 1
 27 | rnb1kb1r/ppp2ppp/8/3pP3/P3n3/2P5/1PqPP1PP/2B1KBR1 w kq | f6-e4 (QUIET_MOVE), 1
@@ -18057,7 +18057,7 @@
 27 | r2qr1k1/p2p1pp1/1p1pp3/1P1b3P/P2K2p1/N1P1P1P1/3P1n2/R1B2Bn1 w | b7-d5 (QUIET_MOVE), 1
 27 | r1b2rk1/1pp2qp1/1nn1p3/p2p2B1/3P4/P1PB1N1P/1PQ2PP1/1R2K2R w K a6 | a7-a5 (LONG_MOVE), 1
 27 | r3kbnr/pppb1ppp/8/2Ppp3/P2PP2q/8/1P4P1/RNB1KB1n w kq | d8-h4 (ATTACK), 1
-27 | rnQR2nr/1p3k2/3b3p/pBpN2p1/8/5N2/PPPP1PPP/R1BQ2K1 b | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnQR2nr/1p3k2/3b3p/pBpN2p1/8/5N2/PPPP1PPP/R1BQ2K1 b | d7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r2qkb1r/ppp1pppp/2n1b3/3p4/3P2PP/P7/1PPKPn2/R1B2B2 w kq | d1-f2 (ATTACK), 1
 27 | r1bqk2r/1pp2ppp/p4n2/4n2P/1b6/3P4/PP2P1P1/1RBQKBNR w Kkq | f8-b4 (QUIET_MOVE), 1
 27 | r1bq1rk1/pppp1pp1/8/2bp3p/4n2P/P4N2/1P3PP1/nNB1KBR1 w | d6-c5 (QUIET_MOVE), 1
@@ -18110,7 +18110,7 @@
 27 | r1bk1br1/1pN2Np1/p1pp4/BB5p/4P3/3P4/PPP2PPP/R2QK2R b KQ | e5-f7 (ATTACK), 1
 27 | rn2k1nr/pppb1ppp/8/3p4/3p2Pq/b4P2/P1PKP2P/R2Q1B1R w kq | b2-a3 (ATTACK), 1
 27 | rn1qk1nr/p3pp1p/2pp2p1/8/2p1NB2/5N2/PP2BPPP/R2QK2R b KQkq | d4-f3 (QUIET_MOVE), 1
-27 | R4br1/p2pk1pp/1p1Npp2/2p1P3/4P2B/P4N2/2P2PPP/R2QKB1R b KQ | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+27 | R4br1/p2pk1pp/1p1Npp2/2p1P3/4P2B/P4N2/2P2PPP/R2QKB1R b KQ | b7-a8 (TURN_INTO_ATTACK) turn into ROOK, 1
 27 | r1bqkbQ1/p2ppp1p/1pn5/6B1/4P3/2N5/PPP2PPP/R3KBNR b KQq | c1-g5 (ATTACK), 1
 27 | rn1q1kr1/pp3pp1/5P2/1Bp3Pp/8/P1N1PN2/P1P2PP1/R1BQK2R b KQ | d5-c3 (QUIET_MOVE), 1
 27 | r1b1kb1r/pppp1ppp/2n2n2/1B6/N4K2/6P1/PPPq3P/R1n3NR w kq | e1-d2 (QUIET_MOVE), 1
@@ -18237,7 +18237,7 @@
 27 | rn1qk1nr/1Rp4p/p5p1/2bBNp2/8/2N1P3/1PPP1PPP/2BQK2R b Kkq | f3-e5 (ATTACK), 1
 27 | rnbk3r/ppp2ppp/4p3/2b5/6n1/7N/PPP1PP1P/RNB1KB1R w KQ | f6-g4 (ATTACK), 1
 27 | r1bqk1nr/1ppp1ppp/p7/8/2nP4/P7/P3P1PP/R1BQKBNR w KQkq | e5-c4 (ATTACK), 1
-27 | r2qk1nr/ppp2ppp/2n5/P7/1b3p2/2PP3b/4P1PP/q1BQKB1R w kq | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+27 | r2qk1nr/ppp2ppp/2n5/P7/1b3p2/2PP3b/4P1PP/q1BQKB1R w kq | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r1bqkb1r/pppppppp/8/5n2/5P1P/PPPP4/RB1K2n1/1N4N1 w kq | e3-g2 (ATTACK), 1
 27 | rnbk1bnr/pp2pN1p/2p3p1/8/4N3/8/PPPP1PPP/R1B1KB1R b KQ | e5-f7 (QUIET_MOVE), 1
 27 | 3k1bnr/2p1p2p/2Bp1pp1/p7/8/2N1PN2/PPPP1PPP/R1BQK2R b KQ | a8-c6 (ATTACK), 1
@@ -18433,8 +18433,8 @@
 27 | r3kbnr/ppp2ppp/2n5/8/2p2p2/1P4Pb/P1PPP2P/R1BQK2q w Qkq | d5-h1 (ATTACK), 1
 27 | 1r3b2/pbk2Np1/np2N3/1Bpp4/7p/4P3/PPPP1PPP/R1BQK2R b KQ | g5-e6 (ATTACK), 1
 27 | r1bqr2k/ppp2ppp/3bp2n/8/4P3/2PB1P1N/PP4PP/RN1K3R w | d7-e6 (ATTACK), 1
-27 | rnb1k1nr/pppp1ppp/8/6q1/1PN1P3/P1PP4/1b5P/R2QKB1q w Qkq | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
-27 | r1Qk1bn1/1pp1pp2/7r/1B4Bp/p2P4/2N2N2/PPP2PPP/R2Q1RK1 b | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnb1k1nr/pppp1ppp/8/6q1/1PN1P3/P1PP4/1b5P/R2QKB1q w Qkq | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
+27 | r1Qk1bn1/1pp1pp2/7r/1B4Bp/p2P4/2N2N2/PPP2PPP/R2Q1RK1 b | d7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | rnbqk3/pppp1pp1/5n2/4p3/Pbr5/2N5/2P1P1PP/1RQ1KBNR w Kq | f8-b4 (ATTACK), 1
 27 | 2bqkb1r/1ppppppp/6n1/2P5/6r1/5N2/PP1PPP1P/RNB1K2R w KQk | e5-g6 (QUIET_MOVE), 1
 27 | r2qkbnr/pP2p1pp/B4p2/8/3P4/2N2N1P/PPP2P1P/R1BQK2R b KQ | f1-a6 (ATTACK), 1
@@ -18451,8 +18451,8 @@
 27 | r1bqk1nr/n1pp1Qpp/p7/3NN3/8/p3P3/2PP1PPP/R1B1KB1R b KQkq | h5-f7 (ATTACK), 1
 27 | r3kb1r/ppp1pppp/2nq4/3p4/bP1P1P1P/2P1P1K1/3N2P1/2n1NB2 w kq | d1-a4 (ATTACK), 1
 27 | r1bq1rk1/pppp1ppp/8/4p3/2P1N1n1/3P4/P1n1PP1P/R3KBNR w KQ | d4-c2 (ATTACK), 1
-27 | rn1qkb1r/pp1b2pp/5n2/4p3/1P2p3/P3P2P/3P1PP1/RNBbK2R w kq | e2-d1 (TURN_INTO_ATTACK) turn into null, 1
-27 | r1b1kb1r/pp1ppppp/1q3n2/6K1/4P3/NPn4P/P4PP1/2q2BNR w kq | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+27 | rn1qkb1r/pp1b2pp/5n2/4p3/1P2p3/P3P2P/3P1PP1/RNBbK2R w kq | e2-d1 (TURN_INTO_ATTACK) turn into BISHOP, 1
+27 | r1b1kb1r/pp1ppppp/1q3n2/6K1/4P3/NPn4P/P4PP1/2q2BNR w kq | d2-c1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r1b1kbn1/pppp1p1r/2n3p1/4p1P1/8/2N1P3/PPPPB2P/R1BK2q1 w q | h1-g1 (ATTACK), 1
 27 | r2qkb1r/pp2pppp/2p2n2/2n5/2P1pP2/N4b2/PP1P3P/R1B1KR2 w Qkq | d7-c5 (QUIET_MOVE), 1
 27 | r2qk2r/ppp2ppp/2n2n2/3pp3/P7/b1P4P/1P1PPP2/1NBQK2b w kq | g2-h1 (ATTACK), 1
@@ -18500,7 +18500,7 @@
 27 | r1bqkb1r/ppp2ppp/8/3p3P/P2P1P2/4P3/1P2K1P1/nNB2BNn w kq | c2-a1 (ATTACK), 1
 27 | rnb1kb1r/ppp2ppp/5n2/4p3/8/3P2PN/PP3P1P/RNB1KB1R w KQkq | g8-f6 (QUIET_MOVE), 1
 27 | r1bqkb2/ppppp1pr/8/3N1p2/P6P/6P1/nPPPPP1n/2BQK3 w q | b4-a2 (ATTACK), 1
-27 | rn1q2Nr/ppp1k3/7p/6p1/8/b1N2N1P/PPPP1P1P/R1BQKB1R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+27 | rn1q2Nr/ppp1k3/7p/6p1/8/b1N2N1P/PPPP1P1P/R1BQKB1R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 27 | Bn2kbnN/8/p3p2p/2pp1ppQ/5P2/2N5/PPPP1PPP/R1B1K2R b KQ | g6-h8 (ATTACK), 1
 27 | rn1qkb1r/pp2nppp/8/2p1P3/8/P6P/1P2PP1P/RNBQKB1R w KQkq | d5-e7 (QUIET_MOVE), 1
 27 | r1bq1bnr/p1p1pk1p/3p4/6B1/3N4/3PP3/PPP2PPP/R2QKB1R b KQ | e2-e3 (QUIET_MOVE), 1
@@ -18733,7 +18733,7 @@
 27 | r2k1QnN/1pp1p3/n6p/3p1Pp1/8/p1NB4/PPPP1PPP/R1B1K2R b KQ | f7-f8 (ATTACK), 1
 27 | r1b1k2r/1ppq1ppp/p4n2/4n3/7P/b1P5/PP2PPP1/R1B1KBNR w KQkq | f8-a3 (ATTACK), 1
 27 | r3k2r/p1pp1pp1/2nbp2p/8/5P1q/2P1K3/PP1PP2n/RNBQ2Nb w kq | f8-d6 (QUIET_MOVE), 1
-27 | r2qkbnr/p1p2ppp/p7/3p4/PPN1P3/2P2n1b/3P1P1P/R1BK2q1 w kq | g2-g1 (TURN_INTO) turn into null, 1
+27 | r2qkbnr/p1p2ppp/p7/3p4/PPN1P3/2P2n1b/3P1P1P/R1BK2q1 w kq | g2-g1 (TURN_INTO) turn into QUEEN, 1
 27 | r1b2rk1/pppp1ppp/2n1pn2/8/8/1N1P1P1N/P1PqP1P1/2B1KB1R w K | b4-d2 (ATTACK), 1
 27 | B4bnr/n1k2pp1/3pp2p/p7/2N1P3/5N2/PPPP1PPP/R1BQ1RK1 b | b6-c4 (ATTACK), 1
 27 | 4kb1r/1pp1pppp/1r1p4/6q1/3n4/P1nP1PP1/2P1P2P/R1BK1QNR w k | d5-c3 (QUIET_MOVE), 1
@@ -18777,7 +18777,7 @@
 27 | r3kbnr/1pp1N1pp/6N1/p7/3PPp2/3B4/PPP2PPP/R1BQK2R b KQkq | e5-g6 (ATTACK), 1
 27 | rnb1kbnr/pp2pppp/2p5/8/3q4/P4P2/1PP2KPP/RNq2B1R w kq | d8-d4 (QUIET_MOVE), 1
 27 | rnbk1bQ1/1p1p1pp1/2pBp3/p7/2BP4/2P1P3/P1P2PPP/R3K1NR b KQ | a3-d6 (QUIET_MOVE), 1
-27 | r1bqkbnr/1ppppppp/8/8/4P2Q/7P/3P1PP1/nqBKNB1R w kq | a2-b1 (TURN_INTO_ATTACK) turn into null, 1
+27 | r1bqkbnr/1ppppppp/8/8/4P2Q/7P/3P1PP1/nqBKNB1R w kq | a2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | 2r2rk1/1pBbbpp1/p1n1p2p/2P5/3Pq3/5NP1/PP2BP1P/2RQK2R w K | d8-c8 (QUIET_MOVE), 1
 27 | r1b1Nb1Q/1pp4p/p1Npk1p1/8/5p2/2PBP3/PP1P1PPP/R1B2RK1 b | d4-h8 (ATTACK), 1
 27 | N1b2bnr/pp1npkp1/5p2/7p/2Q1p3/8/PPP2PPP/R1B1KBNR b KQ | d4-c4 (QUIET_MOVE), 1
@@ -18869,7 +18869,7 @@
 27 | r1b1kbnr/p1Nnp1pp/8/1p3p2/3Q4/8/PPP2PPP/R1B1KBNR b KQkq | e6-c7 (ATTACK), 1
 27 | r1bq1rk1/pp3Np1/2p2n1p/3p4/4p3/4P2P/PPPP1PP1/R1BQ1RK1 b | g5-f7 (ATTACK), 52
 27 | r2q3r/3Ppk1p/1pp3pB/p4p1B/3P4/2N5/PPP2PPP/R2QK1NR b KQ | f8-h6 (QUIET_MOVE), 1
-27 | r1bq1rk1/ppp2ppp/2n4B/2bp3n/P7/5PP1/4P2P/qN1QKB1R w | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+27 | r1bq1rk1/ppp2ppp/2n4B/2bp3n/P7/5PP1/4P2P/qN1QKB1R w | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | rn1qkb2/ppp1ppp1/5n2/3p4/3P4/NPP5/PK2PrPP/1bB3NR w q | f5-b1 (ATTACK), 1
 27 | r3kbnr/ppp1pppp/2n5/5Q2/8/2N5/PPP2PPP/R1B1KBNR b KQkq | e4-f5 (ATTACK), 1
 27 | rn1qkb1r/ppp2ppp/8/3p4/6b1/1P1PP3/P1PN2PP/R3KBNR w KQkq | c8-g4 (ATTACK), 1
@@ -18913,7 +18913,7 @@
 27 | 1rb2kr1/p1pp3p/n3pBp1/8/3PP3/P1NB1N2/P1PQ1PPP/R4RK1 b | b5-d3 (QUIET_MOVE), 1
 27 | r3kbnr/p2q1p2/1ppp2pp/3N4/3BP3/5N2/PPP2PPP/R2Q1RK1 b q | e3-d4 (QUIET_MOVE), 1
 27 | 2b1kbnr/1p2p1pp/nN1p4/5p2/8/2N1P3/PPPP1PPP/R1BQ1RK1 b k | c4-b6 (ATTACK), 1
-27 | 1QbB1knr/6b1/p3pppp/3p4/2B1P3/2N2N2/PPP2PPP/R2Q1RK1 b | a7-b8 (TURN_INTO_ATTACK) turn into null, 1
+27 | 1QbB1knr/6b1/p3pppp/3p4/2B1P3/2N2N2/PPP2PPP/R2Q1RK1 b | a7-b8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r3k1nr/ppp2ppp/2nbb3/4p3/P1p1P3/2P1KPq1/1P1P4/RNBQ4 w kq | h2-g3 (ATTACK), 1
 27 | rn1qk2r/ppB2ppp/5n2/3pp3/5P2/PP1P2Pb/2PbP2P/4KB1R w Kkq | c3-d2 (ATTACK), 1
 27 | rnbk1bnr/pp2p1pp/2p5/4N3/4N3/8/PPPP1PPP/R1B1KB1R b KQ | f3-e5 (QUIET_MOVE), 1
@@ -18922,9 +18922,9 @@
 27 | r2q1rk1/1pp2pp1/2n2n1p/3p1b2/Pp5P/R1PPp3/1Q2K1P1/1NB2Bb1 w | a5-b4 (ATTACK), 1
 27 | 2bk3r/pp4p1/N1p5/3ppp1p/2P4P/P2PN3/1PQ1PPP1/1RB1KB1R b K | b8-a6 (ATTACK), 1
 27 | r1bq1rk1/1pbp1pp1/n1p5/4p1p1/1p6/P1BP1P1P/3KP1P1/nN3B1R w | c2-a1 (ATTACK), 1
-27 | 2rqr1k1/1pp2pbp/p1n3p1/3p1b2/PPP3n1/4P3/3P2PP/1qB1K1NR w | c2-b1 (TURN_INTO_ATTACK) turn into null, 1
+27 | 2rqr1k1/1pp2pbp/p1n3p1/3p1b2/PPP3n1/4P3/3P2PP/1qB1K1NR w | c2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | rnbq3r/ppp1p2p/2kp3b/7Q/2BPN3/5N2/PPP2PPP/R3K2R b KQ | f7-h5 (ATTACK), 1
-27 | rnb1kb1r/pp2pppp/2p5/4n3/1P6/8/PqP1PPBP/R1bK2NR w kq | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnb1kb1r/pp2pppp/2p5/4n3/1P6/8/PqP1PPBP/R1bK2NR w kq | d2-c1 (TURN_INTO_ATTACK) turn into BISHOP, 1
 27 | r1b1kb1r/ppp2ppp/2n2n2/8/4q3/7N/PPPKPPPP/R1B2B1R w kq | e5-e4 (ATTACK), 1
 27 | r1b1k2r/1ppp1ppp/3bpn2/1p6/3n4/P6P/1PP1PPP1/R1B1KB1R w KQkq | c6-d4 (ATTACK), 1
 27 | r1b1kb1r/2Bp1pp1/1p2p3/p3P2p/8/2N3P1/PPP1PPP1/2RQKB1R b Kkq | d8-c7 (ATTACK), 1
@@ -19351,7 +19351,7 @@
 27 | r1b3nr/1p1kq3/3pppQp/PNp5/N1P1P3/3B4/1B1P1PPP/2R1R1K1 b | c3-a4 (QUIET_MOVE), 1
 27 | r1bqk2r/pppp1ppp/8/4n3/1P2n3/4PpbP/PB1P2P1/RN2KB2 w Qkq | h2-g3 (QUIET_MOVE), 1
 27 | r1b2rk1/pppp1ppp/8/4n3/Pb3q2/2NP4/1PP1P1PP/R2QKB1R w KQ | f6-f4 (ATTACK), 1
-27 | rnb2b1Q/1p1pkp2/p4N1p/8/2p5/4PN2/PPP2PPP/R1BQKB1R b KQ | g7-h8 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnb2b1Q/1p1pkp2/p4N1p/8/2p5/4PN2/PPP2PPP/R1BQKB1R b KQ | g7-h8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r1b1k2r/ppp2ppp/4pn2/3qn3/8/P5P1/P1PP1P1P/R1BQK1NR w KQkq | d8-d5 (ATTACK), 1
 27 | 1Bbq1r1k/1ppp2pp/n2P4/5p2/4P3/2N5/PPP2PPP/R2QKBNR b KQ | a7-b8 (ATTACK), 1
 27 | rnb1kr2/pp3ppp/2p1pn2/3p4/5q1P/2P5/P2PP1P1/R2QKBNR w KQq | c7-f4 (ATTACK), 1
@@ -19427,7 +19427,7 @@
 27 | Nn2nb1r/pp2pk2/5p2/3P1bpp/3P4/5N1P/PPP1QPP1/R1B1R1K1 b | f1-e1 (QUIET_MOVE), 1
 27 | r1bqk2r/pp1p1ppp/8/1p2p3/P1Pn3P/3P4/1P1n1PP1/R3KBNR w KQkq | e4-d2 (ATTACK), 1
 27 | r1bq1rk1/ppp2ppp/B4n2/3p4/P7/2P2PbP/RP1P4/1NBQK2R w K | d6-g3 (ATTACK), 1
-27 | r1b1kQn1/p2pn3/1pp3pp/8/2P1PB2/P2B1NN1/1P3PPP/R2Q1RK1 b q | g7-f8 (TURN_INTO_ATTACK) turn into null, 1
+27 | r1b1kQn1/p2pn3/1pp3pp/8/2P1PB2/P2B1NN1/1P3PPP/R2Q1RK1 b q | g7-f8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | rn2kb1r/2N1pp2/7n/pp2NPpR/3P4/4P3/PPP2PP1/R1BQKB2 b Qkq | d5-c7 (ATTACK), 1
 27 | 2rqkb1r/ppp1pppp/2n4B/3p4/3Pn1bP/2P5/PP2P3/RN2K1N1 w Qk | h3-g4 (ATTACK), 1
 27 | r1B1kbr1/p1ppp1p1/5n2/P4P1p/8/2N2N2/P1PP1PPP/R1BQ1RK1 b q | a6-c8 (ATTACK), 1
@@ -19621,7 +19621,7 @@
 27 | r1b2rk1/ppp2ppp/2n5/3n2q1/Pb6/2pP1P2/1PP1Q1PP/R3KB1R w KQ | d4-c3 (ATTACK), 1
 27 | Nn1k1bnr/pp3ppp/8/3p1R2/4p3/6P1/PPPPPP2/R1BQKBN1 b Q | h5-f5 (ATTACK), 1
 27 | r1bqk2r/ppp2ppp/2n1p3/3p4/P2P4/R1P4P/1P2P3/1NB1KBNn w kq | g3-h1 (ATTACK), 1
-27 | 1n2Q3/p2p1pbN/bpkN3n/7p/6p1/8/PPP1PPPP/R1BQKB1R b KQ | e7-e8 (TURN_INTO) turn into null, 1
+27 | 1n2Q3/p2p1pbN/bpkN3n/7p/6p1/8/PPP1PPPP/R1BQKB1R b KQ | e7-e8 (TURN_INTO) turn into QUEEN, 1
 27 | 1nb1kbnr/1ppp1ppp/8/4r3/2P5/6P1/P1qPP2P/RNB1KBNR w KQk | e4-c2 (ATTACK), 1
 27 | r1b2rk1/pp1p1ppp/2pbp1n1/5P2/3PKqP1/P1P5/1P2P3/1Nn2BN1 w | g3-f4 (QUIET_MOVE), 1
 27 | r1b1k1nr/pp1ppp2/2p3pp/8/1P1NP3/2NB4/1PP2PP1/R1BQK2R b KQkq | f3-d4 (ATTACK), 1
@@ -19712,7 +19712,7 @@
 27 | 5knr/p1q1bp1p/5pp1/2pB1b2/8/2P1PN1P/PP1P1PP1/R1BQ1RK1 b | c6-d5 (ATTACK), 1
 27 | r1bqk2r/pppp1ppp/5n2/4p3/P2P1P2/2b1PQPB/7P/2n1K1NR w Kkq | b2-c3 (ATTACK), 1
 27 | rn3bnr/p2k1p1p/3pp1p1/2p5/R3P3/2N2Q1P/1PPP1P1P/2B1K1NR b K | h5-f3 (QUIET_MOVE), 1
-27 | r2qk1nr/ppp2ppp/2nbb3/3p4/5P2/PQ4P1/4P2P/RNq1KB1R w Kkq | b2-c1 (TURN_INTO_ATTACK) turn into null, 1
+27 | r2qk1nr/ppp2ppp/2nbb3/3p4/5P2/PQ4P1/4P2P/RNq1KB1R w Kkq | b2-c1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | rnbq1b2/pppp2p1/3k4/3N3p/3pBB2/5N2/PPP2PPP/R2QK2R b KQ | c1-f4 (QUIET_MOVE), 1
 27 | r3k2r/pppq1ppp/8/2bp2n1/8/4PnP1/P1PP2KP/RNB1QBR1 w kq | e5-f3 (QUIET_MOVE), 1
 27 | r3kb1r/ppp2ppp/2n2n2/3p4/5P2/P6q/1PPPPK1P/RNBQ3R w kq | b8-c6 (QUIET_MOVE), 1
@@ -19824,7 +19824,7 @@
 27 | r3k1nr/pppb1ppp/8/4P3/1b1nq3/8/P1PNBPPP/R1B1K1NR w KQkq | c6-d4 (QUIET_MOVE), 1
 27 | rnbqk2r/pppp1ppp/8/3p3P/PbP5/4B1n1/1PK1P1P1/R4BN1 w kq | e6-d5 (ATTACK), 1
 27 | Bn3knr/1bN2ppp/pp6/3pp3/P3P3/8/P1PP1PQP/R1B1K1NR b KQ | f3-g2 (ATTACK), 1
-27 | rnbqk1nr/1ppp1ppp/8/p7/1b6/N2P4/P1P1K1PP/RQ3BbR w kq | f2-g1 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnbqk1nr/1ppp1ppp/8/p7/1b6/N2P4/P1P1K1PP/RQ3BbR w kq | f2-g1 (TURN_INTO_ATTACK) turn into BISHOP, 1
 27 | rn1qkb1r/p1pp1ppp/4p2n/8/3P4/N7/PPP1PP1P/R2QK1Nb w Qkq | g4-h6 (ATTACK), 1
 27 | r3kbn1/ppp2pp1/2np2p1/4p3/2P1PPP1/1PN5/P2P1q1r/R1B2K1b w q | h4-f2 (QUIET_MOVE), 1
 27 | 2b2b2/1p1kq1rp/2pp1p2/p5p1/N1BBP1P1/5N2/PPP2PP1/R2Q1RK1 b | c3-a4 (QUIET_MOVE), 1
@@ -19874,12 +19874,12 @@
 27 | r1bq1rk1/pppp1pp1/6p1/8/1P1P3P/4P1b1/P1P1K1P1/RNB2BNn w | f2-h1 (ATTACK), 1
 27 | r1b1kb1r/ppp2ppp/2np1n2/1B3K2/N7/6P1/PPPq3P/R1n3NR w kq | d7-d6 (QUIET_MOVE), 1
 27 | 2r1kb1r/ppp1ppp1/2n2n1p/8/P4P1P/2Pq3b/1P4P1/RNB1KBN1 w Qk | d8-d3 (ATTACK), 1
-27 | rnb1kb1r/pp3ppp/2p1pn2/8/4q3/2P2N1P/PP1K1PP1/R1B2r1R w kq | e2-f1 (TURN_INTO_ATTACK) turn into null, 1
+27 | rnb1kb1r/pp3ppp/2p1pn2/8/4q3/2P2N1P/PP1K1PP1/R1B2r1R w kq | e2-f1 (TURN_INTO_ATTACK) turn into ROOK, 1
 27 | r1bkqQ2/ppp2N2/4p1p1/nB1p4/8/2N1P3/PPPP1PPP/R1B1K2R b KQ | g5-f7 (QUIET_MOVE), 1
 27 | 3k1b1r/4pp2/nPBp1n2/pp4N1/7p/4PN2/PP1P1PPP/R1BQ1RK1 b | e4-g5 (ATTACK), 1
 27 | rn1q1rk1/pp3ppp/2pp1n2/8/5PbP/P7/P1PP1P2/R1BQKB1R w KQ | c8-g4 (ATTACK), 1
 27 | 2bqk2r/1pp2ppp/2n1pn2/3p4/6P1/r1P1P2P/P2P1P2/R2QKBNR w KQk | a5-a3 (ATTACK), 1
-27 | 1n3kQ1/2p3br/p1bp1pp1/3B3p/p2BP3/2N2N1P/1PP1QPP1/2R1R1K1 b | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+27 | 1n3kQ1/2p3br/p1bp1pp1/3B3p/p2BP3/2N2N1P/1PP1QPP1/2R1R1K1 b | f7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | 2bqk2r/1ppp1ppp/2n1p3/P7/2PPn2N/8/1r1bPPPP/R2K1B1R w k | f6-e4 (QUIET_MOVE), 1
 27 | r1b1kbnr/pppp1ppp/8/3qP3/8/3KP3/PP2P2P/RN2QBNR w kq | c6-d5 (QUIET_MOVE), 1
 27 | rn1qkb1r/pp1b2pp/5n2/4p3/1P2p3/P3PbPP/3P1P2/RNB1K2R w kq | d1-f3 (QUIET_MOVE), 1
@@ -20111,7 +20111,7 @@
 27 | 2rqkr2/ppp3pp/5p2/2bpp3/Pn2nP1P/NP2P1PN/2PP1K2/7Q w | d6-e4 (QUIET_MOVE), 1
 27 | r1b1kb1r/ppp1pppp/5n2/nP1p4/2P4P/PQ1P1P2/2K1q3/RNB5 w kq | f2-e2 (ATTACK), 1
 27 | r1b1k2r/ppp2ppp/8/3pn1q1/1P1bn3/7P/P1P3P1/RNKQ1BNR w kq | d8-g5 (QUIET_MOVE), 1
-27 | r1bqk2r/pppp1ppp/3bn3/4Q3/P1P5/1n1B3N/1P3PPP/3q1K1R w kq | d2-d1 (TURN_INTO) turn into null, 1
+27 | r1bqk2r/pppp1ppp/3bn3/4Q3/P1P5/1n1B3N/1P3PPP/3q1K1R w kq | d2-d1 (TURN_INTO) turn into QUEEN, 1
 27 | Bn1qkb1r/p1pppp1p/7n/1N4B1/3P4/8/PPP1PP1P/R2QK1NR b KQk | g2-a8 (ATTACK), 1
 27 | r3kb1r/ppp2ppp/2n5/4p3/1P2P1n1/6P1/P1PP1q1P/RNB1K1NR w KQkq | d4-f2 (ATTACK), 1
 27 | rnb1Q3/pp3p1p/2pp1kpn/8/8/P3NN2/PBP1PPPP/R3KB1R b KQ | c1-b2 (QUIET_MOVE), 1
@@ -20164,7 +20164,7 @@
 27 | r1b1kb1r/p2pppp1/1pp5/6Bp/Q2PR3/P1NP1N2/1P3PP1/R3KB2 b Qkq | h4-e4 (ATTACK), 1
 27 | r3kb1r/2pPpp1p/1p5n/p5N1/2BP2N1/8/PPP2PPP/R1BQ1RK1 b k | c6-d7 (ATTACK), 1
 27 | r2qkbnr/p2ppppp/p7/2p5/1P4n1/P3P3/2PPKP2/RNB3Nb w kq | h2-g4 (ATTACK), 1
-27 | 1rQ1kbr1/p1pq1p2/4p2p/1BN1N3/3P2p1/8/PPP2PPP/R1BQ1RK1 b | b7-c8 (TURN_INTO_ATTACK) turn into null, 1
+27 | 1rQ1kbr1/p1pq1p2/4p2p/1BN1N3/3P2p1/8/PPP2PPP/R1BQ1RK1 b | b7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | rn1qkb1r/ppp1pppp/8/3p1b2/n7/3P4/P1PNPP1P/1R3KNR w kq | b2-a4 (QUIET_MOVE), 1
 27 | r1bNk2r/pppp3p/6pn/3N1P2/8/b7/1PPP1PPP/R1BQKB1R b KQkq | c6-d8 (ATTACK), 1
 27 | r1b1k1nB/ppp2p1p/2n1p1p1/8/2P4N/P3P3/P3PPPP/R2QKB1R b KQq | d2-e3 (ATTACK), 1
@@ -20196,7 +20196,7 @@
 27 | 5br1/2N1pk2/B1p2p2/p2p1Pp1/1p1P3p/4BN2/PPP2PPP/2RQ1RK1 b | c8-a6 (ATTACK), 1
 27 | r1bqkb1r/ppp1pppp/n7/P7/4p3/2Pn3P/1P1P1PP1/1N1K2NR w kq | c1-d3 (QUIET_MOVE), 1
 27 | N1bk1bnr/p1Qnp1p1/5p2/1p5p/4p3/8/PPP2PPP/R1B1KBNR b KQ | c3-c7 (QUIET_MOVE), 1
-27 | Q2q1bnr/2N1kpp1/p2p3p/4p2Q/8/P3P3/1PP2PPP/R1B1KBNR b KQ | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+27 | Q2q1bnr/2N1kpp1/p2p3p/4p2Q/8/P3P3/1PP2PPP/R1B1KBNR b KQ | b7-a8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 27 | r1b1kb1r/pp1p1pp1/5q1p/2p5/1PP1n2P/6P1/P2PBP1K/RNBQ4 w kq | e6-f6 (QUIET_MOVE), 1
 27 | rnbqk2r/pppp1ppp/1P6/4p3/8/P2P2P1/2P2nBP/bNBK2N1 w kq | h1-f2 (QUIET_MOVE), 1
 27 | r1bqr1k1/pp1p1pp1/7p/3p4/1bP4P/3PPN1n/PP3PP1/RQ1K1B2 w | f4-h3 (ATTACK), 1
@@ -20409,7 +20409,7 @@
 26 | 1nbqk2r/2pp1p1p/4p2p/6b1/B2PP3/5N1P/PPP1QPP1/R4RK1 b k | b5-a4 (ATTACK), 1
 26 | r1b1kb1r/p1p2ppp/2n1p3/3p3P/pP3P2/N1PPn3/PB6/R1K1q3 w kq | f2-e1 (QUIET_MOVE), 1
 26 | r1bqk2r/pppp1pp1/3b4/8/1P2n2P/2P5/P2P1PPR/RNBQK3 w Qkq | f6-e4 (ATTACK), 1
-26 | 1n1Q1k2/p1N1n2r/5p1p/4p1pN/1B1pP3/3B4/PPP2PPP/R2QK2R b KQ | d7-d8 (TURN_INTO) turn into null, 1
+26 | 1n1Q1k2/p1N1n2r/5p1p/4p1pN/1B1pP3/3B4/PPP2PPP/R2QK2R b KQ | d7-d8 (TURN_INTO) turn into QUEEN, 1
 26 | r1b1k1r1/pp2bp1N/n1pp2p1/4P3/2B5/4P3/PPP3PP/R1BQK2R b KQq | f4-e5 (ATTACK), 1
 26 | r3kbnr/p1p2pp1/bp1p4/6Np/Q3P3/2N5/PPP2PPP/R3K2R b KQkq | d4-a4 (QUIET_MOVE), 1
 26 | r1bqkb1r/pppp1ppp/8/1n6/4P3/8/PPPpKn1P/RN4NR w kq | g4-f2 (QUIET_MOVE), 1
@@ -20497,7 +20497,7 @@
 26 | r1bq1rk1/ppp2ppp/5n2/3p4/PP1bP3/3P1P1P/3P1P2/1NBQK3 w d6 | d7-d5 (LONG_MOVE), 1
 26 | 1Qbqkr2/p1ppn1pp/1p3p2/8/8/8/PPP1PPPP/R1B1KBNR b KQ | a8-b8 (ATTACK), 1
 26 | r1b1k2r/pp1p1ppp/4pn2/8/2Pn4/2K5/PP2PqPP/RN3BNR w kq | f4-f2 (ATTACK), 1
-26 | 1nbqkbnr/1ppp1ppp/8/8/2B1r2P/3P4/P1P2K2/RNBQ2Nq w k | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+26 | 1nbqkbnr/1ppp1ppp/8/8/2B1r2P/3P4/P1P2K2/RNBQ2Nq w k | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | r1b1kb1r/pp1ppppp/1q6/1p6/1P3P2/7P/P1PPK3/RNB3Nn w kq | d8-b6 (QUIET_MOVE), 1
 26 | r3kb1r/p2n1ppp/p1p1p3/3p4/6P1/2N1P3/PPPP1PP1/R1B2RK1 b kq | h3-g4 (ATTACK), 1
 26 | r1bBk1nr/1ppp1p1p/p5p1/4P3/8/8/PPP1PPPP/R2QKB1R b KQ | d4-e5 (ATTACK), 1
@@ -20671,7 +20671,7 @@
 26 | rnbqk2Q/ppp1pp1p/3p4/6B1/4N3/8/PPP2PPP/R3KBNR b KQq | d4-h8 (ATTACK), 1
 26 | r2qr1k1/1pp2ppp/1p2pn2/3p4/5P2/3P4/PPbKP1PP/n4BNR w | a7-b6 (ATTACK), 1
 26 | rnq1k3/p1pppp2/1p3B2/7B/3P4/2N1P3/PPP2PPP/R2QK1NR b KQq | h8-f6 (ATTACK), 1
-26 | rRb1kbn1/7p/2p1p1p1/3P1p2/3BP3/P3NN1P/P3BPP1/R2Q1RK1 b q | a7-b8 (TURN_INTO_ATTACK) turn into null, 1
+26 | rRb1kbn1/7p/2p1p1p1/3P1p2/3BP3/P3NN1P/P3BPP1/R2Q1RK1 b q | a7-b8 (TURN_INTO_ATTACK) turn into ROOK, 1
 26 | 5rk1/5ppp/rqppbn2/2b5/Pn2PP2/1PN5/1RPP3P/2B1K1NR w K | d8-b6 (QUIET_MOVE), 1
 26 | r1b1k2r/pppp1ppp/2n5/8/6q1/BPPKP3/P2P1n2/RN1Q1Bb1 w kq | e4-f2 (QUIET_MOVE), 1
 26 | r2qkb1r/1ppbp1pp/1p2n3/1P1p4/6nP/P1PP1p2/5P2/RN2K1N1 w kq | a7-b6 (ATTACK), 1
@@ -20681,7 +20681,7 @@
 26 | r1bq4/2pkp2Q/1p1p1B2/pB1Pn3/4P3/2N5/PPP2PPP/R3K1NR b KQ | f1-b5 (QUIET_MOVE), 1
 26 | 1rb3B1/pp1k2Q1/n1ppp3/5p2/3P1P2/2N5/PPPN1PPP/R1B1K2R b KQ | f8-g7 (ATTACK), 1
 26 | r1b1kbnr/p1Nn1ppp/1p6/8/8/8/PPPP1PPP/R1BQK1NR b KQkq | d5-c7 (ATTACK), 1
-26 | rn1qk2r/pp3ppp/2pb1n2/4p3/4bP1P/7N/P2PP3/Br1QKB2 w kq | c2-b1 (TURN_INTO_ATTACK) turn into null, 1
+26 | rn1qk2r/pp3ppp/2pb1n2/4p3/4bP1P/7N/P2PP3/Br1QKB2 w kq | c2-b1 (TURN_INTO_ATTACK) turn into ROOK, 1
 26 | rnb1kbnr/1p1p1ppp/4p3/2p5/8/8/P1P1PqPP/RQK2BNR w k | d4-f2 (ATTACK), 1
 26 | rnb2rk1/pp1p1ppp/4p3/1n6/1b5P/N2PPN2/P4PP1/R3KB1R w KQ | c5-b4 (QUIET_MOVE), 1
 26 | 2b1k3/n2p4/pN2pBp1/2p2p1p/3PP3/3B1N1P/PPP2PP1/R2Q1RK1 b | a8-b6 (ATTACK), 1
@@ -20922,7 +20922,7 @@
 26 | r1b1kb1r/2p1ppp1/2n4p/p2NP3/8/3B1N2/1PPP1PPP/2BQK2R b Kkq | c3-d5 (ATTACK), 1
 26 | rn2k2r/p3bppp/2qp1n2/8/2pP4/2P2bP1/PP1QPP1P/2R1K2R w Kkq | d5-f3 (ATTACK), 1
 26 | B1b1kb2/p2n1pp1/1p1pp3/5N1p/3Q4/2N1P3/PPP2PPP/R1B2RK1 b | h4-f5 (ATTACK), 1
-26 | Q3kb1r/p2qp1pp/5p1n/1B6/3P4/2N2N1P/PPP2P1P/R1BQK2R b KQ | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+26 | Q3kb1r/p2qp1pp/5p1n/1B6/3P4/2N2N1P/PPP2P1P/R1BQK2R b KQ | b7-a8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | 2b3nB/3q1k2/n2pp3/pB4N1/2pP3p/2N5/PPP2PPP/R2QK1NR b KQ | h7-g5 (QUIET_MOVE), 1
 26 | r1bqk2r/2p1bpp1/p1p1p2p/2P5/3P4/2Q1B3/PP3PPP/R3KB1R w KQkq | b7-c6 (ATTACK), 2
 26 | 4kbn1/1p1p2p1/pNn3N1/7p/2p5/8/PPPPPPPP/R1BQKB1R b KQ | h8-g6 (QUIET_MOVE), 1
@@ -20936,7 +20936,7 @@
 26 | r1bk4/1ppp2Bp/p7/n1P2p2/3P4/4N3/P1P1PPPP/R2QKBNR b KQ | d5-e3 (ATTACK), 1
 26 | rnb1kQ2/3p1p1p/1p1Bp3/p7/3PP3/2N5/PPP2PPP/R3KBNR b KQ | h8-f8 (ATTACK), 1
 26 | Q3kbnr/4p1pp/n2p1p2/p1p5/2P5/5NNR/PP1BPPP1/2R1KB2 b k | b7-a8 (ATTACK), 1
-26 | rn3Q2/p1kbn3/1pp1p1N1/8/3P3p/1B3N2/PP1P1PPP/R1BQ1RK1 b | f7-f8 (TURN_INTO) turn into null, 1
+26 | rn3Q2/p1kbn3/1pp1p1N1/8/3P3p/1B3N2/PP1P1PPP/R1BQ1RK1 b | f7-f8 (TURN_INTO) turn into QUEEN, 1
 26 | r1bq1rk1/pppp1ppp/5n2/7P/P6R/8/1P1QP1P1/RNB1KBb1 w Q | c5-g1 (ATTACK), 1
 26 | r3kbnr/1pp2ppp/p1n5/3pp3/2P5/4P2q/PP1P1P2/RNBK3b w kq | h4-h3 (ATTACK), 1
 26 | r2q1rk1/1bpp1ppp/p3p3/8/5PnP/P5PR/1PPPNb2/R1B1K3 w Q | c5-f2 (ATTACK), 1
@@ -20946,7 +20946,7 @@
 26 | r1bqk2r/p1pp1p1p/p5p1/4P3/4P3/2N2N2/PPP2PPP/2RQK2R b Kkq | a1-c1 (ATTACK), 1
 26 | 3Rkbnr/4ppp1/2ppb2p/1p6/4P3/2N2N2/1PPP1PPP/2BQK2R b Kk | b8-d8 (ATTACK), 1
 26 | rn1qkb1r/pp3ppp/4pn2/1p6/5P2/1PP2R2/P1bP3P/RNB3K1 w kq | f5-c2 (ATTACK), 1
-26 | 2bq1NnB/3p1k2/n3p3/pB6/2pP3p/2N5/PPP2PPP/R2QK1NR b KQ | g7-f8 (TURN_INTO_ATTACK) turn into null, 1
+26 | 2bq1NnB/3p1k2/n3p3/pB6/2pP3p/2N5/PPP2PPP/R2QK1NR b KQ | g7-f8 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 26 | 1Qb2k1r/4B1b1/p3pppp/3p4/2B1P3/2N2N2/PPP2PPP/R2Q1RK1 b | d8-e7 (ATTACK), 1
 26 | rnb2bnN/1p1k4/p3P1Bp/2p5/5N2/8/PPPP1PPP/R1BQK2R b KQ | d5-e6 (EN_PASSANT), 1
 26 | rn1k1N2/pp1np1p1/1q6/3P3p/2p2Q2/2N5/PPPP1PPP/R1B2RK1 b | f3-f4 (ATTACK), 1
@@ -20958,7 +20958,7 @@
 26 | B1bqk3/p1pppp1p/np5b/8/3P4/2NQ4/PPP1PP1P/R3K1NR b KQ | d1-d3 (QUIET_MOVE), 1
 26 | r2q1rk1/ppp2ppp/8/3pP3/Pb5P/6n1/1PbN2P1/R1B1KBNR w | e4-g3 (QUIET_MOVE), 1
 26 | r3k1n1/1p6/pnpN4/3pB3/4p2p/P7/P1PPPPPP/R2QKBNR b KQ | f7-d6 (QUIET_MOVE), 1
-26 | r1bqkb1r/pppp1ppp/8/1n6/4P3/8/PPP2n1P/RN1q1KNR w kq | d2-d1 (TURN_INTO) turn into null, 1
+26 | r1bqkb1r/pppp1ppp/8/1n6/4P3/8/PPP2n1P/RN1q1KNR w kq | d2-d1 (TURN_INTO) turn into QUEEN, 1
 26 | rnb1kb1r/pp2pp1p/2p5/6p1/4Q3/4BN2/PPP2PPP/R3KB1R b KQkq | g1-f3 (QUIET_MOVE), 1
 26 | rnb2rk1/pp1p1ppp/4p3/8/7P/N4Nq1/PPP1P1P1/R1B1KB1n w | f2-h1 (ATTACK), 1
 26 | r1bq1rk1/ppp2ppp/4pn2/8/P1pn2P1/5P1P/2K1P1B1/R1B3NR w | c6-d4 (QUIET_MOVE), 1
@@ -21008,7 +21008,7 @@
 26 | r1bqk2r/1p1p1p1p/2p1p2p/p3P3/4P1Q1/R1N5/1PP2PPP/4KB1R b Kkq | d1-g4 (QUIET_MOVE), 1
 26 | r1bq1rk1/pppp1p1p/4p1p1/2b5/3n2P1/P3n2N/1PP2P1P/2R1K2R w K | c6-d4 (ATTACK), 1
 26 | Nn4k1/1p2Bpp1/2p1p2r/p6p/1P1P4/2P2N2/1P2PPPP/R2QKB1R b KQ | b6-a8 (ATTACK), 1
-26 | r1b1k1nr/ppp2ppp/2n5/4p3/7q/PN1P4/1PP3PP/R1K2BqR w kq | f2-g1 (TURN_INTO_ATTACK) turn into null, 1
+26 | r1b1k1nr/ppp2ppp/2n5/4p3/7q/PN1P4/1PP3PP/R1K2BqR w kq | f2-g1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | B1b3r1/p1pk2bp/4pn2/PN1pN3/3P1P2/8/PBP2PPP/2RQ1RK1 b | f7-e5 (QUIET_MOVE), 1
 26 | r3kbnr/ppp2ppp/8/4p1q1/P7/N4n1P/1PPP1K1P/R1B2B1R w kq | d4-f3 (ATTACK), 1
 26 | r1bk1b1r/ppp1pBp1/n6B/3QN3/4p3/2N5/PPP2PPP/R3K2R b KQ | d1-d5 (ATTACK), 1
@@ -21068,7 +21068,7 @@
 26 | 2bq1rk1/1ppp1ppp/5n2/4p3/1pP5/3PPN2/r4PPP/n2K1BNR w | a8-a2 (ATTACK), 1
 26 | 2kr1b1r/ppp2ppp/4bn2/4p2P/8/PP1P1Pq1/2P1B3/RNBQK3 w Q | h4-g3 (ATTACK), 1
 26 | rnb1kbnr/1pp1pppp/8/8/Pp6/2NP4/2P2PPP/3qKBNR w Kkq | c1-d1 (ATTACK), 1
-26 | rnbqkbr1/5p1p/2p1pn1p/8/2P1p1R1/p4NP1/1P1PBP2/1qB1K3 w q | a2-b1 (TURN_INTO_ATTACK) turn into null, 1
+26 | rnbqkbr1/5p1p/2p1pn1p/8/2P1p1R1/p4NP1/1P1PBP2/1qB1K3 w q | a2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | r1b2rk1/ppp2p2/4pnpp/n1P1p3/4P3/P2P1P1P/3q2P1/2bK1BN1 w | b2-d2 (QUIET_MOVE), 1
 26 | r1bqk2r/pppp1ppp/3b4/5n2/8/1P1P2P1/P2KPn1P/1R3BNR w kq | g4-f2 (ATTACK), 1
 26 | r1b1k2r/ppp2ppp/2p1p3/8/3Pn3/6P1/PPP2P1P/RNq1K1NR w kq | g5-c1 (QUIET_MOVE), 1
@@ -21118,7 +21118,7 @@
 26 | r3kbnr/ppp1pppp/8/3p4/8/PP5q/1B1PPP1P/RN1QK2R w KQkq | d7-h3 (ATTACK), 1
 26 | rnbqkb2/p1pppp2/1p6/7Q/4N3/4P1P1/PPPP1P2/R1B1KBN1 b Qq | d1-h5 (ATTACK), 1
 26 | r2q1rk1/1bp2pp1/p1p1p2p/2P3b1/3PB3/2Q1B3/PP3PPP/R4RK1 w | e8-g8 (SHORT_CASTLING), 1
-26 | r1bqk2r/ppp1np2/2n3p1/1P1p3p/7P/P1PP2PR/5P2/bN2Kq2 w kq | e2-f1 (TURN_INTO_ATTACK) turn into null, 1
+26 | r1bqk2r/ppp1np2/2n3p1/1P1p3p/7P/P1PP2PR/5P2/bN2Kq2 w kq | e2-f1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | 1nbk2nr/2pp2pp/2r5/pN1B1P2/3P4/P7/P1P2PPP/R1BQK2R b KQ | c4-d5 (QUIET_MOVE), 1
 26 | r1b1kb1r/pp3ppp/2np4/8/5nP1/1PPP4/PQ2PP2/RN2KBq1 w Qkq | e6-f4 (QUIET_MOVE), 1
 26 | r1bq2k1/1p3rp1/p1p2n1p/3p4/3Pp3/4P2P/PPPB1PP1/R2Q1RK1 b | c1-d2 (QUIET_MOVE), 67
@@ -21198,7 +21198,7 @@
 26 | r2q1rk1/pp3ppp/4b3/3p4/1n2np1P/N4N2/P2PP1P1/R1B1KBR1 w Q | f6-e4 (QUIET_MOVE), 1
 26 | r1b1k2r/ppp2ppp/5n2/3qp3/8/P4PN1/P1PP2PP/R1B1KB1R w KQkq | g8-f6 (QUIET_MOVE), 1
 26 | 3k2nr/3bp1b1/1N1p1ppp/p7/3P4/4P3/PPPN1PPP/R1BQK2R b KQ | a8-b6 (ATTACK), 1
-26 | r3kb1r/ppp1pppp/2n1bn2/8/7P/PPP1P3/1B1P4/RN2Kqq1 w Qkq | g2-f1 (TURN_INTO_ATTACK) turn into null, 1
+26 | r3kb1r/ppp1pppp/2n1bn2/8/7P/PPP1P3/1B1P4/RN2Kqq1 w Qkq | g2-f1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | rn2kbr1/p1p2ppp/1p2P2n/8/2NP4/8/PPP2PPP/R1BQKR2 b Qq | d5-e6 (ATTACK), 1
 26 | rnbk3r/7p/p1p1p2B/1pP2p1Q/4P3/P1NB3P/P1P2PP1/R4RK1 b | d4-c5 (ATTACK), 1
 26 | Qn1qk2r/p1pppp1p/7B/5p2/3P4/2Nb4/PPP2PPP/R3K1NR b KQk | f3-a8 (ATTACK), 1
@@ -21606,7 +21606,7 @@
 26 | r1q1k3/p1pppp2/np6/4B2B/3P4/2N1P3/PPP2PPP/R2QK1NR b KQq | f6-e5 (QUIET_MOVE), 1
 26 | r1bq1b1N/1ppp1B2/p1k4B/3N3p/3PP3/P7/1PP2PPP/R2QK2R b KQ | f4-h6 (ATTACK), 1
 26 | rn2k1nr/p1Np1p1p/6p1/4N3/4P2q/P7/P1PP1PPP/R1BQK2R b KQkq | b5-c7 (ATTACK), 1
-26 | r1Q1k2r/2ppp1bp/pp6/5p2/8/2N2N1P/PPPB1PP1/R2QKB1R b KQkq | b7-c8 (TURN_INTO_ATTACK) turn into null, 1
+26 | r1Q1k2r/2ppp1bp/pp6/5p2/8/2N2N1P/PPPB1PP1/R2QKB1R b KQkq | b7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | 2q2bnr/2pkpppp/p2p4/6R1/3P1N2/2N1P3/1PP2PPP/2BQ1RK1 b | e1-g1 (SHORT_CASTLING), 1
 26 | 3k1bnr/1p2p1p1/1N1pPp1p/8/p7/4PN2/PPPB1PPP/R2Q1RK1 b | e5-e6 (QUIET_MOVE), 1
 26 | r1bq1rk1/pppp1ppp/2n5/2b5/2P5/P2P4/1P2P2P/RNKn1Bq1 w | e3-d1 (ATTACK), 1
@@ -22133,7 +22133,7 @@
 26 | r2qkb1r/1pp1ppp1/4bn2/3p4/2P2p1P/p2P2P1/P3P3/n3KBNR w Kkq | b3-a1 (ATTACK), 1
 26 | 1n3k1r/p1NPn3/5p1p/4p1pN/1B1pP3/3B4/PPP2PPP/R2QK2R b KQ | c6-d7 (ATTACK), 1
 26 | 2rqkb1r/p1p1pppp/2p5/3p4/P4P1P/1P1P2n1/4P1B1/R1BQK1N1 w Qk | d6-d5 (QUIET_MOVE), 1
-26 | r1b1k1nr/ppp2ppp/2n5/3p4/8/1P1P3P/PbP2qP1/2qK1BNR w kq | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+26 | r1b1k1nr/ppp2ppp/2n5/3p4/8/1P1P3P/PbP2qP1/2qK1BNR w kq | d2-c1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | 1rb2rk1/1p1p1pp1/p2N1n1p/2B5/8/3P4/PPP1PPPP/R2QKB1R b KQ | e3-c5 (ATTACK), 1
 26 | B1bk1b1r/p1p1pppp/8/3pN3/3P4/2N5/PPP2PPP/R1BQK2R b KQ | f3-e5 (ATTACK), 1
 26 | r1bq1rk1/pp2np1p/2p1p1p1/2p4Q/2P1Pb2/PP1n4/R4P2/1N1K2N1 w | g7-g6 (QUIET_MOVE), 1
@@ -22348,7 +22348,7 @@
 26 | 2bq1bkr/2pppQ1p/pp6/4N1p1/1N6/8/PPPP1PPP/R1B2RK1 b | f3-f7 (QUIET_MOVE), 1
 26 | r4rk1/1pp2ppp/p1n2q2/8/Pb2p3/2P1P1P1/1B1PKP1P/RN4Nb w | d6-b4 (ATTACK), 1
 26 | rnbqk2r/pppp1ppp/8/4p3/P7/3P4/1PP1PnPP/R2K1BN1 w kq | h1-f2 (QUIET_MOVE), 1
-26 | rn2k2r/pp3ppp/2p2n2/4p3/1P1PP3/P4PP1/bb5P/2q1KBNR w kq | c2-c1 (TURN_INTO) turn into null, 1
+26 | rn2k2r/pp3ppp/2p2n2/4p3/1P1PP3/P4PP1/bb5P/2q1KBNR w kq | c2-c1 (TURN_INTO) turn into QUEEN, 1
 26 | r1b4r/pppk1ppp/8/3pN3/1P6/2N1P3/1PPP1PPP/R1BQK2R b KQ | d3-e5 (ATTACK), 1
 26 | r1b1k2r/ppqp1ppp/4pn2/8/1PP5/8/P2NPPPP/n2K1BNR w kq | c2-a1 (ATTACK), 1
 26 | r1b2kn1/pp1p1pp1/n3p3/2p3N1/2P5/P7/1P1PPPPR/R1BQKB2 b Q | h1-h2 (ATTACK), 1
@@ -22404,7 +22404,7 @@
 26 | rnb2rk1/pp1p2pp/2pbp3/7P/4nP2/1qP1P1P1/3PN2p/2B1KB2 w | h3-h2 (QUIET_MOVE), 1
 26 | r1b1k2r/pppp1ppp/8/P3N3/5n1q/P7/2PPP2P/1NBQKB1R w Kkq | d8-h4 (QUIET_MOVE), 1
 26 | r1b1k3/1ppp1ppr/p5Np/1P2P3/4N3/4P3/1PP2KPP/R1BQ1B1R b q | h4-g6 (ATTACK), 1
-26 | Q5nr/2pN1k1p/p3pp2/1B2b1p1/8/2N5/PPPP1PPP/R1BQ1RK1 b | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+26 | Q5nr/2pN1k1p/p3pp2/1B2b1p1/8/2N5/PPPP1PPP/R1BQ1RK1 b | b7-a8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | r3kb1r/p1p1pppp/p1n5/3p4/2PP4/4Pq2/PP1n1P1P/RNB3K1 w kq | e4-d2 (ATTACK), 1
 26 | r2qk3/pppb1pp1/3b1n2/4n3/7P/1PP2Pr1/P3P1PR/RN2KBN1 w Qq | f8-d6 (QUIET_MOVE), 1
 26 | r3kbnr/2p1pppp/p7/3P4/8/2N5/2PPPPPP/R1BQKBNR b KQkq | c4-d5 (ATTACK), 1
@@ -22524,7 +22524,7 @@
 26 | r1b1kbnr/pppp1ppp/8/8/P1P2p2/8/KP1BP1qP/nN4NR w kq | f1-g2 (ATTACK), 1
 26 | r1b1kb1r/pppp1ppp/4p3/8/3n4/PP6/2P1KPPP/RNq2BR1 w kq | c6-d4 (ATTACK), 1
 26 | rn6/3kp2r/1ppp1n1b/p4Q1p/3P4/2N1P2P/PPPB1PB1/R4RK1 b | f3-f5 (QUIET_MOVE), 1
-26 | 1B1Bkbnr/1p1b3p/p4pp1/8/8/PPN2N2/1P2PPPP/R2QKB1R b KQk | e7-d8 (TURN_INTO_ATTACK) turn into null, 1
+26 | 1B1Bkbnr/1p1b3p/p4pp1/8/8/PPN2N2/1P2PPPP/R2QKB1R b KQk | e7-d8 (TURN_INTO_ATTACK) turn into BISHOP, 1
 26 | r1b2rk1/p1pp1ppp/2nb4/1p2p3/PP6/2PnPq1P/3PN3/R1B2K2 w | e4-f3 (QUIET_MOVE), 1
 26 | r1bq1rk1/ppp2p1p/4p3/8/Pbpn3p/5PPB/1P2PK1P/n1B3R1 w | d5-c4 (ATTACK), 1
 26 | b1rqr1k1/2p2pp1/p1p1p2p/2P3b1/3PB3/1Q2B3/PP3PPP/3RR1K1 w | b7-a8 (QUIET_MOVE), 1
@@ -22631,7 +22631,7 @@
 26 | r1bqk2r/p5p1/2p1pn2/1p1pP2p/8/P1B1P3/1PP2PPP/R2Q1RK1 b kq | d2-c3 (ATTACK), 1
 26 | rn2kb1r/pp2pppp/2p5/3p4/3P4/2BQ1N1B/PPP1PP2/R3K2R b KQkq | f1-h3 (ATTACK), 1
 26 | r4rk1/p1pp1pp1/3bp2p/PP6/1n5q/4PP2/1P1P2BP/1NBQK2R w K | d8-h4 (QUIET_MOVE), 1
-26 | rn2kb1r/pp3ppp/2p2n2/4p3/P2P2Pq/4PPRb/7P/R1BqK3 w Qkq | c2-d1 (TURN_INTO_ATTACK) turn into null, 1
+26 | rn2kb1r/pp3ppp/2p2n2/4p3/P2P2Pq/4PPRb/7P/R1BqK3 w Qkq | c2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | 2b2bnr/p1pq1kp1/1p2Q3/5P1p/8/P1N5/1PPP1PPP/R1B1K1NR b KQ | d5-e6 (ATTACK), 1
 26 | 1nbqkb1r/1pp2ppp/4p3/1p6/1P6/7P/r1P2PP1/1RBnKBNR w Kk | d7-e6 (ATTACK), 1
 26 | r3k1nr/pppb3p/n2pp1p1/8/2PP3B/P6P/P3PPB1/R2QK2R b KQkq | f1-g2 (ATTACK), 1
@@ -22729,7 +22729,7 @@
 26 | r1bqk2r/pppp1p1p/7n/3NN3/7p/8/PPP1PPP1/R2QKB1R b KQkq | c3-d5 (QUIET_MOVE), 1
 26 | r3kbnr/pppb1ppp/8/2Ppp3/P2Pq3/8/1P4P1/RNBK1B1n w kq | h4-e4 (ATTACK), 1
 26 | 2bqkb1r/p1p1pp1p/B6n/3p2B1/R2P4/1PN1P3/5PPP/3QK1NR b Kk | f1-a6 (ATTACK), 1
-26 | rnb2rk1/pp1p2pp/2pbp3/7P/4nP2/BqP1P1P1/3PN3/4KB1q w | h2-h1 (TURN_INTO) turn into null, 1
+26 | rnb2rk1/pp1p2pp/2pbp3/7P/4nP2/BqP1P1P1/3PN3/4KB1q w | h2-h1 (TURN_INTO) turn into QUEEN, 1
 26 | 3qkb1r/1p2pppp/2np1n2/6r1/P7/7P/R1PPPP1P/1N1QKB1R w Kk | c7-d6 (ATTACK), 1
 26 | r2qkbnr/1pp2ppp/p1n5/8/1P6/PbB2pPP/3P1P2/RNK4R w kq | e4-f3 (ATTACK), 1
 26 | r1bq1rk1/pppp1ppp/2n5/8/P4p2/3P4/1PPKP1PP/R3NB1n w | f2-h1 (ATTACK), 1
@@ -22839,7 +22839,7 @@
 26 | r4rk1/pppb1ppp/2n5/2b1p3/1PP2PP1/P4P2/3P1qKP/RNq5 w | h4-f2 (ATTACK), 1
 26 | r2qkb1r/p1pp1ppp/4p3/8/PnP2P1P/N4Nn1/3PP3/2B1KB1b w kq | e4-g3 (ATTACK), 1
 26 | 3qkN1r/rpp2p2/2P2Npp/p7/8/8/PPPP1PPP/R1BQKB1R b KQk | e4-f6 (ATTACK), 1
-26 | rnb1k1nr/pp1p1ppp/2p5/6B1/PbP5/6PN/4PP1P/q2K1B1R w kq | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+26 | rnb1k1nr/pp1p1ppp/2p5/6B1/PbP5/6PN/4PP1P/q2K1B1R w kq | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | N4br1/pp1kppp1/2np3p/5q2/8/3P1N1P/PPP2P2/R1BQKB1R b KQ | c7-a8 (ATTACK), 1
 26 | rnbq1b2/1pp5/p2kpPQ1/8/3N4/2N5/PPPP1PPP/R1B1KB1R b KQ | f3-d4 (ATTACK), 1
 26 | r1b1kb1r/ppp1pppn/8/4n3/6P1/3P3P/PP1KPP2/RNB2Bq1 w kq | h1-g1 (ATTACK), 1
@@ -22866,7 +22866,7 @@
 26 | r5nr/1ppk1pQp/3p4/p2Np3/3P4/5N2/PPPP1PPP/R1B1K2R b KQ | g5-g7 (ATTACK), 1
 26 | r2qkb1r/pp2pppp/2pp1n2/8/P1PP4/1Pn3P1/4bPBP/4K1R1 w kq | c7-c6 (QUIET_MOVE), 1
 26 | r1b2rk1/ppp2ppp/4pn2/8/7P/3PPPb1/P3K1P1/RNq2BNR w | c4-c1 (QUIET_MOVE), 1
-26 | 1rbq2Q1/1pk1p3/2pp3b/p1P5/5B2/2NB1N1P/PPP2PP1/2RQ1RK1 b | h7-g8 (TURN_INTO_ATTACK) turn into null, 1
+26 | 1rbq2Q1/1pk1p3/2pp3b/p1P5/5B2/2NB1N1P/PPP2PP1/2RQ1RK1 b | h7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 26 | rkbN3r/pB2b1pp/2p4n/3P4/8/P1N5/1PPP1PPP/R1BQK2R b KQ | a6-b7 (ATTACK), 1
 26 | rnb2kn1/1p3p1Q/2p3p1/p2p2N1/4B2P/2P1P3/PPP2PP1/R1B1K2R b KQ | f3-g5 (QUIET_MOVE), 1
 26 | r1b1k1nr/ppp2ppp/8/3p1p2/Pb6/8/1PPq2PP/R1nK1BNR w kq | e3-d2 (ATTACK), 1
@@ -23003,7 +23003,7 @@
 26 | r1bqk2r/pppp3p/n4p1p/8/3NP3/P1N5/2P2PPP/R2QKB1R b KQkq e3 | e2-e4 (LONG_MOVE), 1
 26 | 2b2rk1/1pp1qpp1/2p1pn1p/8/1P1PP3/5NP1/1PP2P1P/rNB1K2R w K | a6-a1 (QUIET_MOVE), 1
 26 | r1b1kb1r/ppp1pppp/n2q4/P7/4p3/2PnK2P/1P1P2PR/1N4N1 w kq | d8-d6 (QUIET_MOVE), 1
-26 | 2Q1kbnr/B3p2p/1p3p2/3P2p1/p7/P1N2N1P/1PP2P1P/R2QKB1R b KQk | c7-c8 (TURN_INTO) turn into null, 1
+26 | 2Q1kbnr/B3p2p/1p3p2/3P2p1/p7/P1N2N1P/1PP2P1P/R2QKB1R b KQk | c7-c8 (TURN_INTO) turn into QUEEN, 1
 26 | rn3k1r/3p1ppp/3Bp2n/P7/3PN3/5N2/P1P1bPPP/R2QKB1R b KQ | c7-d6 (QUIET_MOVE), 1
 26 | r2qkb1r/ppp1p1pp/8/3pn3/4b1P1/N3P2P/P2PNP2/R1B2KR1 w kq | d7-e5 (QUIET_MOVE), 1
 26 | r1bqk2r/pppp1ppp/8/8/2n1Pn1P/P7/P1PP2P1/R1B1K1NR w KQkq | h5-f4 (QUIET_MOVE), 1
@@ -23015,13 +23015,13 @@
 25 | r1bN1knr/pppp3p/6P1/3N4/8/R7/1PPP1PPP/2BQKB1R b K | a1-a3 (ATTACK), 1
 25 | rq2k3/pbp1p2Q/1pn5/3N1N2/8/4P3/PPPP1PPP/R1B1KB1R b KQ | c3-d5 (ATTACK), 1
 25 | r1b1k1nr/pppp1ppp/4p2B/8/4N3/3K3P/PPP1P1P1/q5NR w kq | f1-a1 (ATTACK), 1
-25 | r1b1kbnr/ppp1pppp/2n5/8/PB2P3/5P2/4N1PP/1q2KB1R w Kkq | b2-b1 (TURN_INTO) turn into null, 1
+25 | r1b1kbnr/ppp1pppp/2n5/8/PB2P3/5P2/4N1PP/1q2KB1R w Kkq | b2-b1 (TURN_INTO) turn into QUEEN, 1
 25 | r1bq1rk1/ppp2ppp/8/2npp1P1/7P/4PP2/PbnPK3/5N1R w d6 | d7-d5 (LONG_MOVE), 1
 25 | rn1qk2r/pp3ppp/8/2p1p1b1/P5b1/1PP5/2P2P1P/R3KBNR w KQkq | e7-g5 (ATTACK), 1
 25 | 1rb1k1nr/Rp1p2p1/1Bp1p2p/5P2/8/2NB1N2/2PP1PPP/3QK2R b K | e4-f5 (ATTACK), 1
 25 | 3k1Nn1/2p1p3/2B2p1r/p2p3p/8/2N1P3/PPPP1PPP/R1BQK2R b KQ | g6-f8 (ATTACK), 1
 25 | rnb1k2r/pppp1ppp/1P6/8/5p2/q2P4/P1PKPn1P/1R3BN1 w kq | e7-a3 (ATTACK), 1
-25 | rn1QQ1nr/2p2kpp/p4p2/4P3/8/2N1BN2/PPP2PPP/R4RK1 b | e7-e8 (TURN_INTO) turn into null, 1
+25 | rn1QQ1nr/2p2kpp/p4p2/4P3/8/2N1BN2/PPP2PPP/R4RK1 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
 25 | r2k1b1r/p2Pp1p1/4Np1p/8/8/1p2P3/1PP2PPP/R1BQKBNR b KQ | c5-e6 (QUIET_MOVE), 1
 25 | 2bqkbnr/1ppp1ppp/4P3/2P5/1P1n4/8/3PP1PP/2r1KBNR w Kk | b1-c1 (ATTACK), 1
 25 | r1k2bnN/pp2n2p/4p1p1/1B6/8/5N2/PPPP1PPP/R1BQ1RK1 b | f7-h8 (ATTACK), 1
@@ -23198,7 +23198,7 @@
 25 | r2q1rk1/ppp2p1p/5np1/3p4/3B4/P2P4/P1PN1PPP/3RKBR1 w | g7-g6 (QUIET_MOVE), 1
 25 | r3k3/pp2q1p1/2pp1pr1/4p2Q/1B2P3/3BP3/PPP2PPP/R4RK1 b q | f3-h5 (ATTACK), 1
 25 | r5n1/4bNp1/3pk3/pB2pN1Q/1p6/4P3/PPPP1PPP/R1B1K2R b KQ | h4-f5 (QUIET_MOVE), 1
-25 | rn1Q2BN/6p1/1p1k1p2/p3p2p/8/2N5/PPPP1PPP/R1BQK2R b KQ | d7-d8 (TURN_INTO) turn into null, 1
+25 | rn1Q2BN/6p1/1p1k1p2/p3p2p/8/2N5/PPPP1PPP/R1BQK2R b KQ | d7-d8 (TURN_INTO) turn into QUEEN, 1
 25 | r1bk1b2/1p1ppBp1/n4pN1/p6p/3P1B2/5N2/P1P1QPPP/R5K1 b | h8-g6 (QUIET_MOVE), 1
 25 | Bnbk2N1/4Q3/pp2p1pp/2pp4/6PN/8/PPPP1PP1/R1B2RK1 b | f7-e7 (QUIET_MOVE), 1
 25 | r1b1k1nr/pp1p1ppp/4n3/1q6/4p3/1P2PP1N/P2p2PP/2Q3KR w kq | c3-d2 (ATTACK), 1
@@ -23215,7 +23215,7 @@
 25 | r1b1k2r/pppp1ppp/2n5/8/5qP1/1P1P4/P1PKP2P/RN4Nn w kq | f1-f4 (ATTACK), 1
 25 | 5Nn1/pp1kp2r/8/2pP1ppp/8/2N5/PPPP1PPP/R1BQ1RK1 b | e6-f8 (QUIET_MOVE), 1
 25 | r1b1k3/ppp3p1/2n1p1r1/3n1p2/P3K3/2qP1N2/P4PPP/R2Q1BR1 w q f6 | f7-f5 (LONG_MOVE), 1
-25 | 1rN1Q3/1bkp1p1r/p7/2p3pp/1PP5/3B4/1P1P1PPP/R1BQR1K1 b | e7-e8 (TURN_INTO) turn into null, 1
+25 | 1rN1Q3/1bkp1p1r/p7/2p3pp/1PP5/3B4/1P1P1PPP/R1BQR1K1 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
 25 | r1b1kb1r/1pp1pppp/2n5/3p4/2P1P1P1/P4KqP/8/1RB2BNn w kq | d6-g3 (QUIET_MOVE), 1
 25 | r1b2b1Q/pppk4/2p3pn/7p/4P3/2N5/PPPP1PPP/R1B2RK1 b | e5-h8 (ATTACK), 1
 25 | rn1k1b2/1p3p2/p1p4p/3p2P1/3P2b1/P1N1B3/1PP1PPP1/2R1KB1R b K | h4-g5 (ATTACK), 1
@@ -23368,7 +23368,7 @@
 25 | r3kbnr/pN1pp1p1/p1p5/8/3P3p/5N2/RPP2PPP/2BQR1K1 b kq | f1-e1 (QUIET_MOVE), 1
 25 | 2b1k1nr/rppp1ppp/4p3/2q5/4P3/P2P2P1/1P1K2BP/1Nn3bR w k | f2-g1 (ATTACK), 1
 25 | 2kr1b1r/1pp2ppp/p1n2n2/4p3/P1P5/5PP1/1P2P2P/2BK1BNR w | e8-c8 (LONG_CASTLING), 1
-25 | r1bqk2r/pppp1ppp/8/4n3/1P2n2P/4P1b1/PB1P4/RN1K1q2 w kq | g2-f1 (TURN_INTO_ATTACK) turn into null, 1
+25 | r1bqk2r/pppp1ppp/8/4n3/1P2n2P/4P1b1/PB1P4/RN1K1q2 w kq | g2-f1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | r3kb1r/p1p2pp1/p2qpn1p/3p1K1P/8/2N1P3/PPn2P1N/2B4b w kq | e7-e6 (QUIET_MOVE), 1
 25 | r2qkbnr/ppp2p1p/8/4p2p/P1p5/1n2P1PN/3P1P1P/4KB1b w kq | d5-c4 (ATTACK), 1
 25 | rn1qk2r/pp3ppp/2p5/3ppP2/2PP2n1/N6N/P2KP2P/2B4b w kq | f6-g4 (ATTACK), 1
@@ -23643,7 +23643,7 @@
 25 | 4kb1r/1pp1ppp1/r1n2n1p/8/5PbP/2P5/PPQPK3/RNB3q1 w k | c8-g4 (QUIET_MOVE), 1
 25 | r3k3/ppp2pp1/n3bn1r/8/3ppb2/P3qP1P/1PPNK1P1/R4B2 w q | g1-e3 (QUIET_MOVE), 1
 25 | rnbqk3/pppp1pp1/4p1r1/3P4/4n3/8/P1P1KPPP/b4BNR w q | f6-e4 (ATTACK), 1
-25 | rnb1k2r/ppp2ppp/5n2/4p3/8/B2P1PPN/4PKBP/q2q3R w kq | a2-a1 (TURN_INTO) turn into null, 1
+25 | rnb1k2r/ppp2ppp/5n2/4p3/8/B2P1PPN/4PKBP/q2q3R w kq | a2-a1 (TURN_INTO) turn into QUEEN, 1
 25 | 1Bb2kN1/1p1pQ3/p1p2N2/4p1pp/3P4/8/PPP1PPPP/R3KB1R b KQ | h7-e7 (QUIET_MOVE), 1
 25 | Nn3knr/ppB2ppp/4p3/3p4/3P4/R7/1PP2PPP/3QKBNR b K | b6-a8 (ATTACK), 1
 25 | r1b1kQ2/2p2p1p/ppn4B/4p3/4p3/2N5/PPP2PPP/2R1KBNR b Kq | g8-f8 (ATTACK), 1
@@ -23780,7 +23780,7 @@
 25 | r1b2r2/ppqp1ppk/3bp3/8/4n3/1P6/P1n2PPP/RN2KBNR w KQ | d4-c2 (ATTACK), 1
 25 | rnb1kb2/3ppQp1/8/pp2N3/3p4/2PBP3/P1P2PPP/R1B2RK1 b q | g8-f7 (ATTACK), 1
 25 | r1b1k2r/pp3ppp/2p1pn2/8/Pbp5/5P2/1PK1Pq1P/R1B2B1R w kq | d4-f2 (ATTACK), 1
-25 | 2rq1rk1/pb1pnp1p/2p1p2p/2P1b3/P2nPB2/6P1/1P3P2/q2K2R1 w | a2-a1 (TURN_INTO) turn into null, 1
+25 | 2rq1rk1/pb1pnp1p/2p1p2p/2P1b3/P2nPB2/6P1/1P3P2/q2K2R1 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 25 | 6R1/r1kn2b1/pppp1p1r/5B1P/3P4/2N2N2/PPPB1PP1/2RQ2K1 b | e8-g8 (ATTACK), 1
 25 | r1bq1rk1/1ppp2pp/8/Ppb2p2/3p2P1/1P2PP2/3P3P/4nKNR w | d3-e1 (ATTACK), 1
 25 | r1b1kbnr/ppp2pp1/4p3/8/2pP2Q1/4P3/PP1P1P1q/1RB2KN1 w kq | h1-h2 (ATTACK), 1
@@ -23859,7 +23859,7 @@
 25 | 2bk1r2/r1pp1p1p/2p2Np1/p3N3/6Q1/P3P3/2PP1PPP/R1B2RK1 b | f3-e5 (ATTACK), 1
 25 | r1bq1rk1/pppp1ppp/8/4p3/3bPP2/1P1P3P/P1P5/1N1K1B1n w | g3-h1 (ATTACK), 1
 25 | 1nb1k3/4b1pB/3P1p2/1pN1p2p/8/2P2N2/PPP2PPP/R1BQR1K1 b | g8-h7 (ATTACK), 1
-25 | Nn1k2R1/1p1bb1p1/p2Q4/5pBp/4P3/8/PPP2PPP/R3KBNR b KQ | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+25 | Nn1k2R1/1p1bb1p1/p2Q4/5pBp/4P3/8/PPP2PPP/R3KBNR b KQ | f7-g8 (TURN_INTO_ATTACK) turn into ROOK, 1
 25 | Bn3b2/3Pkpr1/p1p4p/6pP/3P4/P1N1P2N/1BP2PP1/R2QK2R b KQ | e6-d7 (ATTACK), 1
 25 | r1b2rk1/p1pp1ppp/p2b4/4p2P/P2nP2q/3n1P2/1P1P2K1/1N4N1 w | c1-d3 (QUIET_MOVE), 1
 25 | 2bq1rk1/1p1p2pp/2p1p3/4r3/PbP2n1P/8/RP1PPP2/2B1KB1R w | f5-e5 (QUIET_MOVE), 1
@@ -23876,7 +23876,7 @@
 25 | rn2kbnr/2p1p3/pp2P1Rp/5p2/8/5N2/PPP2PP1/R1BNKB2 b Qkq | g3-g6 (ATTACK), 1
 25 | r1bk1bQ1/pp1p1p1p/4p3/2p5/8/2N5/PPP1PPPP/R3KBNR b KQ | h8-g8 (ATTACK), 1
 25 | 2bqkb1r/2pppp2/Bp4p1/3P4/3P3p/1P3N2/R4PPP/2BQ1RK1 b k | d3-a6 (ATTACK), 1
-25 | r3k1nr/p1p2ppp/p7/P2pn3/6b1/b3qP2/2P1P1PP/1q2KB1R w Kkq | b2-b1 (TURN_INTO) turn into null, 1
+25 | r3k1nr/p1p2ppp/p7/P2pn3/6b1/b3qP2/2P1P1PP/1q2KB1R w Kkq | b2-b1 (TURN_INTO) turn into QUEEN, 1
 25 | r2qkbnr/pbpp1ppp/8/8/7P/8/PP1KPPP1/nNB2BN1 w kq | c8-b7 (ATTACK), 1
 25 | r3kb2/2pp1Qp1/b6q/4p3/p1B1P3/2N5/1PPP1PPP/R1B1K1NR b KQq | g8-f7 (ATTACK), 1
 25 | rnb5/3pk1pQ/2p5/p3N1Pp/P3P3/P7/2PP1PP1/R1B1KBNR b KQ | g8-h7 (ATTACK), 1
@@ -23911,11 +23911,11 @@
 25 | r1bq1rk1/pppp1ppp/8/2n1p1P1/7P/4PP2/PbnP4/4KN1R w | b4-c2 (ATTACK), 1
 25 | 1n6/3k3r/p5Nb/1p1B1N2/2p1PpP1/3P3p/PPP2P1P/R1BQ1RK1 b | d6-f5 (QUIET_MOVE), 1
 25 | r1b1k2r/pppp1ppp/4p2n/8/P1P3P1/5PbP/1P2P3/nN2KB2 w kq | h2-g3 (QUIET_MOVE), 1
-25 | 2Q5/p4kp1/2p4r/1pN1pp1p/7P/P2PN3/1PQ1PPP1/1RB1KB1R b K | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+25 | 2Q5/p4kp1/2p4r/1pN1pp1p/7P/P2PN3/1PQ1PPP1/1RB1KB1R b K | d7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | 2bqkb2/1ppppp1p/n6p/8/N2PP3/5N2/PPP2PKP/R2Q1R2 b | g1-g2 (ATTACK), 1
 25 | 1rb1k1n1/RpBp2pr/2p1p2p/5P2/8/2NB1N2/2PP1PPP/3QK2R b K | b6-c7 (QUIET_MOVE), 1
 25 | r2q1rk1/1b3ppp/4pb2/3p4/Pn1PnP2/4P1P1/7P/RNB1K1NR w | a6-b4 (ATTACK), 1
-25 | 1n3Q1r/1pk2Qpp/r4n2/p1p5/8/2N5/PPPP1PPP/R1B1K1NR b KQ | e7-f8 (TURN_INTO_ATTACK) turn into null, 1
+25 | 1n3Q1r/1pk2Qpp/r4n2/p1p5/8/2N5/PPPP1PPP/R1B1K1NR b KQ | e7-f8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | r1b1kbnr/pp1p2pp/2p5/4P3/4N3/5N2/PP1Q1PPP/R3KB1R b KQkq | c2-d2 (ATTACK), 1
 25 | rnb1k2B/1p2pp1p/2p3pQ/p1N5/4p3/8/P1P1PPPP/R3KB1R b KQq | d2-h6 (ATTACK), 1
 25 | Q4b1r/3kp1p1/1p3n1p/p1p2p2/8/4P1N1/PPPP1PPP/R1B1K2R b KQ | f3-a8 (ATTACK), 1
@@ -24042,7 +24042,7 @@
 25 | rn2k2r/3p1ppp/3Bp2n/P7/3PN3/5N2/P1P1BPPP/R2QK2R b KQ | f1-e2 (ATTACK), 1
 25 | 1n6/p2p1pQN/bp1N4/2k4p/6p1/8/PPP1PPPP/R1BQKB1R b KQ | g8-g7 (ATTACK), 1
 25 | r3kbnr/p1p1pp2/n6p/3N2p1/8/4PN2/1PQP1PPP/2B1KB1R b Kkq | d1-c2 (ATTACK), 1
-25 | r1bq1rk1/pp1pbppp/4p3/3P3P/n3n3/5N2/5PP1/q1B1KBR1 w | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+25 | r1bq1rk1/pp1pbppp/4p3/3P3P/n3n3/5N2/5PP1/q1B1KBR1 w | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | 2kr1b1r/1pp1pppp/p1p5/8/8/PP4Pb/2PP1P2/R1BQ1KNq w | e6-h3 (ATTACK), 1
 25 | r1b2rk1/pppp1p1p/4pqp1/2b5/P1P3n1/5n1N/1P3P1P/2RK3R w | d8-f6 (QUIET_MOVE), 1
 25 | 2k4r/pbpr1pp1/1p4np/4p3/Pb6/1P3PP1/2PP3P/R1BK2NR w | d8-d7 (ATTACK), 1
@@ -24126,7 +24126,7 @@
 25 | r1b2rk1/ppp2ppp/5n2/4p3/1n6/N2P2PN/PP3P1P/R2K1B1R w | c6-b4 (ATTACK), 1
 25 | 2r2rk1/1pp2pp1/p1n1p2p/8/1Ppq1Pb1/6P1/P3P2P/R2K1BNR w | d8-d4 (ATTACK), 1
 25 | r1b1k1n1/ppp3pr/n7/4Np1p/2B5/R5N1/1PPB1PPP/3QK2R b Kq | f1-c4 (QUIET_MOVE), 1
-25 | Q3kb1r/3p3p/p3pn2/1p2NPp1/5B2/8/NPP2PPP/2RQKB1R b Kk | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+25 | Q3kb1r/3p3p/p3pn2/1p2NPp1/5B2/8/NPP2PPP/2RQKB1R b Kk | b7-a8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | r1bk2nr/1ppp1p1p/p5p1/4P3/3Q4/8/PPP1PPPP/R3KB1R b KQ | d1-d4 (QUIET_MOVE), 1
 25 | 2bqkbnr/1ppp1ppp/8/2r1p3/P7/3P4/4PPPP/RN1K1BR1 w k | c2-c5 (QUIET_MOVE), 1
 25 | r3k1nr/p1p2ppp/5q2/1R1p4/3n4/P2P2PB/P1P1P2P/2BQ1K1R w kq | e7-f6 (QUIET_MOVE), 1
@@ -24189,7 +24189,7 @@
 25 | 2bqkbnr/1pp1pppp/8/8/2p5/3P1N2/r1nKPPPP/3R1BR1 w k | a3-a2 (ATTACK), 1
 25 | N5nr/1B1kpN1p/8/p2p2p1/2p5/4P2P/PPPP1PP1/R1BQ1RK1 b | h6-f7 (ATTACK), 1
 25 | r1b1k2r/pppp1ppp/2nbp3/8/P2P4/3K1N1P/1PP1P3/RNq5 w kq | h1-c1 (ATTACK), 1
-25 | 4kbnr/1pp1pppp/4b3/6r1/P7/n2PqPPP/1K2P3/B1q2B1R w k | c2-c1 (TURN_INTO) turn into null, 1
+25 | 4kbnr/1pp1pppp/4b3/6r1/P7/n2PqPPP/1K2P3/B1q2B1R w k | c2-c1 (TURN_INTO) turn into QUEEN, 1
 25 | r4b1r/pk2Pp1p/2pp4/Pp4B1/3P4/2NB1N1P/1PP2P2/2RQKR2 b | f6-e7 (ATTACK), 1
 25 | 6nr/3pk3/5p1b/1NpBp1pp/1p2P3/5N1P/PB1P1PP1/R2Q1RK1 b | b7-d5 (QUIET_MOVE), 1
 25 | r2qkr2/pppn1ppp/4b3/8/8/1P2PNnP/P1PP4/R2QKB1R w KQq | e4-g3 (ATTACK), 1
@@ -24201,7 +24201,7 @@
 25 | 2b3Q1/1pkn4/B2ppp2/p1p5/4P3/P1N2N2/1PPP1PPP/R1B1K2R b KQ | f1-a6 (ATTACK), 1
 25 | r2Nk1r1/p3p1bR/P1pp2P1/4n3/4P3/5N2/1PPP1PP1/R1BQKB2 b Q | e6-d8 (ATTACK), 1
 25 | 5bn1/2p1k2p/4p1p1/pBppNp2/8/4P3/PPP2PPP/R1BQK2R b KQ | f7-e5 (QUIET_MOVE), 1
-25 | 4kB2/1B1p1ppp/p3p3/1pp5/4NP2/8/PPPP1P1P/R1BQK1NR b KQ | e7-f8 (TURN_INTO_ATTACK) turn into null, 1
+25 | 4kB2/1B1p1ppp/p3p3/1pp5/4NP2/8/PPPP1P1P/R1BQK1NR b KQ | e7-f8 (TURN_INTO_ATTACK) turn into BISHOP, 1
 25 | rn2k2r/pBp1np1p/6p1/5b2/8/P7/P1PPQPPP/R1B1K1NR b KQkq | d5-b7 (ATTACK), 1
 25 | 2bqkb1r/2pppp1p/p6p/8/3PP3/5N2/PNP2PPP/R2Q1RK1 b k | a4-b2 (ATTACK), 1
 25 | 1Bb4k/1p1p4/p1p1pNpN/7p/3P4/8/PPP1PPPP/R2QKB1R b KQ | a7-b8 (ATTACK), 1
@@ -24216,7 +24216,7 @@
 25 | r1b1kb1r/pppp1ppp/4p3/8/1n1P3P/2NK4/PPP1P3/R1B2q2 w kq | c6-b4 (QUIET_MOVE), 1
 25 | rnbqk2r/pppp1ppp/4p3/6P1/3P3P/8/n3PPB1/b3K1NR w kq | c3-a2 (ATTACK), 1
 25 | Nn4k1/4Bpp1/2p1p2r/Rp5p/1P1P4/2P2N2/1P2PPPP/3QKB1R b K | a1-a5 (ATTACK), 1
-25 | 5Q2/1Bpk1p1Q/1pn1p2p/6p1/p2P4/2N2N2/PPP2PPP/R1B2RK1 b | e7-f8 (TURN_INTO_ATTACK) turn into null, 1
+25 | 5Q2/1Bpk1p1Q/1pn1p2p/6p1/p2P4/2N2N2/PPP2PPP/R1B2RK1 b | e7-f8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | r1b1kb1r/ppp2ppp/2n1p3/3p4/3P3P/P1P5/1P1KPn2/RN3q2 w kq | g1-f1 (ATTACK), 1
 25 | 3k3r/1p1n1p2/n2Np1pb/pN6/8/4PP1P/PPPP3P/R1BQ1RK1 b | c8-d6 (ATTACK), 1
 25 | r2qkb1r/ppp1pppp/3p4/1Nn5/8/5b2/PP1P1P1P/R1B1K2R w kq | g4-f3 (ATTACK), 1
@@ -24226,7 +24226,7 @@
 25 | rnb5/pp4p1/6Np/2p1kn2/8/3P4/PPP1PPPP/R1BQKB1R b KQ | f8-g6 (QUIET_MOVE), 1
 25 | r1b2rk1/ppp2ppp/3p4/2b1p3/4P1q1/2N2K2/PPPP3P/1RB2R2 w | h4-g4 (QUIET_MOVE), 1
 25 | rnb1k2r/pp3ppp/8/2Pp4/4n3/N1q3PN/P3PP1P/R3KB1R w KQkq | a5-c3 (ATTACK), 1
-25 | r3kbnr/1pp2ppp/2n5/3pp3/P2PP1Pq/8/5P1P/R1qK1B1R w kq | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+25 | r3kbnr/1pp2ppp/2n5/3pp3/P2PP1Pq/8/5P1P/R1qK1B1R w kq | d2-c1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | r1b1kbnr/pppp1ppp/4p3/7B/2P1PP2/P1K5/7P/nNB3q1 w kq | b3-a1 (ATTACK), 1
 25 | Qn1qk2r/p2b1p1p/7R/1Pp1P1p1/8/4NN2/PP2PPP1/R1B1KB2 b Q | h2-h6 (QUIET_MOVE), 1
 25 | rnb2rk1/1ppp1ppp/1p6/4p1q1/3b4/P2P1BP1/2P2n1P/1N3KN1 w | d8-g5 (ATTACK), 1
@@ -24325,7 +24325,7 @@
 25 | r2q1rk1/pppb1p2/5n1p/8/P2n1P1P/1P6/2P1P1P1/bN2KBNR w K | c6-d4 (QUIET_MOVE), 1
 25 | r2qkb1r/p1p1pppp/1p6/3p1b2/8/3P1P1P/P1nNP3/1n3KNR w kq | c3-b1 (ATTACK), 1
 25 | 4kb1r/1p2pppp/2np1n2/6r1/P2q4/2N4P/R1P1PP1P/3QKB1R w Kk | b6-d4 (ATTACK), 1
-25 | Bn1Q1b2/5pr1/p1p2k1p/6pP/3P4/P1N1P2N/1BP2PP1/R2QK2R b KQ | d7-d8 (TURN_INTO) turn into null, 1
+25 | Bn1Q1b2/5pr1/p1p2k1p/6pP/3P4/P1N1P2N/1BP2PP1/R2QK2R b KQ | d7-d8 (TURN_INTO) turn into QUEEN, 1
 25 | 3k1b1r/1p3pN1/3p3p/p1pNp3/4B1Q1/P7/1PPP1PPP/R1B1K2R b KQ | h5-g7 (ATTACK), 1
 25 | 2bqk1nr/1pp2ppp/8/4p3/3n4/3Pb3/rP1N2PP/1RKQ1BNR w k | a7-a2 (ATTACK), 1
 25 | r2qkb1r/ppp1pppp/8/3p1n2/3P2b1/1P6/P1KN3P/R1B3Nn w kq | f2-h1 (ATTACK), 1
@@ -24462,7 +24462,7 @@
 25 | r1b1k2r/ppppqppp/5n2/8/8/4bPP1/P2P1K1P/RNB2B1R w kq | c5-e3 (ATTACK), 1
 25 | r1bqk1nr/p1p2ppp/p7/3pp3/8/3P1P2/2n1PKPP/4bBNR w kq | b4-e1 (QUIET_MOVE), 1
 25 | rnbq2k1/pp4pp/2p1p3/3p2p1/Pb1P2PP/1PN5/R1PK4/1r4n1 w | f1-b1 (ATTACK), 1
-25 | 1Q2kb1r/3p1pp1/2p4p/4N3/pp1PNB2/3QP3/PP3PPP/R3K2R b KQk | a7-b8 (TURN_INTO_ATTACK) turn into null, 1
+25 | 1Q2kb1r/3p1pp1/2p4p/4N3/pp1PNB2/3QP3/PP3PPP/R3K2R b KQk | a7-b8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | 3rkbnr/ppp2P1p/3q4/8/6Q1/2N5/PPPP1PPP/R1B1K1NR b KQk | e6-f7 (ATTACK), 1
 25 | 2b1k2r/1pqp1ppp/2n5/1p6/3bn3/r7/2P1PPPP/2RQKBNR w Kk | f6-d4 (ATTACK), 1
 25 | r1bqk2r/ppp2ppp/4pn2/8/P6P/1n1P2P1/1b2KPB1/1N4NR w kq | c1-b2 (ATTACK), 1
@@ -24584,7 +24584,7 @@
 25 | 4k2r/p3bnpp/N2p1p2/8/4B1Q1/4P3/PPPP1PPP/R1B1K1NR b KQ | c5-a6 (ATTACK), 1
 25 | 2rq1rk1/3b1ppp/8/p3P3/1p1P4/3Q1N1P/PPP1NPP1/R1B1K2R b KQ | e3-d4 (ATTACK), 63
 25 | r1bqk2r/p1pp1ppp/3n1n2/4p3/3PP3/5PPP/P7/b1B2KNR w kq | c3-a1 (ATTACK), 1
-25 | 2rqkb1r/ppp1pppp/4b2n/P3n3/2P5/3P4/4BP1P/RN2K2q w Qk | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+25 | 2rqkb1r/ppp1pppp/4b2n/P3n3/2P5/3P4/4BP1P/RN2K2q w Qk | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | 1nb1k1nr/1ppp1ppp/4p3/8/P6P/b4NP1/2P1PP2/1qBK1B1R w k | f8-a3 (QUIET_MOVE), 1
 25 | rn2k2r/p1p2ppp/p4n2/3qp3/2N4P/3bP1P1/P3NP2/b1B2K1R w kq | d8-d5 (ATTACK), 1
 25 | r1b5/ppp1p3/n2k4/3PQBp1/3P4/P1N1B3/1PP2PPP/R3K1NR b KQ | h8-e5 (QUIET_MOVE), 1
@@ -24738,7 +24738,7 @@
 25 | r1bqk1nB/p1ppp3/1pn5/7Q/4N3/4P3/P1PP1PPP/R3KB1R b KQq | d1-h5 (ATTACK), 1
 25 | r1b2rk1/1pp2ppp/2p1pb2/1p6/8/N1P3PP/P1P1PPKR/2q3N1 w | a6-b5 (ATTACK), 1
 25 | r1bqk3/pppp1pp1/3b4/P2pn1pr/1Pn5/4P3/2PP1P2/R1B1K3 w Qq | h2-h5 (ATTACK), 1
-25 | r1Q2k2/4p1p1/2R2N2/p2pN2p/2p3b1/8/1PPPPPPP/2BQKB1R b K | b7-c8 (TURN_INTO_ATTACK) turn into null, 1
+25 | r1Q2k2/4p1p1/2R2N2/p2pN2p/2p3b1/8/1PPPPPPP/2BQKB1R b K | b7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 25 | 5br1/1p3Np1/pNp3k1/5Q2/2BpP2p/2BP3P/PPP2P1P/R3K2R b KQ | f3-f5 (QUIET_MOVE), 1
 25 | 1n1k2N1/r2p2p1/b1p5/1p3N2/p2P4/2P1B3/PP2PPPP/2RQKB1R b K | e7-g8 (ATTACK), 1
 25 | r3kb1r/p1p2ppp/3p1nq1/3bp3/P1P5/1P1P4/4PP1P/n1BK1B2 w kq | h1-d5 (ATTACK), 1
@@ -24858,7 +24858,7 @@
 25 | rn3knr/1p3P2/p1p3pp/8/2BNN1P1/P4Q2/2PP1PP1/R1B1K2R b KQ | d1-f3 (QUIET_MOVE), 1
 25 | r2qkr2/ppp2ppp/3p1n2/8/1P1p4/P4PP1/3P3P/RN1K1BNR w q | e5-d4 (ATTACK), 1
 25 | 1nN2br1/1p1kp2p/3p4/2P2Pp1/4P3/2N1B3/PPP1BPP1/R2QK2R b KQ | a7-c8 (ATTACK), 1
-25 | rk2Qb1r/p4p1p/P1pp4/6B1/1p1P4/2NB1N1P/1PP2P2/2RQKR2 b | e7-e8 (TURN_INTO) turn into null, 1
+25 | rk2Qb1r/p4p1p/P1pp4/6B1/1p1P4/2NB1N1P/1PP2P2/2RQKR2 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
 25 | r1b1kb1r/ppp1pppp/8/P1n5/4p1P1/2PnK2P/1P1PN2q/1N6 w kq | a6-c5 (QUIET_MOVE), 1
 25 | r3k1nr/p1p2ppp/1p4q1/3Pb3/3n4/2K5/PPPP3P/R1B2QNR w kq | g5-g6 (QUIET_MOVE), 1
 25 | 2bqk2r/rp1p1ppp/2n2n2/2p1p3/8/3P1P1P/P1P1P3/R3KBNR w k | b8-c6 (QUIET_MOVE), 1
@@ -25487,7 +25487,7 @@
 25 | r1bq1rk1/pppp1ppp/8/P7/5p2/3P4/nPPKP1PP/4NB1n w | b4-a2 (ATTACK), 1
 24 | r1b1k3/2pp1p2/1pn2Q2/p3p3/2P5/P2B1N2/P2P1PPP/R1B1K2R b KQq | b2-a3 (ATTACK), 1
 24 | r3kb1r/1b1pppp1/2p4p/6n1/P2PnP2/2q1P1PP/4B3/4K1NR w Kkq | a5-c3 (ATTACK), 1
-24 | rn3b1Q/2k2p2/p1p5/1p1p3b/3P4/P1N1B3/1PP1PPP1/2R1KB1R b K | h7-h8 (TURN_INTO) turn into null, 1
+24 | rn3b1Q/2k2p2/p1p5/1p1p3b/3P4/P1N1B3/1PP1PPP1/2R1KB1R b K | h7-h8 (TURN_INTO) turn into QUEEN, 1
 24 | r2qk1r1/ppp2pBp/8/8/PPn1p3/6P1/b1PPP2P/3QKBR1 w q | h8-g8 (QUIET_MOVE), 1
 24 | 3qk3/1pp2pp1/3b1nr1/r2p4/7P/P1PbP1P1/R2N1P1R/1NQ1K3 w | f5-d3 (ATTACK), 1
 24 | 2b1k2r/1ppp1ppp/2n5/8/2P1n2P/N3p3/P1P2qP1/1R2KBNR w k | f6-f2 (QUIET_MOVE), 1
@@ -25752,7 +25752,7 @@
 24 | r4rk1/ppp2ppp/8/3n1bqP/8/5P2/PPpNK1PR/R4BN1 w | d8-g5 (QUIET_MOVE), 1
 24 | r1bq3Q/pp1pkp1p/6p1/6Bn/2P5/8/PP2PPPP/R3KB1R b KQ | c1-g5 (QUIET_MOVE), 1
 24 | 2bq1rk1/1pppbppp/5p2/8/7n/PP2PP2/3P1KP1/R1B2BN1 w | f5-h4 (ATTACK), 1
-24 | 1nb1kb1r/1pp2ppp/4pn2/3q4/7P/r3P1P1/P1P2P2/2qK2NR w k | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+24 | 1nb1kb1r/1pp2ppp/4pn2/3q4/7P/r3P1P1/P1P2P2/2qK2NR w k | d2-c1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 24 | 5k1r/2pQpp1p/1pB3pB/p2PN3/3P4/7P/PPP2P1P/R3K2R b KQ | e3-h6 (ATTACK), 1
 24 | Q1bk3N/p5b1/np1P1p1p/4p3/8/2B5/PPP1PPPP/R3KB1R b KQ | d5-a8 (ATTACK), 1
 24 | 2b1k2r/2p2ppp/2p1pn2/3p4/6P1/r1P1P2P/P2P1P1q/R2QK1N1 w Qk | b7-c6 (ATTACK), 1
@@ -25969,7 +25969,7 @@
 24 | 3qkb1r/4pp2/2B2n1p/p1p3p1/R7/2NPBN2/1PP2PP1/R2QK3 b Qk | e4-c6 (QUIET_MOVE), 1
 24 | rnb1k1Q1/1pp2p2/p3p2p/8/3Pp3/P1N5/2P2PPP/2R1KBNR b Kq | h8-g8 (ATTACK), 1
 24 | 6nr/2p1ppp1/Rp3k1p/8/8/2N2N2/PPPPPPP1/R1BQKB2 b Q | a7-a6 (ATTACK), 1
-24 | rn3kRr/1p6/p5pp/2p5/2BNN1P1/P4Q2/2PP1PP1/R1B1K2R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+24 | rn3kRr/1p6/p5pp/2p5/2BNN1P1/P4Q2/2PP1PP1/R1B1K2R b KQ | f7-g8 (TURN_INTO_ATTACK) turn into ROOK, 1
 24 | 1r2kb1r/1pp2ppp/2n4n/p6P/2p3b1/2P1P3/PP5R/R1Kq2N1 w k | d3-d1 (QUIET_MOVE), 1
 24 | 4Nk2/5Qrp/1p1N2pB/p1P1pp2/8/5B2/PPP2PPP/R3K1NR b KQ | d7-f7 (QUIET_MOVE), 1
 24 | r2qk2r/p1ppnppp/5n2/2b5/2P4P/p4bP1/P2p2B1/RN2K3 w kq | e3-d2 (ATTACK), 1
@@ -26177,7 +26177,7 @@
 24 | r3kb1r/pppb1ppp/8/4n3/2P5/PP6/3N1nPP/R1BK1Bq1 w kq | h1-f2 (QUIET_MOVE), 1
 24 | 2kr4/pbpr1pp1/1p4np/4p3/P7/bP3PP1/2PP3P/2BK2NR w | b4-a3 (ATTACK), 1
 24 | 2b2k2/1rpp1p1N/1pn2Bp1/p2N4/8/8/PPP1PPPP/R3KB1R b KQ | g5-h7 (ATTACK), 1
-24 | rnQ2kn1/3pbpp1/3B4/p7/4P3/1P3N2/1PP2PPP/R2QKB1R b KQ | c7-c8 (TURN_INTO) turn into null, 1
+24 | rnQ2kn1/3pbpp1/3B4/p7/4P3/1P3N2/1PP2PPP/R2QKB1R b KQ | c7-c8 (TURN_INTO) turn into QUEEN, 1
 24 | rnb3nr/p2p1k1p/2p5/1p2P1B1/4N3/3B3P/1PP2PP1/2RQ1RK1 b | d4-e5 (ATTACK), 1
 24 | 2bk1r2/1rpp1p1N/2p3p1/p3N3/6Q1/P3P3/2PP1PPP/R1B2RK1 b | f6-h7 (ATTACK), 1
 24 | 2bqk1nB/2pp4/p1n3p1/4N2p/N3P3/P2P3P/2P1QPP1/3R1RK1 b | f3-e5 (ATTACK), 1
@@ -26237,7 +26237,7 @@
 24 | 1nb1k2r/1ppp1ppp/8/b3p3/7q/3P4/P3PP1P/RN1K1BNR w k | d8-h4 (QUIET_MOVE), 1
 24 | r2qk1nr/ppp2ppp/8/3p4/1n4b1/2p4N/P3PP1P/R1K2B1R w kq | c6-b4 (ATTACK), 1
 24 | r3k1n1/ppp2ppr/3bb3/8/1n6/4PN1P/P1PP1KP1/1qBQ3R w q | h8-h7 (ATTACK), 1
-24 | rnb4Q/1ppk1n2/8/p2N2B1/2BP3p/P7/P1P2PPP/R2Q1RK1 b | g7-h8 (TURN_INTO_ATTACK) turn into null, 1
+24 | rnb4Q/1ppk1n2/8/p2N2B1/2BP3p/P7/P1P2PPP/R2Q1RK1 b | g7-h8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 24 | r2qkb1r/1pp1ppp1/4b3/8/2p2p1P/p2PnB2/P1nKP3/6NR w kq | d5-c4 (ATTACK), 1
 24 | r1b1k2r/pppp1ppp/3nn3/8/8/P2P3P/1qPN1PP1/3BK2R w Kkq | a2-b2 (ATTACK), 1
 24 | r1b2bnN/ppppk1p1/8/4Q2p/4N3/8/PPP2PPP/2KR1B1R b | d4-e5 (ATTACK), 1
@@ -26321,7 +26321,7 @@
 24 | r3k2r/pppq1p2/6p1/1P1p1n1p/5P1P/P1PP1nPb/8/bN5K w kq | e7-f5 (QUIET_MOVE), 1
 24 | r4r2/p1p1qp1k/2Np1pp1/7p/4P3/P4Q2/1RPP1PPP/2B2RK1 b | d4-c6 (ATTACK), 1
 24 | r1bqr1k1/pppp1ppp/4p3/8/8/B1bPP1nP/P1P1K3/2R3N1 w | h1-g3 (ATTACK), 1
-24 | r1bqk2r/1ppp1ppp/p7/8/P2K1nnP/1P3Nb1/R7/2q2B1R w kq | c2-c1 (TURN_INTO) turn into null, 1
+24 | r1bqk2r/1ppp1ppp/p7/8/P2K1nnP/1P3Nb1/R7/2q2B1R w kq | c2-c1 (TURN_INTO) turn into QUEEN, 1
 24 | 2kr3r/2pbb1p1/2p1p2p/p1P2p2/P2PB3/7P/1P1B1PP1/3R1RK1 w f6 | f7-f5 (LONG_MOVE), 6
 24 | 2bk2B1/pN4Q1/n1p1p3/1p3p2/3P1P2/2N5/PPP2PPP/R1B1K2R b KQ | d6-b7 (ATTACK), 1
 24 | r2k2nr/1bp4p/1p2B3/3pN3/p2P4/8/PPPQ1PPP/R1B2RK1 b | f7-e6 (ATTACK), 1
@@ -26345,7 +26345,7 @@
 24 | 3q1r2/3p1ppk/1pn2n2/3Np1r1/Pbb3P1/4P2P/3PKP1R/2B2B2 w | a6-c4 (ATTACK), 1
 24 | 1n6/3k2br/p5N1/1p1B1N2/2P1PpP1/7p/PPP2P1P/R1BQ1RK1 b | d3-c4 (ATTACK), 1
 24 | 2r1r1k1/2b2pn1/2bp2pp/pp1p4/3B2P1/P1P2R1P/1PB2P2/3R2K1 w | a6-a5 (QUIET_MOVE), 9
-24 | 4N1r1/5k1p/1p2p1pB/pNP2p2/8/5B2/PPP2PPP/R2QK1NR b KQ | d7-e8 (TURN_INTO_ATTACK) turn into null, 1
+24 | 4N1r1/5k1p/1p2p1pB/pNP2p2/8/5B2/PPP2PPP/R2QK1NR b KQ | d7-e8 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 24 | 2rr1k2/2b2p2/p2p2pp/1p1p3n/3Bb3/PBP2RPP/1P3P2/3R2K1 w | f5-e4 (QUIET_MOVE), 4
 24 | 2rr1k2/1b3pp1/p2p3p/bp1p3n/8/PBP4P/1P3PPB/3RR1K1 w | a8-c8 (QUIET_MOVE), 23
 24 | r1b2Q2/1pknQ3/1qp5/p7/4pB2/2N5/PPP2PPP/R3KBNR b KQ | c1-f4 (QUIET_MOVE), 1
@@ -26440,7 +26440,7 @@
 24 | rn1k2nr/p1pp4/5pp1/1B5p/4P3/4BN2/PPP2PP1/R2QK2R b Q | h2-h1 (QUIET_MOVE), 1
 24 | r1bq1rk1/pppp1ppp/4p3/8/P3PP1P/1P1P2n1/2n2b2/5BK1 w | d4-f2 (ATTACK), 1
 24 | 1rbqk2r/p1pp1ppp/3n1n2/2b1p3/4P1P1/5P1P/P3N3/2B1K2R w k | d4-c5 (QUIET_MOVE), 1
-24 | r1bqkb1r/ppp2ppp/8/4n3/4N3/7B/P2PP2P/n1BK2qR w kq | f2-g1 (TURN_INTO_ATTACK) turn into null, 1
+24 | r1bqkb1r/ppp2ppp/8/4n3/4N3/7B/P2PP2P/n1BK2qR w kq | f2-g1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 24 | r1b1kb1r/ppp2ppp/2n1p3/8/2pP4/8/PPPKPn1P/R5N1 w kq | h1-f2 (QUIET_MOVE), 1
 24 | 2bN1k1r/1p1p3p/pN3nP1/2p5/8/R7/1PPP1PPP/2BQKB1R b K | a8-b6 (QUIET_MOVE), 1
 24 | 2r1kb1r/pp2pppp/3p1n2/2p5/4PK1P/3P2P1/b1Pn1PR1/5q2 w k | b1-f1 (ATTACK), 1
@@ -26639,7 +26639,7 @@
 24 | r3kb1r/2p1p2p/p4pp1/1p1N4/8/P2BRN2/1PPP2P1/R1BQ2K1 b kq | c3-d5 (ATTACK), 1
 24 | 2r1kb2/2p1ppp1/p4n2/Pp1p4/2b1r3/q1P1P1P1/5P1P/B3N1KR w | d6-a3 (QUIET_MOVE), 1
 24 | N4bnr/pp2p1p1/8/5B1p/4Q2k/4p2N/PPP2PPP/R1B1K2R b KQ | e6-e4 (QUIET_MOVE), 1
-24 | rnbqkbr1/5p1p/2p1pn1p/8/2P1p1RN/6P1/3PBP2/1qq2K2 w q | b2-c1 (TURN_INTO_ATTACK) turn into null, 1
+24 | rnbqkbr1/5p1p/2p1pn1p/8/2P1p1RN/6P1/3PBP2/1qq2K2 w q | b2-c1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 24 | 2bk1bn1/3N3Q/p2pp2p/8/8/2P1P3/PP1P1PPP/R1B1KBNR b KQ | f7-h7 (ATTACK), 1
 24 | 8/r1kn2R1/pp1p1p1r/2p2B1P/3P4/2N2N2/PPPB1PP1/2RQ2K1 b | g8-g7 (ATTACK), 1
 24 | r6r/ppp1nkpp/8/n1b1pb1P/4PP2/3K1q2/PPPP4/1RB5 w | d1-f3 (QUIET_MOVE), 1
@@ -26747,7 +26747,7 @@
 24 | r1b1kb1r/ppp1pppn/8/4n1P1/7P/3P4/PP1KPq2/RNB5 w kq | f1-f2 (ATTACK), 1
 24 | 1n1qk2Q/3pbp1p/p4n2/2pN4/8/4P1P1/PPPP1P1P/R1B2RK1 b | g7-h8 (ATTACK), 1
 24 | 3qr1k1/1ppb1pp1/3pp3/4P2n/2Pn3P/P7/2rN1PP1/RN2KR2 w Q | c6-d4 (ATTACK), 1
-24 | 1BQ1k1nr/4p3/p4pp1/R1N4p/1PBP4/5N2/1PP2PPP/3QR1K1 b | c7-c8 (TURN_INTO) turn into null, 1
+24 | 1BQ1k1nr/4p3/p4pp1/R1N4p/1PBP4/5N2/1PP2PPP/3QR1K1 b | c7-c8 (TURN_INTO) turn into QUEEN, 1
 24 | r3k2r/pppqnp2/6p1/1P1pn2p/7P/P1PP2Pb/5P1K/bN6 w kq | d8-d7 (QUIET_MOVE), 1
 24 | rnb1kb1r/pp1ppppp/2p5/1P6/8/N1P1n3/P1K1Pq1P/R7 w kq | d1-e3 (QUIET_MOVE), 1
 24 | 2r1r1k1/5p2/1bbp1Bp1/1p3nPp/p2p3P/P1P3R1/1P3P2/1B1R2K1 w | g7-f5 (QUIET_MOVE), 1
@@ -27006,7 +27006,7 @@
 24 | 1n3knr/1BN2ppp/p7/1p2p3/P3Q3/8/P1PP1P1P/R1B1K1NR b KQ | g2-e4 (ATTACK), 1
 24 | r3k1nr/1pB1bppp/p1n5/6P1/8/2PP3b/PP1KPq1P/RN6 w kq | f8-e7 (QUIET_MOVE), 1
 24 | 2r1kb1r/p1p1pppp/2p5/8/P4P1P/1P1P2n1/3BP1q1/R2QK1N1 w Qk | d5-g2 (QUIET_MOVE), 1
-24 | 1q3N2/1p1k3B/r1ppp2p/p7/N2P4/4BN2/PPP2PP1/R2Q1RK1 b | e7-f8 (TURN_INTO_ATTACK) turn into null, 1
+24 | 1q3N2/1p1k3B/r1ppp2p/p7/N2P4/4BN2/PPP2PP1/R2Q1RK1 b | e7-f8 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 24 | r4rk1/ppp2ppp/2n5/3qp3/8/NPP1P3/P1KP1n1P/2R3NR w | d8-d5 (ATTACK), 1
 24 | rn2kr2/p1Npq2p/4pp2/8/3PP3/P7/1PP2PPP/R2QK1NR b KQq | b5-c7 (ATTACK), 1
 24 | r1bqr1k1/1ppp2pp/4p3/4n3/P3P2P/2Pn4/RP4P1/1N1K1B1R w | f4-d3 (ATTACK), 1
@@ -27098,7 +27098,7 @@
 24 | rn2Q3/1p6/2pkN3/p2p1B2/7p/2N5/PPPP1PPP/R1BQK2R b KQ | d3-f5 (ATTACK), 1
 24 | rkbQB3/p4p1p/7n/1ppNP3/1P6/8/1PP2PPP/R2QK1NR b KQ | c3-d5 (QUIET_MOVE), 1
 24 | Nn1k1b1r/1p2pp1p/p2p4/5PN1/8/7R/PPPP1PP1/R1BQK3 b Q | f3-g5 (ATTACK), 1
-24 | r2q1bnQ/p1k1p2p/3p4/1Bp4Q/8/8/PPPP1PPP/R1B1K2R b KQ | g7-h8 (TURN_INTO_ATTACK) turn into null, 1
+24 | r2q1bnQ/p1k1p2p/3p4/1Bp4Q/8/8/PPPP1PPP/R1B1K2R b KQ | g7-h8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 24 | 1n3b1r/r1pkp2p/8/p2N1pQ1/2NP1P2/3PB3/P4PPP/2R2RK1 b | h5-g5 (ATTACK), 1
 24 | rnbq4/ppp1pp1Q/4k3/2N3B1/2p5/8/PPP2PPP/2KR2NR b | e4-c5 (QUIET_MOVE), 1
 24 | 5kr1/pBN3bp/4pn2/P2pN3/3P1P2/B7/P1P2PPP/2RQ1RK1 b | b2-a3 (QUIET_MOVE), 1
@@ -27112,10 +27112,10 @@
 24 | r1bq1B1N/1p3B2/p2p4/2p4Q/kNPPP3/P7/1P3PPP/R3K2R b KQ | h6-f8 (ATTACK), 1
 24 | 1n2kbn1/N1pp1ppB/1p5p/p7/8/8/PPPP1PPP/R1B1Q1K1 b | d1-e1 (ATTACK), 1
 24 | r1b1k1nr/1pppqppp/2n5/p4Q2/1bP3P1/8/P3B2P/b2KR3 w kq | d4-a1 (ATTACK), 1
-24 | r1bQB3/p1k2p1p/7n/1pp1P3/1P6/2N5/1PP2PPP/R2QK1NR b KQ | d7-d8 (TURN_INTO) turn into null, 1
+24 | r1bQB3/p1k2p1p/7n/1pp1P3/1P6/2N5/1PP2PPP/R2QK1NR b KQ | d7-d8 (TURN_INTO) turn into QUEEN, 1
 24 | 1rbk2r1/1pNp1p2/4p1pn/Q5Np/4P3/P7/1PP3PP/R4BKR b | d2-a5 (ATTACK), 1
 24 | 1r1k1bB1/1p2pp2/p1n3p1/3N4/6R1/4PN2/PPPPQPP1/R1B1K3 b Q | c7-d5 (ATTACK), 1
-24 | 2rqkb1r/ppp1pppp/4bn2/8/1P1P1P2/P6P/2P1P3/b2Q1K2 w k | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+24 | 2rqkb1r/ppp1pppp/4bn2/8/1P1P1P2/P6P/2P1P3/b2Q1K2 w k | b2-a1 (TURN_INTO_ATTACK) turn into BISHOP, 1
 24 | r2qk2r/3b1ppp/p3p3/2b1P3/4n3/NPn4P/P1K3PR/R1B3N1 w kq | f8-c5 (ATTACK), 1
 24 | r1b1k2r/pppp1ppp/3b1n2/8/2P1p3/P1Kq2P1/1P1n3P/2B4R w kq | e2-d3 (QUIET_MOVE), 1
 24 | 2r2rk1/pp3pp1/1qpbp3/8/2PpPnpP/P2BKn2/1P3P2/3R4 w | e5-d4 (ATTACK), 1
@@ -27126,7 +27126,7 @@
 24 | r4rk1/ppp2ppp/8/1B1pP3/Pb5q/8/RPbN2P1/2B1K1Nn w | d8-h4 (ATTACK), 1
 24 | r1b1k1nr/2p4p/p1p1p1p1/3p2N1/3P4/6P1/PPP2PP1/R2Q1RK1 b kq | f3-g5 (ATTACK), 1
 24 | rnb2rk1/pppp1ppp/4p3/1n6/4P3/b2P1qP1/P3N2P/3K3R w | f2-f3 (QUIET_MOVE), 1
-24 | 3r1bNr/ppp1k2p/3q4/8/6Q1/2N5/PPPP1PPP/R1B1K1NR b KQ | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+24 | 3r1bNr/ppp1k2p/3q4/8/6Q1/2N5/PPPP1PPP/R1B1K1NR b KQ | f7-g8 (TURN_INTO_ATTACK) turn into KNIGHT, 1
 24 | r1bqkbnr/pppp1ppp/8/4P3/8/P1N1K3/1Pn5/R1B2B1r w kq | e1-c2 (ATTACK), 1
 24 | B1b1r3/2p2kpp/p2p4/1p3P2/3P4/P7/PBP2PPP/R2Q1KNR b | e1-f1 (QUIET_MOVE), 1
 24 | 4k3/ppp2pp1/2n5/r3p3/1bP1n2r/4P3/PP1P1PqP/R1B1K2R w KQ | f6-e4 (ATTACK), 1
@@ -27149,7 +27149,7 @@
 24 | r1b1kb1r/ppp1ppp1/8/3q2P1/8/Pn3N1P/1P1P1P2/1NBK3R w q | d8-d5 (ATTACK), 1
 24 | 2b3nr/7p/2N1k3/p1PpNpB1/8/2P3PP/PP2P1P1/R2QKB1R b KQ | d4-c5 (ATTACK), 1
 24 | 1nbk2nr/2ppp2p/B7/p7/4Pb2/2N5/1PPP1PPP/2BQK2R b K | f1-a6 (ATTACK), 1
-24 | 2kr1r2/ppp2ppp/2n2n2/1B4q1/P5P1/4PP1b/3bK2P/q1B4R w | b2-a1 (TURN_INTO_ATTACK) turn into null, 1
+24 | 2kr1r2/ppp2ppp/2n2n2/1B4q1/P5P1/4PP1b/3bK2P/q1B4R w | b2-a1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 24 | r1b1kb1r/ppp1pppp/5n2/8/P5P1/7P/RPPPKP2/1Nq5 w kq | h1-c1 (ATTACK), 1
 24 | r1b2rk1/pp1p1ppp/4pn2/2P5/3p4/1P4PN/P2KPP1q/R1B5 w | h1-h2 (ATTACK), 1
 24 | 7r/pp1Np1kp/4N1pn/5p2/2Q5/4P3/PPPP1PPP/R1B1K2R b KQ | g5-e6 (QUIET_MOVE), 1
@@ -27224,7 +27224,7 @@
 24 | 4Nbnr/6kp/p2p1p2/4pP1Q/3P3p/8/PPP2PPP/R1B2RK1 b | c7-e8 (QUIET_MOVE), 1
 24 | r1bq1rk1/pppp1ppp/8/8/7P/8/PP2PnP1/RNK2BNR w | e4-f2 (ATTACK), 1
 24 | Nnb2b1r/p6p/2k1pp2/6pQ/8/3B1N2/PPP2PPP/R1B1K2R b KQ | c7-a8 (ATTACK), 1
-24 | Q1bN1b2/2k2p1r/3p1np1/6Bp/4P3/8/PPP2PPP/R2QKB1R b KQ | a7-a8 (TURN_INTO) turn into null, 1
+24 | Q1bN1b2/2k2p1r/3p1np1/6Bp/4P3/8/PPP2PPP/R2QKB1R b KQ | a7-a8 (TURN_INTO) turn into QUEEN, 1
 24 | r3k1r1/p3p1bR/P2pN1P1/2p5/2B1P3/5N2/1PPP1PP1/R1BQK3 b Q | f1-c4 (ATTACK), 1
 24 | r1b2rk1/pp3pp1/2pb4/2p1p1p1/P1P1P3/Nn1P4/3q3P/3K2NR w | f2-d2 (QUIET_MOVE), 1
 24 | rn6/1p2p1Q1/1qkp1p2/p1pN4/4P3/2P5/PP1P1PPP/R1BR2K1 b | f4-d5 (QUIET_MOVE), 1
@@ -27312,7 +27312,7 @@
 24 | 1n2kbnr/1p3ppp/3p4/q1r5/8/N6P/P1P1PP1P/R1B1KB1R w KQk | d8-a5 (QUIET_MOVE), 1
 24 | Q5nr/2pk1p2/pp3p1B/5b2/2N4p/8/PPP1PPPP/R3KB1R b KQ | c1-h6 (ATTACK), 1
 24 | 2r1kbnr/2p2ppp/p1n5/3pP3/8/P3P3/1PPP3P/RNB1K2q w k | f3-h1 (QUIET_MOVE), 1
-24 | r1b1k1nr/pp1p1ppp/4n3/1q6/4p3/1P2PPPN/P6P/2q3KR w kq | d2-c1 (TURN_INTO_ATTACK) turn into null, 1
+24 | r1b1k1nr/pp1p1ppp/4n3/1q6/4p3/1P2PPPN/P6P/2q3KR w kq | d2-c1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 24 | N4br1/pp1kppp1/2np3p/8/8/3P1Q1P/PPP2P2/R1B1KB1R b KQ | d1-f3 (ATTACK), 1
 24 | r2q1rk1/pppb1p2/5n1p/8/P2n1P1P/1Pb5/2P1P1P1/4KBNR w K | a1-c3 (ATTACK), 1
 24 | r2q3r/p1p3kp/n2p1p1b/3Q4/6R1/2N5/1PP1PPPP/4KBNR b K | e4-g4 (QUIET_MOVE), 1
@@ -27516,8 +27516,8 @@
 24 | r1b1k2r/p1qp1Q1p/p1p4p/4N3/4P3/2N5/PPP2PPP/R3K2R b KQkq | f3-f7 (ATTACK), 1
 24 | r1qk1b1r/p1p2N1p/p2p1N2/3p4/3Q3p/2P5/PP3PPP/2R1K2R b K | g5-f7 (ATTACK), 1
 24 | 5rk1/1pp1bppp/r1np4/8/4PPn1/PP6/1B1PN2P/RN1K3q w | f3-h1 (ATTACK), 1
-24 | B3Q3/2N3bk/5p2/p2p4/1p1P2pp/4BN2/PPP2PPP/2RQ1RK1 b | e7-e8 (TURN_INTO) turn into null, 1
-24 | Q4bnr/p2p4/P3ppQp/2k5/4P3/1PN5/2P2PPP/2KR1BNR b | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+24 | B3Q3/2N3bk/5p2/p2p4/1p1P2pp/4BN2/PPP2PPP/2RQ1RK1 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
+24 | Q4bnr/p2p4/P3ppQp/2k5/4P3/1PN5/2P2PPP/2KR1BNR b | b7-a8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 24 | 2B2b2/1p2k2r/1Npp1p2/p5pP/3BP3/5N2/PPP2PP1/R2Q1RK1 b | g4-h5 (ATTACK), 1
 24 | r1b1k1nr/pppp1ppp/4p3/8/q7/1n4PP/P3P2R/2BK1BN1 w kq | a1-b3 (ATTACK), 1
 24 | Q4bnr/p1pkpppp/B7/8/8/2N5/bPP2PPP/R1B1K1NR b KQ | f1-a6 (ATTACK), 1
@@ -27621,7 +27621,7 @@
 24 | r1b2rk1/ppBp1ppn/2n1p3/8/1b1PP3/1K6/P1P4P/RN4Nq w | g2-h1 (ATTACK), 1
 24 | r1b1k2r/1pp2ppp/p1n5/3n4/P7/N1q1P2P/2P1KPP1/2B2BR1 w kq | e7-d5 (ATTACK), 1
 24 | 3qkr2/prpn1p2/3b3Q/1B2p3/8/2N2N2/PPPP2PP/R1B1K2R b KQ | g7-h6 (QUIET_MOVE), 108
-24 | rnb2Q2/8/pkp1pN1Q/1p6/8/1N6/PPPP1PPP/R1B1KB1R b KQ | f7-f8 (TURN_INTO) turn into null, 1
+24 | rnb2Q2/8/pkp1pN1Q/1p6/8/1N6/PPPP1PPP/R1B1KB1R b KQ | f7-f8 (TURN_INTO) turn into QUEEN, 1
 24 | r3kb1r/pp1n1ppp/2p5/4p1q1/8/1P1P4/P3PP1P/R2QKB1R w KQkq | h4-g5 (ATTACK), 1
 24 | r2qk2r/p1p2ppp/p4n2/3p4/1b3Pb1/8/PN1P2PP/n1BK3R w kq | c8-g4 (QUIET_MOVE), 1
 24 | 8/1B1k1R2/4pnpr/2pp2Np/1P6/2N1P2P/1PPP1PP1/2BQ1RK1 b | f8-f7 (ATTACK), 1
@@ -27664,7 +27664,7 @@
 24 | rnb1k2r/1ppp1ppp/1p6/1R6/5p2/q2P4/P1PKPn1P/5BN1 w kq | a7-b6 (ATTACK), 1
 24 | r2qk2r/p2ppp1p/R1p4b/8/3PP1Q1/2N5/1PP2PPP/4K1NR b Kq | d1-g4 (QUIET_MOVE), 1
 24 | r4rk1/ppp2ppp/1n6/4b3/4P2q/P1P5/1P1P2PP/RNB1K2n w | d8-h4 (QUIET_MOVE), 1
-24 | 2rq1rk1/pp3ppp/2p5/1nbp1b2/2P4P/PP3P2/8/RNK2q1n w | f2-f1 (TURN_INTO) turn into null, 1
+24 | 2rq1rk1/pp3ppp/2p5/1nbp1b2/2P4P/PP3P2/8/RNK2q1n w | f2-f1 (TURN_INTO) turn into QUEEN, 1
 24 | rn1q4/1p1kp1Q1/3p1p2/p1p5/4P3/2PN4/PP1P1PPP/R1B1K2R b KQ | g8-g7 (ATTACK), 1
 24 | 2r1kb1r/ppp1pppp/4b2n/P7/2nq4/R2P4/3KBP1P/1N5q w k | e5-c4 (ATTACK), 1
 24 | r1b1kbnr/pppp1ppp/2n5/3Pp3/P7/2P1P1K1/7P/5BNq w kq | e4-h1 (ATTACK), 1
@@ -28088,7 +28088,7 @@
 23 | r1bQ2kB/8/2p4n/pp2PP1p/2P1B1P1/P4N1P/1P3P2/R3R1K1 b | d6-d8 (QUIET_MOVE), 1
 23 | r3k1n1/p1p2ppr/bp6/3pn2P/P7/3P1P2/2PK3P/bNB3q1 w q | d4-a1 (ATTACK), 1
 23 | rnb1k2r/pppp1ppp/8/4p3/8/P1KPPn2/1P5b/R1B1q3 w kq | h4-e1 (QUIET_MOVE), 1
-23 | r3k1nr/ppp2ppp/8/3p4/1n3Nb1/8/P2KPP1P/q1q2B1R w kq | c2-c1 (TURN_INTO) turn into null, 1
+23 | r3k1nr/ppp2ppp/8/3p4/1n3Nb1/8/P2KPP1P/q1q2B1R w kq | c2-c1 (TURN_INTO) turn into QUEEN, 1
 23 | 1rb4N/ppp1k1pp/8/3N4/1P6/4P3/1PPP1PPP/R1BQK2R b KQ | c3-d5 (ATTACK), 1
 23 | rnb1k1nr/pppp1ppp/4p3/8/5P2/B2PP3/P1P4P/2K3q1 w kq | h1-g1 (ATTACK), 1
 23 | 2b4r/rpkp1R1p/p1p2N2/8/8/P7/P1PPPPP1/R1BQKB2 b Q | e7-f7 (ATTACK), 1
@@ -28104,7 +28104,7 @@
 23 | Nn2k3/3p2Bp/p7/1pp5/6P1/3p4/PPP1PPP1/R2QKBNR b KQ | h3-g4 (ATTACK), 1
 23 | 2krr3/pp2bppp/2pp1p2/8/3Pb2P/4PN1R/5PP1/1q2KB2 w | b2-b1 (QUIET_MOVE), 1
 23 | r3k2r/p1p2ppp/2n1p3/8/P4Nn1/8/1PPKPb1P/RNB4b w | b8-c6 (QUIET_MOVE), 1
-23 | 1n1qkb1r/1pp1pppp/8/8/4bn2/5N2/3PPKPP/rq3B1R w k | b2-b1 (TURN_INTO) turn into null, 1
+23 | 1n1qkb1r/1pp1pppp/8/8/4bn2/5N2/3PPKPP/rq3B1R w k | b2-b1 (TURN_INTO) turn into QUEEN, 1
 23 | 3k1b2/p3n2B/N3P2p/1p1p2P1/8/8/PPPP1PP1/R1BQK1NR b KQ | h4-g5 (ATTACK), 1
 23 | r3kb2/ppp2pp1/4r3/4p3/P1P4P/3qP1PN/1P3P2/nN4KR w q | g6-e6 (ATTACK), 1
 23 | r1bqk2r/pp3ppp/2p5/8/Pb6/2nP2pP/4PP2/n3K1NR w kq | d7-c6 (ATTACK), 1
@@ -28136,7 +28136,7 @@
 23 | rnb1k2r/pp1p1ppp/2p5/P3P3/6B1/1PPK4/5nq1/RN4b1 w kq | h1-f2 (QUIET_MOVE), 1
 23 | 3r1r2/k1p5/P1p2bpp/2Pb1p2/3Pp3/R1B3PP/1P2BP2/4R1K1 w | g7-g6 (QUIET_MOVE), 2
 23 | 3k3r/1p3pQ1/3p3p/p1pNp3/4B3/P7/1PPP1PPP/R1B1K2R b KQ | g4-g7 (ATTACK), 1
-23 | 2b1kb1r/1pp1pppp/5n2/7P/r2n2P1/3P4/5P2/2qNKBNR w k | c2-c1 (TURN_INTO) turn into null, 1
+23 | 2b1kb1r/1pp1pppp/5n2/7P/r2n2P1/3P4/5P2/2qNKBNR w k | c2-c1 (TURN_INTO) turn into QUEEN, 1
 23 | r3kbnr/ppp2pp1/2np4/8/b1P5/B3PP1p/P6P/R3K1q1 w kq | h1-g1 (ATTACK), 1
 23 | r2qkb1r/ppp1pp1p/4b1p1/3p4/P1P3nP/2K5/1P2P3/n1B5 w kq | b3-a1 (ATTACK), 1
 23 | r1b1kb1r/ppp2ppp/2n1p3/3p4/P2P4/1PK1P3/2PB3q/1R6 w kq | b8-c6 (QUIET_MOVE), 1
@@ -28198,7 +28198,7 @@
 23 | 5k2/1BN1b1pr/4P2n/p2N1p1Q/8/7P/PPPP1PP1/R1B1K2R b KQ | d1-h5 (ATTACK), 1
 23 | r3kr2/pppn1ppp/4b3/8/7q/1P2P3/P1PP4/R2QKBNn w Qq | d8-h4 (ATTACK), 1
 23 | 2Q1k3/3np2p/p5pB/1pp5/4p3/2N5/PPP2PPP/R3KBNR b KQ | a8-c8 (ATTACK), 1
-23 | Q1bkn3/p1pp1p2/4p3/8/3P2P1/2N5/1PP1PPP1/R1BQKBN1 b Q | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+23 | Q1bkn3/p1pp1p2/4p3/8/3P2P1/2N5/1PP1PPP1/R1BQKBN1 b Q | b7-a8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 23 | r3k1nr/pbpp1ppp/p7/3Kp3/1b1P4/1P3PPP/P1n1q3/8 w kq | c8-b7 (QUIET_MOVE), 1
 23 | Q5nr/p2p2Q1/P3pp1p/2k5/4P3/1PN5/2P2PPP/2KR1BNR b | g6-g7 (ATTACK), 1
 23 | 3r4/2pkp1p1/3p1pNn/2P5/p1P1P2N/4B2P/PP3PP1/3RR1K1 b | f1-e1 (QUIET_MOVE), 1
@@ -28794,7 +28794,7 @@
 23 | 7r/p2bkppp/2n5/1B2p2Q/7R/P3P3/2PP1PPP/2B1K1NR b K | d1-h5 (QUIET_MOVE), 1
 23 | r2qk2r/ppp2ppp/8/4p3/1bpnb3/8/PP3PP1/R1BK1n2 w kq | f5-e4 (ATTACK), 1
 23 | r2q1b2/1pp1pkp1/2n5/1p1p4/3P2n1/2P5/P3PP1r/RN1QKB2 w Q | e8-f7 (ATTACK), 1
-23 | 2Q1k2r/3p2pp/3Bpp1n/8/4N3/r4N2/P1P1BPPP/R2QK2R b KQ | c7-c8 (TURN_INTO) turn into null, 1
+23 | 2Q1k2r/3p2pp/3Bpp1n/8/4N3/r4N2/P1P1BPPP/R2QK2R b KQ | c7-c8 (TURN_INTO) turn into QUEEN, 1
 23 | 2Q2B2/5p1p/pppp2k1/8/8/P1N2N2/1PP1PPPP/R2QKB1R b KQ | a8-c8 (ATTACK), 1
 23 | r1b1k2r/pppp1ppp/4p3/8/1b1nn1P1/8/2P2P1P/2K2BNR w kq | f6-e4 (ATTACK), 1
 23 | r3kb1r/ppp2ppp/3p4/3P4/5pnq/2N5/PBb1P1K1/R5N1 w kq | h2-g4 (QUIET_MOVE), 1
@@ -28858,7 +28858,7 @@
 23 | 1Q1k1bnr/p5pp/3pp3/5p2/8/4PN2/PP1P1PPP/R1B1K2R b KQ | a8-b8 (ATTACK), 1
 23 | 4k1nr/7p/2pb1pp1/p2pp3/N5R1/3PPN2/2P2PPP/3QR1K1 b k | c3-a4 (QUIET_MOVE), 1
 23 | 2bqkb1r/2ppp3/5p1p/2P5/4P2N/8/PPP2PPP/R2Q1RK1 b k | f3-h4 (ATTACK), 1
-23 | r2qkb1r/1pp1ppp1/4b3/8/5p1P/p3n3/P1n1P1B1/1K1q2NR w kq | d2-d1 (TURN_INTO) turn into null, 1
+23 | r2qkb1r/1pp1ppp1/4b3/8/5p1P/p3n3/P1n1P1B1/1K1q2NR w kq | d2-d1 (TURN_INTO) turn into QUEEN, 1
 23 | r1b1k3/pppp1pp1/5q2/8/PPPn1pP1/2KP3N/4P1P1/1N3r2 w q | d8-f6 (QUIET_MOVE), 1
 23 | R6r/1pk1nPpp/2p5/2P1B3/1P4Q1/2N5/1PP2PPP/4KBNR b K | f4-e5 (ATTACK), 1
 23 | 3k1b2/2pnpp1r/pp3np1/8/3B3p/2N4P/PPP2PP1/3R1RK1 b | e3-d4 (QUIET_MOVE), 1
@@ -28868,7 +28868,7 @@
 23 | r1b2rk1/ppp2ppp/2n1p2P/8/2pP1P2/1P2P1n1/PKP5/4q3 w | d5-c4 (ATTACK), 1
 23 | r1bqkbnr/pppp1ppp/8/4P3/8/P1N5/1P2K3/n1B2B1r w kq | c2-a1 (ATTACK), 1
 23 | 3R1b1Q/R4p2/2p1p1k1/6pp/3P4/2N5/1PP1PPPP/2B1KBNR b K | e5-h8 (ATTACK), 1
-23 | r4rk1/p1p2ppp/1p1b1n2/3p4/6q1/4P2P/P4P2/1Rnq1KNR w | d2-d1 (TURN_INTO) turn into null, 1
+23 | r4rk1/p1p2ppp/1p1b1n2/3p4/6q1/4P2P/P4P2/1Rnq1KNR w | d2-d1 (TURN_INTO) turn into QUEEN, 1
 23 | 6nr/3kp1Q1/1p5p/p4p2/2p5/4P1N1/PPPP1PPP/R1B1K2R b KQ | f8-g7 (ATTACK), 1
 23 | rn3rk1/ppp2ppp/5n2/8/3P3P/8/PP1Q1P1P/RN1K1B1q w | d5-h1 (ATTACK), 1
 23 | 1n1kbQ2/ppN5/4p2p/5pp1/8/8/PPP2PPP/R1B1KBNR b KQ | a8-c7 (ATTACK), 1
@@ -28923,7 +28923,7 @@
 23 | r1bq1rk1/pppp1pp1/7p/6N1/7P/N5n1/PP2P1P1/R1K2B2 w | h7-h6 (QUIET_MOVE), 1
 23 | 3r4/2p1p1p1/2PpkpNn/8/p1P1P2N/4B2P/PP3PP1/3RR1K1 b | c5-c6 (QUIET_MOVE), 1
 23 | 2rr1k2/2b2pp1/p2p3p/1p1p3n/1P1B4/P1P1R1Pb/2B2P2/3R2K1 w | d7-h3 (ATTACK), 7
-23 | r3kbnr/1p3ppp/8/1p2pb2/3P1P1P/2q3P1/2n1P1KR/1q3B2 w kq | a2-b1 (TURN_INTO_ATTACK) turn into null, 1
+23 | r3kbnr/1p3ppp/8/1p2pb2/3P1P1P/2q3P1/2n1P1KR/1q3B2 w kq | a2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 23 | 2r4r/3kp3/2Np4/pp1Pb2p/8/4PQ1P/PPP2PP1/R1B2RK1 b | d1-f3 (QUIET_MOVE), 1
 23 | rn3bnB/pp2pp1Q/1k6/2p3N1/8/8/PPP2PPP/R3KB1R b KQ | e4-h7 (ATTACK), 1
 23 | rnQ5/1p1p1pNp/k7/p1B5/4P3/2N4P/PPP2PP1/R3KB1R b KQ e3 | e2-e4 (LONG_MOVE), 1
@@ -29105,7 +29105,7 @@
 23 | r3kb1r/ppp1pppp/6P1/1Pn5/P1P2n1P/5P2/3KP3/6qb w kq | f1-g1 (ATTACK), 1
 23 | r1bk2nr/pp2bp1p/8/8/3P4/2P1B2p/PP2BPPP/R3K2R w KQ | h4-h3 (QUIET_MOVE), 4
 23 | r1b1r3/pp1p1pkp/2p2q1n/8/5P2/8/P1PPB1PP/3RK1NR w | d8-f6 (QUIET_MOVE), 1
-23 | 1BbQ3k/1p1pq1pp/8/5p2/4P3/2N5/RPP1NPPP/3QKB1R b K | c7-d8 (TURN_INTO_ATTACK) turn into null, 1
+23 | 1BbQ3k/1p1pq1pp/8/5p2/4P3/2N5/RPP1NPPP/3QKB1R b K | c7-d8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 23 | 1n4nN/rpk3N1/p1p4p/8/3p4/P3P2Q/P4PPP/R1B1KB1R b KQ | f7-h8 (ATTACK), 1
 23 | 5b2/p1Nkn1p1/7p/2pn4/2P5/5B2/PP1PNPPP/R1BQK2R b KQ | b5-c7 (ATTACK), 1
 23 | 2b1kb1r/1pppqppp/5n2/1P2p2P/3n4/5P1R/1K1PP1P1/6r1 w k | d8-e7 (QUIET_MOVE), 1
@@ -29172,7 +29172,7 @@
 23 | r1b2k2/1ppn1p1Q/5N2/p2P2B1/3P4/8/PPP2PPP/R3KB1R b KQ | h5-h7 (ATTACK), 1
 23 | r1b1r1k1/pp1p1ppp/3bp3/2p5/2P4q/P3P3/R3KPPP/6R1 w | d8-h4 (QUIET_MOVE), 1
 23 | 2kr3r/ppp2p1p/3b2p1/3b2P1/1P2p2P/2P5/Pn1P4/RN3KN1 w | d3-b2 (ATTACK), 1
-23 | Q3k3/5p1p/5B1n/1pppN3/8/2NP4/PPP2PPP/2RQKB1R b K | a7-a8 (TURN_INTO) turn into null, 1
+23 | Q3k3/5p1p/5B1n/1pppN3/8/2NP4/PPP2PPP/2RQKB1R b K | a7-a8 (TURN_INTO) turn into QUEEN, 1
 23 | 1N4nr/1p3kp1/4B3/p1p5/5N1p/P7/P1PP1PPP/R1BQR1K1 b | c4-e6 (ATTACK), 1
 23 | Q4b2/6pr/2pppk2/5p1p/n7/2P1PN1P/1PPB1PP1/3R1RK1 b | b7-a8 (QUIET_MOVE), 1
 23 | 2r1k3/R2p1ppr/2p1pn2/7p/3PPB2/2N2Q1P/1PP2PP1/5RK1 b | h2-h3 (QUIET_MOVE), 1
@@ -29233,7 +29233,7 @@
 23 | 2bqk2r/rppp1pp1/4p3/8/2KP4/b6p/P1P1P1nP/R4B1n w k | a8-a7 (ATTACK), 1
 23 | 2bq2k1/1p1p2pp/2p1p3/4r3/PbP4P/8/RP1PPrn1/2BK3R w | f8-f2 (ATTACK), 1
 23 | r2qkbnr/p2ppppp/8/2p1n3/p1P5/3PP2N/4KP2/1bB5 w kq | g4-e5 (QUIET_MOVE), 1
-23 | r1bQ1k2/1p6/p1p2n2/2PpB3/8/2N5/PPP2PPP/R3KBNR b KQ | d7-d8 (TURN_INTO) turn into null, 1
+23 | r1bQ1k2/1p6/p1p2n2/2PpB3/8/2N5/PPP2PPP/R3KBNR b KQ | d7-d8 (TURN_INTO) turn into QUEEN, 1
 23 | 3k4/p2n3r/3Q1npp/1N2p3/8/2N3P1/PPP1PPBP/R1B1K2R b KQ | d5-d6 (ATTACK), 1
 23 | r4rk1/ppp2ppp/8/4p2n/1n6/N2P2Pb/PP3P1P/R2K3R w | f6-h5 (ATTACK), 1
 23 | 2bk2nr/2ppp2p/n7/p7/4Pb2/2N2Q2/1PPP1PPP/2B1K2R b K | d1-f3 (QUIET_MOVE), 1
@@ -29372,7 +29372,7 @@
 23 | rn2k2r/2p2p1p/pp2p1p1/4N3/4N1R1/8/PPP2PP1/R2QKB2 b Qkq | g3-g4 (ATTACK), 1
 23 | r1b1kb2/p1N2pp1/4p3/2p1N2p/6n1/8/PPP2PPP/R2Q1RK1 b q | b5-c7 (ATTACK), 1
 23 | 3k1bnr/2p1pN2/p2p4/7p/8/2N1P3/PPPP1PPP/R1B1K2R b KQ | g5-f7 (ATTACK), 1
-23 | r2qkbnr/1pp1pppp/2n5/8/4PP2/3P1QP1/2P4P/qq3K2 w kq | a2-b1 (TURN_INTO_ATTACK) turn into null, 1
+23 | r2qkbnr/1pp1pppp/2n5/8/4PP2/3P1QP1/2P4P/qq3K2 w kq | a2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 23 | Q1nk1b1r/p1p3p1/7p/5p2/1p6/2N1P3/PPPB1PPP/2R1R1K1 b | c6-a8 (ATTACK), 1
 23 | NN4nB/p3kp2/3p4/1p5p/4P3/1P6/P1PP1PPP/R2QKB1R b KQ | c7-a8 (ATTACK), 1
 23 | rn2kb1r/2pp1ppp/8/4p3/1p6/P2P1b1P/2PKP2q/RNB5 w kq | h1-h2 (QUIET_MOVE), 1
@@ -29710,7 +29710,7 @@
 23 | Nn4nr/6p1/p1pkQp1p/1p6/3N4/P7/2P1PPPP/2KR1B1R b | g4-e6 (QUIET_MOVE), 1
 23 | r1b1k2r/ppp2p1p/2nbp2p/q7/8/5N2/1PP1P2P/1R1K1B1R w kq | g7-h6 (ATTACK), 1
 23 | r3k2r/pbpp1ppp/3bp3/P6P/2P5/1nN1P3/3P3q/2BK1n2 w kq | g3-f1 (ATTACK), 1
-23 | 1Q2k2r/3p2pp/2q2p1B/p7/4P3/2N5/PPP2PPP/R2QK1NR b KQk | c7-b8 (TURN_INTO_ATTACK) turn into null, 1
+23 | 1Q2k2r/3p2pp/2q2p1B/p7/4P3/2N5/PPP2PPP/R2QK1NR b KQk | c7-b8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 23 | 3k1b2/2pnpppr/pp3n2/8/7p/2N1B2P/PPP2PP1/3R1RK1 b | d2-e3 (QUIET_MOVE), 1
 23 | rn2kb1r/ppp2ppp/8/3pP3/6n1/1PP1P3/P3K2P/RNq5 w kq | g1-c1 (ATTACK), 1
 23 | r3k1nr/1ppb1ppp/8/p3p3/2p1P2q/P1B5/1PP1P1K1/2b3N1 w kq | e3-c1 (ATTACK), 1
@@ -29823,7 +29823,7 @@
 22 | 2rq1rk1/ppp1nppp/2n5/3bp3/8/P2Pp1P1/1bP4P/6K1 w | c3-b2 (ATTACK), 1
 22 | r1b1k1nr/p2p1ppp/4p3/1qP5/3P1P2/5K2/2P3PP/2BQ3R w kq | b1-b5 (ATTACK), 1
 22 | r1b1k2r/pppp1ppp/2n5/8/Pb3P2/2n3K1/6PP/4qrN1 w kq | e7-e1 (QUIET_MOVE), 1
-22 | r1bqkb2/pp2ppp1/5n2/8/P1P1r3/4P2P/3P2P1/1qBK3n w q | a2-b1 (TURN_INTO_ATTACK) turn into null, 1
+22 | r1bqkb2/pp2ppp1/5n2/8/P1P1r3/4P2P/3P2P1/1qBK3n w q | a2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 22 | r2q1rk1/pppbpp1p/8/3p4/P7/2PPP2P/2P1KP2/5B1R w | c8-d7 (QUIET_MOVE), 1
 22 | 2b1k2r/1pp2p1p/1bn1p2p/1p1p4/1P1P3P/r1q5/P2n4/RK6 w k | e4-d2 (QUIET_MOVE), 1
 22 | r3k1nr/pppb1ppp/4p3/8/5q2/1Pb5/P3P1PP/4KB1R w kq | b4-c3 (ATTACK), 1
@@ -30001,7 +30001,7 @@
 22 | r1b2rk1/ppp2ppp/8/3np2P/8/P2P1PN1/5qPR/3K1B2 w | e3-f2 (QUIET_MOVE), 1
 22 | 2r1kbnr/ppp1pppp/8/8/5P2/1n1P3N/4K1PP/2q2B1R w k | a1-b3 (ATTACK), 1
 22 | r1b1k2r/pppp1ppp/4p3/8/8/2nPPP1P/4KP2/2q2BR1 w kq | d5-c3 (QUIET_MOVE), 1
-22 | r3kb1r/ppp1pp1p/7p/8/P3n2N/1n6/4P2P/1bq1KB1R w kq | c2-c1 (TURN_INTO) turn into null, 1
+22 | r3kb1r/ppp1pp1p/7p/8/P3n2N/1n6/4P2P/1bq1KB1R w kq | c2-c1 (TURN_INTO) turn into QUEEN, 1
 22 | r1b1kb1r/pp1p1ppp/4p3/1P4P1/P2p4/nK2P2q/5n1P/8 w kq | e4-f2 (ATTACK), 1
 22 | r1b1k1nr/pp3ppp/2np4/8/2p4P/1P2P1K1/2qB2P1/6NR w kq | a2-c2 (ATTACK), 1
 22 | 5kr1/3Bpp1p/p1P5/3P2p1/8/2N5/PPP2PPP/R2QK1NR b KQ | c5-c6 (QUIET_MOVE), 1
@@ -30027,7 +30027,7 @@
 22 | r3kb1r/ppp2ppp/2n5/3P4/7P/PPP1n3/1B3q2/RNK5 w kq | g4-e3 (ATTACK), 1
 22 | r1bq1rk1/ppp2p1p/2n4p/3p4/P3P2P/4qP2/4n3/4KBb1 w | g3-e2 (ATTACK), 1
 22 | 2n3n1/3k4/4N3/1ppPB3/p6N/P7/P1P1PPPP/R2QKB1R b KQ | c7-e6 (QUIET_MOVE), 1
-22 | 2QQ4/r4pk1/2p1p2p/pp5p/4P3/R1N5/1PP2PPP/4KB1R b K | d7-d8 (TURN_INTO) turn into null, 1
+22 | 2QQ4/r4pk1/2p1p2p/pp5p/4P3/R1N5/1PP2PPP/4KB1R b K | d7-d8 (TURN_INTO) turn into QUEEN, 1
 22 | 2bqkb1r/1pp1pppp/8/8/2pn4/3P1NP1/r2KBn1P/5R2 w k | c2-d4 (QUIET_MOVE), 1
 22 | r3k2r/p2Bpp1p/1p5Q/8/3Pp3/2N2N1P/PPP2P2/R3K2R b KQ | c6-d7 (ATTACK), 1
 22 | 3Q2k1/2R1n3/2p1PBp1/4Pp1p/8/P3NN1P/P3BPP1/R4RK1 b | d1-d8 (QUIET_MOVE), 1
@@ -30068,7 +30068,7 @@
 22 | r1b1k1nr/pppp1ppp/4p3/8/8/1n4PP/4PR2/2qK1BN1 w kq | b1-c1 (ATTACK), 1
 22 | r1b2b1r/pppp1kpp/n7/4n3/8/2P1P3/1P1KN2q/RNB5 w | b8-a6 (ATTACK), 1
 22 | r1b1k2r/1pp1qppp/p7/7n/1P6/8/P3P1P1/1RB1KBNn w kq | f6-h5 (ATTACK), 1
-22 | rnbqk2r/pp4pp/4p3/8/P4b1P/NKP2p2/1P3n2/R2r4 w kq | d2-d1 (TURN_INTO) turn into null, 1
+22 | rnbqk2r/pp4pp/4p3/8/P4b1P/NKP2p2/1P3n2/R2r4 w kq | d2-d1 (TURN_INTO) turn into ROOK, 1
 22 | r4rk1/p1pn1ppp/8/4p3/2P4P/P5n1/P1KPP1bR/2B2q2 w | b7-g2 (ATTACK), 1
 22 | r3kb1r/p1p2pp1/2p1p2p/8/3KPPn1/2N5/PPP3PP/q7 w kq | c1-a1 (ATTACK), 1
 22 | r1b1kb1r/pp2pppp/2p1n3/8/P4P1P/RPP3P1/3q2K1/8 w kq | d3-d2 (ATTACK), 1
@@ -30228,7 +30228,7 @@
 22 | 5br1/Rp2kpp1/1Np4p/2p2P2/8/2PB4/1P2QPPP/2B1K2R b K | d1-e2 (QUIET_MOVE), 1
 22 | 2rqk3/pppb1pp1/8/7n/1bP2P2/4PK1N/P1nN2PR/5B2 w | d6-b4 (ATTACK), 1
 22 | r3kb1r/ppp1pp1p/5n1p/8/P7/1np5/4P2P/1b1K1BNR w kq | c4-c3 (QUIET_MOVE), 1
-22 | 1Qb5/1p2k1Bp/3N4/p4p2/3P4/5N2/P1P1PPPP/R2QKB1R b KQ | c7-b8 (TURN_INTO_ATTACK) turn into null, 1
+22 | 1Qb5/1p2k1Bp/3N4/p4p2/3P4/5N2/P1P1PPPP/R2QKB1R b KQ | c7-b8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 22 | 2kr3r/ppp2ppp/5n2/4p3/1P6/4bP1P/P1n1K2P/1N3B1R w | g8-f6 (QUIET_MOVE), 1
 22 | 1r1k1bnN/ppp3p1/n7/7p/4Q3/2N5/PP3PPP/2R1KB1R b K | g6-h8 (ATTACK), 1
 22 | r3k2r/ppp2ppp/5n2/3p4/4b2P/1PP5/Pn1KBb2/RN6 w kq | h1-e4 (QUIET_MOVE), 1
@@ -30390,7 +30390,7 @@
 22 | 3qk2r/1bpp1p1p/4p2p/8/Pb4P1/Nn3N2/4PP1P/2rK3R w k | c2-c1 (QUIET_MOVE), 1
 22 | r5nr/pppb1kpp/8/4P3/1b1n3P/B7/P1PN1P2/R3K1q1 w Q | h1-g1 (ATTACK), 1
 22 | 2bk1Qnr/2ppp2p/n7/p7/4P3/2N5/1PPP1PPb/2B1K2R b K | f3-f8 (QUIET_MOVE), 1
-22 | 2R1kr2/3b1p2/3p4/3N3p/Q1B1P1p1/8/PB1PNPPP/R4RK1 b | c7-c8 (TURN_INTO) turn into null, 1
+22 | 2R1kr2/3b1p2/3p4/3N3p/Q1B1P1p1/8/PB1PNPPP/R4RK1 b | c7-c8 (TURN_INTO) turn into ROOK, 1
 22 | r3k1r1/ppp2p1p/3b1p2/8/7P/2NqP2P/PP1PNK2/R1B5 w q | b4-d6 (QUIET_MOVE), 1
 22 | 3k4/1B6/4NRpr/2pp3p/1P6/2N1P2P/1PPP1PP1/2BQ1RK1 b | g5-e6 (ATTACK), 1
 22 | 2bk4/4n3/p2p2N1/4p2Q/8/2P1P3/PP1P1PPP/R1B1KBNR b KQ | f8-g6 (QUIET_MOVE), 1
@@ -30408,7 +30408,7 @@
 22 | 2kr4/ppp2ppr/8/4p3/P7/bP1PnPP1/2nKN1Bq/6R1 w | e8-c8 (LONG_CASTLING), 1
 22 | 3k4/3bn3/p2p2N1/4p3/7Q/2P1P3/PP1P1PPP/R1B1KBNR b KQ | h5-h4 (QUIET_MOVE), 1
 22 | r2k3r/pp2b1pp/2n1p3/5nB1/P7/7P/4PP1P/RN2KB1R w KQ | c5-e7 (QUIET_MOVE), 1
-22 | 2bNnkR1/1p1p4/pN6/2p5/8/R7/1PPP1PPP/2BQKB1R b K | h7-g8 (TURN_INTO_ATTACK) turn into null, 1
+22 | 2bNnkR1/1p1p4/pN6/2p5/8/R7/1PPP1PPP/2BQKB1R b K | h7-g8 (TURN_INTO_ATTACK) turn into ROOK, 1
 22 | r3k2r/ppp2ppp/5n2/3p4/7P/1PP5/Pn2Bb2/RN1K3b w kq | d3-b2 (ATTACK), 1
 22 | N2k1b1r/1p2pBpp/3p4/R7/8/P3P2P/1PPP1P2/R1BQK3 b Q | g2-h3 (ATTACK), 1
 22 | r1b1k2r/ppp2ppp/3bp3/3p4/3P4/2PP1q2/PP1K4/R1B5 w kq | b4-d6 (QUIET_MOVE), 1
@@ -30525,7 +30525,7 @@
 22 | r1b1k1nr/ppp2ppp/2n5/8/5N2/P3PK2/P3BPPP/7q w kq | d1-h1 (ATTACK), 1
 22 | rnbq2k1/pp4pp/2p1p3/3p4/P2b2Pp/1P6/R1P3K1/1r4n1 w | g5-h4 (ATTACK), 1
 22 | rnb1k3/ppp2pp1/4pr2/8/4n1P1/2b2K2/P2q1P1P/5BNR w q | g6-f6 (QUIET_MOVE), 1
-22 | 3Q2nr/4pk2/5p1p/p5p1/P3P3/5N2/1PP2PPP/R1BQK2R b KQ | d7-d8 (TURN_INTO) turn into null, 1
+22 | 3Q2nr/4pk2/5p1p/p5p1/P3P3/5N2/1PP2PPP/R1BQK2R b KQ | d7-d8 (TURN_INTO) turn into QUEEN, 1
 22 | r3k1nr/ppp2ppp/P1n1b3/3qp3/Q4P2/6b1/3PP3/4KB2 w kq | h2-g3 (ATTACK), 1
 22 | 2r1r1k1/5p2/1bbp1BP1/1p5p/p2p1p1P/P1P3R1/1P3P2/3R2K1 w | f5-f4 (QUIET_MOVE), 1
 22 | rn1q2n1/3k4/pp1Pp1Q1/8/2N1P2p/P1NB3P/2P2P2/3R1RK1 b | c1-d1 (QUIET_MOVE), 1
@@ -30706,7 +30706,7 @@
 22 | 2r1r1k1/p1p2ppp/1pn5/4p3/2P5/bPP3P1/3B1P1n/5KNq w | g4-h2 (ATTACK), 1
 22 | r1b2rk1/pppp1ppp/8/P1b1p3/6q1/1K1P1n1n/1P2N3/2B5 w | h4-g4 (ATTACK), 1
 22 | N4Q2/1p2R2k/p4p1r/3P2pp/3P4/5N1P/PPP2PP1/R1B3K1 b | e1-e7 (ATTACK), 1
-22 | r2qk2r/ppp2ppp/2nb1n2/P7/6P1/3PP3/2NKbP2/1q6 w kq | b2-b1 (TURN_INTO) turn into null, 1
+22 | r2qk2r/ppp2ppp/2nb1n2/P7/6P1/3PP3/2NKbP2/1q6 w kq | b2-b1 (TURN_INTO) turn into QUEEN, 1
 22 | 2bqk2r/1ppp1ppp/5n2/8/4K1P1/3P3P/P1n5/RN3rNR w k | g8-f6 (QUIET_MOVE), 1
 22 | r1b1kbn1/ppp2pp1/2n5/4P3/P7/R1N1P3/1PP1Kr2/2B3q1 w q | h2-f2 (ATTACK), 1
 22 | r1b3k1/pppp1n1p/6p1/2K1r3/8/P2P4/1qP3PP/RN4NR w | e8-e5 (QUIET_MOVE), 1
@@ -30732,7 +30732,7 @@
 22 | 1rb3n1/1p1pk3/3Qpp1p/R1P5/6P1/2P2N2/2P1PPP1/4KB1R b K | d1-d6 (QUIET_MOVE), 1
 22 | r4rk1/1ppb1ppp/2n1pb2/1p1p4/1P1P4/P3q3/2P5/1R1KB3 w | g1-e3 (ATTACK), 1
 22 | 3qk2r/rp2ppb1/5n1p/8/2Pn4/7N/PP2KP1P/1bB2B1R w k | f3-d4 (ATTACK), 1
-22 | r3kb1r/ppp2ppp/2n5/3p3P/1q2n1b1/N7/P1P5/R1K1r3 w kq | e2-e1 (TURN_INTO) turn into null, 1
+22 | r3kb1r/ppp2ppp/2n5/3p3P/1q2n1b1/N7/P1P5/R1K1r3 w kq | e2-e1 (TURN_INTO) turn into ROOK, 1
 22 | r3kb1r/2N1ppp1/8/p3NB1p/8/8/1PPP1PPP/2BQK2R b Kkq | d5-c7 (ATTACK), 1
 22 | r1b1k1nr/1pppqppp/2n5/p3b3/2P3PP/8/P3B3/3Kb3 w kq | a1-e5 (ATTACK), 1
 22 | 2b1kb1r/1p2pppp/2p2n2/3r4/P6P/2P1P3/3N1PP1/2n2K1R w k | e5-d5 (QUIET_MOVE), 1
@@ -30838,7 +30838,7 @@
 22 | r5k1/ppp3p1/3bb2q/3p4/N6P/3P4/PP2PrB1/n2K2NR w | f8-f2 (ATTACK), 1
 22 | r3k1nr/p1p2qpp/1p6/3Pb3/8/2K5/PPPPn2P/R1B4R w kq | d4-e2 (ATTACK), 1
 22 | 3k4/p3n1bB/N3P2P/1p1p4/8/8/PPPP1PP1/R1BQK1NR b KQ | g5-h6 (ATTACK), 1
-22 | 2b2Q2/1p1k1p2/1p1p4/6Br/3P3p/5Q2/PPP2PPP/R3K1NR b KQ | e7-f8 (TURN_INTO_ATTACK) turn into null, 1
+22 | 2b2Q2/1p1k1p2/1p1p4/6Br/3P3p/5Q2/PPP2PPP/R3K1NR b KQ | e7-f8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 22 | k7/2pn4/B1N4p/p2Np1p1/8/4P2P/PPPP1P1P/R1B1K2R b KQ | b5-a6 (QUIET_MOVE), 1
 22 | 3bk3/3Q1pp1/2Bp4/p4p1p/8/2N1P3/PPP2PPP/R1B2RK1 b | c8-d7 (ATTACK), 1
 22 | r1b2rk1/ppnp1ppp/5n2/8/3P4/8/P1PKP1PP/5BNR w | e8-g8 (SHORT_CASTLING), 1
@@ -30953,7 +30953,7 @@
 22 | 2bqk1nr/1ppp1ppp/4p3/4P3/1bP2P2/3P2PN/8/3K1B1r w k | h2-h1 (QUIET_MOVE), 1
 22 | 3qr1k1/1pp2pp1/1p2p3/3p2P1/6n1/1n1PP3/1rb1K1PP/5B1R w | f6-g4 (QUIET_MOVE), 1
 22 | r1b4r/p1pkpQ1p/p2p4/8/3PN3/8/PPP2PPP/R3K2R b KQ | h5-f7 (QUIET_MOVE), 1
-22 | 4kb1r/1pp1pppp/2n2n2/8/3q2PP/3P1b2/2P1BP2/q1K3R1 w k | a2-a1 (TURN_INTO) turn into null, 1
+22 | 4kb1r/1pp1pppp/2n2n2/8/3q2PP/3P1b2/2P1BP2/q1K3R1 w k | a2-a1 (TURN_INTO) turn into QUEEN, 1
 22 | 5b1R/5kp1/4Qp2/p1pBP3/6P1/2N1PN2/PPP2PP1/R1B1K3 b Q | d6-e6 (ATTACK), 1
 22 | r1b1kr2/ppp2ppp/8/1P1pn3/2q5/PK1nP3/3P1b2/RN6 w q | c1-c4 (ATTACK), 1
 22 | 2bqk2r/1pp2ppp/3p1n2/4K3/6P1/3P3P/P1n5/RN3rNR w k | d7-d6 (QUIET_MOVE), 1
@@ -30974,7 +30974,7 @@
 22 | 2b3nr/BpN2pp1/3p1k2/1N5p/8/2P5/P3PPBP/R2QK2R b KQ | d4-b5 (QUIET_MOVE), 1
 22 | r1b1k1nr/pppp1ppp/4p3/8/8/4PP1P/q2PKP1R/5B2 w kq | a4-a2 (ATTACK), 1
 22 | 2rqk1n1/ppp3p1/4p1p1/6P1/b2n1PP1/P1PP4/7r/1N1K1B2 w | c2-d4 (QUIET_MOVE), 1
-22 | Q6r/2pN1p2/3k2pp/p7/8/8/PPPP1PPP/R1BQKB1R b KQ | b7-a8 (TURN_INTO_ATTACK) turn into null, 1
+22 | Q6r/2pN1p2/3k2pp/p7/8/8/PPPP1PPP/R1BQKB1R b KQ | b7-a8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 22 | r1b1k1nB/pppp1p1p/4p3/8/4N3/3K3P/PPP1P1q1/6NR w q | f1-g2 (ATTACK), 1
 22 | 1nb3n1/ppN1p2k/7b/5p1Q/8/8/PPP2KPP/R1B2BNR b | g5-h5 (QUIET_MOVE), 1
 22 | r1b1k2r/ppp1ppbp/8/7n/P7/3P1P2/1P1PK3/RNB3q1 w kq | f6-h5 (QUIET_MOVE), 1
@@ -31055,7 +31055,7 @@
 22 | r3k2r/ppp2ppp/8/3pb1q1/1P2n3/N1P1P3/P2P2K1/R1B5 w kq | d8-g5 (QUIET_MOVE), 1
 22 | 2q1kb2/p3pp1p/1ppp1p2/8/4Q3/2P1BN2/PP3PKP/R4R2 b | c1-e3 (QUIET_MOVE), 1
 22 | 4kb1r/1pp1pppp/2n2n2/8/3q2PP/3P1b2/p1P2P2/2K2BR1 w k | a3-a2 (QUIET_MOVE), 1
-22 | 2Q2k2/3Bp1rp/p4p2/3P2p1/8/2N5/PPP2PPP/R2QK1NR b KQ | c7-c8 (TURN_INTO) turn into null, 1
+22 | 2Q2k2/3Bp1rp/p4p2/3P2p1/8/2N5/PPP2PPP/R2QK1NR b KQ | c7-c8 (TURN_INTO) turn into QUEEN, 1
 22 | 2kr1b1r/ppp2ppp/8/3n4/5P1P/Pn4P1/3P1P1R/1NB2K2 w | a1-b3 (ATTACK), 1
 22 | r2qk2r/ppp2ppp/8/3p3n/P7/7P/P3KP1P/n1B2B1R w kq | c2-a1 (ATTACK), 1
 22 | r1b1k2r/1p1p1ppp/8/p1p5/P1P5/1P5P/5qP1/nN2KB1n w kq | f4-f2 (QUIET_MOVE), 1
@@ -31084,7 +31084,7 @@
 22 | rn1qkb1r/p2p1ppp/8/1p2p3/8/2P5/PP1P1P2/1bBK2n1 w kq | f3-g1 (ATTACK), 1
 22 | r4rk1/ppp2ppp/2n5/4b2n/2b5/P1NPPP2/4K1P1/5BN1 w | g3-e5 (QUIET_MOVE), 1
 22 | r3kQ2/2pqpp2/7B/p2p4/R7/2N4N/1PP1PPPP/4KB1R b Kq | g8-f8 (ATTACK), 1
-22 | 2rq1rk1/ppp1nppp/2n5/3bp3/P7/3P2PP/1bP5/4q1K1 w | e2-e1 (TURN_INTO) turn into null, 1
+22 | 2rq1rk1/ppp1nppp/2n5/3bp3/P7/3P2PP/1bP5/4q1K1 w | e2-e1 (TURN_INTO) turn into QUEEN, 1
 22 | 2N2kr1/3p1pp1/5n1p/B3Q3/8/P4N2/P1P1PPPP/R3KB1R b KQ | d6-c8 (ATTACK), 1
 22 | r4rk1/pbp2ppp/8/3q4/3n1P1P/2bP2PN/P7/2BQ1KR1 w | a1-c3 (QUIET_MOVE), 1
 22 | r4b1r/5N2/p3Q3/2kp3p/8/4P3/PPPP1PPP/R1B1K1NR b KQ | g5-f7 (QUIET_MOVE), 1
@@ -31133,7 +31133,7 @@
 22 | r2q1rk1/p1pp1ppp/1p3n2/5p2/2P1bn2/7B/P6P/b3K1N1 w | e5-a1 (ATTACK), 1
 22 | r3kb1r/p1p1pppp/p7/8/1npP4/4P3/P4PKP/RNq5 w kq | c6-b4 (ATTACK), 1
 22 | r1bq1rk1/pp1p1ppp/3bp3/7P/6P1/2nK1N2/5n2/2q2BR1 w | e4-f2 (ATTACK), 1
-22 | Nk3b1Q/3B4/p1pp4/4B3/1p1P2Q1/1N6/PPP2PPP/R4RK1 b | h7-h8 (TURN_INTO) turn into null, 1
+22 | Nk3b1Q/3B4/p1pp4/4B3/1p1P2Q1/1N6/PPP2PPP/R4RK1 b | h7-h8 (TURN_INTO) turn into QUEEN, 1
 22 | 1B3Nkr/7p/6p1/ppP2p2/6P1/8/PPP1PPP1/R1Q1KB1R b KQ | h3-g4 (ATTACK), 1
 22 | r1b2rk1/1ppp1ppp/p7/3P1n2/2Pq4/P2K4/1P4qP/3R2N1 w | h4-d4 (QUIET_MOVE), 1
 22 | r1b1k2r/pppp1ppp/3n4/8/4Nn2/q2P1P1P/2P1K3/3B1R2 w kq | g2-f4 (QUIET_MOVE), 1
@@ -31389,7 +31389,7 @@
 22 | 4kb1r/1pp1pppp/5n2/7P/r2n2b1/3P3R/5P2/2qNKBN1 w k | c8-g4 (ATTACK), 1
 22 | 4r1k1/6p1/2p1b2p/p2p2q1/P1PPn3/1p1QP2P/1P4P1/2R1B1K1 b | c3-c4 (QUIET_MOVE), 16
 22 | 2b5/ppBpk2N/7p/7N/3P4/P4P2/P1P2PPP/R2QKB1R b KQ | e5-c7 (ATTACK), 1
-22 | 1n3R1r/3k4/2p1p3/p2p4/3P3p/3BP3/PPPBN1PP/R4RK1 b | e7-f8 (TURN_INTO_ATTACK) turn into null, 1
+22 | 1n3R1r/3k4/2p1p3/p2p4/3P3p/3BP3/PPPBN1PP/R4RK1 b | e7-f8 (TURN_INTO_ATTACK) turn into ROOK, 1
 22 | r4rk1/1bR2pp1/p3p2p/n1P5/8/P3BN2/1b2BPPP/4K2R w K | c6-a5 (QUIET_MOVE), 1
 22 | 7r/2p4p/1pNk1Npn/p2Q4/8/P7/P1PP1PPP/R1B2RK1 b | f3-d5 (QUIET_MOVE), 1
 22 | r4rk1/p1pp1ppp/3bp3/8/p2P2P1/P1K4b/1P2Pq1P/4R3 w | f6-f2 (ATTACK), 1
@@ -31441,7 +31441,7 @@
 22 | rnbqk3/ppp2pp1/4p1r1/8/4n3/2b5/P3KPPP/5BNR w q | a1-c3 (ATTACK), 1
 22 | 3bQk2/5pp1/2Bp4/p4p1p/8/2N1P3/PPP2PPP/R1B2RK1 b | d7-e8 (QUIET_MOVE), 1
 22 | 6nQ/1p3k1p/3B2p1/B4pN1/2P5/P1N5/1P2PPPP/R3KB1R b KQ | f3-g5 (QUIET_MOVE), 1
-22 | NR1k1b1r/5B1p/p2p1P2/8/6Q1/2N5/P1PP1PPP/R1B2RK1 b | b7-b8 (TURN_INTO) turn into null, 1
+22 | NR1k1b1r/5B1p/p2p1P2/8/6Q1/2N5/P1PP1PPP/R1B2RK1 b | b7-b8 (TURN_INTO) turn into ROOK, 1
 22 | 2b1k1nr/1p1p1ppp/3pp3/5P2/8/P4KPP/2r1P3/q4BNR w k | d4-a1 (ATTACK), 1
 22 | 1r2k1nr/1p3ppp/p1n5/6b1/8/2PP3b/PP2Pq1P/RN1K4 w k | a8-b8 (ATTACK), 1
 22 | RBbq3k/1p1p2pp/8/5p2/4P3/2N5/1PP1NPPP/3QKB1R b K | a2-a8 (QUIET_MOVE), 1
@@ -31499,7 +31499,7 @@
 22 | 3B1k2/2NP4/p5p1/2p4p/4Pp2/3B1N1P/PPP2PP1/R2Q1RK1 b | f6-d8 (ATTACK), 1
 22 | r1b1k2r/1pp2ppp/1p1p4/4n3/1b1K4/3PP3/P1P4q/R1B2B2 w kq | d7-d6 (QUIET_MOVE), 1
 22 | Q3kr2/3p3p/1p3pp1/2pP4/5B2/5N2/PP2PPPP/R3KB1R b KQ | a6-a8 (ATTACK), 1
-22 | r1bq1rk1/1ppp1ppp/p7/3P1n2/2P5/P7/1P5P/3RK1Nq w | g2-h1 (TURN_INTO_ATTACK) turn into null, 1
+22 | r1bq1rk1/1ppp1ppp/p7/3P1n2/2P5/P7/1P5P/3RK1Nq w | g2-h1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 22 | r4r2/p1p2p1k/2Np1pp1/7p/4Q3/P7/1RPP1PPP/2B2RK1 b | f3-e4 (ATTACK), 1
 22 | r1bq1rk1/p1pp1ppp/1p3n2/1P2p2P/2K1P3/P4Pb1/8/3n4 w | h4-g3 (ATTACK), 1
 22 | 4r1k1/6p1/2p1b2p/p2p3q/P2Pn3/1pPQP2P/1P4P1/R3B1K1 b | d1-a1 (QUIET_MOVE), 11
@@ -31536,7 +31536,7 @@
 22 | r1b2rk1/pppp1ppp/8/7P/8/b3pPP1/Pq2N2n/nK6 w | f6-b2 (QUIET_MOVE), 1
 22 | r1b2rk1/1ppp1ppp/2P1p3/p7/Pn6/2qnbP2/6P1/K4B2 w | f6-c3 (ATTACK), 1
 22 | 2b1k1Q1/3p4/2pPp2p/p5N1/8/3B4/PPPP1PPP/R1B2RK1 b | h8-g8 (ATTACK), 1
-22 | 3qk1Q1/p2np3/2B4p/8/3N4/P1N4P/1PPP1P1P/R1BQ1RK1 b | h7-g8 (TURN_INTO_ATTACK) turn into null, 1
+22 | 3qk1Q1/p2np3/2B4p/8/3N4/P1N4P/1PPP1P1P/R1BQ1RK1 b | h7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 22 | r4rk1/ppp2ppp/1n6/4b3/4n3/P1PK4/1P1P2qP/RNB5 w | f2-g2 (ATTACK), 1
 22 | r3k2r/1pp2ppp/p1n2n2/8/P1b1p2P/b2q1P2/3P2P1/3K3R w kq | d8-d3 (QUIET_MOVE), 1
 22 | rnb5/2p4Q/ppk5/3N4/8/5N2/PPPP1PPP/R1BQK2R b KQ | c3-d5 (ATTACK), 1
@@ -31599,7 +31599,7 @@
 21 | rnb5/1p3Q1p/2pk3p/p7/4N3/8/PPP1BPPP/4K1NR b K | c3-e4 (ATTACK), 1
 21 | 2rqkr2/ppp3pp/5p2/2bp3P/P4P2/1Pp1n3/3K1n2/6N1 w | d4-c3 (ATTACK), 1
 21 | 1nbqk1r1/1ppppp1p/8/4b3/6PP/4P3/P1PP4/4K1NB w | h8-g8 (QUIET_MOVE), 1
-21 | 5bQ1/1r1k4/3p3p/p3p3/1N1P4/5N2/PPP2PPP/R1B2RK1 b | h7-g8 (TURN_INTO_ATTACK) turn into null, 1
+21 | 5bQ1/1r1k4/3p3p/p3p3/1N1P4/5N2/PPP2PPP/R1B2RK1 b | h7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 21 | 4N3/1Q6/p3p1N1/2pp3p/1k3p2/3P4/PPP1PKPP/R4B1R b | b8-b7 (ATTACK), 1
 21 | r1b1k2r/1pp2p1p/p3pn2/4q1p1/PPp4K/5P1P/6P1/6b1 w kq g6 | g7-g5 (LONG_MOVE), 1
 21 | 1Q2kb2/1p3pp1/p1p5/3p1n2/8/2N1P3/1PP2PPP/R1B2RK1 b | a7-b8 (ATTACK), 1
@@ -31670,7 +31670,7 @@
 21 | r1k4r/p1p2p2/4p2p/6p1/1p1PQ3/8/PPP2PKP/R1B2R2 b | e1-e4 (QUIET_MOVE), 1
 21 | r1b1k2r/pppp1ppp/3n4/8/4N3/q2P1P1n/2PK4/3B1R2 w kq | f4-h3 (ATTACK), 1
 21 | r3r3/4Rp2/p1kpbB1p/bp1p3P/8/PBP5/1P3P2/3R3K w | c8-e8 (QUIET_MOVE), 27
-21 | rn2k2r/pp3ppp/8/3p4/2P2qn1/PP1P3P/4P3/R2K2q1 w kq | g2-g1 (TURN_INTO) turn into null, 1
+21 | rn2k2r/pp3ppp/8/3p4/2P2qn1/PP1P3P/4P3/R2K2q1 w kq | g2-g1 (TURN_INTO) turn into QUEEN, 1
 21 | 2k3nQ/p6p/3pp1p1/5p2/8/4PN2/PP1P1PPP/R1B1K2R b KQ | g7-h8 (ATTACK), 1
 21 | 3r1r2/k1p5/P1p3pp/2Pb4/3PpP1b/R1B5/1P2BP2/4R1K1 w | f6-h4 (ATTACK), 2
 21 | r2q1rk1/pppb1p2/7p/4bP2/P6P/1n2n2K/4P3/5BNR w | c3-e5 (QUIET_MOVE), 1
@@ -31709,7 +31709,7 @@
 21 | rnb1k3/ppppqp1p/7p/3p4/2P5/N2KP2n/6rP/4b3 w q | d8-e7 (QUIET_MOVE), 1
 21 | r1b2b1B/1p1k1R2/p2p2pp/3p4/8/3B1N1P/P2Q1PP1/5RK1 b | f4-f7 (ATTACK), 1
 21 | r3kb1r/ppp1pppp/2n5/3p4/3P4/P1P5/1PK1q3/RN6 w kq | f1-e2 (ATTACK), 1
-21 | r1bqkb1r/pp1ppppp/8/1P2P3/7P/3P2N1/P7/2q1K3 w kq | c2-c1 (TURN_INTO) turn into null, 1
+21 | r1bqkb1r/pp1ppppp/8/1P2P3/7P/3P2N1/P7/2q1K3 w kq | c2-c1 (TURN_INTO) turn into QUEEN, 1
 21 | N2k3r/p2p1p1p/R5p1/1p4N1/6n1/7P/1P2PPP1/3QKB1R b K | a2-a6 (ATTACK), 1
 21 | r1bq1rk1/p1pp1p1p/1p3n1p/1P2p3/2K1P3/P4Pb1/8/3n4 w | g7-h6 (ATTACK), 1
 21 | 2b1kbnr/4p1p1/5pRp/p2Q4/8/4BN2/1PP2PPP/5RK1 b k | d1-d5 (ATTACK), 1
@@ -31761,7 +31761,7 @@
 21 | k7/pp4p1/2p2p2/5B1Q/3PP3/2N5/PPPP1P1P/R1B2RK1 b | d1-h5 (ATTACK), 1
 21 | rn2kbr1/pp2ppp1/2p5/8/8/NP3K2/P1PP3P/R1Bq4 w q | g1-d1 (ATTACK), 1
 21 | rn6/pQ1p1p1p/8/1pkN2p1/8/B2B1N2/2P2PPP/b3K2R b K | c1-a3 (QUIET_MOVE), 1
-21 | 1rbqr1k1/2pp1ppp/p4n2/8/P2P4/b5PP/3P1P2/1q3K2 w | b2-b1 (TURN_INTO) turn into null, 1
+21 | 1rbqr1k1/2pp1ppp/p4n2/8/P2P4/b5PP/3P1P2/1q3K2 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 21 | r2qkb1r/ppp1pppp/8/1P1p4/8/PKP1nn2/8/Bb6 w kq | d3-b1 (ATTACK), 1
 21 | 3k1b1r/4pBpp/1N1p4/R7/8/P3P2P/1PPP1P2/R1BQK3 b Q | a8-b6 (ATTACK), 1
 21 | 2B2knr/p1p2ppp/8/4p2q/8/P1P1b3/1P1rP2P/R1K4R w | d3-d2 (ATTACK), 1
@@ -31774,7 +31774,7 @@
 21 | r7/1b2kp1Q/2p4p/p1P1b1pq/8/3R3P/PPN2PP1/4R1K1 w | f6-e5 (ATTACK), 1
 21 | 3k2B1/4R1p1/2N3N1/1p6/p6p/P1p5/P1PP1PPP/R1BQ2K1 b | b8-c6 (QUIET_MOVE), 1
 21 | rnbk1Q2/4n3/2p5/pp3p2/8/2N5/PPP1PPPP/2K2B1R b | g7-f8 (ATTACK), 1
-21 | 2Q1kbnr/4ppp1/8/7p/4N3/p4N2/PB1P1PPP/R3K2R b KQk | c7-c8 (TURN_INTO) turn into null, 1
+21 | 2Q1kbnr/4ppp1/8/7p/4N3/p4N2/PB1P1PPP/R3K2R b KQk | c7-c8 (TURN_INTO) turn into QUEEN, 1
 21 | r1b2rk1/ppp2ppp/8/3p1n2/5P2/PPP3bq/4P3/RK6 w | h2-g3 (ATTACK), 1
 21 | rnb5/1p3Q1p/2p4p/p3k3/4N3/5N2/PPP1BPPP/4K2R b K | g1-f3 (QUIET_MOVE), 1
 21 | r1bq1b1r/p1pppkpp/p4n2/n7/8/7P/3P2P1/1N1K2N1 w | b3-a5 (ATTACK), 1
@@ -31787,7 +31787,7 @@
 21 | 6nr/pbN3p1/1p2P3/4k2p/8/4R3/1PPP1PPP/2B1K1NR b K | a3-e3 (QUIET_MOVE), 1
 21 | 4kbnr/4p2p/p7/6B1/6Q1/3PP3/PPP2PPP/2KR1B1R b | c4-g4 (ATTACK), 1
 21 | r4rk1/1ppb1ppp/2n1p3/1p1p2b1/1P1P4/P6R/2Pq4/3K4 w | f2-d2 (QUIET_MOVE), 1
-21 | 5RQ1/p7/N6r/4p2p/1p2k3/4BN2/PPP1PPPP/2K2B1R b | f7-g8 (TURN_INTO_ATTACK) turn into null, 1
+21 | 5RQ1/p7/N6r/4p2p/1p2k3/4BN2/PPP1PPPP/2K2B1R b | f7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 21 | rn6/1p2k2p/p1p3p1/3pN3/1P1N4/B7/P3P1PP/R4BKR b | c2-d4 (QUIET_MOVE), 1
 21 | r1b1r1k1/ppp2ppp/8/3p1n2/5P2/PPP3bq/K3P3/R7 w | f8-e8 (QUIET_MOVE), 1
 21 | 2r1k1nr/ppp2ppp/4b3/b2p4/8/5q2/2PPR2P/1NBK4 w k | b4-a5 (ATTACK), 1
@@ -31833,7 +31833,7 @@
 21 | 2Q1kb2/4pp2/8/2P5/3B3p/2N2N2/PPP1PPPP/R3KB1R b KQ | a6-c8 (QUIET_MOVE), 1
 21 | 2r3k1/5pn1/2b2Bp1/1p4Pp/p2p1b1P/P1PBr2R/8/3R2K1 w | e8-e3 (QUIET_MOVE), 1
 21 | rn2kbnr/1pp1pppp/2b5/8/5PP1/5K1P/3q4/4q1NR w kq | a4-c6 (QUIET_MOVE), 1
-21 | 4Q3/k4pB1/BN6/p1P1p3/7p/5N1P/PPP2PP1/R2QR1K1 b | e7-e8 (TURN_INTO) turn into null, 1
+21 | 4Q3/k4pB1/BN6/p1P1p3/7p/5N1P/PPP2PP1/R2QR1K1 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
 21 | 5b1r/4p1kp/3p1p1p/1Q1P4/3P4/P7/1PP2PPP/R3K1NR b KQ | b7-b5 (ATTACK), 1
 21 | 1r1k4/1p3B2/p5Nb/4p3/6R1/4PN2/PPPPQPP1/R1B1K3 b Q | e7-g6 (ATTACK), 1
 21 | rn2k3/2pp1p2/7B/1R1P2pB/p7/3N4/P1PP1PPP/4R1K1 b q | e2-h5 (ATTACK), 1
@@ -32061,7 +32061,7 @@
 21 | r3k2r/ppn2ppp/8/3q4/5pbP/1P6/P1K1P3/RN3B1R w kq | e6-c7 (ATTACK), 1
 21 | 1rbkQ3/p1p1R3/n2p1p2/1p1N4/4P3/P2Bp3/1PP3P1/R3K3 b Q | h5-e8 (QUIET_MOVE), 1
 21 | r1b2rk1/ppp2ppp/8/2bP4/4P3/7P/PB1P3q/R2NK3 w | f4-h2 (ATTACK), 1
-21 | N1k2bQ1/8/2B1p2p/2p1p3/8/8/PPPP1PPP/R1BQK2R b KQ | h7-g8 (TURN_INTO_ATTACK) turn into null, 1
+21 | N1k2bQ1/8/2B1p2p/2p1p3/8/8/PPPP1PPP/R1BQK2R b KQ | h7-g8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 21 | r1b1kr2/5p1p/n7/p2n2B1/3P4/5N2/1PP2PPP/3QKB1R b Kq | c1-g5 (ATTACK), 1
 21 | r3kbn1/ppp2pp1/8/4n1B1/8/2P2P2/PP1KP2r/RN5q w q | h3-h2 (ATTACK), 1
 21 | 4kbnr/2P1ppp1/8/7p/p3N3/5N2/PB1P1PPP/R3K2R b KQk | c6-c7 (QUIET_MOVE), 1
@@ -32192,7 +32192,7 @@
 21 | 2kr1b1r/ppp2ppp/8/3n4/5P1P/P2P2P1/5P1R/1Nn2K2 w | b3-c1 (ATTACK), 1
 21 | 3rr3/1kp5/2p2bp1/P1P2p1p/1P1Pp2P/2B3P1/4RPK1/3R4 w | d5-d8 (QUIET_MOVE), 3; c8-d8 (QUIET_MOVE), 1
 21 | r4rk1/ppp2ppp/3p4/P4b1P/2Pp4/1n2n3/1P2K1q1/6N1 w | g5-g2 (QUIET_MOVE), 1
-21 | 2rqkr2/ppp3pp/5p2/P1bp3P/5P2/1P1nn3/4K3/2q3N1 w | c2-c1 (TURN_INTO) turn into null, 1
+21 | 2rqkr2/ppp3pp/5p2/P1bp3P/5P2/1P1nn3/4K3/2q3N1 w | c2-c1 (TURN_INTO) turn into QUEEN, 1
 21 | r1bk2r1/p2p2pp/8/4QpB1/8/3P1N2/1P2PPPP/4KB1R b K | f4-g5 (QUIET_MOVE), 1
 21 | 2Q1kN2/r1p2p2/2N3p1/p2p4/8/P3P3/2PP1PPP/R1B2RK1 b | g4-c8 (ATTACK), 1
 21 | B1b1kb1Q/4p1p1/pp6/5p2/2N5/8/PPP2PPP/R1B2RK1 b | d2-c4 (QUIET_MOVE), 1
@@ -32450,7 +32450,7 @@
 21 | r1b1kb1r/ppp1pppp/5n2/q7/2P3P1/7P/1P1P1P2/4K3 w kq | a2-a5 (ATTACK), 1
 21 | r4rk1/p1pp1ppp/3bpn2/8/3P1nPP/8/1PqNK3/2B5 w | g2-f4 (ATTACK), 1
 21 | r2N4/2p2p1r/1k6/p4b1p/8/PQ1P3P/1P2PPP1/2R1KB1R b K | d1-b3 (QUIET_MOVE), 1
-21 | 2Q3B1/1p6/r2k2N1/p1p4Q/5N2/8/PPPP1PPP/R1B1K2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into null, 1
+21 | 2Q3B1/1p6/r2k2N1/p1p4Q/5N2/8/PPPP1PPP/R1B1K2R b KQ | d7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 21 | 2r2rk1/ppp2ppp/4bn2/1N1p4/P7/2KPPn2/2P4P/5q2 w | e8-g8 (SHORT_CASTLING), 1
 21 | 5k2/1p6/3Bp2n/p3NN2/3P4/3Q4/PPP1PPPP/R3KB1R b KQ | e7-f5 (ATTACK), 1
 21 | r1b1k2r/p1pp1ppp/p3pn2/8/P4b2/R7/1P1PK2q/1N6 w kq | h4-h2 (QUIET_MOVE), 1
@@ -32586,7 +32586,7 @@
 21 | 4N1nr/pb6/1p2P3/2k3pp/3P4/4RN2/1PP2PPP/2B1K2R b K d3 | d2-d4 (LONG_MOVE), 1
 21 | 1n1kQ1nN/rp4N1/p7/2p4p/5B2/P7/P4PPP/R3KB1R b KQ | e6-e8 (QUIET_MOVE), 1
 21 | Rn1N3r/2pkp2p/3p3n/1p6/3PP3/8/1PP2PPP/3QK2R b K | f7-d8 (ATTACK), 1
-21 | r1bqk2r/pp3ppp/2p5/8/Pb6/2nP3P/4P2R/n4Kb1 w kq | f2-g1 (TURN_INTO_ATTACK) turn into null, 1
+21 | r1bqk2r/pp3ppp/2p5/8/Pb6/2nP3P/4P2R/n4Kb1 w kq | f2-g1 (TURN_INTO_ATTACK) turn into BISHOP, 1
 21 | r1bq1rk1/pppp1ppp/7n/5p2/3nP3/N5P1/P7/b4K2 w | g4-h6 (ATTACK), 1
 21 | 2kr1b1r/ppp1pppp/8/8/5Pn1/7N/PP1PK1n1/1NB5 w | h4-g2 (ATTACK), 1
 21 | R3kb1r/3npp2/2B4p/2B3p1/8/2NP1N2/1qP2PP1/R2QK3 b Qk | a5-a8 (QUIET_MOVE), 1
@@ -32623,7 +32623,7 @@
 21 | 2b1k2r/1p1p1ppp/1pnp4/4pP2/3bn1P1/1PP5/3q1r2/3K4 w k | g5-d2 (ATTACK), 1
 21 | 2k5/1p1n4/n3p1NN/8/p7/4PP1P/PPPP3P/R1BQ1RK1 b | f7-h6 (ATTACK), 1
 21 | r1bk3r/p4p1p/4pN1p/R2p3Q/3N4/8/1PP2PPP/5RK1 b | d1-h5 (QUIET_MOVE), 1
-21 | 3R1k2/2N5/5B2/p5pp/2B1Pp2/5N1P/PPP2PP1/R2Q1RK1 b | d7-d8 (TURN_INTO) turn into null, 1
+21 | 3R1k2/2N5/5B2/p5pp/2B1Pp2/5N1P/PPP2PP1/R2Q1RK1 b | d7-d8 (TURN_INTO) turn into ROOK, 1
 21 | r7/p2kpp1p/4b2n/3P4/8/4P3/PPP2PPP/R2QK1NR b KQ | d4-d5 (QUIET_MOVE), 1
 21 | N1b4r/pp1k1ppp/8/1B6/1B1P4/8/2P2PPn/R2QK1NR b KQ | f1-b5 (QUIET_MOVE), 1
 21 | r3k1n1/1bpp1p2/4p3/n7/7r/P1bP4/2PNPP2/1qBQK3 w q | c8-b7 (ATTACK), 1
@@ -32757,7 +32757,7 @@
 21 | 2N2b2/1p5p/pB1pk3/8/8/3Q4/PPP1PPPP/R3KBNR b KQ | d1-d3 (QUIET_MOVE), 1
 21 | r2r2k1/2p1q1p1/p2b3p/P7/2b1p2P/P1P2nP1/1B1K4/R6n w | e5-f3 (QUIET_MOVE), 1
 21 | r1b2rk1/ppp2p1p/2n4p/3p4/P3P2q/3q1P2/4n3/4KBb1 w | d8-h4 (ATTACK), 1
-21 | r1bqkbn1/1pppppp1/2n5/8/2P1P3/P4P2/3P1K2/qr6 w q | a2-a1 (TURN_INTO) turn into null, 1
+21 | r1bqkbn1/1pppppp1/2n5/8/2P1P3/P4P2/3P1K2/qr6 w q | a2-a1 (TURN_INTO) turn into QUEEN, 1
 21 | 3b4/p2k4/N2p1p1Q/8/4B3/4PN2/PPPP1PPP/R1B1K2R b KQ | g1-f3 (QUIET_MOVE), 1
 21 | r1b2rk1/pp2np1p/2p1p1p1/2p5/2P1qb2/PP6/5PK1/6N1 w | b1-e4 (ATTACK), 1
 21 | 1k1n4/4b1p1/1p1p4/1N3B1p/8/4P3/PPPP1PPP/R1BR2K1 b | d4-b5 (QUIET_MOVE), 1
@@ -32818,7 +32818,7 @@
 21 | 2b1kb1r/1pp2ppp/4p3/4qr2/8/P4P1N/3BK1PP/1N4R1 w k | a1-e5 (QUIET_MOVE), 1
 21 | r1b1k2r/pppp1ppp/2n1p3/8/1PP2P2/2K4P/3N2P1/5n2 w kq | e3-f1 (ATTACK), 1
 21 | 2b5/r1kp4/2p5/pp2N1Q1/3P4/P2BP3/P1P2PPP/3R1RK1 b | a1-d1 (QUIET_MOVE), 1
-21 | r1b1k2r/pp1n1ppp/2p5/6N1/3Pp3/1P2b2P/P5B1/1q2K3 w kq | c2-b1 (TURN_INTO_ATTACK) turn into null, 1
+21 | r1b1k2r/pp1n1ppp/2p5/6N1/3Pp3/1P2b2P/P5B1/1q2K3 w kq | c2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 21 | 2b1kbnr/1pp1pppp/8/8/5P2/r1KP3P/PPP5/q5N1 w k | a7-a3 (ATTACK), 1
 21 | Nn2k3/6BQ/p2p4/1p6/2p3P1/8/PPP1PPP1/R3KBNR b KQ | d3-h7 (ATTACK), 1
 21 | r3k2r/ppp1ppbp/4b1p1/8/PPp3nP/7K/2n1P3/6q1 w kq | c1-g1 (QUIET_MOVE), 1
@@ -32874,7 +32874,7 @@
 21 | r4r1k/ppp1pp1p/3q4/3p4/b7/2PPP2P/2P2PR1/3K1B2 w | g8-h8 (QUIET_MOVE), 1
 21 | r3kb1r/ppp1pppp/2n5/3n4/P7/1PK1P1P1/3P1P1P/8 w kq | f6-d5 (ATTACK), 1
 21 | rn3rk1/pp3ppp/2pp4/5B2/5P1P/P7/P1PPKP2/7q w | c1-h1 (ATTACK), 1
-21 | rn1qkbnr/1pp1pppp/8/8/b5P1/7P/5PK1/4q1NR w kq | e2-e1 (TURN_INTO) turn into null, 1
+21 | rn1qkbnr/1pp1pppp/8/8/b5P1/7P/5PK1/4q1NR w kq | e2-e1 (TURN_INTO) turn into QUEEN, 1
 21 | 1k1n1b2/6p1/1p1p4/5B1p/3N4/4P3/PPPP1PPP/R1BR2K1 b | f1-d1 (QUIET_MOVE), 1
 21 | r1b1k2r/ppp2ppp/4p3/8/5b2/PPnq3P/K4n2/R1B5 w kq | b5-c3 (ATTACK), 1
 21 | 4kb2/4pp2/Q7/2P4p/3B4/2N2N2/PPP1PPPP/R3KB1R b KQ | h8-d4 (ATTACK), 1
@@ -32919,7 +32919,7 @@
 21 | r2k2r1/pp2bp1p/8/3n4/3P4/2P1B2b/PP2BP1P/3RR2K w | f6-d5 (QUIET_MOVE), 4
 21 | 3Q1k2/p1p2p2/1p1pp3/1B6/3P4/2N5/PPP1PP1P/R3K1NR b KQ | g5-d8 (ATTACK), 1
 21 | 2kr1b1r/p2p1ppp/8/2p1p3/P1P1n3/2N1P3/1P1P4/R2K2q1 w | g3-g1 (QUIET_MOVE), 1
-21 | r3kb1r/1pp1p1pp/1p2n2P/1b6/P1p5/3q3n/8/RNK2r2 w kq | f2-f1 (TURN_INTO) turn into null, 1
+21 | r3kb1r/1pp1p1pp/1p2n2P/1b6/P1p5/3q3n/8/RNK2r2 w kq | f2-f1 (TURN_INTO) turn into ROOK, 1
 21 | 1n6/1pQ5/r1kp1p2/p1pN4/4P3/2P5/PB1P1PPP/R2R2K1 b | g7-c7 (QUIET_MOVE), 1
 21 | 3rr3/1kp5/2p2bp1/P1P2p1p/1P1Pp2P/2B3PK/3R1P2/4R3 w | d5-d8 (QUIET_MOVE), 5
 21 | 2b1k3/1pqp1pp1/4nn2/1pp1Q3/1P2p2r/2P5/1P3PP1/5RK1 w | d8-c7 (QUIET_MOVE), 111
@@ -33056,7 +33056,7 @@
 21 | 2rq1rk1/2pp1p1p/p3p3/3n4/P2P4/5P1P/NPP2P2/2K4R w | f6-d5 (QUIET_MOVE), 1
 21 | 2r1k3/1pp2pp1/p1nbp3/8/1P1Pb3/P1KnP3/R2B2q1/1N6 w | g5-g2 (QUIET_MOVE), 1
 21 | B6k/8/1N3n2/p5Np/3Pp3/8/PPPP1PPP/R1BQ1RK1 b | c8-b6 (ATTACK), 1
-21 | r1q2r2/pp3ppk/3b1n2/1P1pp3/7P/NPPK1P2/6P1/3q4 w | d2-d1 (TURN_INTO) turn into null, 1
+21 | r1q2r2/pp3ppk/3b1n2/1P1pp3/7P/NPPK1P2/6P1/3q4 w | d2-d1 (TURN_INTO) turn into QUEEN, 1
 21 | 3r4/pR1kpp2/2p1b2n/2p5/4B1p1/2N1P3/1PP2PPP/4R1K1 b | b4-b7 (QUIET_MOVE), 1
 21 | 2b1kbnr/1ppp1ppp/8/4p1P1/P7/3P3P/3KP1r1/RN6 w k | g1-g2 (ATTACK), 1
 21 | 4rrk1/p1p2ppp/5n2/2bp4/8/5PPN/1P1N2BP/2BKq3 w | e7-e1 (ATTACK), 1
@@ -33136,7 +33136,7 @@
 20 | r1b1k1nr/1ppp1ppp/8/p3b3/2Pn3b/P2K2q1/4B3/8 w kq | g5-g3 (QUIET_MOVE), 1
 20 | r1b1k2r/pppp1ppp/8/5p2/1PP5/P2P4/3B4/bq2K3 w kq | c2-b1 (ATTACK), 1
 20 | 1R3bnr/6kp/p3N1p1/6B1/4P3/8/1PP1NPPP/3QK2R b K | c7-e6 (ATTACK), 1
-20 | B1Q2b1k/p3p3/8/1N4p1/1B4P1/8/PPP2P1P/R2QK1NR b KQ | c7-c8 (TURN_INTO) turn into null, 1
+20 | B1Q2b1k/p3p3/8/1N4p1/1B4P1/8/PPP2P1P/R2QK1NR b KQ | c7-c8 (TURN_INTO) turn into QUEEN, 1
 20 | r3k1nr/1ppb1ppp/8/p7/2p5/P4Nq1/1PP1P3/2b2K2 w kq | e5-g3 (QUIET_MOVE), 1
 20 | r1b2rk1/ppp2pp1/7p/4p2P/3n2P1/P2PK3/3N1P2/1R6 w | e6-e5 (QUIET_MOVE), 1
 20 | 5rk1/1pp1bppp/4bp2/3p1n2/3q1P2/PP6/8/R2KBB2 w | e3-d4 (ATTACK), 1
@@ -33517,7 +33517,7 @@
 20 | 8/2pp1p1p/1p3Q2/p2k4/3P4/P1N5/P1P2PPP/R3KB1R b KQ | e2-c3 (QUIET_MOVE), 1
 20 | 4n2N/R3b3/1N3k2/3ppp1Q/8/4P3/1PPP1PPP/2B1K2R b K | d1-h5 (ATTACK), 1
 20 | r2q4/ppp2kp1/5n1p/P2p4/2P5/P4PP1/3P3P/2B2bK1 w | d3-f1 (ATTACK), 1
-20 | r3k1nr/ppp2pp1/2n1b3/6p1/1b6/1P3P2/2P1P1B1/2K4r w kq | h2-h1 (TURN_INTO) turn into null, 1
+20 | r3k1nr/ppp2pp1/2n1b3/6p1/1b6/1P3P2/2P1P1B1/2K4r w kq | h2-h1 (TURN_INTO) turn into ROOK, 1
 20 | rnb2rk1/pp1p1ppp/8/2b1p2P/4p3/P2n3q/8/4K1R1 w | f2-d3 (ATTACK), 1
 20 | r1b2rk1/pppp1ppp/4p3/8/P1P5/5qP1/1P2N3/R2K4 w | e3-f3 (ATTACK), 1
 20 | 2N2kr1/3p1Qp1/7p/B3N3/8/P7/P1P1PPPP/R3KB1R b KQ | d5-f7 (ATTACK), 1
@@ -33548,7 +33548,7 @@
 20 | r1b2rk1/pppp1ppp/2n1p3/8/2K2n1P/P1PP4/q7/8 w | h2-a2 (ATTACK), 1
 20 | 6QN/rk6/4P2p/p1p5/N7/8/PPPP1PPP/R1B1K2R b KQ | e8-g8 (ATTACK), 1
 20 | 4rk2/1p3p1B/5Q2/2PN3p/p7/P3P2P/1PP2P1P/R4RK1 b | c3-d5 (QUIET_MOVE), 1
-20 | 1QQ2k2/N4ppr/4p2p/4p3/R7/5N2/1PP1PPP1/2B1KB2 b | b7-c8 (TURN_INTO_ATTACK) turn into null, 1
+20 | 1QQ2k2/N4ppr/4p2p/4p3/R7/5N2/1PP1PPP1/2B1KB2 b | b7-c8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 20 | 1r1r2k1/2p2pp1/4p2p/p3P3/1b1B4/1P4PP/P4PK1/3R1R2 w | a6-a5 (QUIET_MOVE), 1
 20 | r4rk1/b1p2ppp/5n2/4n3/8/N2B2KP/P1PP3P/2Bq4 w | h1-d1 (ATTACK), 1
 20 | r6r/ppp2kpp/3b1n2/4p3/P2PK3/N6q/1PP5/R1B5 w | g8-f6 (QUIET_MOVE), 1
@@ -33762,7 +33762,7 @@
 20 | r3kb1r/ppp1pppp/5n2/2P5/6bP/8/1P1P1P2/q3K3 w kq | a5-a1 (QUIET_MOVE), 1
 20 | 2rr4/2p2p1k/4p1p1/p3P2p/Pb1B3P/1P3KP1/5P2/3R1R2 w | g8-h7 (QUIET_MOVE), 3; h6-h5 (QUIET_MOVE), 1
 20 | 7Q/p1pp4/B3p1k1/6B1/1P1P4/2N4N/1PP2PPP/R3K2R b KQ | g1-h3 (ATTACK), 1
-20 | r1bqk3/pppp1pp1/3b4/5np1/8/PPP5/R4n2/1K2q3 w q | e2-e1 (TURN_INTO) turn into null, 1
+20 | r1bqk3/pppp1pp1/3b4/5np1/8/PPP5/R4n2/1K2q3 w q | e2-e1 (TURN_INTO) turn into QUEEN, 1
 20 | 8/3pkppN/R3p3/2p5/2BnP3/P7/1P1P1PP1/R1BQK3 b Q | a8-a6 (ATTACK), 1
 20 | r1b1kr2/p4ppp/2p5/2np4/7P/3P4/P3P1Pq/3K1BN1 w q | g3-h2 (ATTACK), 1
 20 | 3rk3/pR2pp2/2B1b2n/2p5/6p1/2N1P3/1PP2PPP/4R1K1 b | e4-c6 (ATTACK), 1
@@ -33961,7 +33961,7 @@
 20 | 4k1R1/8/2N1p1p1/3p1p1p/2p5/4PN2/1PP2PPP/2BQ1RK1 b | g7-g8 (ATTACK), 1
 20 | 3q1b1r/1pp1pkp1/2n4p/8/1P2P1nP/2P5/3P1P2/2r1K2b w | a1-c1 (ATTACK), 1
 20 | 1n1N4/3p2kp/p3p3/5P1Q/3P4/P4N2/1PP2PPP/3R1RK1 b | f7-d8 (ATTACK), 1
-20 | 4k2R/3p1p2/2p2B2/8/p2PP3/2N2N2/PPn2PP1/R2Q1RK1 b | h7-h8 (TURN_INTO) turn into null, 1
+20 | 4k2R/3p1p2/2p2B2/8/p2PP3/2N2N2/PPn2PP1/R2Q1RK1 b | h7-h8 (TURN_INTO) turn into ROOK, 1
 20 | r3kb1r/pP1b1ppp/7n/8/1p6/1P2K3/2P3nP/5qNR w kq | f4-g2 (ATTACK), 1
 20 | r3k1nr/p1p2ppp/p1n1b3/4p3/1Q3P2/6b1/3PP3/3K1q2 w kq | h1-f1 (ATTACK), 1
 20 | rn3r2/pp2bppk/2p5/2P1q3/P7/5P1N/1P5P/2B1K2b w | c7-e5 (QUIET_MOVE), 1
@@ -34560,7 +34560,7 @@
 19 | 4r1k1/6p1/2p4p/p2p2q1/P1PP4/1Q2P1nb/1P6/1R2B1K1 b | d3-b3 (ATTACK), 14
 19 | r1b2rk1/ppp1bppp/2p1p3/8/4PP2/8/P6P/q1K5 w | d4-a1 (ATTACK), 1
 19 | r1b3nr/n1p1bkpp/4p3/4p3/8/P4P1N/4K1PP/7q w | b1-h1 (ATTACK), 1
-19 | rnN1Q3/8/p3p1Q1/2k5/4P2p/P1NB3P/2P2P2/3R1RK1 b | e7-e8 (TURN_INTO) turn into null, 1
+19 | rnN1Q3/8/p3p1Q1/2k5/4P2p/P1NB3P/2P2P2/3R1RK1 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
 19 | 2k2b1r/R1p2p1p/7n/3QP3/8/1PN1P3/5PPP/4K1NR b K | d4-d5 (QUIET_MOVE), 1
 19 | rRk5/p1p4Q/3p4/2nN4/8/8/1PP1PPPP/4KBNR b K | b4-b8 (ATTACK), 1
 19 | 3k1b2/2pQ2p1/2P4p/5p2/3P4/3P4/PP3PPP/R1B2RK1 b | e6-d7 (QUIET_MOVE), 1
@@ -34992,7 +34992,7 @@
 19 | 6Q1/3k1B1p/1p6/3P1N2/3P1B2/5N2/PPP2PPP/R3K2R b KQ | g4-g8 (ATTACK), 1
 19 | r3k1nr/pp2nppp/8/8/P5b1/4Pq2/P2P4/R1B2K2 w kq | g3-f3 (ATTACK), 1
 19 | 2Qb2kr/7p/4p1pB/p7/2pPp3/8/1P3PPP/R3K2R b K | b8-c8 (ATTACK), 1
-19 | 3Q2Q1/k7/6Np/p1p5/N7/8/PPPP1PPP/R1B1K2R b KQ | d7-d8 (TURN_INTO) turn into null, 1
+19 | 3Q2Q1/k7/6Np/p1p5/N7/8/PPPP1PPP/R1B1K2R b KQ | d7-d8 (TURN_INTO) turn into QUEEN, 1
 19 | r2qk3/p1p2pp1/3b4/8/3n2nP/2NB2r1/PP3K2/R6R w q | e3-g4 (QUIET_MOVE), 1
 19 | 2N5/5kQ1/pp1p4/8/3B4/8/PPP1PPPP/R3KBNR b KQ | h7-g7 (ATTACK), 1
 19 | r3k2r/2p2pBp/p7/7P/1b2p1n1/8/P1P2qP1/R4K1R w kq | d2-f2 (ATTACK), 1
@@ -35020,7 +35020,7 @@
 19 | 1k3N2/1p2p2R/1n1p4/5P2/p7/8/PPPP1PP1/R1BQK3 b Q | g6-f8 (ATTACK), 1
 19 | Q7/6k1/1B2Pn2/p2N3p/2BP4/P7/1PP2PPP/R3K2R b KQ | c3-d5 (ATTACK), 1
 19 | r1b2rk1/pppp1ppp/4p3/8/2P1P3/PP6/5n2/bK6 w | e5-a1 (ATTACK), 1
-19 | rnb1k2r/pppp1ppp/8/8/6n1/2P4P/3P2q1/K4q2 w kq | f2-f1 (TURN_INTO) turn into null, 1
+19 | rnb1k2r/pppp1ppp/8/8/6n1/2P4P/3P2q1/K4q2 w kq | f2-f1 (TURN_INTO) turn into QUEEN, 1
 19 | 4k3/1R4p1/2N3N1/p7/7p/8/1PPPPPPP/2BQKB1R b K | e7-c6 (QUIET_MOVE), 1
 19 | 4r1k1/1p3r2/pq2bp1p/3p4/2pP3Q/2R1P2P/3B2P1/6K1 b | e1-h4 (QUIET_MOVE), 6
 19 | 6Q1/3k3p/3pp3/5p2/8/2N1P3/PPPP1PPP/R1B2RK1 b | h8-g8 (ATTACK), 1
@@ -35159,7 +35159,7 @@
 19 | 5bnr/3k4/1Npp4/6Bp/3P4/7P/PPP2PP1/3R1RK1 b | d5-b6 (QUIET_MOVE), 1
 19 | r4rk1/pp3ppp/1p6/2bp4/P3b3/2Pn1n2/4K3/RN6 w | e5-f3 (QUIET_MOVE), 1
 19 | r1b1kb1r/pp3ppp/4p3/8/P7/3K1P1P/1P1P2q1/7n w kq | g1-g2 (ATTACK), 1
-19 | rnb1k2r/pppp1ppp/2P5/8/PP4n1/3q4/K7/4q3 w kq | e2-e1 (TURN_INTO) turn into null, 1
+19 | rnb1k2r/pppp1ppp/2P5/8/PP4n1/3q4/K7/4q3 w kq | e2-e1 (TURN_INTO) turn into QUEEN, 1
 19 | 4kbn1/1p2ppp1/8/3pr3/P7/3qP3/3P1PP1/1RB1K2r w | h4-h1 (QUIET_MOVE), 1
 19 | r1b5/5p1p/pk1QpN2/2Rp1N2/8/8/1PP2PPP/4R1K1 b | f8-d6 (QUIET_MOVE), 1
 19 | rn2k2r/pbpp2pp/8/8/P2P1b2/RP1K1P2/6P1/1q6 w kq | c1-b1 (ATTACK), 1
@@ -35291,7 +35291,7 @@
 18 | k1b2b1Q/4p2p/p7/5p2/8/P3P3/1P3PPP/R1B1K2R b KQ | e5-h8 (ATTACK), 1
 18 | r1b1k2r/pppp1ppp/4p3/4n3/7P/b1P5/6q1/2K5 w kq | f8-a3 (ATTACK), 1
 18 | r3k1nr/ppp2p1p/8/8/1b6/3K1P1P/P1PP4/1q1b4 w kq | a1-b1 (ATTACK), 1
-18 | 5Q2/3k4/1B2p3/p6p/2B1P3/P1N3P1/P1P2PP1/2R1K2R b K | g7-f8 (TURN_INTO_ATTACK) turn into null, 1
+18 | 5Q2/3k4/1B2p3/p6p/2B1P3/P1N3P1/P1P2PP1/2R1K2R b K | g7-f8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 18 | r1b1k2r/pppp1pp1/5q2/7p/4P1K1/6PP/P7/5B2 w kq h6 | h7-h5 (LONG_MOVE), 1
 18 | 6Q1/3pk3/bpp1p3/8/3PN3/8/P1PB1PPP/3RK2R b K | e3-d4 (ATTACK), 1
 18 | Q7/p2pk3/b6b/1p3N2/7P/2N5/PPP2PP1/R4RK1 b | g3-f5 (QUIET_MOVE), 1
@@ -35323,7 +35323,7 @@
 18 | 8/1k2Q3/p7/1p4p1/8/4P3/PPPP1PPP/R1B1KB1R b KQ | c5-e7 (QUIET_MOVE), 1
 18 | r1b2rk1/ppp1bppp/2p1p3/8/4PP2/8/q1K4P/8 w | a1-a2 (ATTACK), 1
 18 | rn2k2r/pp3ppp/8/1pPpnb2/1Kq5/7P/P7/8 w kq | c1-c4 (QUIET_MOVE), 1
-18 | r3kb1r/p1p1pppp/p7/4q3/8/P7/5P1P/n1q3K1 w kq | c2-c1 (TURN_INTO) turn into null, 1
+18 | r3kb1r/p1p1pppp/p7/4q3/8/P7/5P1P/n1q3K1 w kq | c2-c1 (TURN_INTO) turn into QUEEN, 1
 18 | rn2k1nr/pb3ppp/4p3/1p1P3P/1b4K1/4P3/6q1/8 w kq | f2-g2 (QUIET_MOVE), 1
 18 | 2Q5/pR3pk1/3p2p1/5p1p/8/P7/2PP1PPP/2B2RK1 b | c7-c8 (ATTACK), 1
 18 | 2k2b1r/pp3ppp/8/3r4/2n2P2/P3p2P/1PP1K3/3q4 w | a1-d1 (QUIET_MOVE), 1
@@ -35421,7 +35421,7 @@
 18 | rn4k1/pp4pp/2p1p3/8/1P3Pn1/P1P5/4b2P/6KR w | f3-e2 (ATTACK), 1
 18 | 2kr1b1r/ppp1pppp/8/3nK3/8/4P1P1/3n1P1P/8 w | b3-d2 (ATTACK), 1
 18 | r1b1kr2/p4ppp/2p5/2np4/P6P/3P2P1/4P3/3K1q2 w q | g1-f1 (ATTACK), 1
-18 | 1k2R3/3Q4/np6/4NN2/8/P3PP1P/P1P4P/R1B2RK1 b | e7-e8 (TURN_INTO) turn into null, 1
+18 | 1k2R3/3Q4/np6/4NN2/8/P3PP1P/P1P4P/R1B2RK1 b | e7-e8 (TURN_INTO) turn into ROOK, 1
 18 | r1b1k2r/pppp1ppp/3b4/P2p4/6P1/4q1PK/8/8 w kq | b4-d6 (QUIET_MOVE), 1
 18 | r1b2rk1/pppp1ppp/4p3/P7/1PqN4/6P1/2K5/8 w | f1-c4 (ATTACK), 1
 18 | q4rk1/2p2ppp/1p2b3/3p4/8/N1PP4/1B2P1n1/3K2b1 w | f2-g1 (ATTACK), 1
@@ -35635,7 +35635,7 @@
 18 | 1nb1k2r/1p3ppp/1p2p3/8/r5Pb/1n1K4/1P2P3/5q2 w k | a8-a4 (ATTACK), 1
 18 | N4Q2/3kp3/2p2p2/8/p2P1N2/8/PP3PPP/R1B2RK1 b | g8-f8 (ATTACK), 1
 18 | 2k5/6R1/2N1p3/3pNp1Q/8/2p1P3/1PP2PPP/2B2RK1 b | g6-g7 (QUIET_MOVE), 1
-18 | 4Q2Q/pk6/3p3p/2pN3N/8/P7/1PP2PPP/R4RK1 b | e7-e8 (TURN_INTO) turn into null, 1
+18 | 4Q2Q/pk6/3p3p/2pN3N/8/P7/1PP2PPP/R4RK1 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
 18 | 7r/1kp5/3p1Rpp/4p3/4P2P/2PPB3/1P3PP1/R5K1 b | f7-f6 (ATTACK), 1
 18 | 2kr3r/p1p2ppp/2p5/8/2b1p3/1pq1P3/P3KP1R/8 w | e6-c4 (QUIET_MOVE), 1
 18 | 4k3/1pR1p1bp/6p1/4p3/4N2N/8/PPP2PPP/R5K1 b | c5-e4 (ATTACK), 1
@@ -35694,7 +35694,7 @@
 18 | 6n1/pbN1p1k1/1p1pN3/8/7Q/8/P1P2PPP/2R2RK1 b | d4-e6 (QUIET_MOVE), 1
 18 | 3k1b1r/1p2pppp/3p4/8/P2n3P/4r3/R1P4P/3K3R w | e2-d4 (ATTACK), 1
 18 | r4rk1/p2p1ppp/5n2/3bb3/P7/3P2PP/3KP3/6q1 w | b6-g1 (ATTACK), 1
-18 | 2kr3r/ppp2p1p/6p1/3b2P1/2nb3P/P5K1/8/1N3q2 w | f2-f1 (TURN_INTO) turn into null, 1
+18 | 2kr3r/ppp2p1p/6p1/3b2P1/2nb3P/P5K1/8/1N3q2 w | f2-f1 (TURN_INTO) turn into QUEEN, 1
 18 | r1b3k1/pp1p1pp1/7p/3P4/1K5b/P2P1r1P/1P6/5B2 w | e3-f3 (QUIET_MOVE), 1
 18 | N2Q4/4p3/2pk1p2/8/p2P1N2/8/PP3PPP/R1B2RK1 b | f8-d8 (QUIET_MOVE), 1
 18 | 2k2r2/p1pN1p2/5N2/1r6/8/2P5/PP1P2PP/R1B1K2R b KQ | e5-d7 (ATTACK), 108
@@ -36207,7 +36207,7 @@
 17 | 3r4/pp2b3/3k1p1p/3P1R2/2r5/2P1PK2/PP5P/3R4 w | h8-d8 (QUIET_MOVE), 1
 17 | 3k4/8/1nB5/p3N3/4N2P/1P2P3/P1P2PP1/R1B2RK1 b | f3-e5 (QUIET_MOVE), 1
 17 | 4r1k1/1p3r2/p4p1p/3p4/1BpP2bP/4Q3/6P1/2R3K1 b | g3-e3 (ATTACK), 2
-17 | 2r3k1/5p2/2b3p1/1p2BnPp/p6P/P3b3/7K/2r2R2 w | c2-c1 (TURN_INTO) turn into null, 1
+17 | 2r3k1/5p2/2b3p1/1p2BnPp/p6P/P3b3/7K/2r2R2 w | c2-c1 (TURN_INTO) turn into ROOK, 1
 17 | 8/3Qpp1p/p4k2/2P1P2p/R7/2P2N2/2P2PR1/4KB2 b | e4-e5 (QUIET_MOVE), 1
 17 | 2r3k1/5p2/3p2p1/1pb3p1/2p5/PpB4P/4rP2/5RK1 w | b6-c5 (QUIET_MOVE), 1
 17 | 3rr3/1pk2p1p/p5p1/3p3n/8/5b2/1BPb1P1P/5K2 w | a5-d2 (ATTACK), 1
@@ -36239,9 +36239,9 @@
 17 | 4Q3/8/8/p1k2N1p/3Q4/P3P2P/P2P1PP1/R1B2RK1 b | d8-d4 (QUIET_MOVE), 1
 17 | rn2k2r/ppp1bppp/8/8/PPPK2n1/4q3/8/8 w kq | a3-e3 (QUIET_MOVE), 1
 17 | 2k5/3b4/n1p5/pp6/5Q2/P7/1PP1PPPP/2K2B1R b | f6-f4 (ATTACK), 1
-17 | r1b2Bkr/6p1/2p4p/P2p4/5Pn1/2P5/2K1q3/R2q4 w | d2-d1 (TURN_INTO) turn into null, 1
+17 | r1b2Bkr/6p1/2p4p/P2p4/5Pn1/2P5/2K1q3/R2q4 w | d2-d1 (TURN_INTO) turn into QUEEN, 1
 17 | r1b1k2r/pppp1ppp/8/8/P1P1P3/8/3P4/3K3q w kq | h3-h1 (QUIET_MOVE), 1
-17 | 1k3Q1b/8/p1p1N3/8/4B3/8/PP1P1PPP/R1B2RK1 b | f7-f8 (TURN_INTO) turn into null, 1
+17 | 1k3Q1b/8/p1p1N3/8/4B3/8/PP1P1PPP/R1B2RK1 b | f7-f8 (TURN_INTO) turn into QUEEN, 1
 17 | r5nr/4k3/1R6/p4N2/2B2B1p/8/PPP2PP1/2KR4 b | e3-f5 (QUIET_MOVE), 1
 17 | r3k3/p1p2pp1/3b4/7P/3n2n1/8/PP1qr3/R2KR3 w q | g5-d2 (QUIET_MOVE), 1
 17 | 8/5pk1/4Rn1p/2Qp4/2b1p2p/4P2P/1B1P2PK/4q3 b | g1-h2 (QUIET_MOVE), 2; b6-e6 (ATTACK), 1
@@ -36282,7 +36282,7 @@
 17 | 6nr/5R1p/1p2N2k/6N1/8/8/1PP1PPPP/4KB1R b K | f3-g5 (ATTACK), 1
 17 | 4R3/3kQ3/6Np/3P1p2/1P6/2P2B2/2P2PPP/2B2RK1 b | e2-e7 (QUIET_MOVE), 1
 17 | 2b5/2Q1pk1p/p7/6N1/3r4/8/PPP2PPP/R3K2R b KQ | e4-g5 (QUIET_MOVE), 1
-17 | 3QQ3/8/2k5/p4N1p/8/P3P2P/P2P1PP1/R1B2RK1 b | d7-d8 (TURN_INTO) turn into null, 1
+17 | 3QQ3/8/2k5/p4N1p/8/P3P2P/P2P1PP1/R1B2RK1 b | d7-d8 (TURN_INTO) turn into QUEEN, 1
 17 | 8/p2Qppkp/8/2P4p/R3P3/2P2N2/2P2P1R/4KB2 b | c8-d7 (ATTACK), 1
 17 | 2k2b1r/ppp1pppp/8/n7/1r6/7b/P4K2/RN6 w | e6-h3 (ATTACK), 1
 17 | 6nr/6k1/1p1b1p1p/5N2/8/4BQ2/P1P2PPP/2R3K1 b | g3-f5 (QUIET_MOVE), 1
@@ -36402,7 +36402,7 @@
 17 | 6n1/4p3/4Nk2/5p2/1QB4N/8/PPP2PPP/R3K2R b KQ | a6-c4 (QUIET_MOVE), 1
 17 | 4r1k1/1p4r1/pB2bpq1/3p4/2pP2PQ/4P3/8/2R3K1 b | h3-g4 (ATTACK), 4
 17 | 2Q5/2p2ppk/4p2p/2P3q1/3P4/1r5P/1P1R1PP1/6K1 w | e7-g5 (QUIET_MOVE), 1
-17 | 7R/2k2N2/5N2/P7/3B4/8/P1PPP1PP/1R1QKB1R b K | h7-h8 (TURN_INTO) turn into null, 1
+17 | 7R/2k2N2/5N2/P7/3B4/8/P1PPP1PP/1R1QKB1R b K | h7-h8 (TURN_INTO) turn into ROOK, 1
 17 | 1rk5/p1Q5/3p4/2nN4/8/8/1PP1PPPP/4KBNR b K | h7-c7 (ATTACK), 1
 17 | 3r2r1/1p5p/3b1p1R/p1kP4/P3P3/2P2K2/1P5P/3R4 w | e7-d6 (QUIET_MOVE), 2
 17 | 2Q5/2p1qppk/4p2p/2P5/3P4/1r5P/1P3PP1/3R2K1 w | g8-h7 (QUIET_MOVE), 1
@@ -36443,7 +36443,7 @@
 17 | 1R2Q3/k7/1P1p1N2/6B1/3PP3/P7/P4PPP/4KB1R b K | b5-b6 (QUIET_MOVE), 1
 17 | 4kbnr/2pp1ppp/1p2P3/1P5K/5p1P/8/4q1r1/8 w k | e3-e2 (QUIET_MOVE), 1
 17 | 6k1/5ppb/r3p2p/8/1p1P2P1/1P1N1P1P/5r2/K2R4 w | a8-a6 (ATTACK), 38
-17 | 5Q2/2p2Bp1/p1k5/1p1N2N1/8/B7/2PP1PP1/R2QK3 b Q | e7-f8 (TURN_INTO_ATTACK) turn into null, 1
+17 | 5Q2/2p2Bp1/p1k5/1p1N2N1/8/B7/2PP1PP1/R2QK3 b Q | e7-f8 (TURN_INTO_ATTACK) turn into QUEEN, 1
 17 | 6n1/4pkQ1/4N3/8/2B2p1N/8/PPP2PPP/R3K2R b KQ | c3-g7 (QUIET_MOVE), 1
 17 | 8/Q1pk3p/8/pB6/8/R1P5/1PP2PPP/2B1K1NR b K | f1-b5 (ATTACK), 1
 17 | 4Q3/2kP4/8/p4N1p/8/P3P2P/P2P1PP1/R1B2RK1 b | f7-e8 (QUIET_MOVE), 1
@@ -36482,7 +36482,7 @@
 17 | r3k1nr/6N1/1R6/p7/2B2B1p/8/PPP2PP1/2KR4 b | f5-g7 (QUIET_MOVE), 1
 17 | 2k2b1r/ppp1pppp/8/4n3/2b5/4K3/P7/RN3r2 w | f4-f1 (QUIET_MOVE), 1
 17 | 2r4r/pp2b3/3k1p1p/P2P3R/8/2P1P3/1P5P/3R3K w | d8-c8 (QUIET_MOVE), 1
-17 | 4k2r/2p3pp/1p6/2b1P3/5n1P/P5r1/6P1/n2q1KR1 w k | d2-d1 (TURN_INTO) turn into null, 1
+17 | 4k2r/2p3pp/1p6/2b1P3/5n1P/P5r1/6P1/n2q1KR1 w k | d2-d1 (TURN_INTO) turn into QUEEN, 1
 17 | 2k2b1r/ppp1pppp/2n1b3/8/1r6/5K2/P7/RN6 w | a5-c6 (QUIET_MOVE), 1
 17 | r3kb1r/ppp1p1pp/8/6P1/8/N5KP/P7/qb6 w kq | d3-b1 (ATTACK), 1
 17 | 4r3/ppp2kp1/5n1p/P7/P1p5/5qPP/3P4/2B1K3 w | a8-e8 (QUIET_MOVE), 1
@@ -36559,7 +36559,7 @@
 17 | 5Q2/ppN4p/4k2p/1B2p3/7N/7P/P4PP1/R3K2R b KQ | d5-c7 (QUIET_MOVE), 1
 17 | 2k2b1r/ppp1pppp/4b3/4n3/6r1/8/P7/RN4K1 w | f4-g4 (QUIET_MOVE), 1
 17 | 3rr3/k1p5/P1p5/2P3bp/RP1Pp3/2B5/3R1PK1/8 w | f6-g5 (ATTACK), 1
-17 | 2r3k1/5p2/1b1p1Bp1/6p1/2p5/1p3b1P/4rP2/1q3RK1 w | a2-b1 (TURN_INTO_ATTACK) turn into null, 1
+17 | 2r3k1/5p2/1b1p1Bp1/6p1/2p5/1p3b1P/4rP2/1q3RK1 w | a2-b1 (TURN_INTO_ATTACK) turn into QUEEN, 1
 17 | 4k2r/p1p1npp1/3p3p/7P/2b2P2/2P3P1/1r3P2/3K4 w k | b8-b2 (QUIET_MOVE), 1
 17 | 2b2r2/1p1p1ppk/4pn2/3r4/8/1PK1P3/1P3PP1/5q2 w | g8-h7 (ATTACK), 1
 17 | r7/4B3/pbkp2pp/1p1b3P/8/P1P4P/1P3P2/6K1 w | f7-g6 (ATTACK), 20
@@ -36585,7 +36585,7 @@
 17 | 3rr3/2p5/k1p5/P1P4p/1P1Ppb2/2B5/5PK1/R3R3 w | g5-f4 (QUIET_MOVE), 1
 17 | r3kb2/p2pppp1/5n1r/1q6/3p4/7b/1P2PP2/4K3 w q | h7-h6 (ATTACK), 1
 17 | 6k1/2p1bp2/4p1p1/p3P2p/P6P/1rB3P1/5P1K/3R4 w | b8-b3 (ATTACK), 1
-17 | rn2kb1r/1pp1pppp/1p6/8/6bP/1K6/8/4q1q1 w kq | e2-e1 (TURN_INTO) turn into null, 1
+17 | rn2kb1r/1pp1pppp/1p6/8/6bP/1K6/8/4q1q1 w kq | e2-e1 (TURN_INTO) turn into QUEEN, 1
 17 | 5k1r/7p/p3QR2/1p6/8/3BP1P1/PP3PP1/R1B1K3 b Q | h6-f6 (QUIET_MOVE), 1
 17 | 1nb3nr/1ppp1k1p/4p3/7P/8/2P1P3/P2KP3/1q6 w | a1-b1 (ATTACK), 1
 17 | r3k1nr/p1p3pp/1p6/8/1KP5/1P6/P2qn2P/b7 w kq | c1-d2 (ATTACK), 1
@@ -36746,7 +36746,7 @@
 16 | r2q4/ppp1pk2/6p1/2p5/6P1/P1PKP1n1/8/6r1 w | d6-c5 (ATTACK), 1
 16 | 2krr3/pp2bppp/3p1p2/3p4/7P/4Pq2/1K6/8 w | h1-f3 (ATTACK), 1
 16 | r3kr2/p4ppp/2p5/3p4/n2P3P/4K1P1/4b3/5q2 w q | g4-e2 (ATTACK), 1
-16 | 4N3/6k1/8/p1B4Q/2BP4/P7/1PP2PPP/R3K2R b KQ | e7-e8 (TURN_INTO) turn into null, 1
+16 | 4N3/6k1/8/p1B4Q/2BP4/P7/1PP2PPP/R3K2R b KQ | e7-e8 (TURN_INTO) turn into KNIGHT, 1
 16 | r4rk1/pp3ppp/5n2/P7/8/7P/3n1b1P/1K3R2 w | e4-d2 (QUIET_MOVE), 1
 16 | 3k4/p2Q2N1/P7/2pPN3/8/B7/P2P1PP1/R4RK1 b | g4-d7 (QUIET_MOVE), 1
 16 | 8/1pk5/7Q/p5B1/8/8/PPP2PPP/R3KBNR b KQ | c1-g5 (ATTACK), 1
@@ -36859,7 +36859,7 @@
 16 | r3kb1r/ppp2ppp/8/P7/4q1KP/7P/2P5/8 w kq | e5-e4 (ATTACK), 1
 16 | 2b2r2/1p1p1ppk/4pn2/3r4/5P2/1PK1P3/1P4q1/8 w | f1-g2 (ATTACK), 1
 16 | 8/5pk1/4RB1p/3p4/1Q2p2p/4P1qP/3P2P1/5b1K b | b2-f6 (ATTACK), 1
-16 | 6k1/3r1p2/3p3p/1p1p2p1/3n2P1/P7/5PK1/1qr2R2 w | b2-b1 (TURN_INTO) turn into null, 1
+16 | 6k1/3r1p2/3p3p/1p1p2p1/3n2P1/P7/5PK1/1qr2R2 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 16 | 3rk1nr/pp3ppp/8/2PK4/P7/5NP1/4q2P/8 w k | a8-d8 (QUIET_MOVE), 1
 16 | r7/pppb2kp/4p3/3p1r2/1P2p1n1/P3P3/4K3/8 w | f8-f5 (ATTACK), 1
 16 | r3k3/2p3p1/b2qpn2/3p4/3n1P1P/bPr5/8/7K w q | d8-d6 (QUIET_MOVE), 1
@@ -36881,7 +36881,7 @@
 16 | 3r4/2b1k3/p1Bp1Rp1/5pp1/6P1/P7/2p2P2/3R2K1 w | f8-e7 (QUIET_MOVE), 4
 16 | r1b1k2r/2pp1ppp/pp6/3p4/2P3P1/7n/K7/8 w kq | e6-d5 (ATTACK), 1
 16 | r1b1k2r/pppp1ppp/8/8/P2b4/3q4/3K4/5q2 w kq | b5-d3 (QUIET_MOVE), 1
-16 | 2rr2k1/2b3p1/7p/1p1p1p2/3B4/5B2/p7/2q2nRK w | c2-c1 (TURN_INTO) turn into null, 1
+16 | 2rr2k1/2b3p1/7p/1p1p1p2/3B4/5B2/p7/2q2nRK w | c2-c1 (TURN_INTO) turn into QUEEN, 1
 16 | 2R2bk1/8/3p3p/1r3p2/3P4/8/PPPB1PP1/R3K3 b Q | c3-c8 (ATTACK), 1
 16 | 8/3k4/4p1Q1/2N5/4P3/8/PPPP1PPP/R1B1KR2 b Q | a4-c5 (QUIET_MOVE), 1
 16 | 3qk2r/2pppp1p/5n2/8/r1P2b2/3P4/2N5/5K1b w k | h2-f4 (ATTACK), 1
@@ -36896,7 +36896,7 @@
 16 | r3k2r/6pp/1pn5/8/4p3/3pP2P/1K1P3P/1N2q3 w kq | b8-c6 (QUIET_MOVE), 1
 16 | 8/p7/k3Q3/3p4/5P2/5N2/PP1P1PPP/R1B1K2R b KQ | g6-e6 (ATTACK), 1
 16 | r4rk1/p1p2ppp/8/8/4nP2/P7/P4K1P/5B1R w | f6-e4 (ATTACK), 1
-16 | 1k1Q4/8/pp6/6B1/5p1p/7P/PPP2PP1/R2R2K1 b | d7-d8 (TURN_INTO) turn into null, 1
+16 | 1k1Q4/8/pp6/6B1/5p1p/7P/PPP2PP1/R2R2K1 b | d7-d8 (TURN_INTO) turn into QUEEN, 1
 16 | r4rk1/p3bppp/3p4/3P4/6n1/P1P5/1P1K3P/8 w | f2-g4 (ATTACK), 1
 16 | 8/8/3bk2Q/p3pp2/8/4P3/PPP2RPP/R1B3K1 b | h8-h6 (ATTACK), 1
 16 | r1b1k2r/pppp1ppp/2n5/8/q4P2/8/P5K1/8 w kq | d1-a4 (ATTACK), 1
@@ -36938,7 +36938,7 @@
 16 | 4r3/1p3r1k/p4p1p/3p4/3P2P1/2q1PQ1b/8/3R2K1 b | g3-g4 (QUIET_MOVE), 6
 16 | 3N4/2p3pk/p3p2p/2B5/8/Pr6/1P3PPP/1K1R4 w | b7-b3 (QUIET_MOVE), 1
 16 | r3k1nr/ppp2p1p/8/2K5/1q6/5b1P/P1Pb4/8 w kq | b1-b4 (QUIET_MOVE), 1
-16 | r1b1k2r/pppp1ppp/8/1q6/3b4/P7/3K4/5q2 w kq | f2-f1 (TURN_INTO) turn into null, 1
+16 | r1b1k2r/pppp1ppp/8/1q6/3b4/P7/3K4/5q2 w kq | f2-f1 (TURN_INTO) turn into QUEEN, 1
 16 | r1b1k3/pppn1pp1/8/P3p3/8/8/2PK3P/6Nq w q | b8-d7 (ATTACK), 1
 16 | r3kb1r/ppp3pp/8/5b2/P2p2pP/8/1K6/1q6 w kq | e4-b1 (QUIET_MOVE), 1
 16 | 1k3N2/1p2R3/3p4/5P2/p7/8/PBPP1PP1/R2QK3 b Q | c1-b2 (ATTACK), 1
@@ -37190,7 +37190,7 @@
 16 | 2kr4/ppp1npp1/3b4/8/8/P1P1PP2/1r6/2R3K1 w | h2-b2 (ATTACK), 1
 16 | 5rk1/1p4p1/5q1p/2p5/p1P1Q3/3P3P/b5PK/3R4 b | e1-e4 (QUIET_MOVE), 51
 16 | 1r4k1/2R5/4p2p/n4pp1/P4P2/3NK1PP/1P4B1/8 w g6 | g7-g5 (LONG_MOVE), 1
-16 | r3kb1r/ppp1pppp/8/P7/1P6/4q3/1K6/3q4 w kq | d2-d1 (TURN_INTO) turn into null, 1
+16 | r3kb1r/ppp1pppp/8/P7/1P6/4q3/1K6/3q4 w kq | d2-d1 (TURN_INTO) turn into QUEEN, 1
 16 | 4k1n1/3p3p/2p3p1/p7/3BN3/5N1P/2P2PP1/3K1R2 b | h8-d4 (QUIET_MOVE), 1
 16 | r1b2rk1/pp1p1pp1/2p5/q7/5n2/5P1P/1P6/3K4 w | d5-f4 (ATTACK), 1
 16 | r3kb1r/ppp1pppp/8/8/PP6/4q3/1K1p4/8 w kq | d3-d2 (QUIET_MOVE), 1
@@ -37241,7 +37241,7 @@
 15 | 8/8/1k6/4Q3/4N3/4P3/PPPP1PPP/R1B2RK1 b | c3-e4 (QUIET_MOVE), 1
 15 | r4rk1/p1p2pp1/7p/7P/b4pP1/1n1P4/8/5K2 w | c6-a4 (ATTACK), 1
 15 | 4R3/2b2pk1/4p1p1/4P2p/P1KB1P1P/6P1/8/4r3 w | a5-c7 (QUIET_MOVE), 1
-15 | 3Q3k/8/8/2N5/7N/8/PPPPKPPP/1RBR4 b | d7-d8 (TURN_INTO) turn into null, 1
+15 | 3Q3k/8/8/2N5/7N/8/PPPPKPPP/1RBR4 b | d7-d8 (TURN_INTO) turn into QUEEN, 1
 15 | 6k1/3Q1Rp1/p6p/8/2rB4/3q4/2r2PPP/4R1K1 w | c3-c4 (QUIET_MOVE), 3
 15 | B2k4/8/8/B3N3/4N2P/1P2P3/P1P2PP1/R4RK1 b | d2-a5 (ATTACK), 1
 15 | r4rk1/p1pp1ppp/4p3/2b5/4b3/2K2n2/3n4/8 w | h2-f3 (QUIET_MOVE), 1
@@ -37263,7 +37263,7 @@
 15 | 8/8/2k5/4Q3/4N3/4P3/PPPP1PPP/1RBR2K1 b | a1-b1 (QUIET_MOVE), 1
 15 | r4rk1/p1p2p1p/4pp2/8/P4P2/2b3K1/2q4P/8 w | d2-c2 (ATTACK), 1
 15 | 4kb1r/1Q2pppp/8/6q1/8/6K1/5PPP/2r4R w k | d2-g5 (QUIET_MOVE), 1
-15 | 2r3k1/5p2/1B1p2p1/6p1/2p1b2b/7P/4r3/1q3RK1 w | b2-b1 (TURN_INTO) turn into null, 1
+15 | 2r3k1/5p2/1B1p2p1/6p1/2p1b2b/7P/4r3/1q3RK1 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 15 | 2k2b2/ppp2pp1/4r3/P1P1P2P/5q2/7K/7r/8 w | d2-h2 (QUIET_MOVE), 1
 15 | 2kr3r/p1pb1ppp/2p1p3/3n4/2Kb2q1/8/8/8 w | f6-d5 (QUIET_MOVE), 1
 15 | 3rr1k1/pppb1ppp/2p1pb2/8/8/8/2q5/K7 w | e7-f6 (QUIET_MOVE), 1
@@ -37286,7 +37286,7 @@
 15 | 8/1k6/8/4Q3/4N3/4P3/PPPP1PPP/R1BR2K1 b | f1-d1 (QUIET_MOVE), 1
 15 | 4r3/k1p5/P1p5/2P4p/RP1Pp2r/8/3R1P1K/8 w | g4-h4 (QUIET_MOVE), 1
 15 | 4kb1r/1p1b1ppp/4p3/8/8/1KP3P1/4q2P/1r6 w k | g1-b1 (QUIET_MOVE), 1
-15 | 4rk2/5p2/3p4/1p4p1/pPb3P1/P1n2B2/6K1/3q4 w | d2-d1 (TURN_INTO) turn into null, 1
+15 | 4rk2/5p2/3p4/1p4p1/pPb3P1/P1n2B2/6K1/3q4 w | d2-d1 (TURN_INTO) turn into QUEEN, 1
 15 | 8/2R3kp/2Bp1p2/8/3PP3/5P2/1PP2P1P/5RK1 b | c8-c7 (ATTACK), 1
 15 | 8/2Q1k3/2p5/pp6/8/P7/1PP1PPPP/2K2B1R b | b8-c7 (QUIET_MOVE), 1
 15 | 3k4/3p3p/2p2Np1/p3N3/3B4/7P/2P2PP1/3K1R2 b | f3-e5 (QUIET_MOVE), 1
@@ -37371,7 +37371,7 @@
 15 | 5rk1/1pp2ppp/4b3/3p4/3n1p1N/K3n2P/8/8 w | e2-d4 (QUIET_MOVE), 1
 15 | 1n5k/1R6/2p4p/5r2/6N1/8/PB2P1PP/5BKR b | a3-b2 (QUIET_MOVE), 1
 15 | 8/2k4p/6p1/2Q5/3P4/8/PPb2PPP/R1B2RK1 b | f8-c5 (QUIET_MOVE), 1
-15 | Q7/1k6/8/5N2/8/3BP2P/1PPP1PP1/R1BR2K1 b | a7-a8 (TURN_INTO) turn into null, 1
+15 | Q7/1k6/8/5N2/8/3BP2P/1PPP1PP1/R1BR2K1 b | a7-a8 (TURN_INTO) turn into QUEEN, 1
 15 | 4rk2/5p2/2Bp4/1p4p1/pPb3P1/P1n5/3p2K1/8 w | d3-d2 (QUIET_MOVE), 1
 15 | 4r1k1/1p4r1/p3bp2/3p4/1BpP2Q1/4P3/8/2R3K1 b | h4-g4 (ATTACK), 2
 15 | 5k1r/1pp2ppp/5n2/4p2P/3n4/2KP4/5P2/6r1 w | f1-g1 (ATTACK), 1
@@ -37407,7 +37407,7 @@
 15 | 2b1k3/1ppp1p1p/7p/4p1q1/8/1r4r1/Kb3n2/8 w | d8-g5 (QUIET_MOVE), 1
 15 | r4rk1/p1pp1ppp/8/8/8/PK4n1/P4p2/q7 w | f3-f2 (QUIET_MOVE), 1
 15 | 1rb1r1k1/ppBp1p1p/4p1p1/8/2P3q1/8/8/6K1 w | f3-g4 (ATTACK), 1
-15 | 5Q2/p1k4p/p3p2p/8/1p6/5N1P/2P2P2/R1KR4 b | f7-f8 (TURN_INTO) turn into null, 1
+15 | 5Q2/p1k4p/p3p2p/8/1p6/5N1P/2P2P2/R1KR4 b | f7-f8 (TURN_INTO) turn into QUEEN, 1
 15 | r3k2r/pp3ppp/4p3/1b6/7P/6q1/6P1/3K3R w kq | d7-b5 (ATTACK), 1
 15 | 4kb1r/1Q2pppp/8/8/8/3q1K2/5PPP/2r4R w k | d2-d3 (QUIET_MOVE), 1
 15 | 6r1/2p5/2p5/2P3b1/1P1PR2p/r1k1B2K/1R3P2/8 w | c4-c3 (QUIET_MOVE), 1
@@ -37488,7 +37488,7 @@
 15 | 6Q1/4kNpp/p7/8/8/8/PPR2PPP/4KB1R b K | c1-c2 (ATTACK), 1
 15 | Q1b2k2/p2p4/8/1B4N1/8/8/1B1P1PPP/R3K2R b KQ | e4-a8 (ATTACK), 1
 15 | 2r3k1/5p2/3p1Bp1/6p1/2p4b/1p3b1P/4r3/1R4K1 w | e1-h4 (QUIET_MOVE), 1
-15 | B6Q/8/4k3/B3N3/4N3/1P2P3/P1P2PP1/R4RK1 b | h7-h8 (TURN_INTO) turn into null, 1
+15 | B6Q/8/4k3/B3N3/4N3/1P2P3/P1P2PP1/R4RK1 b | h7-h8 (TURN_INTO) turn into QUEEN, 1
 15 | 2r2k2/2b2pp1/3p3p/3p4/2pBn3/p4BP1/7K/8 w | a4-a3 (QUIET_MOVE), 4
 15 | 8/p6p/3pk1p1/Q1p5/2P5/8/P2PNPP1/R3K3 b Q | a4-a5 (ATTACK), 1
 15 | r4rk1/pp3ppp/3pb3/P7/4P2P/2K2n2/8/8 w | e5-f3 (ATTACK), 1
@@ -37565,7 +37565,7 @@
 15 | r6r/pp1bk1p1/7p/P6P/3Pn3/1n6/3q4/3K4 w | f2-d2 (QUIET_MOVE), 1
 15 | 6r1/2p5/2p2b2/2P5/1P1PR2p/r1k1B2K/5P2/1R6 w | g5-f6 (QUIET_MOVE), 1
 15 | 3R4/2r2pk1/4p1p1/4P2p/P6P/2b1B1P1/5PK1/8 w | b4-c3 (QUIET_MOVE), 1
-15 | r1b2rk1/pPp2ppp/4p3/8/3bn3/8/8/1q1K4 w | b2-b1 (TURN_INTO) turn into null, 1
+15 | r1b2rk1/pPp2ppp/4p3/8/3bn3/8/8/1q1K4 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 15 | r1b1k2r/pppp1ppp/8/8/P1q5/8/3P1K2/8 w kq | e4-c4 (ATTACK), 1
 15 | 2kr4/5ppp/p1pp4/8/2b1n1P1/2P1P3/7r/3K4 w | a2-h2 (ATTACK), 1
 15 | 4Q3/6pk/1p6/3bP3/p7/P1P4P/1n3PP1/4R1K1 w | g8-h7 (QUIET_MOVE), 1
@@ -37635,7 +37635,7 @@
 15 | 4k2r/5ppp/8/2n1p3/P3n2P/2P5/3q3P/3K3b w k | f2-d2 (ATTACK), 1
 15 | 6k1/6Q1/1N6/8/2PB1p2/P4N2/3PPPP1/2KR1B2 b | e5-g7 (QUIET_MOVE), 1
 15 | 8/7p/p4k2/Q4P2/8/8/PPP2PPP/R3K1NR b KQ | d5-a5 (ATTACK), 1
-15 | 3Q4/8/2k2N2/4Q3/8/4P3/PPP2PPP/1RBR2K1 b | d7-d8 (TURN_INTO) turn into null, 1
+15 | 3Q4/8/2k2N2/4Q3/8/4P3/PPP2PPP/1RBR2K1 b | d7-d8 (TURN_INTO) turn into QUEEN, 1
 15 | r7/p1p2k2/1p2q2b/3Q4/8/P4P2/1P3P2/R4RK1 w | h3-e6 (QUIET_MOVE), 1
 15 | 8/1Qk1B2p/3N4/p7/3P4/8/PPP2P1P/R3KR2 b Q | b5-b7 (QUIET_MOVE), 1
 15 | r7/4Bp2/p2p3p/bp1k3P/8/P1P5/1P3P2/7K w | c6-d5 (ATTACK), 27
@@ -37663,7 +37663,7 @@
 15 | r4rk1/p1pp1ppp/8/8/2K5/P4pn1/P7/q7 w | f6-a1 (ATTACK), 1
 15 | 2r3k1/5p2/3p1Bp1/6p1/2p5/1p3b1P/4rb2/1R4K1 w | b6-f2 (ATTACK), 1
 15 | 8/8/2k1N1Q1/8/4P3/8/PPPP1PPP/R1B1KR2 b Q | c5-e6 (ATTACK), 1
-15 | 2r3k1/5p2/1b1p2p1/1p4p1/2p4P/P7/5P2/1q2B1K1 w | b2-b1 (TURN_INTO) turn into null, 1
+15 | 2r3k1/5p2/1b1p2p1/1p4p1/2p4P/P7/5P2/1q2B1K1 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 15 | 8/k1p5/P1p3Rp/2P5/4pP2/1b6/1P1rBP1K/8 w | d4-d2 (QUIET_MOVE), 1
 15 | 8/8/4N1Q1/1k1P4/4P3/4B3/PPP2PPP/R3KR2 b Q | d4-d5 (QUIET_MOVE), 1
 15 | 2r2k2/2b2pp1/3p3p/3p4/3Bn3/2p2BP1/p6K/8 w | c4-c3 (QUIET_MOVE), 4
@@ -37762,7 +37762,7 @@
 14 | r3k2r/2pp1ppp/pp2b3/8/6P1/7n/8/2K5 w kq | d5-e6 (QUIET_MOVE), 1
 14 | r5k1/p1p2ppp/2p5/7n/3p4/P2P4/r7/4K3 w | g2-a2 (QUIET_MOVE), 1
 14 | r4r1k/ppp1p2p/6p1/8/3PK3/2P2q2/8/5B2 w | h3-f3 (QUIET_MOVE), 1
-14 | 1k2Q3/8/8/2R5/B1N5/5N2/PPPP1PK1/R1B5 b | e7-e8 (TURN_INTO) turn into null, 1
+14 | 1k2Q3/8/8/2R5/B1N5/5N2/PPPP1PK1/R1B5 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
 14 | 8/k7/4Q3/p7/P2P4/8/1P2PPPP/R3KB1R b KQ a3 | a2-a4 (LONG_MOVE), 1
 14 | r7/P1p5/2p2b2/2P5/1P1P2K1/1k2P1P1/8/4B2R w | f8-a8 (QUIET_MOVE), 1
 14 | 7k/6R1/2p1N2p/p1B5/8/Pr6/1P3PPP/1K6 w | h7-h8 (QUIET_MOVE), 1
@@ -37776,7 +37776,7 @@
 14 | 2R5/7k/1r2pK1p/5p2/PP1n4/3N2PP/4B3/8 w | g8-h7 (QUIET_MOVE), 1
 14 | k7/5R2/pN3N2/P7/3P4/2P5/1P4PP/1RB3K1 b | d5-b6 (QUIET_MOVE), 1
 14 | r5k1/pp1n2pp/2p1p3/8/b7/2n4P/5K2/6R1 w | b8-d7 (QUIET_MOVE), 1
-14 | 3r4/2b1k3/p1BR2p1/5pp1/6P1/P7/5P2/3q2K1 w | c2-d1 (TURN_INTO_ATTACK) turn into null, 3
+14 | 3r4/2b1k3/p1BR2p1/5pp1/6P1/P7/5P2/3q2K1 w | c2-d1 (TURN_INTO_ATTACK) turn into QUEEN, 3
 14 | 8/5Q2/3k4/8/8/4P2P/PPPP1P1P/R1B1K2R b KQ | a7-f7 (QUIET_MOVE), 1
 14 | 7Q/2kB4/5B2/R1p1N3/8/8/1PP2PPP/5RK1 b | a2-a5 (ATTACK), 1
 14 | 1n1qk3/2pppp1p/8/3bb3/8/2P1P3/r7/4K3 w | d6-e5 (QUIET_MOVE), 1
@@ -37786,7 +37786,7 @@
 14 | r4rk1/p1p2pp1/7p/7P/b2n1pP1/8/8/5K2 w | b3-d4 (ATTACK), 1
 14 | 8/1p5r/p3bp2/2Bp1k2/3Pr3/4P3/2p1K3/5R2 b | f2-e2 (QUIET_MOVE), 1
 14 | 2k5/5R2/5N2/p2P4/P4N2/2P5/1P4PP/R1B3K1 b | d4-d5 (QUIET_MOVE), 17
-14 | 1k1R4/5R2/p4N2/P2N4/8/2P1B3/1P4PP/R5K1 b | d7-d8 (TURN_INTO) turn into null, 1
+14 | 1k1R4/5R2/p4N2/P2N4/8/2P1B3/1P4PP/R5K1 b | d7-d8 (TURN_INTO) turn into ROOK, 1
 14 | 4k3/4R3/4N3/4pN2/7p/8/PPP2PPP/R5K1 b | g7-e7 (QUIET_MOVE), 1
 14 | Q7/p1p2k2/1p6/8/5b2/P4P1q/1P3P2/R2R1K2 w | h2-h3 (QUIET_MOVE), 1
 14 | 2k5/5R2/p4N2/P7/5N2/2P5/1P1P2PP/R1B3K1 b | g8-f6 (QUIET_MOVE), 2
@@ -37849,7 +37849,7 @@
 14 | 1k6/5R2/p4N2/P7/3P1N2/2P5/1P4PP/R1B3K1 b d3 | d2-d4 (LONG_MOVE), 5
 14 | 6k1/1p3r2/p3bp1B/3p4/2pr3P/6R1/6P1/6K1 b | c3-g3 (QUIET_MOVE), 1
 14 | 8/8/1p6/2k5/8/Q4b2/PPPPNP1P/R1B1K3 b Q | a7-a3 (QUIET_MOVE), 1
-14 | 1k1R4/5R2/5N2/p7/P4N2/2P5/1P4PP/R1B3K1 b | d7-d8 (TURN_INTO) turn into null, 2
+14 | 1k1R4/5R2/5N2/p7/P4N2/2P5/1P4PP/R1B3K1 b | d7-d8 (TURN_INTO) turn into ROOK, 2
 14 | 2R2bk1/8/3p3B/5p2/3P4/8/PrP2PP1/R3K3 b Q | d2-h6 (ATTACK), 1
 14 | 7k/6R1/4N2p/p1p5/3B4/Pr6/1P3PPP/1K6 w | c6-c5 (QUIET_MOVE), 1
 14 | 2R5/5pk1/4p1p1/1KB1b2p/P4P1P/6P1/8/4r3 w | c7-e5 (ATTACK), 1
@@ -37878,8 +37878,8 @@
 14 | 8/7R/kp5B/p2N4/P2P4/8/1PP2PKP/3R4 b a3 | a2-a4 (LONG_MOVE), 1
 14 | k7/5R2/p4N2/P2P4/5N2/2P5/1P4PP/R1B3K1 b | d4-d5 (QUIET_MOVE), 4
 14 | 2r3k1/1R3pp1/p3p2p/2b5/2K5/5N1P/5PP1/8 w | a3-c5 (ATTACK), 1
-14 | 1k1Q4/5R2/p4N2/P2N4/8/2P1B3/1P4PP/R5K1 b | d7-d8 (TURN_INTO) turn into null, 1
-14 | 3Q4/k4R2/p4N2/P7/5N2/2P5/1P4PP/R1B3K1 b | d7-d8 (TURN_INTO) turn into null, 2
+14 | 1k1Q4/5R2/p4N2/P2N4/8/2P1B3/1P4PP/R5K1 b | d7-d8 (TURN_INTO) turn into QUEEN, 1
+14 | 3Q4/k4R2/p4N2/P7/5N2/2P5/1P4PP/R1B3K1 b | d7-d8 (TURN_INTO) turn into QUEEN, 2
 14 | 1n6/6k1/3N4/4N2p/3P4/8/PP3PPP/3R1RK1 b | f7-e5 (QUIET_MOVE), 1
 14 | 8/1p4k1/3Bbp2/p2p4/2pP4/2R1P1K1/5r1r/8 b | c1-c3 (QUIET_MOVE), 1
 14 | 6k1/6p1/4pp1p/1Br5/4brP1/1P5P/K7/4R3 w | c7-c5 (QUIET_MOVE), 4
@@ -37888,7 +37888,7 @@
 14 | r4r2/p2p1pkp/8/2P2p2/3Pn3/q7/2P1K3/8 w | e6-f5 (ATTACK), 1
 14 | 3r4/5k2/1b1p4/pp1p2p1/1P6/P1P5/4bnK1/8 w | f8-f7 (ATTACK), 1
 14 | 1k6/8/8/2R5/B1N1P3/5N2/PPPP1PK1/R1B5 b | g1-f3 (QUIET_MOVE), 1
-14 | Q3k3/8/5K2/4B3/2BNP3/3P4/1PP2PP1/1R1R4 b | a7-a8 (TURN_INTO) turn into null, 1
+14 | Q3k3/8/5K2/4B3/2BNP3/3P4/1PP2PP1/1R1R4 b | a7-a8 (TURN_INTO) turn into QUEEN, 1
 14 | 7k/7P/7R/4B3/1p1P2N1/1P1P1KNP/2r5/3R4 b | f4-e5 (QUIET_MOVE), 8
 14 | 2r5/1p4k1/p2Bbp2/3p4/2pP2r1/4P3/5K2/2R5 b | c7-d6 (QUIET_MOVE), 1
 14 | 1nb3r1/1ppp1k1p/4p3/7P/P7/2n5/4q3/6K1 w | h8-g8 (QUIET_MOVE), 1
@@ -37929,7 +37929,7 @@
 14 | 2krr3/ppp3pp/5n2/8/8/P2P3q/4P3/3K4 w | h8-e8 (QUIET_MOVE), 1
 14 | r1b1r1k1/pp1p1ppp/4p3/8/2p5/8/5q2/2K5 w | g3-f2 (QUIET_MOVE), 1
 14 | 2k5/B4R2/p2P1N2/P2N4/8/2P5/1P4PP/R5K1 b | e3-a7 (QUIET_MOVE), 1
-14 | k2Q4/8/1Q6/p7/P7/8/1P2PPPP/R3KB1R b KQ | d7-d8 (TURN_INTO) turn into null, 1
+14 | k2Q4/8/1Q6/p7/P7/8/1P2PPPP/R3KB1R b KQ | d7-d8 (TURN_INTO) turn into QUEEN, 1
 14 | r4rk1/pppb1ppp/4p3/8/8/3p4/1K6/4q3 w | d4-d3 (QUIET_MOVE), 1
 14 | 1k6/7p/6p1/8/3P4/8/PPQ2PPP/R1B2RK1 b | c5-c2 (ATTACK), 1
 14 | 1r4k1/2R5/4p2p/n4p2/P4K2/3N2PP/1P2B3/8 w | b3-b8 (QUIET_MOVE), 1
@@ -38036,7 +38036,7 @@
 14 | r1b2rk1/ppp2ppp/4p3/3p4/8/8/2K5/4q3 w | a5-e1 (QUIET_MOVE), 1
 14 | 2rr2k1/6p1/1n5p/1p1p4/8/5Bp1/p1p5/4R1K1 w | c4-b6 (ATTACK), 1
 14 | 3k4/5R2/p4N2/P2N4/8/2P5/1P1P2PP/R1B3K1 b | g8-f6 (QUIET_MOVE), 4
-14 | r4rk1/pppb1ppp/4p3/8/8/K7/8/3qq3 w | d2-d1 (TURN_INTO) turn into null, 1
+14 | r4rk1/pppb1ppp/4p3/8/8/K7/8/3qq3 w | d2-d1 (TURN_INTO) turn into QUEEN, 1
 14 | 2r2rk1/pp3ppp/P3b3/4p3/7P/2K2n2/8/8 w | a8-c8 (QUIET_MOVE), 1
 14 | k2R4/1p6/2N5/1BP5/p7/8/PP3PPP/5RK1 b | d7-d8 (QUIET_MOVE), 1
 14 | 8/kQ6/8/p2Br3/8/2N4P/PPP2P2/3R1RK1 b | c6-b7 (QUIET_MOVE), 1
@@ -38055,7 +38055,7 @@
 14 | r1b1r1k1/pp1p1ppp/4p3/8/2p4q/8/2K5/8 w | c5-c4 (QUIET_MOVE), 1
 14 | r3k2r/2pp1ppp/pp6/3b4/6P1/7n/1K6/8 w kq | b7-d5 (ATTACK), 1
 14 | r1b2rk1/ppp2ppp/8/3p4/6q1/8/4n3/7K w | d4-e2 (QUIET_MOVE), 1
-14 | 1k1Q4/5R2/5N2/p7/P4N2/2P5/1P4PP/R1B3K1 b | d7-d8 (TURN_INTO) turn into null, 5
+14 | 1k1Q4/5R2/5N2/p7/P4N2/2P5/1P4PP/R1B3K1 b | d7-d8 (TURN_INTO) turn into QUEEN, 5
 14 | 4r1k1/5p2/5Rp1/6p1/p1p5/1pP2n1P/4p3/7K w | e3-e2 (QUIET_MOVE), 1
 14 | r7/4Bp2/p2p3p/b2k3P/p7/2P5/1P3P2/7K w | b5-a4 (ATTACK), 27
 14 | 7k/7P/7R/8/1p1P1BN1/1P1P1KNP/2r5/3R4 b | d2-f4 (QUIET_MOVE), 15
@@ -38105,7 +38105,7 @@
 14 | 1Q6/2kB4/5B2/1R2N3/8/2p5/1PP2PPP/5RK1 b | h8-b8 (QUIET_MOVE), 1
 14 | r5k1/p1p2ppp/2p5/7n/3p4/P2P4/6r1/3K4 w | g3-h5 (ATTACK), 1
 14 | r3k2r/ppp3pp/5n2/8/8/3P3q/P2KP3/8 w kq | f1-h3 (ATTACK), 1
-14 | 2rr2k1/6p1/1n5p/1p1p4/8/6p1/p5B1/2q1R1K1 w | c2-c1 (TURN_INTO) turn into null, 1
+14 | 2rr2k1/6p1/1n5p/1p1p4/8/6p1/p5B1/2q1R1K1 w | c2-c1 (TURN_INTO) turn into QUEEN, 1
 14 | k7/3P1R2/p4N2/P2N4/8/2P1B3/1P4PP/R5K1 b | d6-d7 (QUIET_MOVE), 2
 14 | 2r5/6k1/p2Bbp2/1p1p4/2pPr3/4P3/5K2/R7 b | b1-a1 (QUIET_MOVE), 1
 14 | 7k/7P/5R2/8/1p1P2N1/1P1P1KNP/2rB4/3R4 b | g2-f3 (QUIET_MOVE), 63
@@ -38122,7 +38122,7 @@
 14 | 8/8/2pR2R1/1k2p3/4P2P/2PPB3/1P3PP1/6K1 b | f6-d6 (ATTACK), 1
 14 | B7/2k5/5N1R/2p5/p3N3/8/P2P1PPP/4K2R b K | g3-e4 (QUIET_MOVE), 1
 14 | 2b4R/2p2Q2/1p5k/4P1p1/8/8/P4PPP/5RK1 b | d8-h8 (QUIET_MOVE), 1
-14 | 3r4/2b1k3/p1BR2p1/5pp1/6P1/P7/5P2/3r2K1 w | c2-d1 (TURN_INTO_ATTACK) turn into null, 1
+14 | 3r4/2b1k3/p1BR2p1/5pp1/6P1/P7/5P2/3r2K1 w | c2-d1 (TURN_INTO_ATTACK) turn into ROOK, 1
 14 | 8/8/Q7/8/3N1k2/8/PPPP1PPP/R1B2RK1 b | a7-a6 (ATTACK), 1
 14 | 1k6/5R2/1N3N2/8/p2P4/2P5/PP4PP/R1B3K1 b d3 | d2-d4 (LONG_MOVE), 2
 14 | r4rk1/pbp2ppp/4p3/8/3bnK2/6q1/8/8 w | e1-g3 (QUIET_MOVE), 1
@@ -38229,7 +38229,7 @@
 13 | 5r2/2p5/2p1R3/2P2K2/1P1b4/r1k1B3/5P2/1R6 w | g8-f8 (QUIET_MOVE), 1
 13 | 8/4k1p1/4Bp1p/K6P/6P1/1P1b2r1/3r4/2R5 w | f8-e7 (QUIET_MOVE), 3
 13 | 5rk1/p1p2pp1/4p2p/8/8/N3q1b1/2Kr4/8 w | d3-d2 (QUIET_MOVE), 1
-13 | 5k2/5p1n/p6p/R5p1/8/7P/5bPK/qr6 w | a2-a1 (TURN_INTO) turn into null, 10
+13 | 5k2/5p1n/p6p/R5p1/8/7P/5bPK/qr6 w | a2-a1 (TURN_INTO) turn into QUEEN, 10
 13 | 8/1kR5/5N2/3N4/8/2P5/PP1P2PP/R1B3K1 b | c5-c7 (QUIET_MOVE), 2
 13 | 2krr3/2pp1ppp/pp6/8/5n2/5b2/2K5/8 w | g4-f3 (QUIET_MOVE), 1
 13 | k4Q2/5R2/5N2/8/7P/P3P2P/1P1B1P2/5RK1 b | h6-f8 (QUIET_MOVE), 1
@@ -38237,7 +38237,7 @@
 13 | 4k3/8/7Q/8/4N2P/P3P2P/1P3P2/R1B2RK1 b | d6-h6 (ATTACK), 1
 13 | 1k6/2RN4/8/3N4/3P4/2P5/PP4PP/R1B3K1 b | f6-d7 (QUIET_MOVE), 5
 13 | 2r3k1/p2p2pp/P3p3/4P2b/3b4/8/1r6/2K5 w | a8-c8 (QUIET_MOVE), 1
-13 | r7/5p2/p2pk2p/b6P/2P4B/8/5PK1/1q6 w | b2-b1 (TURN_INTO) turn into null, 14
+13 | r7/5p2/p2pk2p/b6P/2P4B/8/5PK1/1q6 w | b2-b1 (TURN_INTO) turn into QUEEN, 14
 13 | 5rk1/p1p2pp1/4p2p/8/8/N2rq1b1/8/3K4 w | d8-d3 (ATTACK), 1
 13 | 2krr3/ppp2p1p/8/8/n4bP1/8/5n2/7K w | d3-f2 (ATTACK), 1
 13 | 8/p6p/2k1p2p/2R5/1Q6/1P3N1P/5P2/2KR4 b | a5-c5 (QUIET_MOVE), 1
@@ -38253,7 +38253,7 @@
 13 | 8/1k6/5N2/2R5/5N2/2P5/PP1P2PP/R1B3K1 b | a5-c5 (QUIET_MOVE), 3
 13 | 8/3N2k1/3N4/7p/3P4/8/PP3PPP/3R1RK1 b | e5-d7 (ATTACK), 1
 13 | 1k6/8/3pN2B/8/N2P4/8/1PP2PPP/5RK1 b | b6-a4 (ATTACK), 1
-13 | Q7/8/2RN2k1/8/3P3p/7P/1PP2PP1/3R2K1 b | a7-a8 (TURN_INTO) turn into null, 1
+13 | Q7/8/2RN2k1/8/3P3p/7P/1PP2PP1/3R2K1 b | a7-a8 (TURN_INTO) turn into QUEEN, 1
 13 | 8/7k/5R2/4NN2/1p1P4/1P1P1K1P/2rB4/6R1 b | d1-g1 (QUIET_MOVE), 14
 13 | r1b1k3/pppp1p1p/4p3/P6q/3K4/8/8/8 w q | e2-h5 (ATTACK), 1
 13 | 8/1k6/5N2/R2N4/8/2P5/PP1P2PP/R1B3K1 b | f4-d5 (QUIET_MOVE), 5
@@ -38296,7 +38296,7 @@
 13 | r4rk1/pp3pp1/2ppb3/8/1K3n2/8/8/4q3 w | h4-e1 (QUIET_MOVE), 1
 13 | 1k6/8/4N2B/3p4/3P4/2N5/1PP2PPP/5RK1 b | a4-c3 (QUIET_MOVE), 1
 13 | 8/k7/5N2/2RN4/3P4/2P1B3/PP4PP/R5K1 b | c1-e3 (QUIET_MOVE), 1
-13 | 5k2/5p1n/p6p/R5p1/8/7P/5bPK/rr6 w | a2-a1 (TURN_INTO) turn into null, 13
+13 | 5k2/5p1n/p6p/R5p1/8/7P/5bPK/rr6 w | a2-a1 (TURN_INTO) turn into ROOK, 13
 13 | r4rk1/p1p2p1p/4pp2/7K/q6P/2b5/8/8 w | f4-a4 (QUIET_MOVE), 1
 13 | 5k2/6p1/4Bp1p/K7/6PP/1P1b2r1/2r5/4R3 w | f3-g3 (QUIET_MOVE), 3
 13 | 6r1/2p5/2p1R3/2P3K1/1P1b4/r1k1B3/5P2/1R6 w | h8-g8 (QUIET_MOVE), 2
@@ -38330,12 +38330,12 @@
 13 | 3r4/1R6/2R2p2/2bP4/2k1P3/2P5/1P2K2P/5r2 w | d6-c5 (QUIET_MOVE), 2
 13 | k7/2R5/5N2/3N4/3P4/2P1B3/PP3KPP/R7 b | g1-f2 (QUIET_MOVE), 2
 13 | 2r5/6k1/R2Bbp2/1p1p4/3Pr3/2p1P3/5K2/8 b | a1-a6 (ATTACK), 1
-13 | 5rk1/1pp2ppp/8/8/5p2/4nn1b/8/K2q4 w | d2-d1 (TURN_INTO) turn into null, 1
+13 | 5rk1/1pp2ppp/8/8/5p2/4nn1b/8/K2q4 w | d2-d1 (TURN_INTO) turn into QUEEN, 1
 13 | 8/3R2pb/5p1p/8/1KB2kP1/1P3r1P/r7/8 w | g5-f4 (QUIET_MOVE), 4
 13 | 2k5/5ppp/p1pp4/2n5/2b5/2P5/7r/2K1r3 w | e8-e1 (QUIET_MOVE), 1
 13 | 2R5/7k/1r5p/5p1B/PP1n1K2/3N2PP/8/8 w | c6-d4 (QUIET_MOVE), 1
 13 | r7/5p2/p2pk2p/b6P/2P4B/8/1p3P2/7K w | b3-b2 (QUIET_MOVE), 27
-13 | r4rk1/p1pp1ppp/8/1K6/8/5qn1/8/5q2 w | f2-f1 (TURN_INTO) turn into null, 1
+13 | r4rk1/p1pp1ppp/8/1K6/8/5qn1/8/5q2 w | f2-f1 (TURN_INTO) turn into QUEEN, 1
 13 | r4rk1/pp3pp1/2ppb3/8/5n2/K7/8/q7 w | e1-a1 (QUIET_MOVE), 1
 13 | 8/8/7R/p1k1N3/8/8/PPP1PPP1/3RKB2 b | e6-h6 (ATTACK), 1
 13 | 7r/2p5/2p1R3/2P5/1P1b3K/r1k1B3/5P2/1R6 w | g8-h8 (QUIET_MOVE), 1
@@ -38429,7 +38429,7 @@
 13 | r1b2rk1/pppp1ppp/8/8/8/8/3q4/5K2 w | e8-g8 (SHORT_CASTLING), 1
 13 | 8/5k2/8/4QR2/8/p3P3/PPP3PP/R1B3K1 b | f2-f5 (ATTACK), 1
 13 | k7/2RN4/1N6/8/3P4/2P1B3/PP4PP/R5K1 b | d5-b6 (QUIET_MOVE), 1
-13 | 3r4/1kpp1ppp/1p6/8/5n2/5b2/4r3/q2K4 w | a2-a1 (TURN_INTO) turn into null, 1
+13 | 3r4/1kpp1ppp/1p6/8/5n2/5b2/4r3/q2K4 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 13 | 2krr3/pppb1pp1/4p2p/8/8/1K6/5q2/8 w | h8-e8 (QUIET_MOVE), 1
 13 | 8/1k6/5N2/2R5/3P1N2/2P1B3/PP4PP/R5K1 b | c1-e3 (QUIET_MOVE), 1
 13 | 6r1/2p5/2p1R1K1/2P5/1P1b4/r1k1B3/5P2/1R6 w | h8-g8 (QUIET_MOVE), 3; f8-g8 (QUIET_MOVE), 1
@@ -38512,7 +38512,7 @@
 13 | 2r2rk1/p4ppp/p3b3/4p3/7P/3K1n2/8/8 w | b7-a6 (ATTACK), 1
 13 | r3k2r/pp3ppp/4p3/1b6/7P/8/6q1/4K3 w kq | h2-g2 (ATTACK), 1
 13 | 8/8/P1RN4/7k/3P3p/7P/1PP2PP1/3R2K1 b | a5-a6 (QUIET_MOVE), 1
-13 | R4k2/2R5/8/3N1N2/8/2P5/1P1P2PP/R1B3K1 b | a7-a8 (TURN_INTO) turn into null, 1
+13 | R4k2/2R5/8/3N1N2/8/2P5/1P1P2PP/R1B3K1 b | a7-a8 (TURN_INTO) turn into ROOK, 1
 13 | 2krr3/p2p1ppp/8/2b1p3/8/1q6/1P4K1/8 w | h8-e8 (QUIET_MOVE), 1
 13 | 2r5/2b1Rpk1/8/1pp3p1/7P/6P1/p4P2/6K1 w | a3-a2 (QUIET_MOVE), 2
 13 | 2br4/1ppp1kpp/5n2/r3p3/7b/8/8/2K5 w | h8-d8 (QUIET_MOVE), 1
@@ -38530,7 +38530,7 @@
 13 | r7/ppp3kp/4p3/1b1p4/6n1/3rp3/1K6/8 w | e4-e3 (QUIET_MOVE), 1
 13 | 3rr3/1kpp1ppp/pp6/8/5n2/5b2/3K4/8 w | c8-b7 (QUIET_MOVE), 1
 13 | 2r5/5k2/3p4/1p5p/p4p2/P1P2b2/1r6/4R1K1 w | e4-f3 (QUIET_MOVE), 1
-13 | r7/5p2/p2pkB1p/b6P/2P5/8/5P2/1q5K w | b2-b1 (TURN_INTO) turn into null, 6
+13 | r7/5p2/p2pkB1p/b6P/2P5/8/5P2/1q5K w | b2-b1 (TURN_INTO) turn into QUEEN, 6
 13 | 4R3/8/3N3k/4N2p/3P3P/8/PP3PP1/3R2K1 b | d7-e5 (QUIET_MOVE), 1
 13 | 5r2/pp1k4/7p/b2P4/8/2P1P3/1P5P/3R3K w | h8-f8 (ATTACK), 1
 13 | 8/4kp2/4p1p1/p3P1P1/P4P1p/1P3K2/7b/8 w | g3-h2 (QUIET_MOVE), 1
@@ -38563,7 +38563,7 @@
 13 | 1nb3r1/1ppp1k1p/4p3/7q/P7/2n5/8/7K w | e2-h5 (ATTACK), 1
 13 | 6k1/8/8/pQ6/8/P7/1PP1PPPP/2K2B1R b | c6-b5 (ATTACK), 1
 13 | 4r1k1/5p2/1b1p2p1/1p4pP/2p5/P7/5qK1/8 w | e1-f2 (ATTACK), 1
-13 | r7/ppp3kp/4p3/1b1p4/6n1/3r4/K7/4q3 w | e2-e1 (TURN_INTO) turn into null, 1
+13 | r7/ppp3kp/4p3/1b1p4/6n1/3r4/K7/4q3 w | e2-e1 (TURN_INTO) turn into QUEEN, 1
 13 | r4rk1/1p3pp1/2ppb3/p7/1K3n2/8/8/q7 w a6 | a7-a5 (LONG_MOVE), 1
 12 | 8/2p5/k1p5/2Pbb3/3P2Kp/8/1P2r3/6R1 w | f6-e5 (ATTACK), 1
 12 | 2R5/P4p2/2K1p1p1/5k1p/3B3P/6P1/8/r7 w | f6-f5 (QUIET_MOVE), 1
@@ -38577,7 +38577,7 @@
 12 | r1b5/ppppkp1p/4p3/3q4/8/4K3/8/8 w | e8-e7 (QUIET_MOVE), 1
 12 | 8/8/3p4/2pQ4/2P1k3/8/P2PNPP1/R3K3 b Q | g5-d5 (QUIET_MOVE), 1
 12 | 8/2R2pk1/2P2p2/3p3p/5K1P/3B2P1/8/3r4 w | g1-d1 (QUIET_MOVE), 1
-12 | r1b5/1pppkp1p/4p3/3q4/8/8/4K3/q7 w | a2-a1 (TURN_INTO) turn into null, 1
+12 | r1b5/1pppkp1p/4p3/3q4/8/8/4K3/q7 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 12 | 2r2rk1/p4ppp/p7/3bp3/7n/4K3/8/8 w | e6-d5 (QUIET_MOVE), 1
 12 | 8/8/p7/8/kQ6/P3B3/1P3PPP/R3K2R b KQ | c5-b4 (QUIET_MOVE), 1
 12 | 2r5/1p5p/2p1pk2/3n3K/4b3/p1n4P/8/8 w | a4-a3 (QUIET_MOVE), 1
@@ -38613,7 +38613,7 @@
 12 | 2r2rk1/p4ppp/p7/3bp3/8/3K1n2/8/8 w | h4-f3 (QUIET_MOVE), 1
 12 | 3r4/5k2/1b1p4/1P4p1/p7/P7/2p1bn2/6K1 w | f8-f7 (ATTACK), 3
 12 | 8/7k/8/6Q1/P7/8/1PP1PPPP/2K2B1R b | a3-a4 (QUIET_MOVE), 1
-12 | 6k1/3r1p2/3p3p/3p2p1/3n2P1/6q1/8/r4K2 w | a2-a1 (TURN_INTO) turn into null, 1
+12 | 6k1/3r1p2/3p3p/3p2p1/3n2P1/6q1/8/r4K2 w | a2-a1 (TURN_INTO) turn into ROOK, 1
 12 | 3r4/2rp2p1/pp6/4k2p/b6P/6b1/4K3/8 w | f4-g3 (QUIET_MOVE), 1
 12 | 5R2/7k/8/5N2/1B1P2N1/1P1P1K1P/1r6/6R1 b | d1-g1 (QUIET_MOVE), 16
 12 | 5k1r/1pp2ppp/8/4p3/3n4/3n4/K7/6r1 w | f4-d3 (ATTACK), 1
@@ -38663,7 +38663,7 @@
 12 | 8/2R2pk1/5p2/2Pp1B1p/7P/4K1P1/8/r7 w | a4-a1 (QUIET_MOVE), 1
 12 | 6k1/5pp1/8/3p1b2/1p3P2/rP1r3p/2K5/8 w | h4-h3 (QUIET_MOVE), 3
 12 | 2r3k1/pp3ppp/8/8/4n3/K1b2n2/8/3r4 w | d8-d1 (QUIET_MOVE), 1
-12 | Q7/8/5N2/2k5/5N2/2P5/1P1P2PP/R1B3K1 b | a7-a8 (TURN_INTO) turn into null, 1
+12 | Q7/8/5N2/2k5/5N2/2P5/1P1P2PP/R1B3K1 b | a7-a8 (TURN_INTO) turn into QUEEN, 1
 12 | 3r4/5k2/1b1p4/p5p1/pPp5/8/4bn1K/8 w | b5-a4 (ATTACK), 1
 12 | 8/1K3Bp1/3k1p1p/7P/6r1/1P6/1r2b3/4R3 w | g3-g4 (ATTACK), 3
 12 | 8/5p2/8/3pk2p/2b1p2p/4P1PP/3P1K2/8 b | g2-g3 (QUIET_MOVE), 1
@@ -38677,7 +38677,7 @@
 12 | 6k1/P3Q3/8/8/8/8/1PP1PPPP/2K2B1R b | f6-e7 (QUIET_MOVE), 1
 12 | 4k3/2pppp1p/2n5/8/4b3/2b5/r7/1q4K1 w | b8-b1 (QUIET_MOVE), 1
 12 | 8/2p1R3/2p5/2P5/1P1P4/1kBKP1P1/8/2r5 w | a1-c1 (QUIET_MOVE), 1
-12 | r7/5p2/p2p1k1p/b6P/2P5/8/5PK1/1q6 w | b2-b1 (TURN_INTO) turn into null, 1; e6-f6 (ATTACK), 6
+12 | r7/5p2/p2p1k1p/b6P/2P5/8/5PK1/1q6 w | b2-b1 (TURN_INTO) turn into QUEEN, 1; e6-f6 (ATTACK), 6
 12 | 5k2/5p2/3p4/1p4p1/pPb3P1/r7/5n2/7K w | d1-f2 (QUIET_MOVE), 1
 12 | 8/8/pbkp3p/1p1b4/8/P1P4r/1P6/3K4 w | h4-h3 (ATTACK), 1
 12 | 3R4/1r3kp1/5p1p/3p4/6P1/KP3r1P/8/8 w | f2-f3 (QUIET_MOVE), 1
@@ -38701,12 +38701,12 @@
 12 | 2k5/ppp3pp/5n2/8/8/P6q/4r3/1K1r4 w | d4-d1 (QUIET_MOVE), 1
 12 | 4r1k1/8/6p1/6p1/p1p5/1pP2n1P/4p3/7K w | f7-g6 (ATTACK), 1
 12 | rn3r2/pp3ppk/2pp4/8/8/5q2/2K5/8 w | a3-f3 (ATTACK), 1
-12 | 2r5/1p5p/2p1pk2/3n4/4b1K1/2n4P/8/q7 w | a2-a1 (TURN_INTO) turn into null, 1
+12 | 2r5/1p5p/2p1pk2/3n4/4b1K1/2n4P/8/q7 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 12 | 4k2r/p4ppp/8/5b1P/1P6/2n1q3/8/3K4 w k | b5-c3 (QUIET_MOVE), 1
 12 | 5rk1/2p2ppp/1p6/3q4/3p4/2nb4/5K2/8 w | f5-d3 (ATTACK), 1
 12 | 3r4/5k2/3p4/1pbp2p1/1p6/P7/4bnK1/8 w | b6-c5 (ATTACK), 1
 12 | 7k/P7/8/6Q1/8/8/1PP1PPPP/2K2B1R b | a6-a7 (QUIET_MOVE), 1
-12 | 3r4/5k2/1b1p4/pP4p1/p7/8/4bn1K/2q5 w | c2-c1 (TURN_INTO) turn into null, 1
+12 | 3r4/5k2/1b1p4/pP4p1/p7/8/4bn1K/2q5 w | c2-c1 (TURN_INTO) turn into QUEEN, 1
 12 | 2R5/5p2/P3pkp1/1KB4p/7P/6P1/8/4r3 w | g7-f6 (QUIET_MOVE), 1
 12 | 3r4/2rp1kp1/pp5p/8/b4b2/3K3P/8/8 w | c6-a4 (ATTACK), 1
 12 | r7/5p2/p3k2p/b1p2q1P/7B/8/5P1K/8 w | b1-f5 (QUIET_MOVE), 7
@@ -38717,7 +38717,7 @@
 12 | r1b1k3/p1p2pp1/p7/2n1p3/8/5K2/2q5/8 w q | d7-c5 (QUIET_MOVE), 1
 12 | 3r4/5k2/1b1p4/1P4p1/p7/P5K1/4bn2/6q1 w | c1-g1 (QUIET_MOVE), 3
 12 | 8/8/3p4/2p1k1Q1/2P5/8/P2PNPP1/R3K3 b Q | h6-g5 (ATTACK), 1
-12 | 2r3k1/8/3pp1p1/1p6/pP3p2/P7/8/2q3K1 w | c2-c1 (TURN_INTO) turn into null, 1
+12 | 2r3k1/8/3pp1p1/1p6/pP3p2/P7/8/2q3K1 w | c2-c1 (TURN_INTO) turn into QUEEN, 1
 12 | 3R4/1r3kp1/5p1p/3p4/1K4P1/1P5P/5r2/8 w | a7-b7 (QUIET_MOVE), 1
 12 | 7k/8/8/P5Q1/8/8/1PP1PPPP/2K2B1R b | a4-a5 (QUIET_MOVE), 1
 12 | 5R2/7k/3p4/5p2/3P1B2/8/P1r2PP1/R3K3 b Q | h6-f4 (QUIET_MOVE), 1
@@ -38765,7 +38765,7 @@
 12 | 5Rk1/8/3p3B/5p2/3P4/8/P1r2PP1/R3K3 b Q | c8-f8 (ATTACK), 1
 12 | 6k1/3r1p2/3p3p/3p2p1/p2n1qP1/8/6K1/8 w | c1-f4 (ATTACK), 1
 12 | 8/6k1/3N4/3PN2R/7P/8/PP3PP1/3R2K1 b | h8-h5 (ATTACK), 1
-12 | 2r5/5pk1/8/1pp1b1P1/8/7p/5P2/q3R2K w | a2-a1 (TURN_INTO) turn into null, 2
+12 | 2r5/5pk1/8/1pp1b1P1/8/7p/5P2/q3R2K w | a2-a1 (TURN_INTO) turn into QUEEN, 2
 12 | 4r3/6pk/5p1p/1PK5/2B2RPP/8/2b5/8 w | e1-e8 (QUIET_MOVE), 1
 12 | 8/7k/P7/6Q1/8/8/1PP1PPPP/2K2B1R b | a5-a6 (QUIET_MOVE), 1
 12 | 8/5p2/5k2/3p3p/2b1p2p/4P2P/3P1KP1/8 b | g1-f2 (QUIET_MOVE), 1
@@ -38810,15 +38810,15 @@
 12 | 5b2/1pp1pkp1/8/3q4/5P2/8/3KP2r/5r2 w | d8-d5 (ATTACK), 1
 12 | 8/4Q3/p1k5/8/8/P3B3/1P3PPP/R3K2R b KQ | h7-e7 (ATTACK), 1
 12 | 5rk1/p1p2pp1/7p/7b/3n1p2/8/4r3/5K2 w | e8-e2 (QUIET_MOVE), 1
-12 | R6k/4Q3/8/8/8/8/1PP1PPPP/2K2B1R b | a7-a8 (TURN_INTO) turn into null, 1
+12 | R6k/4Q3/8/8/8/8/1PP1PPPP/2K2B1R b | a7-a8 (TURN_INTO) turn into ROOK, 1
 12 | 6k1/p1p2pp1/7p/7b/3n1p2/8/4r3/1r3K2 w | b8-b1 (QUIET_MOVE), 1
 12 | 5Rk1/8/8/5N2/1B1P2N1/1P1P1K1P/1r6/3R4 b | f7-f8 (QUIET_MOVE), 14
 12 | 2R5/P4p2/2K1pkp1/2B4p/7P/6P1/8/r7 w | b1-a1 (QUIET_MOVE), 1
-12 | 3r4/5k2/1b1p4/1P4p1/p7/P7/4bn1K/2q5 w | c2-c1 (TURN_INTO) turn into null, 3
+12 | 3r4/5k2/1b1p4/1P4p1/p7/P7/4bn1K/2q5 w | c2-c1 (TURN_INTO) turn into QUEEN, 3
 12 | 6k1/1p6/p3bp2/3p3r/2pP4/8/6P1/4B1K1 b | d2-e1 (ATTACK), 1
 12 | r4rk1/pp3ppp/5n2/b7/7n/8/2K5/8 w | f3-h4 (ATTACK), 1
 12 | 1r6/1P4pk/5p1p/1K6/2B2RPP/8/2b5/8 w | e8-b8 (QUIET_MOVE), 1
-12 | r7/5p2/p2p1k1p/b1P4P/8/8/5P2/1q5K w | b2-b1 (TURN_INTO) turn into null, 4
+12 | r7/5p2/p2p1k1p/b1P4P/8/8/5P2/1q5K w | b2-b1 (TURN_INTO) turn into QUEEN, 4
 12 | r1b5/1pppkp1p/4p3/3q4/8/p7/5K2/8 w | a4-a3 (QUIET_MOVE), 1
 12 | 4r3/1p4k1/5p2/p1Bp4/2pP2K1/4P3/8/1b6 b | f3-g4 (ATTACK), 1
 12 | 6k1/5pp1/8/3p1b2/1p3P2/rP5p/8/1K1r4 w | d3-d1 (QUIET_MOVE), 3
@@ -38835,7 +38835,7 @@
 12 | 6k1/1R4p1/7p/2p5/2P5/p2r3P/b5P1/6K1 b | e7-b7 (ATTACK), 51
 12 | 5rk1/p4ppp/3p1b2/8/Pn6/2r5/1K6/8 w | d5-b4 (ATTACK), 1
 11 | 3r4/5p2/p3k2p/2p5/5Bq1/2b5/5PK1/8 w | h5-g4 (QUIET_MOVE), 5
-11 | r7/5p2/p4k1p/b1p4P/8/8/5P2/1q4K1 w | b2-b1 (TURN_INTO) turn into null, 1
+11 | r7/5p2/p4k1p/b1p4P/8/8/5P2/1q4K1 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 11 | 4r3/1p3k2/p4p1p/3p4/3P4/4q3/8/R6K b | g1-a1 (QUIET_MOVE), 6
 11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/p1p5/6K1 w | c3-c2 (QUIET_MOVE), 1
 11 | 8/1p4k1/5p2/p2p4/3P2K1/2p1r3/8/1bB5 b | a3-c1 (QUIET_MOVE), 1
@@ -38863,7 +38863,7 @@
 11 | 3r4/5k2/3p4/1p1p2p1/1P1b4/8/4bnK1/8 w | c5-d4 (QUIET_MOVE), 1
 11 | 8/2b1k3/p1B3p1/6p1/6p1/P7/5PK1/3r4 w | f5-g4 (ATTACK), 4
 11 | 5k2/5p2/3p4/1p4p1/pPb3n1/r7/6K1/8 w | f2-g4 (ATTACK), 1
-11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/p7/2q2K2 w | c2-c1 (TURN_INTO) turn into null, 1
+11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/p7/2q2K2 w | c2-c1 (TURN_INTO) turn into QUEEN, 1
 11 | 2r5/2b2pk1/7p/3p4/4p1P1/8/2p4K/5q2 w | d6-d5 (QUIET_MOVE), 1
 11 | 6k1/5pp1/8/3p1b2/1p3P2/1r1r4/2K5/3q4 w | h1-d1 (QUIET_MOVE), 2
 11 | 2R5/P4p2/2K1p1p1/7p/4k2P/6P1/8/B7 w | f5-e4 (QUIET_MOVE), 1
@@ -38890,7 +38890,7 @@
 11 | 6k1/3R4/1r5p/7n/PP4K1/3N2PP/8/8 w | g7-h5 (ATTACK), 1
 11 | 5b2/8/3k4/pp1P4/3Pp3/5K1P/PP6/8 w | f5-e4 (ATTACK), 1
 11 | 8/6pk/7p/2pb4/8/7P/p2r2P1/R3K3 b | f2-e1 (QUIET_MOVE), 17
-11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/2p4K/q7 w | a2-a1 (TURN_INTO) turn into null, 2
+11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/2p4K/q7 w | a2-a1 (TURN_INTO) turn into QUEEN, 2
 11 | Q1R5/5p2/2K1p1p1/7p/7P/5kP1/8/B7 w | e4-f3 (QUIET_MOVE), 1
 11 | 3r4/5p2/p3k2p/b7/8/5P2/5BK1/2q4q w | h5-h1 (QUIET_MOVE), 1
 11 | 6k1/3R4/2K2p1p/2P3p1/6P1/5r1P/1r6/8 w | f4-f3 (QUIET_MOVE), 1
@@ -38908,7 +38908,7 @@
 11 | r7/5p2/p3k2p/b1p4q/7B/8/5PK1/8 w | d1-h5 (ATTACK), 7; f5-h5 (ATTACK), 7
 11 | 2r3k1/5p2/2b3p1/1p2n1bp/8/p7/7K/8 w | a4-a3 (QUIET_MOVE), 1
 11 | 8/6pk/7p/2p5/2b5/r6P/p5P1/R5K1 b | c1-a1 (QUIET_MOVE), 12
-11 | 3r4/5p2/p3k2p/b6q/8/5PB1/6K1/2q5 w | c2-c1 (TURN_INTO) turn into null, 3
+11 | 3r4/5p2/p3k2p/b6q/8/5PB1/6K1/2q5 w | c2-c1 (TURN_INTO) turn into QUEEN, 3
 11 | 6k1/6p1/5p1p/8/1K4P1/1P1R3P/r4r2/8 w | h2-f2 (QUIET_MOVE), 4
 11 | 3R4/5kp1/5p1p/3p4/6P1/1r3r1P/1K6/8 w | c3-b3 (QUIET_MOVE), 4; b7-b3 (ATTACK), 1
 11 | 6k1/1R6/8/2N4p/1p1B4/8/1PK2PPP/8 w | h8-g8 (QUIET_MOVE), 1
@@ -38920,7 +38920,7 @@
 11 | 5r2/2b2pk1/3p3p/8/4p3/6P1/2p4K/5q2 w | c8-f8 (QUIET_MOVE), 1
 11 | 3r4/2b2pk1/7p/3p4/4p1P1/8/2p4K/5q2 w | d6-d5 (QUIET_MOVE), 1
 11 | 5k2/5p2/3p4/1p1b2p1/pP4n1/r7/8/7K w | c4-d5 (QUIET_MOVE), 1
-11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/3q4/q4K2 w | a2-a1 (TURN_INTO) turn into null, 1
+11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/3q4/q4K2 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 11 | 6k1/6p1/5p1p/1K6/1P3rP1/3R3P/1r6/8 w | f2-f4 (QUIET_MOVE), 4
 11 | 6r1/5p2/pB2k2p/2p5/8/2b5/5P2/3q1K2 w | h5-d1 (QUIET_MOVE), 7
 11 | 8/3p2p1/pp6/4k2p/b6b/2rK4/2r5/8 w | c8-c3 (QUIET_MOVE), 1
@@ -38959,11 +38959,11 @@
 11 | 6k1/8/6p1/8/p1p4p/1pP1rn2/4p1K1/8 w | g5-h4 (ATTACK), 1
 11 | 6r1/5p2/p4k1p/b1p4P/8/8/5PK1/3q4 w | a8-g8 (QUIET_MOVE), 4
 11 | 8/1p5k/p3bp2/8/3p3r/5P2/2p5/2B3K1 b | g2-f3 (ATTACK), 1
-11 | 2r3k1/5p2/2b3p1/1p2n1bp/8/6K1/8/q7 w | a2-a1 (TURN_INTO) turn into null, 1
+11 | 2r3k1/5p2/2b3p1/1p2n1bp/8/6K1/8/q7 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 11 | 3r4/2b2pk1/3p3p/8/4p3/6P1/2p4K/5q2 w | c8-d8 (QUIET_MOVE), 1
 11 | 8/8/pbkp3p/3b4/P7/2p4P/r7/2K5 w | c4-c3 (QUIET_MOVE), 5
 11 | 5r2/2b2pk1/7p/3p4/4p1P1/8/2p4K/5q2 w | d6-d5 (QUIET_MOVE), 1
-11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/2p5/q5K1 w | a2-a1 (TURN_INTO) turn into null, 1
+11 | 2r5/2b2pk1/3p3p/8/4p3/6P1/2p5/q5K1 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 11 | 8/6pk/7p/2p5/2b5/p2r3P/6P1/1R4K1 b | b8-b1 (QUIET_MOVE), 51
 11 | 8/1p3k2/5p2/3p4/3P1K2/p2r4/2p5/1bB5 b | g4-f4 (QUIET_MOVE), 1
 11 | 7k/6R1/7p/2N5/1p1B4/8/1P3PPP/1K6 w | a5-b4 (ATTACK), 1
@@ -38994,7 +38994,7 @@
 11 | 8/8/pbkp3p/3b4/2p5/P6r/1P1K4/8 w | b5-c4 (ATTACK), 4
 11 | 8/1p3k2/p3bp2/3p4/8/B1pr4/5KP1/8 b | b4-a3 (QUIET_MOVE), 1
 11 | r7/5p2/p4k1p/b1p2q1P/8/8/5PK1/8 w | b1-f5 (QUIET_MOVE), 2
-11 | 6k1/8/6p1/8/p1p4p/1pP1rn2/5K2/4q3 w | e2-e1 (TURN_INTO) turn into null, 1
+11 | 6k1/8/6p1/8/p1p4p/1pP1rn2/5K2/4q3 w | e2-e1 (TURN_INTO) turn into QUEEN, 1
 11 | 8/3r2pk/3K1p1p/7P/2B3P1/1P6/2b5/8 w | a7-d7 (ATTACK), 3
 11 | 8/R7/4bpk1/1p1p4/3Pr3/4PK2/8/2r5 b | g3-f3 (QUIET_MOVE), 1
 11 | 3r4/3p2p1/pp6/4k2p/b6b/3K4/2r5/8 w | c7-c2 (QUIET_MOVE), 1
@@ -39004,7 +39004,7 @@
 11 | 3k1br1/1p2pp1p/3p4/8/r2n4/8/6K1/8 w | h8-g8 (QUIET_MOVE), 1
 11 | 6k1/8/6p1/8/p1p4p/1pP1r1q1/3n4/5K2 w | f3-d2 (QUIET_MOVE), 1
 11 | 8/2R2pk1/2P2p2/3p3B/7P/4K1P1/2r5/8 w | f2-c2 (QUIET_MOVE), 1
-11 | 6k1/5pp1/8/3p1b2/1p3P2/1r1r4/8/2K4q w | h2-h1 (TURN_INTO) turn into null, 6
+11 | 6k1/5pp1/8/3p1b2/1p3P2/1r1r4/8/2K4q w | h2-h1 (TURN_INTO) turn into QUEEN, 6
 11 | 8/6pk/7p/2pb4/8/3r3P/p4KP1/R7 b | g1-f2 (QUIET_MOVE), 17
 11 | 1k6/4R3/8/4pP2/6N1/2P5/2P2PPP/6K1 b | a7-e7 (QUIET_MOVE), 1
 11 | 8/1p3k2/5p2/3p4/3P1K2/3r4/pBp5/1b6 b | c1-b2 (QUIET_MOVE), 1
@@ -39026,7 +39026,7 @@
 11 | 8/pp1k4/1b1P3p/8/2r5/8/1P4KP/3R4 w | e4-c4 (ATTACK), 1
 11 | 8/1p6/p3bpk1/8/3p3r/5P2/2p3K1/2B5 b | g1-g2 (QUIET_MOVE), 1
 11 | 8/6pk/7p/2p5/2b5/3r3P/p5P1/5RK1 b | b1-f1 (QUIET_MOVE), 12
-11 | r7/5p2/p4k1p/b1p4P/8/8/5P1K/1q6 w | b2-b1 (TURN_INTO) turn into null, 1
+11 | r7/5p2/p4k1p/b1p4P/8/8/5P1K/1q6 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 11 | 8/8/p1kp3p/3b4/2pb4/P6r/1P6/3K4 w | b6-d4 (QUIET_MOVE), 2
 11 | 3r4/5p2/p3k2p/2p4q/8/2b5/5PKB/8 w | a8-d8 (QUIET_MOVE), 5
 11 | 6r1/5p2/p4k1p/b1p4P/8/7q/5P2/7K w | f5-h3 (QUIET_MOVE), 6
@@ -39089,7 +39089,7 @@
 10 | 8/2p5/k1p5/2Pbr3/6Kp/8/1P6/6R1 w | e2-e5 (ATTACK), 1
 10 | k7/P2RKr2/2P5/7p/5r2/8/4p3/R7 w | f8-f7 (QUIET_MOVE), 1
 10 | 8/pp1k4/1b1P3p/8/7P/5K2/1r6/3R4 w | c2-b2 (ATTACK), 1
-10 | 8/8/pbkp3p/3b3P/1r6/6K1/8/1q6 w | b2-b1 (TURN_INTO) turn into null, 1
+10 | 8/8/pbkp3p/3b3P/1r6/6K1/8/1q6 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 10 | 4r3/1p3k2/p4p1p/3p4/4q3/8/8/2R3K1 b | h1-g1 (QUIET_MOVE), 1
 10 | 6k1/3R4/2r4p/7K/PP6/3N2PP/8/8 w | b6-c6 (QUIET_MOVE), 1
 10 | 3R4/6pk/5p1p/2K5/6PP/1r6/2r5/8 w | b2-c2 (QUIET_MOVE), 2
@@ -39104,7 +39104,7 @@
 10 | 8/6p1/5p1p/5R1P/6Pk/5K2/2r5/6r1 w | e1-g1 (QUIET_MOVE), 1
 10 | 8/3k1p2/4p1p1/p3b1P1/P7/1P3K2/8/8 w | e7-d7 (QUIET_MOVE), 2; c7-d7 (QUIET_MOVE), 3
 10 | 8/6pk/7p/2p5/2b5/1r5P/R5P1/6K1 b | a1-a2 (ATTACK), 6
-10 | 8/8/pbkp3p/3b4/2r4P/6K1/8/1q6 w | b2-b1 (TURN_INTO) turn into null, 1
+10 | 8/8/pbkp3p/3b4/2r4P/6K1/8/1q6 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 10 | 3r4/5k2/3p4/3p2p1/1p1b4/3n4/4b1K1/8 w | b5-b4 (QUIET_MOVE), 1
 10 | 5k2/3R4/1r5p/1P5K/P4N2/6PP/8/8 w | g8-f8 (QUIET_MOVE), 1
 10 | 8/8/p1kp3p/3b4/1r6/1p5P/5b1K/8 w | b6-f2 (QUIET_MOVE), 1
@@ -39120,7 +39120,7 @@
 10 | 2k5/4R3/8/4NP2/8/2P5/2P2PPP/6K1 b | g4-e5 (ATTACK), 1
 10 | 5k2/3R4/4r2p/1P1N3K/P7/6PP/8/8 w | b6-e6 (QUIET_MOVE), 1
 10 | 8/8/5pRp/8/1K1r1kPP/1P6/2r5/8 w | d5-d4 (QUIET_MOVE), 16; d3-d4 (QUIET_MOVE), 4
-10 | 3r2k1/6p1/7p/1p1n4/8/2r3pK/8/q7 w | a2-a1 (TURN_INTO) turn into null, 1
+10 | 3r2k1/6p1/7p/1p1n4/8/2r3pK/8/q7 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 10 | 4k3/6R1/2K5/1PN4p/3B3P/8/5PP1/8 w | d8-e8 (QUIET_MOVE), 1
 10 | 2R5/k1p5/P7/2P5/8/1b2p3/1r6/5BK1 w | f2-b2 (ATTACK), 1
 10 | 8/1p3k2/p3bp2/8/3p1KP1/8/2p5/2r5 b g3 | g2-g4 (LONG_MOVE), 1
@@ -39151,7 +39151,7 @@
 10 | k4r2/P1R5/2P1K3/7p/1r6/8/4p3/R7 w | f5-f8 (QUIET_MOVE), 1
 10 | 3R4/6pk/5p1p/2K5/6P1/1r5P/1r6/8 w | b4-b3 (QUIET_MOVE), 2
 10 | 6k1/5pp1/8/3p3P/1p6/3r1p2/5r2/2K5 w | b3-d3 (ATTACK), 38
-10 | r5k1/5p2/3p2p1/2b5/2p4p/8/7K/1q6 w | b2-b1 (TURN_INTO) turn into null, 1
+10 | r5k1/5p2/3p2p1/2b5/2p4p/8/7K/1q6 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 10 | 5R2/7k/3p4/5p2/3P1B2/8/P4KP1/R7 b | e1-f2 (ATTACK), 1
 10 | 8/5k2/2PKrp1p/6p1/3R2P1/6r1/8/8 w | e1-e6 (QUIET_MOVE), 2; e2-e6 (QUIET_MOVE), 3
 10 | 3r2k1/6p1/7p/1p1n4/8/6p1/p7/2r3K1 w | c8-c1 (ATTACK), 1
@@ -39182,7 +39182,7 @@
 10 | 8/1p4k1/p4p2/2Bp1K2/2pP4/8/8/4r3 b | f4-f5 (ATTACK), 1
 10 | 8/8/p1kp3p/3b4/2rb4/1p4KP/8/8 w | a4-b3 (EN_PASSANT), 1
 10 | 1r6/1P5k/1K3p2/6p1/2B2RP1/8/2b5/8 w | h6-g5 (ATTACK), 1
-10 | 8/2b5/p4kp1/8/6p1/P7/2B3K1/3r1q2 w | f2-f1 (TURN_INTO) turn into null, 2
+10 | 8/2b5/p4kp1/8/6p1/P7/2B3K1/3r1q2 w | f2-f1 (TURN_INTO) turn into QUEEN, 2
 10 | 8/1p3k2/5p2/3p1K2/3P4/3r4/8/Bbq5 b | f4-f5 (QUIET_MOVE), 1
 10 | 8/4k3/pbB3p1/6p1/8/P5p1/5r2/7K w | g4-g3 (QUIET_MOVE), 2
 10 | 5k2/5p2/p4n1p/8/7p/6bK/6P1/7r w | a1-h1 (QUIET_MOVE), 10
@@ -39194,7 +39194,7 @@
 10 | 8/8/pbkp3p/3b3P/1r6/6K1/6q1/8 w | a2-g2 (QUIET_MOVE), 1
 10 | 2b5/8/p4pk1/1p6/1Bp2K2/3p4/8/3r4 b | c5-b4 (QUIET_MOVE), 1
 10 | k4r2/P1R5/2P5/4K2p/1r6/8/4p3/R7 w | g4-b4 (ATTACK), 1
-10 | 3r2k1/6p1/7p/1p1n1K2/8/2r5/8/q5q1 w | g2-g1 (TURN_INTO) turn into null, 1
+10 | 3r2k1/6p1/7p/1p1n1K2/8/2r5/8/q5q1 w | g2-g1 (TURN_INTO) turn into QUEEN, 1
 10 | 8/6R1/5p1p/8/1K3kPP/1P1r4/2r5/8 w | f3-d3 (ATTACK), 4
 10 | 8/4kp2/4p1p1/p3b1P1/P5K1/1P6/8/8 w | f4-e5 (ATTACK), 1
 10 | 8/6pk/7p/2p5/2b5/7P/R4KP1/1r6 b | a1-a2 (ATTACK), 5; g1-f2 (QUIET_MOVE), 6
@@ -39218,7 +39218,7 @@
 10 | 8/5Qpk/2q1p2p/8/8/2P4P/6PK/8 w | c5-c6 (ATTACK), 1
 10 | 5k2/5p1n/p6p/8/7p/8/5bPK/r7 w | g5-h4 (ATTACK), 10
 10 | 4R3/6pk/5p1p/2K5/6PP/1r6/2r5/8 w | b2-c2 (QUIET_MOVE), 1
-10 | 1k3Q2/4R3/8/4N3/8/2P5/2P2PPP/6K1 b | f7-f8 (TURN_INTO) turn into null, 1
+10 | 1k3Q2/4R3/8/4N3/8/2P5/2P2PPP/6K1 b | f7-f8 (TURN_INTO) turn into QUEEN, 1
 10 | 6k1/3R4/1r5p/1P5K/P7/3N2PP/8/8 w | c6-b6 (QUIET_MOVE), 1
 10 | 8/8/p1kp3p/7K/7P/4b3/4br2/1q6 w | c4-e2 (QUIET_MOVE), 1
 10 | 3r2k1/6p1/4Kr1p/1p1n4/8/8/8/q5q1 w | f3-f6 (QUIET_MOVE), 1
@@ -39235,9 +39235,9 @@
 10 | 8/8/p3bp2/1pB3k1/2p1K3/3p4/8/3r4 b | b4-c5 (QUIET_MOVE), 1
 10 | 8/4k3/pbB3p1/6p1/8/P5p1/7r/7K w | c2-h2 (QUIET_MOVE), 2
 10 | 8/5Qpk/4p2p/7P/7q/2P5/6PK/8 w | e1-h4 (QUIET_MOVE), 4
-10 | 3r4/5k2/3p4/3p2p1/3b4/3n4/4b3/1q5K w | b2-b1 (TURN_INTO) turn into null, 1
+10 | 3r4/5k2/3p4/3p2p1/3b4/3n4/4b3/1q5K w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 10 | 8/6p1/5p1p/7P/5RPk/5K2/2r5/5r2 w | d1-f1 (QUIET_MOVE), 4; g1-f1 (QUIET_MOVE), 1
-10 | 8/8/pbkp3p/8/2b4K/7P/5r2/1q6 w | b2-b1 (TURN_INTO) turn into null, 1
+10 | 8/8/pbkp3p/8/2b4K/7P/5r2/1q6 w | b2-b1 (TURN_INTO) turn into QUEEN, 1
 10 | 8/8/p3bpk1/1p6/1Bp1K3/3p4/8/3r4 b | f4-e4 (QUIET_MOVE), 1
 10 | 8/2K2k2/2P2p1p/6p1/3R2P1/6r1/4r3/8 w | e6-e2 (QUIET_MOVE), 2; b2-e2 (QUIET_MOVE), 1
 10 | 3R4/6p1/5pkp/8/6PP/5K2/2r5/4r3 w | h7-g6 (QUIET_MOVE), 1
@@ -39332,7 +39332,7 @@
 9 | 4r3/1p3k2/p4p1p/8/3p4/6K1/8/2q5 b | f2-g3 (QUIET_MOVE), 1
 9 | 1k6/4R3/8/8/2N1P3/1P5P/P4P2/2K5 b | e6-e7 (QUIET_MOVE), 1
 9 | 8/1p1k4/1b1Pq3/5R1K/7P/8/8/1r6 w | g8-e6 (QUIET_MOVE), 1
-9 | 7r/5p2/8/1pp2k2/5P2/8/6K1/b6q w | h2-h1 (TURN_INTO) turn into null, 2
+9 | 7r/5p2/8/1pp2k2/5P2/8/6K1/b6q w | h2-h1 (TURN_INTO) turn into QUEEN, 2
 9 | 8/2k5/pb1p3p/3b4/8/8/2p5/Kr6 w | b3-b1 (QUIET_MOVE), 1
 9 | r7/pp2k3/8/5p2/P7/1n6/7r/3K4 w | h7-h2 (QUIET_MOVE), 1
 9 | 8/8/pbkp3p/3b4/8/2p4r/2K5/8 w | c4-c3 (QUIET_MOVE), 1
@@ -39345,7 +39345,7 @@
 9 | 8/1p1k4/1b1P4/6RK/7P/8/4q3/1r6 w | e6-e2 (QUIET_MOVE), 1
 9 | r7/pp2k2r/8/5p2/P7/1n6/8/4K3 w | e6-f5 (ATTACK), 1
 9 | 8/3k4/1r3pRp/2K5/1r4P1/7P/8/8 w | a4-b4 (QUIET_MOVE), 1
-9 | 8/1p1k4/1b1P3K/3R4/7P/8/8/qr6 w | a2-a1 (TURN_INTO) turn into null, 1
+9 | 8/1p1k4/1b1P3K/3R4/7P/8/8/qr6 w | a2-a1 (TURN_INTO) turn into QUEEN, 1
 9 | 8/8/pbkp3p/8/8/1bp4r/8/1K6 w | d5-b3 (QUIET_MOVE), 1
 9 | 8/7k/7p/2pb2p1/6P1/7P/5K2/1r6 b | e3-f2 (QUIET_MOVE), 2
 9 | 8/Pk6/1Bp5/2P4p/4K3/6b1/1r6/8 w | f2-g3 (QUIET_MOVE), 1
@@ -39386,7 +39386,7 @@
 9 | 8/7k/7p/2pb2p1/6P1/3K3P/8/1r6 b | e3-d3 (QUIET_MOVE), 1
 9 | 2r5/pp2k3/8/5p2/P7/1n6/7r/4K3 w | a8-c8 (QUIET_MOVE), 1
 9 | 8/6p1/5p1p/6kP/4KrP1/8/1r6/8 w | f2-f4 (ATTACK), 1
-9 | 2k1Q3/3R4/6N1/8/8/1P5P/P2K1P2/8 b | e7-e8 (TURN_INTO) turn into null, 1
+9 | 2k1Q3/3R4/6N1/8/8/1P5P/P2K1P2/8 b | e7-e8 (TURN_INTO) turn into QUEEN, 1
 9 | 4r3/1p3k2/p4p1p/8/8/6K1/8/2qq4 b | f4-g3 (QUIET_MOVE), 1
 9 | 8/Pk6/1Bp5/2P5/8/1r4bp/8/5K2 w | h4-h3 (QUIET_MOVE), 1
 9 | 8/8/pbkp3p/3b4/8/1r6/2p5/K7 w | c3-c2 (QUIET_MOVE), 1
@@ -39532,7 +39532,7 @@
 8 | 3Q4/2R2R2/7k/8/5B2/8/P4KP1/8 b | e5-f4 (QUIET_MOVE), 1
 8 | 8/6pk/7p/3b3P/8/2p5/7r/3K4 b | e1-d1 (QUIET_MOVE), 1
 8 | 5k2/3b2p1/1P5p/5K1P/6B1/8/8/8 w | c6-d7 (QUIET_MOVE), 2
-8 | 3Q4/2R2R2/8/4B1k1/8/8/P4KP1/8 b | d7-d8 (TURN_INTO) turn into null, 1
+8 | 3Q4/2R2R2/8/4B1k1/8/8/P4KP1/8 b | d7-d8 (TURN_INTO) turn into QUEEN, 1
 8 | 6k1/6p1/7p/7P/4b3/2p4r/4K3/8 b | d1-e2 (QUIET_MOVE), 1
 8 | 8/3K2pk/7p/5b1P/2B5/1P6/8/8 w | c2-f5 (ATTACK), 3
 8 | 8/8/4bpk1/3p4/3Pr3/6K1/1r6/8 b | f3-g3 (QUIET_MOVE), 1
@@ -39614,7 +39614,7 @@
 7 | 8/6p1/6kp/3b4/2p5/1r6/3K4/8 b | d1-d2 (QUIET_MOVE), 7; e1-d2 (QUIET_MOVE), 4
 7 | 8/8/1b3K2/p7/1p6/1P3k2/P7/8 w | e3-b6 (QUIET_MOVE), 1
 7 | 8/6pk/7p/2pb4/7r/6K1/8/8 b | f2-g3 (QUIET_MOVE), 21
-7 | k7/8/2p5/B1P5/8/6K1/8/1r5q w | h2-h1 (TURN_INTO) turn into null, 1
+7 | k7/8/2p5/B1P5/8/6K1/8/1r5q w | h2-h1 (TURN_INTO) turn into QUEEN, 1
 7 | 8/6pk/7p/2pb4/8/2r5/4K3/8 b | f2-e2 (QUIET_MOVE), 17
 7 | 1R6/8/7K/2p5/2k1b3/8/1P4r1/8 w | d5-e4 (QUIET_MOVE), 1
 7 | 8/6p1/8/2pb1k2/2r5/8/4K2p/8 b | d2-e2 (QUIET_MOVE), 1
@@ -39622,7 +39622,7 @@
 7 | 8/b4K2/8/p7/1p6/1P3k2/P7/8 w | d4-a7 (QUIET_MOVE), 1
 7 | 8/6p1/8/2pb1k2/8/7p/2r5/6K1 b | f1-g1 (QUIET_MOVE), 1
 7 | 8/6p1/6kp/8/8/2pb4/1r6/3K4 b | e1-d1 (QUIET_MOVE), 1
-7 | 8/6p1/5p2/8/5r2/2K3k1/4r3/7q w | h2-h1 (TURN_INTO) turn into null, 1
+7 | 8/6p1/5p2/8/5r2/2K3k1/4r3/7q w | h2-h1 (TURN_INTO) turn into QUEEN, 1
 7 | 8/6p1/7p/3b4/4k3/1rp5/8/2K5 b | c2-c1 (QUIET_MOVE), 7
 7 | 8/5k2/2P5/3p1p1P/3K4/8/8/6R1 w | f6-f5 (QUIET_MOVE), 1
 7 | 8/8/8/p1b1K3/1p6/1P3k2/P7/8 w | e3-f3 (QUIET_MOVE), 1
@@ -39638,7 +39638,7 @@
 7 | 8/6p1/6kp/8/2b5/1rp5/8/2K5 b | c2-c1 (QUIET_MOVE), 4
 7 | 8/6p1/8/2pb1k2/8/7p/2r5/4K3 b | f1-e1 (QUIET_MOVE), 2
 7 | 8/8/8/p1b1k1K1/1p6/1P6/P7/8 w | e6-e5 (QUIET_MOVE), 1
-7 | k7/P3R3/8/2Pb4/8/8/5K2/4q3 w | e2-e1 (TURN_INTO) turn into null, 1
+7 | k7/P3R3/8/2Pb4/8/8/5K2/4q3 w | e2-e1 (TURN_INTO) turn into QUEEN, 1
 7 | 8/6p1/8/2pb4/5k1p/8/2r5/5K2 b | g1-f1 (QUIET_MOVE), 1
 7 | 8/6pk/7p/8/8/1rpb4/8/3K4 b | c1-d1 (QUIET_MOVE), 1
 7 | 8/6p1/5p1p/8/5r2/3K2k1/7r/8 w | g4-g3 (QUIET_MOVE), 1

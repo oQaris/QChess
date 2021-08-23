@@ -2,19 +2,19 @@ package io.deeplay.qchess.lobot.profiler;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
+import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.FigureType;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Profile {
     private final Map<String, Distribution> repository;
@@ -40,7 +40,7 @@ public class Profile {
         if(distribution.isEmpty()) {
             repository.put(fen, distribution);
         }
-        distribution.setOrAddMove(move);
+        distribution.setOrAddMove(move, 1);
     }
 
     /**
@@ -52,6 +52,10 @@ public class Profile {
     public void add(final GameSettings gs, final Move move) throws ChessError {
         final String fen = gs.history.getBoardToStringForsythEdwards();
         add(fen, move);
+    }
+
+    public void add(final String fen, final Distribution distribution) {
+        repository.put(fen, distribution);
     }
 
     /**
@@ -85,6 +89,63 @@ public class Profile {
             bw.write(convertProfileRowToString(key));
             bw.write(System.lineSeparator());
         }
+    }
+
+    public void load(final BufferedReader br) throws IOException, ProfileException {
+        String line = br.readLine();
+        addRecord(line);
+        while (line != null) {
+            line = br.readLine();
+            addRecord(line);
+        }
+    }
+
+    private void addRecord(final String line) throws ProfileException {
+        if(line == null) return;
+        final String[] parameters = line.split(" \\| ");
+        final String fen = parameters[1];
+        final Distribution distribution = distributionParse(parameters[2]);
+        add(fen, distribution);
+    }
+
+    private Distribution distributionParse(final String line) throws ProfileException {
+        final Distribution distribution = new Distribution();
+        final String[] distributionElements = line.split("; ");
+        for(final String distributionElement : distributionElements) {
+            final String[] moveElements = distributionElement.split(", ");
+            final Move move = moveParse(moveElements[0]);
+            distribution.setOrAddMove(move, Integer.parseInt(moveElements[1]));
+        }
+        return distribution;
+    }
+
+    private Move moveParse(final String moveLine) throws ProfileException {
+        final String moveCellStr = moveComponentParse(moveLine, ProfileService.moveCellPattern);
+        final String moveTypeStr = moveComponentParse(moveLine, ProfileService.moveTypePattern);
+        final String moveTypeStrCut = moveTypeStr.substring(1, moveTypeStr.length() - 1);
+
+        if(!ProfileService.turnTemplates.contains(moveTypeStrCut)) {
+            throw new ProfileException(ProfileErrorCode.REGEX_ERROR);
+        }
+        final Move move = new Move(MoveType.valueOf(moveTypeStrCut), Cell.parse(moveCellStr.substring(0, 2)), Cell.parse(moveCellStr.substring(3)));
+        if(move.getMoveType() == MoveType.TURN_INTO || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+            final String moveTurnIntoFigure = moveComponentParse(moveLine, ProfileService.figureTypePattern);
+            final String moveTurnIntoFigureCut  = moveTurnIntoFigure.split(" ")[2];
+            if(!ProfileService.figureTemplates.contains(moveTurnIntoFigureCut)) {
+                throw new ProfileException(ProfileErrorCode.REGEX_ERROR);
+            }
+            move.turnInto = FigureType.valueOf(moveTurnIntoFigureCut);
+        }
+        return move;
+    }
+
+    private String moveComponentParse(final String moveLine, final Pattern pattern)
+        throws ProfileException {
+        final Matcher matcher = pattern.matcher(moveLine);
+        if(!matcher.find()) {
+            throw new ProfileException(ProfileErrorCode.REGEX_ERROR);
+        }
+        return moveLine.substring(matcher.start(), matcher.end());
     }
 
     private String convertProfileRowToString(final String fen) {

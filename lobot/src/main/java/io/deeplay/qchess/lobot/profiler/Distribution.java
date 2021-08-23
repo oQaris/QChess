@@ -18,9 +18,9 @@ public class Distribution {
      * иначе создастся новая пара со значением 1.
      * @param move ключ по которому идет обновление распределения
      */
-    public void setOrAddMove(final Move move) {
+    public void setOrAddMove(final Move move, final int additive) {
         final int value = data.getOrDefault(move, 0);
-        data.put(move, value + 1);
+        data.put(move, value + additive);
     }
 
     /**
