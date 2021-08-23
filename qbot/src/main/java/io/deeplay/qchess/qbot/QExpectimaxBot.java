@@ -5,12 +5,16 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.qbot.profile.Profile;
+import io.deeplay.qchess.qbot.profile.Storage;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class QExpectimaxBot extends QBot {
+    private final int profileId;
 
     protected QExpectimaxBot(
             final GameSettings roomSettings,
@@ -18,11 +22,12 @@ public class QExpectimaxBot extends QBot {
             final int searchDepth,
             final Strategy strategy) {
         super(roomSettings, color, searchDepth, strategy, "ExpectiMaxBot");
+        profileId = Storage.getProfiles().get("Атакующий_Бот");
     }
 
     protected QExpectimaxBot(
             final GameSettings roomSettings, final Color color, final int searchDepth) {
-        super(roomSettings, color, searchDepth, new PestoStrategy(), "ExpectiMaxBot");
+        this(roomSettings, color, searchDepth, new PestoStrategy());
     }
 
     @Override
@@ -85,9 +90,19 @@ public class QExpectimaxBot extends QBot {
                 ms.move(move);
                 final int currentValue = expectimax(curDepth - 1, curColor.inverse());
                 ms.undoMove();
-                sum += currentValue /* * вероятность узла*/;
+                Double coef;
+                int stateId =
+                        Storage.fenToStateId(profileId, history.getBoardToStringForsythEdwards());
+                if (stateId < 0) coef = 1. / moves.size();
+                else {
+                    Map<Move, Double> probs = Profile.movesWithProb(Storage.getMoves(stateId));
+                    coef = probs.get(move);
+                    if (coef == null) coef = 0.0;
+                }
+
+                sum += currentValue * coef;
             }
-            return (int) Math.round(sum / moves.size());
+            return (int) Math.round(sum);
         }
     }
 }

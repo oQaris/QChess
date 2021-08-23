@@ -1,18 +1,26 @@
-package io.deeplay.qchess.core.profile
+package io.deeplay.qchess.qbot.profile
 
 import io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE
 import io.deeplay.qchess.game.model.Cell
 import io.deeplay.qchess.game.model.Move
 import io.deeplay.qchess.game.model.MoveType
+import io.deeplay.qchess.game.model.figures.FigureType
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.sql.Connection
 
 object Storage {
     init {
-        Database.connect("jdbc:h2:./db/profiles", driver = "org.h2.Driver")
-        transaction {
+        Database.connect(
+            "jdbc:sqlite:C:\\Users\\admin\\Desktop\\Internship\\QChess\\data\\profiles.db?foreign_keys=ON&synchronous=OFF&journal_mode=OFF",
+            driver = "org.sqlite.JDBC"
+        )
+        TransactionManager.manager.defaultIsolationLevel = Connection.TRANSACTION_SERIALIZABLE
+        //Database.connect("jdbc:h2:./data/profiles", driver = "org.h2.Driver")
+        /*transaction {
             SchemaUtils.create(Profiles, States, Moves)
-        }
+        }*/
     }
 
     object Profiles : Table() {
@@ -67,7 +75,6 @@ object Storage {
                 }[States.id]
         }
     }
-// val stateId = getOrPutStateId(profileId, fen)
 
     fun push(stateId: Int, newMove: Move) {
         //addLogger(StdOutSqlLogger)
@@ -78,7 +85,7 @@ object Storage {
         push(stateId, from, to, newMove.moveType.ordinal.toByte(), turnInto)
     }
 
-    fun push(stateId: Int, from: Byte, to: Byte, type: Byte, turnInto: Byte?) {
+    private fun push(stateId: Int, from: Byte, to: Byte, type: Byte, turnInto: Byte?) {
         transaction {
             val moveQuery =
                 Moves.select { (Moves.stateId eq stateId) and (Moves.from eq from) and (Moves.to eq to) and (Moves.turnInto eq turnInto) }
@@ -101,9 +108,51 @@ object Storage {
         }
     }
 
-    fun get(stateId: Int): List<Pair<Move, Short>> {
+    @JvmStatic
+    fun getProfiles(): Map<String, Int> {
         return transaction {
-            mutableListOf<Pair<Move, Short>>().apply {
+            mutableMapOf<String, Int>().apply {
+                Profiles.selectAll().forEach {
+                    put(it[Profiles.name], it[Profiles.id])
+                }
+            }
+        }
+    }
+
+    @JvmStatic
+    fun toProfile(idProfile: Int): Profile {
+        return Profile().apply {
+            transaction {
+                getStates(idProfile).forEach { (fen, stId) ->
+                    states[fen] = getMoves(stId).mapValues { (_, v) -> v.toInt() }.toMutableMap()
+                }
+            }
+        }
+    }
+
+    @JvmStatic
+    fun getStates(idProfile: Int): Map<String, Int> {
+        return transaction {
+            mutableMapOf<String, Int>().apply {
+                States.select { States.profileId eq idProfile }.forEach {
+                    put(it[States.fen], it[States.id])
+                }
+            }
+        }
+    }
+
+    @JvmStatic
+    fun fenToStateId(idProfile: Int, fen: String): Int {
+        return transaction {
+            States.select { (States.profileId eq idProfile) and (States.fen eq fen) }
+                .singleOrNull()?.get(States.id) ?: -1
+        }
+    }
+
+    @JvmStatic
+    fun getMoves(stateId: Int): Map<Move, Int> {
+        return transaction {
+            mutableMapOf<Move, Int>().apply {
                 Moves.select { Moves.stateId eq stateId }.forEach {
                     val from = it[Moves.from]
                     val to = it[Moves.to]
@@ -112,7 +161,9 @@ object Storage {
                         Cell(from / STD_BOARD_SIZE, from % STD_BOARD_SIZE),
                         Cell(to / STD_BOARD_SIZE, to % STD_BOARD_SIZE)
                     )
-                    add(move to it[Moves.frequency])
+                    if (move.moveType == MoveType.TURN_INTO || move.moveType == MoveType.TURN_INTO_ATTACK)
+                        move.turnInto = FigureType.values()[it[Moves.turnInto]!!.toInt()]
+                    put(move, it[Moves.frequency].toInt())
                 }
             }
         }
@@ -131,4 +182,3 @@ object Storage {
         println()
     }
 }
-

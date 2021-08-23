@@ -3,6 +3,7 @@ package io.deeplay.qchess.qbot;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
 import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
@@ -17,6 +18,7 @@ import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
+import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
 import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
@@ -46,7 +48,16 @@ class QBotTest {
     }
 
     @Test
-    void testTime() throws ChessError {}
+    void testExpectimax() throws ChessError {
+        final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
+        final AttackBot bot1 = new AttackBot(gameSettings, Color.WHITE);
+        final QExpectimaxBot bot2 = new QExpectimaxBot(gameSettings, Color.BLACK, 3);
+
+        final Selfplay game = new Selfplay(gameSettings, bot1, bot2);
+        game.run();
+
+        assertEquals(EndGameType.CHECKMATE_TO_WHITE, gameSettings.endGameDetector.getGameResult());
+    }
 
     @Test
     @Disabled

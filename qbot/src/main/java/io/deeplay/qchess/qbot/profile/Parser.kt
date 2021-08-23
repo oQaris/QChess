@@ -1,4 +1,4 @@
-package io.deeplay.qchess.core.profile
+package io.deeplay.qchess.qbot.profile
 
 import io.deeplay.qchess.game.GameSettings
 import io.deeplay.qchess.game.model.Board
@@ -7,9 +7,9 @@ import io.deeplay.qchess.game.model.Move
 import io.deeplay.qchess.game.model.MoveType
 import io.deeplay.qchess.game.model.figures.FigureType
 import java.io.File
-import java.nio.file.Paths
 
 private val profiles = Storage
+private val profilesMap = mutableMapOf<String, Profile>()
 
 fun parse(file: File) {
     val buf = file.inputStream().bufferedReader()
@@ -44,9 +44,6 @@ fun parse(file: File) {
     }
 }
 
-private val toReplace = Paths.get("profiles.txt")
-private val newContents = toReplace.resolveSibling("temp_profile.json")
-
 fun walk(path: String, action: (File) -> Unit) {
     val root = File(path)
     val list = root.listFiles() ?: return
@@ -61,7 +58,11 @@ fun walk(path: String, action: (File) -> Unit) {
 }
 
 fun main() {
-    walk("C:\\Users\\admin\\Desktop\\Internship\\arch\\logs\\QNegaMaxBot-3-tt-pesto_VS_NNNBot-228") { f -> parse(f) }
+    walk("C:\\Users\\admin\\Desktop\\Internship\\arch\\logs") { f ->
+        parse(
+            f
+        )
+    }
     /*profiles.forEach { (t, u) ->
         println(
             "$t:\n${
@@ -86,7 +87,18 @@ fun main() {
     )
     println("Успешно!")*/
 
-    profiles.showAll()
+    /*profiles.getProfiles().forEach { (prfName, prfId) ->
+        println("$prfName:")
+        profiles.getStates(prfId).forEach { (sttFen, sttId) ->
+            println(
+                "$sttFen -> ${
+                    profiles.getMoves(sttId).joinToString(", ") { (move, freq) -> "$move = $freq" }
+                }"
+            )
+        }
+    }*/
+
+    //profiles.showAll()
 }
 
 fun Move.toStr(): String {

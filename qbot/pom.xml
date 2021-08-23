@@ -45,7 +45,44 @@
       <groupId>org.apache.commons</groupId>
       <version>1.9</version>
     </dependency>
-
+    <!-- Statistics -->
+    <dependency>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>kotlin-test</artifactId>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <scope>test</scope>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <!-- DB -->
+    <dependency>
+      <artifactId>exposed-core</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>exposed-dao</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>exposed-jdbc</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>h2</artifactId>
+      <groupId>com.h2database</groupId>
+      <version>1.4.197</version>
+    </dependency>
+    <dependency>
+      <artifactId>sqlite-jdbc</artifactId>
+      <groupId>org.xerial</groupId>
+      <version>3.36.0.1</version>
+    </dependency>
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>
