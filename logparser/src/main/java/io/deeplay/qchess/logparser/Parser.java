@@ -19,7 +19,7 @@ public class Parser {
     private final Pattern moveCellPattern = Pattern.compile("[a-h][1-8]-[a-h][1-8]");
     private final Pattern moveTypePattern = Pattern.compile("\\([A-Z_]+\\)");
     private final ParseMode parseMode;
-    private final Profile profile;
+    private final List<Profile> profiles = new LinkedList<>();
 
     public Parser(final ParseMode parseMode, final int parseModeParameter) throws ParseException {
         if(parseMode == null) {
@@ -30,7 +30,7 @@ public class Parser {
         }
         this.parseMode = parseMode;
         this.parseMode.setCount(parseModeParameter);
-        profile = new Profile();
+        profiles.add(new Profile());
     }
 
     public void profileUpdate(final File directory) throws ParseException, ProfileException {
@@ -47,7 +47,9 @@ public class Parser {
         }
         final List<File> logFiles = getAllLogFiles(directory, logsCount);
         parseLogs(logFiles);
-        ProfileService.saveProfile(profile);
+        for(final Profile profile : profiles) {
+            ProfileService.saveProfile(profile);
+        }
     }
 
     private List<File> getAllLogFiles(final File directory, int logsCount) {
@@ -71,17 +73,36 @@ public class Parser {
         return result;
     }
 
+    private Profile getProfileForName(final String name) {
+        for(final Profile profile : profiles) {
+            if(name.equals(profile.getName())) {
+                return profile;
+            }
+        }
+        final Profile profile = new Profile(name);
+        profiles.add(profile);
+        return profile;
+    }
+
+    //Атакующий_Бот Рандомный_Бот
     private void parseLogs(final List<File> logFiles) throws ParseException {
         for(final File file : logFiles) {
             try (final BufferedReader is = new BufferedReader(new FileReader(file))) {
+                final String whiteName = is.readLine().split(":")[1].trim();
+                final String blackName = is.readLine().split(":")[1].trim();
+                String name = whiteName;
                 String line = is.readLine();
                 String move = null;
                 while (line != null) {
-                    if(line.startsWith("WHITE") || line.startsWith("BLACK")) {
+                    if(line.startsWith("WHITE")) {
+                        name = whiteName;
+                        move = line;
+                    } else if (line.startsWith("BLACK")) {
+                        name = blackName;
                         move = line;
                     } else if(move != null) {
-                        if(line.startsWith("FEN")) {
-                            addToProfile(move, line);
+                        if(line.startsWith("FEN") && !name.equals("Рандомный_Бот")) {
+                            addToProfile(getProfileForName(name), move, line);
                         }
                         move = null;
                     }
@@ -93,11 +114,11 @@ public class Parser {
         }
     }
 
-    private void addToProfile(final String moveLine, final String fenLine) throws ParseException {
+    private void addToProfile(final Profile profile, final String moveLine, final String fenLine) throws ParseException {
         final Move move = moveParse(moveLine);
         final String fen = fenParse(fenLine);
+        profiles.get(0).add(fen, move);
         profile.add(fen, move);
-        System.out.printf("{%s} -> {%s}\n", fen, move);
     }
 
     private Move moveParse(final String moveLine) throws ParseException {

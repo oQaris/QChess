@@ -12,7 +12,9 @@ public class ProfileService {
 
     public static void saveProfile(final Profile profile) throws ProfileException {
         final String namePath = saveDirectory + "/" + profile.getName();
-        try(final BufferedWriter bw = new BufferedWriter(new FileWriter(namePath + "/1.profile"))) {
+        final File dir = new File(namePath);
+        dir.mkdirs();
+        try(final BufferedWriter bw = new BufferedWriter(new FileWriter(dir.getAbsoluteFile() + "/" + profile.getName() + ".profile"))) {
             profile.save(bw);
         } catch (final IOException e) {
             e.printStackTrace();
