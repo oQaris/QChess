@@ -18,10 +18,9 @@ public class Distribution {
      * иначе создастся новая пара со значением 1.
      * @param move ключ по которому идет обновление распределения
      */
-    public Distribution setOrAddMove(final Move move) {
+    public void setOrAddMove(final Move move) {
         final int value = data.getOrDefault(move, 0);
         data.put(move, value + 1);
-        return this;
     }
 
     /**
@@ -42,5 +41,15 @@ public class Distribution {
             result.add(data.getOrDefault(move, 0));
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        for(final Move move : data.keySet()) {
+            sb.append(move).append(", ").append(data.get(move)).append("; ");
+        }
+        sb.deleteCharAt(sb.length() - 1).deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 }

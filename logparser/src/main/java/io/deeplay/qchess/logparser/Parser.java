@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.lobot.profiler.Profile;
+import io.deeplay.qchess.lobot.profiler.ProfileException;
 import io.deeplay.qchess.lobot.profiler.ProfileService;
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,11 +33,12 @@ public class Parser {
         profile = new Profile();
     }
 
-    public void profileUpdate(final File directory) throws ParseException {
+    public void profileUpdate(final File directory) throws ParseException, ProfileException {
         profileUpdate(directory, Integer.MIN_VALUE);
     }
 
-    public void profileUpdate(final File directory, final int logsCount) throws ParseException {
+    public void profileUpdate(final File directory, final int logsCount)
+        throws ParseException, ProfileException {
         if(!directory.isDirectory()) {
             throw new ParseException(ParseErrorCode.WRONG_DIRECTORY);
         }
@@ -94,7 +96,7 @@ public class Parser {
     private void addToProfile(final String moveLine, final String fenLine) throws ParseException {
         final Move move = moveParse(moveLine);
         final String fen = fenParse(fenLine);
-        //profile.add(fen, move);
+        profile.add(fen, move);
         System.out.printf("{%s} -> {%s}\n", fen, move);
     }
 

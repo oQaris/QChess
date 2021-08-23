@@ -5,8 +5,16 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Move;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.function.Function;
 
 public class Profile {
     private final Map<String, Distribution> repository;
@@ -28,8 +36,11 @@ public class Profile {
      * @param move ход который добавится в значение
      */
     public void add(final String fen, final Move move) {
-        final Distribution distribution = repository.getOrDefault(fen, defaultBoardState());
-        repository.put(fen, distribution.setOrAddMove(move));
+        final Distribution distribution = repository.getOrDefault(fen, defaultFEN());
+        if(distribution.isEmpty()) {
+            repository.put(fen, distribution);
+        }
+        distribution.setOrAddMove(move);
     }
 
     /**
@@ -49,13 +60,13 @@ public class Profile {
      */
     public Distribution get(final GameSettings gs) throws ChessError {
         final String fen = gs.history.getBoardToStringForsythEdwards();
-        return repository.getOrDefault(fen, defaultBoardState());
+        return repository.getOrDefault(fen, defaultFEN());
     }
 
     /**
      * @return распределение для GameSetting которого нет в профиле
      */
-    private Distribution defaultBoardState() {
+    private Distribution defaultFEN() {
         return new Distribution();
     }
 
@@ -63,11 +74,25 @@ public class Profile {
         return name;
     }
 
-    // todo посмотреть на json, tostring для distr
     public void save(final BufferedWriter bw) throws IOException {
-        for(final String key : repository.keySet()) {
-            bw.write(key);
-            bw.write(repository.get(key).toString());
+        final List<String> list = new ArrayList<>(repository.keySet());
+        list.sort((o1, o2) -> {
+            final int i1 = FENService.getFiguresCount(o1);
+            final int i2 = FENService.getFiguresCount(o2);
+            return -Integer.compare(i1, i2);
+        });
+        for(final String key : list) {
+            bw.write(convertProfileRowToString(key));
+            bw.write(System.lineSeparator());
         }
+    }
+
+    private String convertProfileRowToString(final String fen) {
+        final StringBuilder sb = new StringBuilder();
+        final Distribution distribution = repository.get(fen);
+        sb.append(FENService.getFiguresCount(fen)).append(" | ");
+        sb.append(fen).append(" | ");
+        sb.append(distribution);
+        return sb.toString();
     }
 }
