@@ -7,6 +7,7 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_NOT_FOUND;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.features.ITranspositionTable;
 import io.deeplay.qchess.game.math.GameMath;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
@@ -138,6 +139,18 @@ public class Board {
      */
     public List<Move> getAllPreparedMoves(final GameSettings gs, final Color color)
             throws ChessError {
+        return getAllPreparedMoves(gs, color, null);
+    }
+
+    /**
+     * @param gs нужен для получения ходов пешек и проверки на шах после хода
+     * @param table реализация ТТ для ускорения проверки на шах
+     * @return список ходов для цвета color, включая превращения пешек в ферзя, слона, ладью и коня
+     *     (создает 4 отдельных хода). Все ходы гарантированно корректные и проверены на шах
+     */
+    public List<Move> getAllPreparedMoves(
+            final GameSettings gs, final Color color, final ITranspositionTable table)
+            throws ChessError {
         final List<Move> allMoves = new ArrayList<>(64);
         for (int i = 0; i < 8; ++i) {
             if (i == 1 || i == 6) { // на линиях 2 и 7 - кандидаты (пешки) на превращение
@@ -150,7 +163,8 @@ public class Board {
                                         move.turnInto = FigureType.QUEEN; // 1 тип превращения
                                         // проверка на шах превращения (проверка для других типов
                                         // превращения эквивалентна):
-                                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) {
+                                        if (gs.moveSystem.isCorrectVirtualMoveSilence(
+                                                move, table)) {
                                             allMoves.add(move);
                                             // 2, 3, 4 типы превращения:
                                             allMoves.add(new Move(move, FigureType.KNIGHT));
@@ -159,19 +173,21 @@ public class Board {
                                         }
                                         break;
                                     default: // проверка на шах другого типа хода пешки:
-                                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move))
+                                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move, table))
                                             allMoves.add(move);
                                         break;
                                 }
                             }
                         } else // обычное заполнение
                         for (final Move move : figure.getAllMoves(gs)) // проверка на шах:
-                            if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) allMoves.add(move);
+                            if (gs.moveSystem.isCorrectVirtualMoveSilence(move, table))
+                                    allMoves.add(move);
             } else // остальные линии
             for (final Figure figure : cells[i])
                     if (figure != null && figure.getColor() == color) // обычное заполнение
                     for (final Move move : figure.getAllMoves(gs)) // проверка на шах:
-                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) allMoves.add(move);
+                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move, table))
+                                allMoves.add(move);
         }
         return allMoves;
     }
@@ -180,7 +196,9 @@ public class Board {
      * @param gs нужен для получения ходов пешек и проверки на шах после хода
      * @return true, если у игрока цвета color нет корректных ходов (поставлен пат)
      */
-    public boolean isHasAnyCorrectMove(final GameSettings gs, final Color color) throws ChessError {
+    public boolean isHasAnyCorrectMove(
+            final GameSettings gs, final Color color, final ITranspositionTable table)
+            throws ChessError {
         for (int i = 0; i < 8; ++i) {
             if (i == 1 || i == 6) { // на линиях 2 и 7 - кандидаты (пешки) на превращение
                 for (final Figure figure : cells[i])
@@ -197,18 +215,34 @@ public class Board {
                                         break;
                                 }
                                 // проверка на шах хода пешки:
-                                if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) return true;
+                                if (gs.moveSystem.isCorrectVirtualMoveSilence(move, table))
+                                    return true;
                             }
                         } else // любая другая фигура
                         for (final Move move : figure.getAllMoves(gs)) // проверка на шах:
-                            if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) return true;
+                            if (gs.moveSystem.isCorrectVirtualMoveSilence(move, table)) return true;
             } else // остальные линии
             for (final Figure figure : cells[i])
                     if (figure != null && figure.getColor() == color)
                         for (final Move move : figure.getAllMoves(gs)) // проверка на шах:
-                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move)) return true;
+                        if (gs.moveSystem.isCorrectVirtualMoveSilence(move, table)) return true;
         }
         return false;
+    }
+
+    /**
+     * @return разность между количеством псевдо-легальных ходов. Для цвета positiveColor с плюсом
+     */
+    public int getDiffPseudoLegalMovesCount(final GameSettings gs, final Color positiveColor) {
+        int diff = 0;
+        for (final Figure[] figures : cells)
+            for (final Figure figure : figures) {
+                if (figure != null) {
+                    if (figure.getColor() == positiveColor) diff += figure.getAllMoves(gs).size();
+                    else diff -= figure.getAllMoves(gs).size();
+                }
+            }
+        return diff;
     }
 
     /** Заполняет доску расстановкой fillingType */
