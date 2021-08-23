@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Board {
-    public static final int STD_BOARD_SIZE = 8;
+    public static final byte STD_BOARD_SIZE = 8;
 
     private static final transient Logger logger = LoggerFactory.getLogger(Board.class);
 

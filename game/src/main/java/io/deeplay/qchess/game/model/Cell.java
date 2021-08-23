@@ -15,7 +15,7 @@ public class Cell {
     static {
         for (int i = 0; i < STD_BOARD_SIZE; ++i)
             for (int j = 0; j < STD_BOARD_SIZE; ++j)
-                hashCodes[i][j] = (i * STD_BOARD_SIZE + j) * 10;
+                hashCodes[i][j] = i * STD_BOARD_SIZE + j;
     }
 
     @SerializedName("column")
@@ -66,6 +66,10 @@ public class Cell {
     @Override
     public int hashCode() {
         return hashCodes[column][row];
+    }
+
+    public byte toByte() {
+        return (byte) hashCodes[column][row];
     }
 
     @Override
