@@ -3,10 +3,13 @@ package io.deeplay.qchess.game.model;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
+import kotlinx.serialization.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Serializable
 public class Cell {
     public static final transient int[][] hashCodes = new int[STD_BOARD_SIZE][STD_BOARD_SIZE];
 

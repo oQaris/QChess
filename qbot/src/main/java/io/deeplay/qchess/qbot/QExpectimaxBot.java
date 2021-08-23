@@ -1,5 +1,10 @@
 package io.deeplay.qchess.qbot;
 
+import static io.deeplay.qchess.qbot.profile.ParserKt.*;
+import static io.deeplay.qchess.qbot.profile.ParserKt.pullProfiles;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
@@ -9,12 +14,20 @@ import io.deeplay.qchess.qbot.profile.Profile;
 import io.deeplay.qchess.qbot.profile.Storage;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class QExpectimaxBot extends QBot {
-    private final int profileId;
+    private final Profile enemyProfile;
 
     protected QExpectimaxBot(
             final GameSettings roomSettings,
@@ -22,7 +35,8 @@ public class QExpectimaxBot extends QBot {
             final int searchDepth,
             final Strategy strategy) {
         super(roomSettings, color, searchDepth, strategy, "ExpectiMaxBot");
-        profileId = Storage.getProfiles().get("Атакующий_Бот");
+        fill();
+        enemyProfile = getProfilesMap().get("Атакующий_Бот");
     }
 
     protected QExpectimaxBot(
@@ -91,15 +105,21 @@ public class QExpectimaxBot extends QBot {
                 final int currentValue = expectimax(curDepth - 1, curColor.inverse());
                 ms.undoMove();
                 Double coef;
-                int stateId =
-                        Storage.fenToStateId(profileId, history.getBoardToStringForsythEdwards());
+                final String fen = history.getBoardToStringForsythEdwards();
+                /*int stateId =
+                        Storage.fenToStateId(profileId, fen);
                 if (stateId < 0) coef = 1. / moves.size();
                 else {
                     Map<Move, Double> probs = Profile.movesWithProb(Storage.getMoves(stateId));
                     coef = probs.get(move);
                     if (coef == null) coef = 0.0;
+                }*/
+                final Map<Move, Double> probs = enemyProfile.movesWithProb(fen);
+                if (probs.isEmpty()) coef = 1. / moves.size();
+                else {
+                    coef = probs.get(move);
+                    if (coef == null) coef = 0.0;
                 }
-
                 sum += currentValue * coef;
             }
             return (int) Math.round(sum);

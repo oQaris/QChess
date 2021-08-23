@@ -1,7 +1,12 @@
 package io.deeplay.qchess.qbot.profile
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.MapSerializer
+import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 import io.deeplay.qchess.game.model.Move
 
+@Serializable
 class Profile {
     val states = HashMap<String, MutableMap<Move, Int>>()
 

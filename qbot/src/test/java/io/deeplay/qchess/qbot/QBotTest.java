@@ -58,6 +58,8 @@ class QBotTest {
 
         assertEquals(EndGameType.CHECKMATE_TO_WHITE, gameSettings.endGameDetector.getGameResult());
     }
+
+    @Test
     void testExpectimax() throws ChessError {
         final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
         final AttackBot bot1 = new AttackBot(gameSettings, Color.WHITE);
