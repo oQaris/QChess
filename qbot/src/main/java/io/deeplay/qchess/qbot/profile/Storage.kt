@@ -119,16 +119,16 @@ object Storage {
         }
     }
 
-    @JvmStatic
+    /*@JvmStatic
     fun toProfile(idProfile: Int): Profile {
         return Profile().apply {
             transaction {
                 getStates(idProfile).forEach { (fen, stId) ->
-                    states[fen] = getMoves(stId).mapValues { (_, v) -> v.toInt() }.toMutableMap()
+                    states[fen].moves = getMoves(stId).toMutableMap()
                 }
             }
         }
-    }
+    }*/
 
     @JvmStatic
     fun getStates(idProfile: Int): Map<String, Int> {

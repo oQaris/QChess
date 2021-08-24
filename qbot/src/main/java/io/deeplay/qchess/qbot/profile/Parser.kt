@@ -2,6 +2,7 @@ package io.deeplay.qchess.qbot.profile
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
 import io.deeplay.qchess.game.GameSettings
 import io.deeplay.qchess.game.model.Board
 import io.deeplay.qchess.game.model.Cell
@@ -77,7 +78,7 @@ val newContents = toReplace.resolveSibling("profiles_temp.json")
 val finalProfiles = Paths.get("C:\\Users\\oQaris\\Desktop\\Git\\QChess\\data\\profiles_final.json")
 
 fun fill(){
-    walk("C:\\Users\\oQaris\\Desktop\\Git\\QChess\\data\\logs") { f ->
+    walk("C:\\Users\\admin\\Desktop\\Internship\\arch\\logs") { f ->
         parse(
             f
         )
@@ -85,7 +86,7 @@ fun fill(){
 }
 
 fun main() {
-    walk("./data/logs") { f ->
+    walk("C:\\Users\\admin\\Desktop\\Internship\\arch\\logs") { f ->
         parse(
             f
         )
@@ -98,23 +99,14 @@ fun main() {
             }"
         )
     }*/
-    /*println("Идёт сохранение в файл...")
+    println("Идёт сохранение в файл...")
     Files.newBufferedWriter(
         newContents,
         StandardCharsets.UTF_8,
         StandardOpenOption.CREATE,
         StandardOpenOption.TRUNCATE_EXISTING
     ).use { writer ->
-        *//*try {
-            ObjectOutputStream(writer).use { oos ->
-                oos.writeObject(profilesMap)
-            }
-        } catch (ex: Exception) {
-            println(ex.message)
-        }*//*
-        //Gson().toJson(profilesMap, HashMap::class.java, writer)
-        writer.write(Json.encodeToString(profilesMap))
-        writer.flush()
+        Gson().toJson(profilesMap, HashMap::class.java, writer)
     }
     println("Перемещение...")
     Files.move(
@@ -123,7 +115,7 @@ fun main() {
         StandardCopyOption.REPLACE_EXISTING,
         StandardCopyOption.ATOMIC_MOVE
     )
-    println("Успешно!")*/
+    println("Успешно!")
 
     /*profiles.getProfiles().forEach { (prfName, prfId) ->
         println("$prfName:")
@@ -140,21 +132,21 @@ fun main() {
 }
 
 fun pullProfiles(): HashMap<String, Profile> {
-        Files.newBufferedReader(finalProfiles).use { reader ->
+        Files.newInputStream(finalProfiles).use { reader ->
             /*val mapper = ObjectMapper()
             val typeRef: TypeReference<HashMap<String, Profile>> =
                 object : TypeReference<HashMap<String, Profile>>() {}
             return mapper.readValue(reader, typeRef)*/
 
-            /*try {
+            try {
                 ObjectInputStream(reader).use { ois ->
                     return ois.readObject() as HashMap<String, Profile>
                 }
             } catch (ex: java.lang.Exception) {
                 println(ex.message)
-            }*/
+            }
 
-            return Json.decodeFromString<HashMap<String, Profile>>(reader.readText())
+            //return Json.decodeFromString<HashMap<String, Profile>>(reader.readText())
 
             /*return Gson().fromJson<Map<String, Profile>>(
                     reader,

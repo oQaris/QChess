@@ -1,10 +1,12 @@
 package io.deeplay.qchess.game.model;
 
+import java.io.Serializable;
+
 /**
  * Типы ходов (упорядочены по возрастанию от менее важного к более, т.е. тип менее важного хода <
  * типа более важного хода)
  */
-public enum MoveType {
+public enum MoveType implements Serializable {
     // Для рокировки
     SHORT_CASTLING(0),
     LONG_CASTLING(0),

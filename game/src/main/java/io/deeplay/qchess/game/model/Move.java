@@ -1,13 +1,11 @@
 package io.deeplay.qchess.game.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import io.deeplay.qchess.game.model.figures.FigureType;
+import java.io.Serializable;
 import java.util.Objects;
-import kotlinx.serialization.Serializable;
 
-@Serializable
-public class Move {
+public class Move implements Serializable {
     @SerializedName("type")
     private final MoveType moveType;
 

@@ -5,12 +5,11 @@ import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import kotlinx.serialization.Serializable;
+import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Serializable
-public class Cell {
+public class Cell implements Serializable {
     public static final transient int[][] hashCodes = new int[STD_BOARD_SIZE][STD_BOARD_SIZE];
 
     private static final transient Logger logger = LoggerFactory.getLogger(Cell.class);
