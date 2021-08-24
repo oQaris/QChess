@@ -1,5 +1,6 @@
 package io.deeplay.qchess.lobot;
 
+import io.deeplay.qchess.MoveWeight;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -349,7 +350,7 @@ public class LoBot extends RemotePlayer {
 
         final List<Move> moves = ms.getAllPreparedMoves(currentColor);
 
-        final List<Move> clusterMoves = (this.depth - depth) > 1? ClusterService.getClusteredMovesDBSCAN(moves.stream().map(move -> {
+        final List<MoveWeight> clusterMoves = ClusterService.getClusteredMovesDBSCANWithWeight(moves.stream().map(move -> {
             int evaluate = 0;
             try {
                 roomSettings.moveSystem.move(move);
@@ -359,13 +360,14 @@ public class LoBot extends RemotePlayer {
                 chessError.printStackTrace();
             }
             return new MovePoint(evaluate, 0, move);
-        }).collect(Collectors.toSet()), 2, 5) : moves;
+        }).collect(Collectors.toSet()), 2, 25);
         int bestMoveValue = color == currentColor ? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;
-        for (final Move move : clusterMoves) {
+
+        for (final MoveWeight moveWeight : clusterMoves) {
             final int alphaForLambda = alpha;
             final int betaForLambda = beta;
-            final int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
-                clusterMinimax(depth - 1, alphaForLambda, betaForLambda, currentColor.inverse()));
+            final int currentValue = (roomSettings.moveSystem.virtualMove(moveWeight.getMove(), (from, to) ->
+                clusterMinimax(depth - 1, alphaForLambda, betaForLambda, currentColor.inverse()))) * ((int)Math.round(moveWeight.getWeight() * 100));
 
             if (color == currentColor) {
                 bestMoveValue = Math.max(bestMoveValue, currentValue);
