@@ -96,6 +96,7 @@ public class Parser {
     private void parseLogs(final List<File> logFiles) throws ParseException {
         for(final File file : logFiles) {
             try (final BufferedReader is = new BufferedReader(new FileReader(file))) {
+                String prevFEN = "FEN: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq";
                 final String whiteName = is.readLine().split(":")[1].trim();
                 final String blackName = is.readLine().split(":")[1].trim();
                 String name = whiteName;
@@ -110,7 +111,8 @@ public class Parser {
                         move = line;
                     } else if(move != null) {
                         if(line.startsWith("FEN") && !name.equals("Рандомный_Бот")) {
-                            addToProfile(getProfileForName(name), move, line);
+                            addToProfile(getProfileForName(name), move, prevFEN);
+                            prevFEN = line;
                         }
                         move = null;
                     }

@@ -21,7 +21,7 @@ public class ProfileService {
     public static final List<String> figureTemplates = Arrays.asList(FigureType.nameOfTypeNumber);
 
     private static final File saveDirectory = new File("./lobot/src/main/resources/profiles");
-    private static final File loadDirectory = new File("./lobot/src/main/resources/profiles");
+    private static final String loadDirectory = "C:\\Users\\Admin\\IdeaProjects\\QChess\\lobot\\src\\main\\resources\\profiles";
 
     static {
         for (final MoveType mt : MoveType.values()) {

@@ -43,6 +43,14 @@ public class Distribution {
         return result;
     }
 
+    public boolean containMove(final Move move) {
+        return data.containsKey(move);
+    }
+
+    public int get(final Move move) {
+        return data.get(move);
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -51,5 +59,13 @@ public class Distribution {
         }
         sb.deleteCharAt(sb.length() - 1).deleteCharAt(sb.length() - 1);
         return sb.toString();
+    }
+
+    public int fullSize() {
+        int result = 0;
+        for(final int i : data.values()) {
+            result += i;
+        }
+        return result;
     }
 }

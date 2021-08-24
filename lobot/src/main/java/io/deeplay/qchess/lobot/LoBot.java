@@ -10,6 +10,8 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.lobot.evaluation.Evaluation;
 import io.deeplay.qchess.lobot.evaluation.MonteCarloEvaluation;
+import io.deeplay.qchess.lobot.profiler.Distribution;
+import io.deeplay.qchess.lobot.profiler.Profile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,6 +24,7 @@ public class LoBot extends RemotePlayer {
     private final int depth;
     private final ChessMoveFunc<Integer> algorithm;
     private final boolean onMonteCarlo;
+    private final Profile profile;
 
     public LoBot(final GameSettings roomSettings, final Color color) {
         this(roomSettings, color, new Strategy());
@@ -34,6 +37,7 @@ public class LoBot extends RemotePlayer {
         algorithm = getAlgorithm(strategy.getAlgorithm());
         roomSettings.history.setMinBoardStateToSave(100);
         onMonteCarlo = strategy.getOnMonteCarlo();
+        profile = strategy.getProfile();
     }
 
     private ChessMoveFunc<Integer> getAlgorithm(final TraversalAlgorithm traversal) {
@@ -51,6 +55,7 @@ public class LoBot extends RemotePlayer {
             case CLUSTERMINIMAX -> (from, to) -> clusterMinimax(depth - 1,
                 Integer.MIN_VALUE,
                 Integer.MAX_VALUE, color.inverse());
+            case EXPECTIMAX_PROFILE -> (from, to) -> expectimaxProfile(depth - 1, color.inverse());
             default -> null;
         };
     }
@@ -234,6 +239,60 @@ public class LoBot extends RemotePlayer {
                 sum += currentValue;
             }
             return (int) Math.round((sum * 1.0) / moves.size());
+        }
+    }
+
+    private int expectimaxProfile(final int depth, final Color currentColor)
+        throws ChessError, ChessException {
+        if (depth == 0) {
+            return evaluation.evaluateBoard(roomSettings, color);
+        }
+
+        final List<Move> moves = ms.getAllPreparedMoves(currentColor);
+
+        final EndGameType endGameType = egd.updateEndGameStatus();
+        egd.revertEndGameStatus();
+        if (endGameType != EndGameType.NOTHING) {
+            return Strategy.getTerminalEvaluation(currentColor, endGameType);
+        }
+
+        if (color == currentColor) {
+            int bestMoveValue = Integer.MIN_VALUE;
+            for (final Move move : moves) {
+                final int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+                    expectimaxProfile(depth - 1, currentColor.inverse()));
+                bestMoveValue = Math.max(bestMoveValue, currentValue);
+            }
+            return bestMoveValue;
+        } else {
+            double sum = 0;
+            final Distribution distribution = profile.get(roomSettings);
+            if(!distribution.isEmpty()) {
+                final int fullSize = distribution.fullSize();
+                for(final Move move : moves) {
+                    if(distribution.containMove(move)) {
+                        int currentValue = 0;
+                        final double prob = (distribution.get(move) * 1.0) / fullSize;
+                        try {
+                            roomSettings.moveSystem.move(move);
+                            currentValue = expectimaxProfile(depth - 1, currentColor.inverse());
+                            roomSettings.moveSystem.undoMove();
+                        } catch (final ChessError chessError) {
+                            chessError.printStackTrace();
+                        }
+                        sum += (currentValue * prob);
+                    }
+                }
+                return (int) Math.round(sum);
+            }
+
+            int bestMoveValue = Integer.MAX_VALUE;
+            for (final Move move : moves) {
+                final int currentValue = roomSettings.moveSystem.virtualMove(move, (from, to) ->
+                    expectimaxProfile(depth - 1, currentColor.inverse()));
+                bestMoveValue = Math.min(bestMoveValue, currentValue);
+            }
+            return bestMoveValue;
         }
     }
 
