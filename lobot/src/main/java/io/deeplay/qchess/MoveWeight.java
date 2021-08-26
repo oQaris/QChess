@@ -3,14 +3,17 @@ package io.deeplay.qchess;
 import io.deeplay.qchess.game.model.Move;
 
 public class MoveWeight {
-    private final Move move;
-    private final double weight;
+    private Move move;
+    private double weight;
+
+    public MoveWeight() {
+        weight = 0;
+    }
 
     public MoveWeight(final Move move, final double weight) {
         this.move = move;
         this.weight = weight;
     }
-
 
     public Move getMove() {
         return move;
@@ -18,5 +21,14 @@ public class MoveWeight {
 
     public double getWeight() {
         return weight;
+    }
+
+
+    public void setMove(final Move move) {
+        this.move = move;
+    }
+
+    public void incWeight() {
+        weight += 1;
     }
 }

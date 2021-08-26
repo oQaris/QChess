@@ -349,23 +349,30 @@ public class LoBot extends RemotePlayer {
         }
 
         final List<Move> moves = ms.getAllPreparedMoves(currentColor);
-
-        final List<MoveWeight> clusterMoves = ClusterService.getClusteredMovesDBSCANWithWeight(moves.stream().map(move -> {
-            int evaluate = 0;
-            try {
-                roomSettings.moveSystem.move(move);
-                evaluate = evaluation.evaluateBoard(roomSettings, color);
-                roomSettings.moveSystem.undoMove();
-            } catch (final ChessError chessError) {
-                chessError.printStackTrace();
-            }
-            return new MovePoint(evaluate, 0, move);
-        }).collect(Collectors.toSet()), 2, 25);
+        final List<MoveWeight> clusterMoves;
+        if (color == currentColor) {
+            clusterMoves = ClusterService
+                .getClusteredMovesDBSCAN(moves.stream().map(move -> {
+                    int evaluate = 0;
+                    try {
+                        roomSettings.moveSystem.move(move);
+                        evaluate = evaluation.evaluateBoard(roomSettings, color);
+                        roomSettings.moveSystem.undoMove();
+                    } catch (final ChessError chessError) {
+                        chessError.printStackTrace();
+                    }
+                    return new MovePoint(evaluate, 0, move);
+                }).collect(Collectors.toSet()), 2, 7);
+        } else {
+            final double weight = 1.0 / moves.size();
+            clusterMoves = moves.stream().map(move -> new MoveWeight(move, weight)).collect(Collectors.toList());
+        }
         int bestMoveValue = color == currentColor ? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;
 
         for (final MoveWeight moveWeight : clusterMoves) {
             final int alphaForLambda = alpha;
             final int betaForLambda = beta;
+            System.err.println(((int)Math.round(moveWeight.getWeight() * 100)));
             final int currentValue = (roomSettings.moveSystem.virtualMove(moveWeight.getMove(), (from, to) ->
                 clusterMinimax(depth - 1, alphaForLambda, betaForLambda, currentColor.inverse()))) * ((int)Math.round(moveWeight.getWeight() * 100));
 

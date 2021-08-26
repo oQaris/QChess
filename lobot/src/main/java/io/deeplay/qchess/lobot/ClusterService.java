@@ -32,57 +32,29 @@ public class ClusterService {
         return set;
     }
 
-    public static List<MoveWeight> getClusteredMovesDBSCANWithWeight(final Set<MovePoint> evaluationSet, final int minPts, final int eps) {
+    public static List<MoveWeight> getClusteredMovesDBSCAN(final Set<MovePoint> evaluationSet, final int minPts, final int eps) {
         DBSCAN(evaluationSet, minPts, eps);
-        return formClustersDBSCANWithWeight(new ArrayList<>(evaluationSet));
+        return formClustersDBSCAN(new ArrayList<>(evaluationSet));
     }
 
-    private static List<MoveWeight> formClustersDBSCANWithWeight(final List<MovePoint> points) {
-        Collections.shuffle(points);
+    private static List<MoveWeight> formClustersDBSCAN(final List<MovePoint> points) {
         int i = -2;
+        Collections.shuffle(points);
+        final Map<Integer, MoveWeight> map = new HashMap<>();
         for(final MovePoint point : points) {
             if(point.getMark() == -1) {
                 point.setMark(i);
                 i--;
             }
-        }
-        // todo походу долго
-        final Map<MovePoint, Integer> moveWeightMap = new HashMap<>();
-        for(final MovePoint movePoint : points) {
-            if(!moveWeightMap.containsKey(movePoint)) {
-                moveWeightMap.put(movePoint, 1);
-            } else {
-                moveWeightMap.put(movePoint, moveWeightMap.get(movePoint) + 1);
+            if(!map.containsKey(point.getMark())) {
+                final MoveWeight mw = new MoveWeight();
+                mw.setMove(point.getMove());
+                map.put(point.getMark(), mw);
             }
+            map.get(point.getMark()).incWeight();
         }
-
-        final int fullSize = points.size();
-        final List<MoveWeight> result = new LinkedList<>();
-        for(final MovePoint movePoint : moveWeightMap.keySet()) {
-            result.add(new MoveWeight(movePoint.getMove(), (moveWeightMap.get(movePoint) * 1.0) / fullSize));
-        }
-        return result;
+        return new ArrayList<>(map.values());
     }
-
-    public static List<Move> getClusteredMovesDBSCAN(final Set<MovePoint> evaluationSet, final int minPts, final int eps) {
-        DBSCAN(evaluationSet, minPts, eps);
-        return formClustersDBSCAN(new ArrayList<>(evaluationSet)).stream().map(MovePoint::getMove).collect(Collectors.toList());
-    }
-
-    private static <T extends ClusterPoint> Set<T> formClustersDBSCAN(final List<T> points) {
-        Collections.shuffle(points);
-        int i = -2;
-        for(final T point : points) {
-            if(point.getMark() == -1) {
-                point.setMark(i);
-                i--;
-            }
-        }
-        final Set<T> set = new TreeSet<>(Comparator.comparingInt(ClusterPoint::getMark));
-        set.addAll(points);
-        return set;
-    }
-
 
     /**
      * @param points лист ClusterPoint
