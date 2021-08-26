@@ -1,30 +1,20 @@
 package io.deeplay.qchess.qbot;
 
-import static io.deeplay.qchess.qbot.profile.ParserKt.*;
-import static io.deeplay.qchess.qbot.profile.ParserKt.pullProfiles;
+import static io.deeplay.qchess.qbot.profile.ParserKt.fill;
+import static io.deeplay.qchess.qbot.profile.ParserKt.getProfilesMap;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.qbot.profile.Profile;
-import io.deeplay.qchess.qbot.profile.Storage;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
 
 public class QExpectimaxBot extends QBot {
     private final Profile enemyProfile;
@@ -34,9 +24,21 @@ public class QExpectimaxBot extends QBot {
             final Color color,
             final int searchDepth,
             final Strategy strategy) {
+        this(roomSettings, color, searchDepth, strategy, null);
+    }
+
+    protected QExpectimaxBot(
+            final GameSettings roomSettings,
+            final Color color,
+            final int searchDepth,
+            final Strategy strategy,
+            final String enemyProfileStr) {
         super(roomSettings, color, searchDepth, strategy, "ExpectiMaxBot");
-        fill();
-        enemyProfile = getProfilesMap().get("Атакующий_Бот");
+        if (enemyProfileStr != null) {
+            if (getProfilesMap().isEmpty()) fill();
+            enemyProfile = getProfilesMap().get(enemyProfileStr);
+            Objects.requireNonNull(enemyProfile, "Профиль " + enemyProfileStr + " не найден!");
+        } else enemyProfile = new Profile();
     }
 
     protected QExpectimaxBot(
@@ -106,14 +108,6 @@ public class QExpectimaxBot extends QBot {
                 ms.undoMove();
                 Double coef;
                 final String fen = history.getBoardToStringForsythEdwards();
-                /*int stateId =
-                        Storage.fenToStateId(profileId, fen);
-                if (stateId < 0) coef = 1. / moves.size();
-                else {
-                    Map<Move, Double> probs = Profile.movesWithProb(Storage.getMoves(stateId));
-                    coef = probs.get(move);
-                    if (coef == null) coef = 0.0;
-                }*/
                 final Map<Move, Double> probs = enemyProfile.movesWithProb(fen);
                 if (probs.isEmpty()) coef = 1. / moves.size();
                 else {

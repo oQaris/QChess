@@ -74,6 +74,11 @@
       <version>0.0.1</version>
     </dependency>
     <dependency>
+      <artifactId>QChess-qbot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
       <artifactId>QChess-game</artifactId>
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>

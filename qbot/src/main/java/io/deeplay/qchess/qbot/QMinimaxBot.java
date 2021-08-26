@@ -21,6 +21,7 @@ public class QMinimaxBot extends QBot {
             final int searchDepth,
             final Strategy strategy) {
         super(roomSettings, color, searchDepth, strategy, "MiniMaxBot");
+        System.out.println("asdfgsdfgshsr");
     }
 
     public QMinimaxBot(final GameSettings roomSettings, final Color color, final int searchDepth) {

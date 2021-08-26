@@ -18,14 +18,12 @@ import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
 import io.deeplay.qchess.game.model.figures.Queen;
 import io.deeplay.qchess.game.model.figures.Rook;
-import io.deeplay.qchess.game.player.ConsolePlayer;
-import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.AttackBot;
+import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
+import io.deeplay.qchess.qbot.strategy.PestoStrategy;
 import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.List;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
@@ -63,7 +61,8 @@ class QBotTest {
     void testExpectimax() throws ChessError {
         final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
         final AttackBot bot1 = new AttackBot(gameSettings, Color.WHITE);
-        final QExpectimaxBot bot2 = new QExpectimaxBot(gameSettings, Color.BLACK, 3);
+        final QExpectimaxBot bot2 =
+                new QExpectimaxBot(gameSettings, Color.BLACK, 3, new PestoStrategy(), "Атакующий_Бот");
 
         final Selfplay game = new Selfplay(gameSettings, bot1, bot2);
         game.run();
