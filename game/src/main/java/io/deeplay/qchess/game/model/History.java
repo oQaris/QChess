@@ -34,6 +34,11 @@ public class History {
     private final Map<BoardState, Integer> repetitionsMap;
     /** Используется как стек */
     private final Deque<BoardState> recordsList;
+    /**
+     * Родитель текущей истории или null, если текущая история является корнем (обычно это история
+     * основной партии, не симуляции бота)
+     */
+    private final History parentHistory;
 
     private Move lastMove;
     /** Двигалась ли фигура до последнего хода (фигура, которая совершила этот последний ход) */
@@ -47,20 +52,11 @@ public class History {
     private int isWhiteCastlingPossibility = 3;
     /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
     private int isBlackCastlingPossibility = 3;
-
     /** Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки */
     private int minBoardStateToSave;
 
-    /**
-     * Родитель текущей истории или null, если текущая история является корнем (обычно это история
-     * основной партии, не симуляции бота)
-     */
-    private History parentHistory;
-
     public History(final GameSettings gameSettings) {
-        this.gameSettings = gameSettings;
-        repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
-        recordsList = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
+        this(null, gameSettings, AVERAGE_MAXIMUM_MOVES);
     }
 
     /** Создает новую историю со ссылкой на предыдущую */
@@ -70,7 +66,7 @@ public class History {
         repetitionsMap = new HashMap<>(averageMaxMoves + 2); // +2 extra moves (ну мало ли что)
         recordsList = new ArrayDeque<>(averageMaxMoves + 2);
         parentHistory = history;
-        final BoardState boardState = history.recordsList.peek();
+        final BoardState boardState = history != null ? history.recordsList.peek() : null;
         recordsList.push(boardState != null ? boardState : newBoardState());
         restore();
     }

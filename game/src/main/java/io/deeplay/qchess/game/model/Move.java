@@ -24,7 +24,8 @@ public class Move implements Serializable {
         this.to = to;
     }
 
-    public Move(final MoveType moveType, final Cell from, final Cell to, final FigureType turnInto) {
+    public Move(
+            final MoveType moveType, final Cell from, final Cell to, final FigureType turnInto) {
         this.moveType = moveType;
         this.from = from;
         this.to = to;

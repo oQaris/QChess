@@ -6,7 +6,6 @@ import static io.deeplay.qchess.qbot.profile.ParserKt.getProfilesMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.qbot.profile.Profile;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,7 +16,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
 

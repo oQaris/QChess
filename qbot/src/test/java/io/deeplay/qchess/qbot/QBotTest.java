@@ -1,6 +1,7 @@
 package io.deeplay.qchess.qbot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
@@ -22,7 +23,6 @@ import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.qbot.strategy.MatrixStrategy;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
-import io.deeplay.qchess.qbot.strategy.SimpleStrategy;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.List;
 import org.junit.Ignore;
@@ -42,27 +42,14 @@ class QBotTest {
     }
 
     QBot getTestedBot(final GameSettings game, final Color myColor, final int depth) {
-        return new QExpectimaxBot(game, myColor, depth, new SimpleStrategy());
+        return new QNegamaxBot(game, myColor, depth);
     }
 
     @Test
     void testWithRand() throws ChessError {
         final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
         final RandomBot bot1 = new RandomBot(gameSettings, Color.WHITE);
-        final QBot bot2 = new QExpectimaxBot(gameSettings, Color.BLACK, 3);
-
-        final Selfplay game = new Selfplay(gameSettings, bot1, bot2);
-        game.run();
-
-        assertEquals(EndGameType.CHECKMATE_TO_WHITE, gameSettings.endGameDetector.getGameResult());
-    }
-
-    @Test
-    void testExpectimax() throws ChessError {
-        final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
-        final AttackBot bot1 = new AttackBot(gameSettings, Color.WHITE);
-        final QExpectimaxBot bot2 =
-                new QExpectimaxBot(gameSettings, Color.BLACK, 3, new PestoStrategy(), "Атакующий_Бот");
+        final QBot bot2 = getTestedBot(gameSettings, Color.BLACK, 3);
 
         final Selfplay game = new Selfplay(gameSettings, bot1, bot2);
         game.run();
@@ -72,15 +59,29 @@ class QBotTest {
 
     @Test
     @Disabled
-    void testFirstStep() throws ChessError {
+    void testExpectimax() throws ChessError {
+        final GameSettings gameSettings = new GameSettings(BoardFilling.STANDARD);
+        final AttackBot bot1 = new AttackBot(gameSettings, Color.WHITE);
+        final QExpectimaxBot bot2 =
+                new QExpectimaxBot(
+                        gameSettings, Color.BLACK, 3, new PestoStrategy(), "Атакующий_Бот");
+
+        final Selfplay game = new Selfplay(gameSettings, bot1, bot2);
+        game.run();
+
+        assertEquals(EndGameType.CHECKMATE_TO_WHITE, gameSettings.endGameDetector.getGameResult());
+    }
+
+    @Test
+    void testFirstStepNega() throws ChessError {
         final GameSettings game = new GameSettings(BoardFilling.STANDARD);
-        final QBot bot1 = new QExpectimaxBot(game, Color.WHITE, 3);
+        final QBot bot1 = new QNegamaxBot(game, Color.WHITE, 3);
         final QBot bot2 = new QMinimaxBot(game, Color.WHITE, 3);
         assertEquals(bot1.getTopMoves(), bot2.getTopMoves());
 
         game.moveSystem.move(new Move(MoveType.QUIET_MOVE, Cell.parse("e2"), Cell.parse("e4")));
         game.moveSystem.move(new Move(MoveType.QUIET_MOVE, Cell.parse("b8"), Cell.parse("c6")));
-        assertEquals(bot1.getTopMoves(), bot2.getTopMoves());
+        assertTrue(bot2.getTopMoves().containsAll(bot1.getTopMoves()));
     }
 
     @Test

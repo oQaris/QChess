@@ -5,8 +5,10 @@ import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.qbot.QBot;
 
 public interface Strategy {
-    int MAX_EST = Integer.MAX_VALUE - QBot.MAX_DEPTH;
-    int MIN_EST = Integer.MIN_VALUE + 1 + QBot.MAX_DEPTH;
+    int MAX_VAL = Integer.MAX_VALUE;
+    int MIN_VAL = Integer.MIN_VALUE + 1;
+    int MAX_EST = MAX_VAL - QBot.MAX_DEPTH;
+    int MIN_EST = MIN_VAL + QBot.MAX_DEPTH;
 
     /**
      * Функция оценки доски для терминальных узлов (может быть переопределена, но не обязательно)

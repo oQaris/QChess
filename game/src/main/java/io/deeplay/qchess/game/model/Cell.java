@@ -3,7 +3,6 @@ package io.deeplay.qchess.game.model;
 import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDINATES;
 import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import org.slf4j.Logger;
@@ -16,8 +15,7 @@ public class Cell implements Serializable {
 
     static {
         for (int i = 0; i < STD_BOARD_SIZE; ++i)
-            for (int j = 0; j < STD_BOARD_SIZE; ++j)
-                hashCodes[i][j] = i * STD_BOARD_SIZE + j;
+            for (int j = 0; j < STD_BOARD_SIZE; ++j) hashCodes[i][j] = i * STD_BOARD_SIZE + j;
     }
 
     @SerializedName("column")

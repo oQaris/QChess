@@ -1,7 +1,5 @@
 package io.deeplay.qchess.qbot.profile
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import io.deeplay.qchess.game.GameSettings
 import io.deeplay.qchess.game.model.Board
@@ -9,18 +7,13 @@ import io.deeplay.qchess.game.model.Cell
 import io.deeplay.qchess.game.model.Move
 import io.deeplay.qchess.game.model.MoveType
 import io.deeplay.qchess.game.model.figures.FigureType
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import java.io.File
-import java.io.FileInputStream
 import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
-import kotlinx.serialization.json.*
 
 
 private val profiles = Storage
@@ -30,8 +23,8 @@ fun parse(file: File) {
     val buf = file.inputStream().bufferedReader()
     val fpName = buf.readLine().takeLastWhile { !it.isWhitespace() }
     val spName = buf.readLine().takeLastWhile { !it.isWhitespace() }
-    val p1 = /*profiles.getOrPutProfileId(fpName)*/profilesMap.getOrPut(fpName){ Profile() }
-    val p2 = /*profiles.getOrPutProfileId(spName)*/profilesMap.getOrPut(spName){ Profile() }
+    val p1 = /*profiles.getOrPutProfileId(fpName)*/profilesMap.getOrPut(fpName) { Profile() }
+    val p2 = /*profiles.getOrPutProfileId(spName)*/profilesMap.getOrPut(spName) { Profile() }
     var isCurP1 = true
     var prewFen = GameSettings(Board.BoardFilling.STANDARD).history.getBoardToStringForsythEdwards()
 
@@ -77,7 +70,7 @@ val toReplace = Paths.get("./data/profiles.json")
 val newContents = toReplace.resolveSibling("profiles_temp.json")
 val finalProfiles = Paths.get("C:\\Users\\oQaris\\Desktop\\Git\\QChess\\data\\profiles_final.json")
 
-fun fill(){
+fun fill() {
     walk("C:\\Users\\admin\\Desktop\\Internship\\arch\\logs") { f ->
         parse(
             f
@@ -132,28 +125,28 @@ fun main() {
 }
 
 fun pullProfiles(): HashMap<String, Profile> {
-        Files.newInputStream(finalProfiles).use { reader ->
-            /*val mapper = ObjectMapper()
-            val typeRef: TypeReference<HashMap<String, Profile>> =
-                object : TypeReference<HashMap<String, Profile>>() {}
-            return mapper.readValue(reader, typeRef)*/
+    Files.newInputStream(finalProfiles).use { reader ->
+        /*val mapper = ObjectMapper()
+        val typeRef: TypeReference<HashMap<String, Profile>> =
+            object : TypeReference<HashMap<String, Profile>>() {}
+        return mapper.readValue(reader, typeRef)*/
 
-            try {
-                ObjectInputStream(reader).use { ois ->
-                    return ois.readObject() as HashMap<String, Profile>
-                }
-            } catch (ex: java.lang.Exception) {
-                println(ex.message)
+        try {
+            ObjectInputStream(reader).use { ois ->
+                return ois.readObject() as HashMap<String, Profile>
             }
-
-            //return Json.decodeFromString<HashMap<String, Profile>>(reader.readText())
-
-            /*return Gson().fromJson<Map<String, Profile>>(
-                    reader,
-                    object :
-                        TypeToken<Map<String, Profile>>() {}.type
-                )*/
+        } catch (ex: java.lang.Exception) {
+            println(ex.message)
         }
+
+        //return Json.decodeFromString<HashMap<String, Profile>>(reader.readText())
+
+        /*return Gson().fromJson<Map<String, Profile>>(
+                reader,
+                object :
+                    TypeToken<Map<String, Profile>>() {}.type
+            )*/
+    }
     return HashMap()
 }
 

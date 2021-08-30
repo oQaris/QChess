@@ -1,5 +1,9 @@
 package io.deeplay.qchess.qbot;
 
+import static io.deeplay.qchess.game.model.MoveType.ATTACK;
+import static io.deeplay.qchess.game.model.MoveType.EN_PASSANT;
+import static io.deeplay.qchess.game.model.MoveType.TURN_INTO;
+import static io.deeplay.qchess.game.model.MoveType.TURN_INTO_ATTACK;
 import static io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag.EXACT;
 import static io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag.LOWERBOUND;
 import static io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag.UPPERBOUND;
@@ -12,6 +16,8 @@ import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.MoveType;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry;
 import io.deeplay.qchess.qbot.TranspositionTable.TTEntry.Flag;
 import io.deeplay.qchess.qbot.strategy.PestoStrategy;
@@ -26,8 +32,6 @@ public class QNegamaxBot extends QBot {
     private static final Logger logger = LoggerFactory.getLogger(QNegamaxBot.class);
     public final boolean ttEnable;
     private final TranspositionTable table = new TranspositionTable();
-    private final Comparator<Move> order =
-            Comparator.comparing(m -> m.getMoveType().importantLevel);
     private int countFindingTT = 0;
 
     public QNegamaxBot(
@@ -54,7 +58,7 @@ public class QNegamaxBot extends QBot {
     }
 
     public QNegamaxBot(final GameSettings roomSettings, final Color color) {
-        this(roomSettings, color, 3);
+        this(roomSettings, color, 7);
     }
 
     /**
@@ -67,16 +71,7 @@ public class QNegamaxBot extends QBot {
                 Comparator.comparingInt(
                         m -> {
                             return m.getMoveType().importantLevel;
-                            /*int res = 0;
-                            try {
-                                gs.moveSystem.move(m);
-                                res = coef * strategy.evaluateBoard(gs.board);
-                                gs.moveSystem.undoMove();
-                                return res;
-                            } catch (final ChessError e) {
-                                e.printStackTrace();
-                            }
-                            return res;*/
+                            // todo сделать сортировку MLV-LVA
                         }));
     }
 
@@ -86,31 +81,20 @@ public class QNegamaxBot extends QBot {
 
     @Override
     public List<Move> getTopMoves() throws ChessError {
-        /*final List<Move> topMoves = new ArrayList<>();
-        int maxGrade = Integer.MIN_VALUE;
-        final List<Move> allMoves = ms.getAllPreparedMoves(color);
-        orderMoves(allMoves, roomSettings, color == Color.WHITE ? 1 : -1);
-        for (final Move move : allMoves) {
-            final int curGrade = root(move);
-            if (curGrade > maxGrade) {
-                maxGrade = curGrade;
-                topMoves.clear();
-                logger.info("{} {}", move, curGrade);
-            }
-            if (curGrade >= maxGrade) {
-                topMoves.add(move);
-            }
-        }
-        return topMoves;*/
         final MoveWrapper bestMove = new MoveWrapper();
-        negamax(
-                new GameSettings(roomSettings, MAX_DEPTH),
-                depth + 1,
-                Integer.MIN_VALUE,
-                Integer.MAX_VALUE,
-                color,
-                bestMove);
+        negamax(roomSettings, depth + 1, Strategy.MIN_VAL, Strategy.MAX_VAL, color, bestMove);
+        clearTT(bestMove.move);
         return Collections.singletonList(bestMove.move);
+    }
+
+    private void clearTT(final Move nextMove) {
+        final MoveType mt = nextMove.getMoveType();
+        if (mt == ATTACK
+                || mt == TURN_INTO
+                || mt == TURN_INTO_ATTACK
+                || mt == EN_PASSANT
+                || board.getFigureUgly(nextMove.getFrom()).figureType == FigureType.PAWN)
+            table.clear();
     }
 
     private int negamax(
@@ -161,75 +145,6 @@ public class QNegamaxBot extends QBot {
                 alpha = value;
                 if (curDepth == depth + 1) bestMove.move = move;
             }
-            if (alpha >= beta) break;
-        }
-
-        final Flag flag;
-        if (value <= alphaOrig) flag = UPPERBOUND;
-        else if (value >= beta) flag = LOWERBOUND;
-        else flag = EXACT;
-
-        table.store(new TTEntry(value, curDepth, flag), boardState);
-
-        return value;
-    }
-
-    /** Точка входа в негамакс после выполнения виртуального хода */
-    public int root(final Move move) throws ChessError {
-        logger.debug("Негамакс с виртуальным {} ходом стартовал", move);
-        final GameSettings newGs = new GameSettings(roomSettings, MAX_DEPTH);
-        newGs.moveSystem.move(move);
-        final int res = -negamax(newGs, depth, Strategy.MIN_EST, Strategy.MAX_EST, color.inverse());
-        logger.debug("Оценка хода: {}", res);
-        return res;
-    }
-
-    /**
-     * Классический минимакс с альфа-бетта отсечением
-     *
-     * @param curDepth Глубина поиска
-     * @param alpha Лучшая оценка максимизирующего игрока
-     * @param beta Лучшая оценка минимизирующего игрока
-     * @param curColor Цвет максимизирующего игрока
-     * @return Оценку позиции на доске
-     * @throws ChessError При выполнении некорректного хода (при нормальной работе невозможно)
-     */
-    private int negamax(
-            final GameSettings gs, final int curDepth, int alpha, int beta, final Color curColor)
-            throws ChessError {
-        final int alphaOrig = alpha;
-        final BoardState boardState = gs.history.getLastBoardState();
-        final TTEntry entry = table.find(boardState);
-
-        // todo сделать что то с entry.depth == curDepth
-        if (ttEnable && entry != null && entry.depth == curDepth) {
-            countFindingTT++;
-            if (entry.flag == EXACT) return entry.value;
-            else if (entry.flag == LOWERBOUND) alpha = max(alpha, entry.value);
-            else if (entry.flag == UPPERBOUND) beta = min(beta, entry.value);
-            if (alpha >= beta) return entry.value;
-        }
-
-        final int coef = curColor == Color.WHITE ? 1 : -1;
-        if (curDepth == 0) {
-            return coef * strategy.evaluateBoard(gs.board);
-        }
-
-        final List<Move> allMoves = gs.moveSystem.getAllPreparedMoves(curColor);
-        // Если терминальный узел
-        final EndGameType gameResult = gs.endGameDetector.updateEndGameStatus(allMoves, curColor);
-        if (gameResult != EndGameType.NOTHING) {
-            return coef * strategy.gradeIfTerminalNode(gameResult, curDepth);
-        }
-
-        orderMoves(allMoves, gs, coef);
-        int value = Integer.MIN_VALUE;
-
-        for (final Move move : allMoves) {
-            gs.moveSystem.move(move);
-            value = max(value, -negamax(gs, curDepth - 1, -beta, -alpha, curColor.inverse()));
-            gs.moveSystem.undoMove();
-            alpha = max(alpha, value);
             if (alpha >= beta) break;
         }
 
