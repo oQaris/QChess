@@ -40,6 +40,16 @@ public class MoveSystem {
         egd = gs.endGameDetector;
     }
 
+    /** @return true, если ход move не является взятием */
+    public static boolean isNotCapture(final Move move) {
+        switch (move.getMoveType()) {
+            case ATTACK, TURN_INTO_ATTACK, EN_PASSANT:
+                return false;
+            default:
+                return true;
+        }
+    }
+
     /**
      * Делает ход move без проверок, записывая его в историю и изменяя сторону цвета в истории
      *

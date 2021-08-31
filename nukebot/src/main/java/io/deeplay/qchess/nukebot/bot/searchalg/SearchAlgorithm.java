@@ -5,131 +5,201 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
+import io.deeplay.qchess.nukebot.bot.evaluationfunc.commoneval.CommonEvaluation;
+import io.deeplay.qchess.nukebot.bot.evaluationfunc.commoneval.CommonEvaluationConstructor;
+import io.deeplay.qchess.nukebot.bot.features.MoveSorter;
+import io.deeplay.qchess.nukebot.bot.features.components.WrapperGuard;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
+import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 import java.util.List;
 
-public abstract class SearchAlgorithm implements Runnable {
+/**
+ * Общий класс для алгоритмов поиска с альфа-бета отсечениями. Совместим с параллельным поиском
+ * благодаря {@link ResultUpdater}
+ */
+public abstract class SearchAlgorithm<T extends SearchAlgorithm<? super T>> extends WrapperGuard<T>
+        implements AlgBase, ISearchAlgorithm {
 
-    public final EvaluationFunc evaluationFunc;
-    public final Color myColor;
-    public final Color enemyColor;
-    public final int maxDepth;
-
+    protected final Color myColor;
+    protected final Color enemyColor;
+    protected final CommonEvaluation commonEvaluation;
     protected final ResultUpdater resultUpdater;
-    protected final Move mainMove;
-    protected final int moveVersion;
-    protected final GameSettings gs;
+    protected final MoveSorter moveSorter;
+    protected int maxDepth;
+    protected int moveVersion;
+    protected Move mainMove;
+    protected GameSettings gs;
+
+    protected SearchAlgorithm(
+            final SearchFunc<?> searchFunc,
+            final Move mainMove,
+            final int moveVersion,
+            final GameSettings gs,
+            final int maxDepth) {
+        super(null);
+        resultUpdater = searchFunc.resultUpdater;
+        this.mainMove = mainMove;
+        this.moveVersion = moveVersion;
+        this.gs = gs;
+        commonEvaluation = searchFunc.commonEvaluation;
+        myColor = searchFunc.myColor;
+        enemyColor = searchFunc.enemyColor;
+        this.maxDepth = maxDepth;
+        moveSorter = searchFunc.moveSorter;
+    }
 
     protected SearchAlgorithm(
             final ResultUpdater resultUpdater,
             final Move mainMove,
             final int moveVersion,
             final GameSettings gs,
-            final Color color,
+            final Color myColor,
+            final CommonEvaluationConstructor commonEvaluationConstructor,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
+        super(null);
         this.resultUpdater = resultUpdater;
         this.mainMove = mainMove;
         this.moveVersion = moveVersion;
         this.gs = gs;
-        this.evaluationFunc = evaluationFunc;
-        myColor = color;
-        enemyColor = color.inverse();
+        commonEvaluation = commonEvaluationConstructor.newInstance(this, evaluationFunc);
+        this.myColor = myColor;
+        enemyColor = myColor.inverse();
         this.maxDepth = maxDepth;
+        moveSorter = new MoveSorter(gs.board);
     }
 
-    protected boolean isTerminalNode(final List<Move> allMoves) {
+    protected SearchAlgorithm(final T alg) {
+        super(alg);
+        resultUpdater = alg.resultUpdater;
+        mainMove = alg.mainMove;
+        moveVersion = alg.moveVersion;
+        gs = alg.gs;
+        commonEvaluation = alg.commonEvaluation;
+        myColor = alg.myColor;
+        enemyColor = alg.enemyColor;
+        maxDepth = alg.maxDepth;
+        moveSorter = new MoveSorter(gs.board);
+    }
+
+    public void setSettings(
+            final Move mainMove, final GameSettings gs, final int maxDepth, final int moveVersion) {
+        this.mainMove = mainMove;
+        this.gs = gs;
+        this.maxDepth = maxDepth;
+        this.moveVersion = moveVersion;
+    }
+
+    public GameSettings getGameSettings() {
+        return gs;
+    }
+
+    public Color getMyColor() {
+        return myColor;
+    }
+
+    public Color getEnemyColor() {
+        return enemyColor;
+    }
+
+    @Override
+    public void makeMove(final Move move) throws ChessError {
+        makeMove(move, true, true);
+    }
+
+    @Override
+    public void makeMove(
+            final Move move, final boolean useHistoryRecord, final boolean changeMoveSideInRecord)
+            throws ChessError {
+        gs.moveSystem.move(move, useHistoryRecord, changeMoveSideInRecord);
+    }
+
+    @Override
+    public void undoMove() throws ChessError {
+        undoMove(true);
+    }
+
+    @Override
+    public void undoMove(final boolean useHistoryRecord) throws ChessError {
+        gs.moveSystem.undoMove(useHistoryRecord);
+    }
+
+    @Override
+    public List<Move> getLegalMoves(final Color color) throws ChessError {
+        return gs.board.getAllPreparedMoves(gs, color);
+    }
+
+    @Override
+    public void prioritySort(final List<Move> allMoves) {
+        allMoves.sort(MoveSorter.movesPriority);
+        // moveSorter.allSorts(allMoves);
+    }
+
+    @Override
+    public boolean isTerminalNode(final List<Move> allMoves) {
         return allMoves.isEmpty() || gs.endGameDetector.isDraw();
     }
 
-    public int getEvaluation(final List<Move> allMoves, final boolean isMyMove, final int depth)
-            throws ChessError {
-        return getEvaluation(
-                gs.endGameDetector.isCheck(myColor),
-                gs.endGameDetector.isCheck(enemyColor),
-                allMoves,
-                true,
-                isMyMove,
-                depth,
-                null);
+    @Override
+    public boolean isCheck(final Color color) {
+        return gs.endGameDetector.isCheck(color);
+    }
+
+    @Override
+    public boolean isStalemate(final Color color) {
+        return gs.endGameDetector.isStalemate(color);
+    }
+
+    @Override
+    public boolean isDraw() {
+        return gs.endGameDetector.isDraw();
     }
 
     /**
-     * @param probablyAllMoves возможно все ходы
-     * @param areExactAllMoves true, если probablyAllMoves - точно все ходы, иначе
-     *     probablyAttackMoves - возможно не все ходы
+     * @param allMoves все ходы текущего игрока
      * @param isMyMove true, если сейчас ход максимизирующего игрока
-     * @param depth текущая глубина (без вычитания 1)
+     * @param depth текущая глубина
+     * @return оценка доски для максимизирующего игрока
      */
     public int getEvaluation(
-            final boolean isCheckToMe,
-            final boolean isCheckToEnemy,
-            final List<Move> probablyAllMoves,
-            final boolean areExactAllMoves,
+            final List<Move> allMoves,
             final boolean isMyMove,
-            final int depth,
-            final TranspositionTable table)
+            final int alfa,
+            final int beta,
+            final int depth)
             throws ChessError {
-        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
-
-        final int checkBonus;
-        if (isCheckToMe) checkBonus = -EvaluationFunc.KING_COST;
-        else if (isCheckToEnemy) checkBonus = EvaluationFunc.KING_COST;
-        else checkBonus = 0;
-
-        if (isMyMove) { // probablyAllMoves are mine
-            boolean isStalemateToMe = probablyAllMoves.isEmpty();
-            // Если поставлен пат, но не факт, что мы посмотрели все ходы, нужно пересчитать:
-            if (isStalemateToMe && !areExactAllMoves) {
-                isStalemateToMe = gs.endGameDetector.isStalemate(myColor, table);
-            }
-            if (isStalemateToMe) {
-                if (isCheckToMe) return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
-                return checkBonus - depth;
-            }
-
-            if (gs.endGameDetector.isStalemate(enemyColor, table)) {
-                if (isCheckToEnemy) return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
-                return checkBonus - depth; // расширяем ничью - чем глубже, тем лучше
-            }
-        } else { // probablyAllMoves are enemy's
-            boolean isStalemateToEnemy = probablyAllMoves.isEmpty();
-            // Если поставлен пат, но не факт, что мы посмотрели все ходы, нужно пересчитать:
-            if (isStalemateToEnemy && !areExactAllMoves) {
-                isStalemateToEnemy = gs.endGameDetector.isStalemate(enemyColor, table);
-            }
-            if (isStalemateToEnemy) {
-                if (isCheckToEnemy) return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
-                return checkBonus - depth; // расширяем ничью - чем глубже, тем лучше
-            }
-
-            if (gs.endGameDetector.isStalemate(myColor, table)) {
-                if (isCheckToMe) return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
-                return checkBonus - depth;
-            }
-        }
-
-        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
-
-        // Проверка на ничью должна быть после проверок на пат и мат
-        if (gs.endGameDetector.isDraw())
-            return checkBonus - depth; // расширяем ничью - чем глубже, тем лучше
-
-        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
-
-        return evaluationFunc.getHeuristics(gs, myColor) + checkBonus;
+        return getEvaluation(
+                isCheck(myColor), isCheck(enemyColor), allMoves, isMyMove, alfa, beta, depth);
     }
 
-    @FunctionalInterface
-    public interface SearchAlgConstructor {
-        SearchAlgorithm newInstance(
-                ResultUpdater resultUpdater,
-                Move mainMove,
-                int moveVersion,
-                GameSettings gs,
-                Color color,
-                EvaluationFunc evaluationFunc,
-                int maxDepth);
+    /**
+     * @param isCheckToMe поставлен ли шах максимизирующему игроку
+     * @param isCheckToEnemy поставлен ли шах минимизирующему игроку
+     * @param allMoves возможно все ходы текущего игрока
+     * @param isMyMove true, если сейчас ход максимизирующего игрока
+     * @param depth текущая глубина
+     * @return оценка доски для максимизирующего игрока
+     */
+    public final int getEvaluation(
+            final boolean isCheckToMe,
+            final boolean isCheckToEnemy,
+            final List<Move> allMoves,
+            final boolean isMyMove,
+            final int alfa,
+            final int beta,
+            final int depth)
+            throws ChessError {
+        return commonEvaluation.getEvaluation(
+                isCheckToMe, isCheckToEnemy, allMoves, isMyMove, alfa, beta, depth);
+    }
+
+    @Override
+    public void updateResult(final int estimation) {
+        resultUpdater.updateResult(mainMove, estimation, maxDepth, moveVersion);
+    }
+
+    @Override
+    public boolean isInvalidMoveVersion() {
+        return resultUpdater.isInvalidMoveVersion(moveVersion);
     }
 }

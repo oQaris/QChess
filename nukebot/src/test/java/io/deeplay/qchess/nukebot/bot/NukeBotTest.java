@@ -15,7 +15,6 @@ import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Rook;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.TimeWrapper;
-import io.deeplay.qchess.nukebot.bot.NukeBotFactory.NukeBotSettings;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

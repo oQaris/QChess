@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public class NukeBot extends RemotePlayer {
 
-    private final SearchFunc searchFunc;
+    private final SearchFunc<?> searchFunc;
 
     public NukeBot(
-            final GameSettings roomSettings, final Color color, final SearchFunc searchFunc) {
+            final GameSettings roomSettings, final Color color, final SearchFunc<?> searchFunc) {
         super(roomSettings, color, "nuke-bot-" + UUID.randomUUID(), "nuke-bot");
         this.searchFunc = searchFunc;
     }

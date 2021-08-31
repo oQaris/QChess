@@ -8,15 +8,14 @@ import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.commoneval.CommonEvaluationConstructor;
 import io.deeplay.qchess.nukebot.bot.exceptions.SearchAlgErrorCode;
 import io.deeplay.qchess.nukebot.bot.exceptions.SearchAlgException;
-import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.NegaAlfaBeta;
+import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.NegaNullMoveAlfaBeta;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.Iterator;
 import java.util.List;
 
-/** Реализует алгоритм поиска негаскаутом с нулевым окном и альфа-бета отсечениями */
-public class NegaScoutAlfaBetaPruning extends NegaAlfaBeta {
+public class PVSNullMove extends NegaNullMoveAlfaBeta {
 
-    public NegaScoutAlfaBetaPruning(
+    public PVSNullMove(
             final ResultUpdater resultUpdater,
             final Move mainMove,
             final int moveVersion,
@@ -41,11 +40,12 @@ public class NegaScoutAlfaBetaPruning extends NegaAlfaBeta {
         try {
             makeMove(mainMove);
             final int est =
-                    -super.negaSearch(
+                    -super.negaNullMoveSearch(
                             false,
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
-                            maxDepth);
+                            maxDepth,
+                            false);
             updateResult(est);
             undoMove();
         } catch (final ChessError e) {
@@ -54,33 +54,57 @@ public class NegaScoutAlfaBetaPruning extends NegaAlfaBeta {
     }
 
     @Override
-    public int negaSearch(final boolean isMyMove, int alfa, final int beta, final int depth)
+    public int negaNullMoveSearch(
+            final boolean isMyMove,
+            int alfa,
+            final int beta,
+            final int depth,
+            boolean isPrevNullMove)
             throws ChessError {
         final List<Move> allMoves = getLegalMoves(isMyMove ? myColor : enemyColor);
-        if (depth <= 0 || isTerminalNode(allMoves)) {
-            final int est = getEvaluation(allMoves, isMyMove, alfa, beta, depth);
-            return isMyMove ? est : -est;
-        }
+
+        if (depth <= 0 || isTerminalNode(allMoves))
+            return getEvaluation(allMoves, isMyMove, alfa, beta, depth);
 
         prioritySort(allMoves);
 
+        final boolean isAllowNullMove =
+                isAllowNullMove(isMyMove ? myColor : enemyColor, isPrevNullMove);
+        if (isAllowNullMove) {
+            isPrevNullMove = true;
+            final List<Move> enemyMoves = getLegalMoves(isMyMove ? enemyColor : myColor);
+            prioritySort(enemyMoves);
+            final Move nullMove = enemyMoves.get(0);
+            // null-move:
+            makeMove(nullMove, true, false);
+            final int estimation =
+                    -super.negaNullMoveSearch(
+                            isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, true);
+            undoMove();
+            if (estimation >= beta) return estimation;
+        } else isPrevNullMove = false;
+
         final Iterator<Move> it = allMoves.iterator();
         Move move = it.next();
+
         // first move:
         makeMove(move);
-        int estimation = -super.negaSearch(!isMyMove, -beta, -alfa, depth - 1);
+        int estimation =
+                -super.negaNullMoveSearch(!isMyMove, -beta, -alfa, depth - 1, isPrevNullMove);
         if (estimation > alfa) alfa = estimation;
         undoMove();
 
-        while (beta > alfa && it.hasNext()) {
+        while (alfa < beta && it.hasNext()) {
             move = it.next();
             makeMove(move);
             // null-window search:
-            estimation = -super.negaSearch(!isMyMove, -alfa - 1, -alfa, depth - 1);
-            if (alfa < estimation && estimation < beta && depth > 1) {
-                final int est = -super.negaSearch(!isMyMove, -beta, -estimation, depth - 1);
-                if (est > estimation) estimation = est;
-            }
+            estimation =
+                    -super.negaNullMoveSearch(
+                            !isMyMove, -alfa - 1, -alfa, depth - 1, isPrevNullMove);
+            if (alfa < estimation && estimation < beta)
+                estimation =
+                        -super.negaNullMoveSearch(
+                                !isMyMove, -beta, -alfa, depth - 1, isPrevNullMove);
             undoMove();
             if (estimation > alfa) alfa = estimation;
         }
