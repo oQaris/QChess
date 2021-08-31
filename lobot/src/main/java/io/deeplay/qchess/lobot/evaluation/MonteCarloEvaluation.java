@@ -35,11 +35,11 @@ public class MonteCarloEvaluation implements Evaluation {
             }
             EndGameType endResult = gs.endGameDetector.getGameResult();
             if (color == Color.WHITE && endResult == EndGameType.CHECKMATE_TO_BLACK
-                || color == Color.BLACK && endResult == EndGameType.CHECKMATE_TO_WHITE) {
+                    || color == Color.BLACK && endResult == EndGameType.CHECKMATE_TO_WHITE) {
                 wins++;
             }
         }
-        //System.out.println((wins * 1000) / iterationNumber);
+        // System.out.println((wins * 1000) / iterationNumber);
         return (wins * 1000) / iterationNumber;
     }
 }

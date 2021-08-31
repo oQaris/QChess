@@ -19,13 +19,12 @@ public class MoveWeight {
         return move;
     }
 
-    public double getWeight() {
-        return weight;
-    }
-
-
     public void setMove(final Move move) {
         this.move = move;
+    }
+
+    public double getWeight() {
+        return weight;
     }
 
     public void incWeight() {

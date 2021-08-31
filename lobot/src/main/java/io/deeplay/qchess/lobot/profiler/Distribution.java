@@ -16,6 +16,7 @@ public class Distribution {
     /**
      * Если такой ход уже есть в распределении то значение увеличится на 1, <br>
      * иначе создастся новая пара со значением 1.
+     *
      * @param move ключ по которому идет обновление распределения
      */
     public void setOrAddMove(final Move move, final int additive) {
@@ -25,6 +26,7 @@ public class Distribution {
 
     /**
      * Проверка распределения на пустоту.
+     *
      * @return true если распределение пусто, false иначе
      */
     public boolean isEmpty() {
@@ -37,7 +39,7 @@ public class Distribution {
      */
     public List<Integer> getProbabilities(final List<Move> moves) {
         final List<Integer> result = new LinkedList<>();
-        for(final Move move : moves) {
+        for (final Move move : moves) {
             result.add(data.getOrDefault(move, 0));
         }
         return result;
@@ -54,7 +56,7 @@ public class Distribution {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for(final Move move : data.keySet()) {
+        for (final Move move : data.keySet()) {
             sb.append(move).append(", ").append(data.get(move)).append("; ");
         }
         sb.deleteCharAt(sb.length() - 1).deleteCharAt(sb.length() - 1);
@@ -63,7 +65,7 @@ public class Distribution {
 
     public int fullSize() {
         int result = 0;
-        for(final int i : data.values()) {
+        for (final int i : data.values()) {
             result += i;
         }
         return result;

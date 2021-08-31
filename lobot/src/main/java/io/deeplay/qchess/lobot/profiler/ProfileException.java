@@ -16,4 +16,3 @@ public class ProfileException extends Exception {
         return pec.getMessage();
     }
 }
-

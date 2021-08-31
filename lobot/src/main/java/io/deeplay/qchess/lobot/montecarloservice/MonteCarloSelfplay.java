@@ -14,7 +14,7 @@ public class MonteCarloSelfplay {
     private Player currentPlayerToMove;
 
     public MonteCarloSelfplay(
-        final GameSettings roomSettings, final Player firstPlayer, final Player secondPlayer) {
+            final GameSettings roomSettings, final Player firstPlayer, final Player secondPlayer) {
         this.roomSettings = roomSettings;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
@@ -27,11 +27,9 @@ public class MonteCarloSelfplay {
             final Move move = currentPlayerToMove.getNextMove();
 
             roomSettings.moveSystem.move(move);
-            currentPlayerToMove =
-                currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
+            currentPlayerToMove = currentPlayerToMove == firstPlayer ? secondPlayer : firstPlayer;
 
             egd.updateEndGameStatus(currentPlayerToMove.getColor());
         }
     }
 }
-

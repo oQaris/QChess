@@ -58,7 +58,7 @@ public class QNegamaxBot extends QBot {
     }
 
     public QNegamaxBot(final GameSettings roomSettings, final Color color) {
-        this(roomSettings, color, 7);
+        this(roomSettings, color, 6);
     }
 
     /**
@@ -66,13 +66,20 @@ public class QNegamaxBot extends QBot {
      *
      * @param moves Исходный список ходов.
      */
-    private void orderMoves(final List<Move> moves, final GameSettings gs, final int coef) {
+    private void orderMoves(final List<Move> moves, final GameSettings gs) {
         moves.sort(
                 Comparator.comparingInt(
-                        m -> {
-                            return m.getMoveType().importantLevel;
-                            // todo сделать сортировку MLV-LVA
-                        }));
+                                (Move m) -> {
+                                    final MoveType mt = m.getMoveType();
+                                    int level = mt.importantLevel;
+                                    // сортировка MVV-LVA
+                                    if (mt == ATTACK || mt == TURN_INTO_ATTACK)
+                                        level +=
+                                                gs.board.getFigureUgly(m.getTo()).figureType.type
+                                                        - gs.board.getFigureUgly(m.getFrom()).figureType.type;
+                                    return level;
+                                })
+                        .reversed());
     }
 
     public int getCountFindingTT() {
@@ -130,7 +137,7 @@ public class QNegamaxBot extends QBot {
             return coef * strategy.gradeIfTerminalNode(gameResult, curDepth);
         }
 
-        orderMoves(allMoves, gs, coef);
+        orderMoves(allMoves, gs);
         int value = Integer.MIN_VALUE;
 
         for (final Move move : allMoves) {

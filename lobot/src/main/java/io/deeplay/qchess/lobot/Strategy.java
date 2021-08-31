@@ -7,11 +7,6 @@ import io.deeplay.qchess.lobot.evaluation.PestoEvaluation;
 import io.deeplay.qchess.lobot.profiler.Profile;
 import io.deeplay.qchess.lobot.profiler.ProfileException;
 import io.deeplay.qchess.lobot.profiler.ProfileService;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 public class Strategy {
 
@@ -25,9 +20,11 @@ public class Strategy {
         this(new PestoEvaluation(), TraversalAlgorithm.MINIMAX, 2, false);
     }
 
-    public Strategy(final Evaluation evaluation, final TraversalAlgorithm algorithm,
-        final int depth,
-        final boolean onMonteCarlo) {
+    public Strategy(
+            final Evaluation evaluation,
+            final TraversalAlgorithm algorithm,
+            final int depth,
+            final boolean onMonteCarlo) {
         this.evaluation = evaluation;
         this.algorithm = algorithm;
         this.depth = depth;
@@ -70,7 +67,6 @@ public class Strategy {
     public boolean getOnMonteCarlo() {
         return onMonteCarlo;
     }
-
 
     public Profile getProfile() {
         return profile;

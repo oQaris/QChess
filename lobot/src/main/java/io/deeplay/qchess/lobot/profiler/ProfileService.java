@@ -21,7 +21,8 @@ public class ProfileService {
     public static final List<String> figureTemplates = Arrays.asList(FigureType.nameOfTypeNumber);
 
     private static final File saveDirectory = new File("./lobot/src/main/resources/profiles");
-    private static final String loadDirectory = "C:\\Users\\Admin\\IdeaProjects\\QChess\\lobot\\src\\main\\resources\\profiles";
+    private static final String loadDirectory =
+            "C:\\Users\\Admin\\IdeaProjects\\QChess\\lobot\\src\\main\\resources\\profiles";
 
     static {
         for (final MoveType mt : MoveType.values()) {
@@ -33,7 +34,10 @@ public class ProfileService {
         final String namePath = saveDirectory + "/" + profile.getName();
         final File dir = new File(namePath);
         dir.mkdirs();
-        try(final BufferedWriter bw = new BufferedWriter(new FileWriter(dir.getAbsoluteFile() + "/" + profile.getName() + ".profile"))) {
+        try (final BufferedWriter bw =
+                new BufferedWriter(
+                        new FileWriter(
+                                dir.getAbsoluteFile() + "/" + profile.getName() + ".profile"))) {
             profile.save(bw);
         } catch (final IOException e) {
             throw new ProfileException(ProfileErrorCode.SAVE_ERROR);
@@ -43,7 +47,8 @@ public class ProfileService {
     public static Profile loadProfile(final String name) throws ProfileException {
         final Profile profile = new Profile(name);
         final String namePath = loadDirectory + "/" + name;
-        try(final BufferedReader br = new BufferedReader(new FileReader(namePath + "/" + name + ".profile"))) {
+        try (final BufferedReader br =
+                new BufferedReader(new FileReader(namePath + "/" + name + ".profile"))) {
             profile.load(br);
         } catch (final IOException e) {
             throw new ProfileException(ProfileErrorCode.LOAD_ERROR);

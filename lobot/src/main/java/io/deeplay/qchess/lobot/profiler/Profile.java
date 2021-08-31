@@ -32,12 +32,13 @@ public class Profile {
     /**
      * Добавляет запись в профиль. Если такого ключа не было создаётся новая запись<br>
      * Иначе обновляется значение о ключу.
+     *
      * @param fen нотация Форсайта-Эдвардса
      * @param move ход который добавится в значение
      */
     public void add(final String fen, final Move move) {
         final Distribution distribution = repository.getOrDefault(fen, defaultFEN());
-        if(distribution.isEmpty()) {
+        if (distribution.isEmpty()) {
             repository.put(fen, distribution);
         }
         distribution.setOrAddMove(move, 1);
@@ -46,6 +47,7 @@ public class Profile {
     /**
      * Добавляет запись в профиль. Если такого ключа не было создаётся новая запись<br>
      * Иначе обновляется значение о ключу.
+     *
      * @param gs из неё мы получим состояние борды, которое используем как ключ
      * @param move ход который добавится в значение
      */
@@ -67,9 +69,7 @@ public class Profile {
         return repository.getOrDefault(fen, defaultFEN());
     }
 
-    /**
-     * @return распределение для GameSetting которого нет в профиле
-     */
+    /** @return распределение для GameSetting которого нет в профиле */
     private Distribution defaultFEN() {
         return new Distribution();
     }
@@ -80,12 +80,13 @@ public class Profile {
 
     public void save(final BufferedWriter bw) throws IOException {
         final List<String> list = new ArrayList<>(repository.keySet());
-        list.sort((o1, o2) -> {
-            final int i1 = FENService.getFiguresCount(o1);
-            final int i2 = FENService.getFiguresCount(o2);
-            return -Integer.compare(i1, i2);
-        });
-        for(final String key : list) {
+        list.sort(
+                (o1, o2) -> {
+                    final int i1 = FENService.getFiguresCount(o1);
+                    final int i2 = FENService.getFiguresCount(o2);
+                    return -Integer.compare(i1, i2);
+                });
+        for (final String key : list) {
             bw.write(convertProfileRowToString(key));
             bw.write(System.lineSeparator());
         }
@@ -101,7 +102,7 @@ public class Profile {
     }
 
     private void addRecord(final String line) throws ProfileException {
-        if(line == null) return;
+        if (line == null) return;
         final String[] parameters = line.split(" \\| ");
         final String fen = parameters[1];
         final Distribution distribution = distributionParse(parameters[2]);
@@ -111,7 +112,7 @@ public class Profile {
     private Distribution distributionParse(final String line) throws ProfileException {
         final Distribution distribution = new Distribution();
         final String[] distributionElements = line.split("; ");
-        for(final String distributionElement : distributionElements) {
+        for (final String distributionElement : distributionElements) {
             final String[] moveElements = distributionElement.split(", ");
             final Move move = moveParse(moveElements[0]);
             distribution.setOrAddMove(move, Integer.parseInt(moveElements[1]));
@@ -124,14 +125,20 @@ public class Profile {
         final String moveTypeStr = moveComponentParse(moveLine, ProfileService.moveTypePattern);
         final String moveTypeStrCut = moveTypeStr.substring(1, moveTypeStr.length() - 1);
 
-        if(!ProfileService.turnTemplates.contains(moveTypeStrCut)) {
+        if (!ProfileService.turnTemplates.contains(moveTypeStrCut)) {
             throw new ProfileException(ProfileErrorCode.REGEX_ERROR);
         }
-        final Move move = new Move(MoveType.valueOf(moveTypeStrCut), Cell.parse(moveCellStr.substring(0, 2)), Cell.parse(moveCellStr.substring(3)));
-        if(move.getMoveType() == MoveType.TURN_INTO || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
-            final String moveTurnIntoFigure = moveComponentParse(moveLine, ProfileService.figureTypePattern);
-            final String moveTurnIntoFigureCut  = moveTurnIntoFigure.split(" ")[2];
-            if(!ProfileService.figureTemplates.contains(moveTurnIntoFigureCut)) {
+        final Move move =
+                new Move(
+                        MoveType.valueOf(moveTypeStrCut),
+                        Cell.parse(moveCellStr.substring(0, 2)),
+                        Cell.parse(moveCellStr.substring(3)));
+        if (move.getMoveType() == MoveType.TURN_INTO
+                || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
+            final String moveTurnIntoFigure =
+                    moveComponentParse(moveLine, ProfileService.figureTypePattern);
+            final String moveTurnIntoFigureCut = moveTurnIntoFigure.split(" ")[2];
+            if (!ProfileService.figureTemplates.contains(moveTurnIntoFigureCut)) {
                 throw new ProfileException(ProfileErrorCode.REGEX_ERROR);
             }
             move.turnInto = FigureType.valueOf(moveTurnIntoFigureCut);
@@ -140,9 +147,9 @@ public class Profile {
     }
 
     private String moveComponentParse(final String moveLine, final Pattern pattern)
-        throws ProfileException {
+            throws ProfileException {
         final Matcher matcher = pattern.matcher(moveLine);
-        if(!matcher.find()) {
+        if (!matcher.find()) {
             throw new ProfileException(ProfileErrorCode.REGEX_ERROR);
         }
         return moveLine.substring(matcher.start(), matcher.end());
