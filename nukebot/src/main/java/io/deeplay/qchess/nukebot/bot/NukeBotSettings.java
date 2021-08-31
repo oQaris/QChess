@@ -16,7 +16,7 @@ public class NukeBotSettings {
     public final BaseAlgEnum baseAlg = BaseAlgEnum.Minimax;
     public final EvaluationEnum evaluation = EvaluationEnum.Pesto;
     public final boolean parallelSearch = true;
-    public final boolean useMTDFsIterativeDeepening = false; // TODO: не работает
+    public final boolean useMTDFsIterativeDeepening = false; // TODO: странное поведение
     public final boolean useTT = true;
     public final CommonEvaluationConstructorEnum commonEvaluation =
             CommonEvaluationConstructorEnum.Simple;
