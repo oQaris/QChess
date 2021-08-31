@@ -7,6 +7,7 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithmFactory;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
 import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
@@ -21,6 +22,8 @@ import org.slf4j.LoggerFactory;
 public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater {
 
     private static final Logger logger = LoggerFactory.getLogger(ParallelExecutorsSearch.class);
+
+    private final TranspositionTable table = new TranspositionTable();
 
     private final Object mutexTheBest = new Object();
     /** Используется, чтобы незавершенные потоки с прошлых ходов случайно не сломали текущий */
@@ -44,7 +47,7 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
     public Move findBest() throws ChessError {
         final long startTime = System.currentTimeMillis();
 
-        final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
+        final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor, table);
         SearchImprovements.prioritySort(allMoves);
 
         theBestEstimation = EvaluationFunc.MIN_ESTIMATION;
@@ -59,9 +62,15 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
             final GameSettings gsParallel = new GameSettings(gs, maxDepth);
             final MTDFSearch searchAlgorithm =
                     SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
-                            this, move, moveVersion, gsParallel, myColor, evaluationFunc, maxDepth);
+                            table,
+                            this,
+                            move,
+                            moveVersion,
+                            gsParallel,
+                            myColor,
+                            evaluationFunc,
+                            maxDepth);
 
-            // executor.execute(() -> searchAlgorithm.MTDFStart(0, maxDepth));
             executor.execute(searchAlgorithm);
         }
         executor.shutdown();

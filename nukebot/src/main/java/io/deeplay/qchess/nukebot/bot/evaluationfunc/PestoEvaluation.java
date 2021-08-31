@@ -1,15 +1,28 @@
 package io.deeplay.qchess.nukebot.bot.evaluationfunc;
 
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.EG_BISHOP_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.EG_KNIGHT_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.EG_PAWN_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.EG_QUEEN_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.EG_ROOK_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.KING_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_BISHOP_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_KNIGHT_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_PAWN_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_QUEEN_COST;
+import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.MG_ROOK_COST;
+
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import java.util.EnumMap;
-import java.util.Map;
 
 public class PestoEvaluation {
-    public static final Map<FigureType, Integer> costInPawns;
-    private static final int[] mg_value = {82, 337, 365, 477, 1025, 0};
-    private static final int[] eg_value = {94, 281, 297, 512, 936, 0};
+    private static final int[] mg_value = {
+        MG_PAWN_COST, MG_KNIGHT_COST, MG_BISHOP_COST, MG_ROOK_COST, MG_QUEEN_COST, KING_COST
+    };
+    private static final int[] eg_value = {
+        EG_PAWN_COST, EG_KNIGHT_COST, EG_BISHOP_COST, EG_ROOK_COST, EG_QUEEN_COST, KING_COST
+    };
     private static final int[] mg_pawn_table = {
         0, 0, 0, 0, 0, 0, 0, 0, 98, 134, 61, 95, 68, 126, 34, -11, -6, 7, 26, 31, 65, 56, 25, -20,
         -14, 13, 6, 21, 23, 12, 17, -23, -27, -2, -5, 12, 17, 6, 10, -25, -26, -4, -4, -10, 3, 3,
@@ -94,14 +107,6 @@ public class PestoEvaluation {
     private static final int[][] eg_table = new int[12][64];
 
     static {
-        costInPawns = new EnumMap<>(FigureType.class);
-        costInPawns.put(FigureType.PAWN, 100);
-        costInPawns.put(FigureType.KNIGHT, 320);
-        costInPawns.put(FigureType.BISHOP, 330);
-        costInPawns.put(FigureType.ROOK, 500);
-        costInPawns.put(FigureType.QUEEN, 900);
-        costInPawns.put(FigureType.KING, 20000);
-
         for (int p = 0, pc = 0; p <= 5; pc += 2, ++p) {
             for (int sq = 0; sq < 64; sq++) {
                 mg_table[pc][sq] = mg_value[p] + mg_pesto_table[p][sq];
@@ -116,6 +121,18 @@ public class PestoEvaluation {
         int gamePhase = 0;
         final int[] mg = {0, 0};
         final int[] eg = {0, 0};
+        final int[] board = gs.board.fastSnapshotReference();
+
+        // Вычисление каждой фигуры
+        for (int sq = 0; sq < 64; ++sq) {
+            final int pc = board[sq];
+            if (pc != FigureType.EMPTY_TYPE) {
+                mg[pc & 1] += mg_table[pc][sq];
+                eg[pc & 1] += eg_table[pc][sq];
+                gamePhase += gamephaseInc[pc];
+            }
+        }
+
         final int side2move;
         final int otherSide;
         if (myColor == Color.WHITE) {
@@ -125,18 +142,6 @@ public class PestoEvaluation {
             side2move = 1;
             otherSide = 0;
         }
-        final int[] board = gs.board.fastSnapshotReference();
-
-        // Вычисление каждой фигуры
-        for (int sq = 0; sq < 64; ++sq) {
-            final int pc = board[sq];
-            if (pc != 12) { // 12 - пустая клетка
-                mg[pc & 1] += mg_table[pc][sq];
-                eg[pc & 1] += eg_table[pc][sq];
-                gamePhase += gamephaseInc[pc];
-            }
-        }
-
         // Вычисление фазы игры
         final int mgScore = mg[side2move] - mg[otherSide];
         final int egScore = eg[side2move] - eg[otherSide];

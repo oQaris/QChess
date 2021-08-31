@@ -1,22 +1,26 @@
 package io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.nullmoveimpl;
 
-import static io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc.QUARTER_PAWN_COST;
-
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.BoardState;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
 import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable.TTEntry;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /** Лучший из лучших */
 public class UltimateQuintessence extends NullMoveMTDFCompatible {
+
+    private static final int LMR_REDUCE_ONE = 6;
+    private static final int LMR_REDUCE_TWO = 32;
+    private static final int LMR_REDUCE_THREE = 64;
 
     public UltimateQuintessence(
             final TranspositionTable table,
@@ -32,7 +36,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
     @Override
     public int alfaBetaWithTT(final int alfa, final int beta, final int depth) throws ChessError {
-        return -uq(false, -beta, -alfa, depth, true);
+        return -uq(false, -beta, -alfa, depth, true, false);
     }
 
     @Override
@@ -45,14 +49,27 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
                             maxDepth,
-                            true);
+                            true,
+                            false);
             resultUpdater.updateResult(mainMove, est, maxDepth, moveVersion);
             gs.moveSystem.undoMove();
         } catch (final ChessError ignore) {
         }
     }
 
-    public int uq(final boolean isMyMove, int alfa, int beta, int depth, boolean verify)
+    /** @return true, если разрешено сократить глубину для хода move */
+    private boolean isAllowLMR(final Move move) {
+        return isNotCapture(move)
+                && gs.board.getFigureUgly(move.getFrom()).figureType != FigureType.PAWN;
+    }
+
+    public int uq(
+            final boolean isMyMove,
+            int alfa,
+            int beta,
+            int depth,
+            boolean verify,
+            boolean isPrevNullMove)
             throws ChessError {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
@@ -72,46 +89,58 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         // --------------- Получение всех ходов из ТТ или создание новых --------------- //
 
         final List<Move> allMoves;
-        if (entry != null) allMoves = entry.allMoves;
-        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+        if (entry != null) {
+            if (entry.allMoves != null) allMoves = entry.allMoves;
+            else // если есть вхождение, значит скорее всего есть и следующие
+            allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor, table);
+        } else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
 
         // --------------- Условие выхода из рекурсии --------------- //
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        if (depth <= 0 || isTerminalNode(allMoves))
-            return quiesce(isMyMove, alfa, beta, depth, false);
-        /*return isMyMove
-        ? getEvaluation(allMoves, true, depth)
-        : -getEvaluation(allMoves, false, depth);*/
+        if (depth <= 0 || isTerminalNode(allMoves)) return quiesce(isMyMove, alfa, beta, depth);
 
         // --------------- Verified Null-Move --------------- //
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
+        final boolean isCheckToWhite =
+                entry != null && entry.isCheckToWhite != 0
+                        ? entry.isCheckToWhite == 1
+                        : gs.endGameDetector.isCheck(Color.WHITE);
+        final boolean isCheckToBlack =
+                entry != null && entry.isCheckToBlack != 0
+                        ? entry.isCheckToBlack == 1
+                        : gs.endGameDetector.isCheck(Color.BLACK);
+        final boolean isCheckToMe = myColor == Color.WHITE ? isCheckToWhite : isCheckToBlack;
+        final boolean isCheckToEnemy = enemyColor == Color.WHITE ? isCheckToWhite : isCheckToBlack;
+        final boolean isCheckToThisSide = isMyMove ? isCheckToMe : isCheckToEnemy;
+        final boolean isCheckToOtherSide = isMyMove ? isCheckToEnemy : isCheckToMe;
+
         final boolean isAllowNullMove =
-                isAllowNullMove(isMyMove ? myColor : enemyColor) && (!verify || depth > 1);
+                isAllowNullMove(
+                                isMyMove ? myColor : enemyColor,
+                                isPrevNullMove,
+                                isCheckToThisSide,
+                                isCheckToOtherSide)
+                        && (!verify || depth > 1);
         boolean failHigh = false;
 
         if (isAllowNullMove) {
             isPrevNullMove = true;
-            // TODO: слишком медленно
-            final List<Move> enemyMoves =
+
+            final List<Move> enemyMoves = // скорее всего в ТТ нет проверок на шах
                     gs.board.getAllPreparedMoves(gs, isMyMove ? enemyColor : myColor);
-            SearchImprovements.prioritySort(enemyMoves);
+            SearchImprovements.allSorts(gs.board, enemyMoves);
             final Move nullMove = enemyMoves.get(0);
 
             // null-move:
-            gs.moveSystem.move(nullMove);
+            gs.moveSystem.move(nullMove, true, false);
 
-            // aspiration window:
+            // null-window search:
             final int est =
-                    -uq(
-                            isMyMove,
-                            -beta - QUARTER_PAWN_COST,
-                            -beta + QUARTER_PAWN_COST,
-                            depth - DEPTH_REDUCTION - 1,
-                            verify);
+                    -uq(isMyMove, -beta, -beta + 1, depth - DEPTH_REDUCTION - 1, verify, true);
 
             gs.moveSystem.undoMove();
 
@@ -129,10 +158,13 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Сортировка по приоритетам --------------- //
 
-        // TODO: сделать эвристику History
-        if (entry == null) SearchImprovements.prioritySort(allMoves);
+        if (entry == null || entry.allMoves == null)
+            SearchImprovements.allSorts(gs.board, allMoves);
 
-        // --------------- PVS с расширенным окном --------------- //
+        // --------------- PVS --------------- //
+
+        final int initDepth = depth;
+        int countNotFail = 0;
 
         boolean doResearch;
         do { // если будет обнаружена позиция Цугцванга, повторить поиск с начальной глубиной:
@@ -146,20 +178,43 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
             // first move:
             gs.moveSystem.move(move);
-            final int firstEst = -uq(!isMyMove, -beta, -alfa, depth - 1, verify);
-            if (firstEst > alfa) alfa = firstEst;
+            int est = -uq(!isMyMove, -beta, -alfa, depth - 1, verify, isPrevNullMove);
+            if (est > alfa) alfa = est;
             gs.moveSystem.undoMove();
 
             if (resultUpdater.isInvalidMoveVersion(moveVersion))
                 return EvaluationFunc.MIN_ESTIMATION;
 
-            while (alfa < beta && it.hasNext()) {
+            while (it.hasNext()) {
+
+                if (beta <= est) {
+                    alfa = beta;
+                    break;
+                }
+
+                ++countNotFail;
+
+                // --------------- PVS --------------- //
+
                 move = it.next();
+
+                final boolean isAllowLMR =
+                        depth != maxDepth
+                                && !isCheckToThisSide
+                                && countNotFail >= LMR_REDUCE_ONE
+                                && isAllowLMR(move);
+                if (isAllowLMR) {
+                    if (countNotFail >= LMR_REDUCE_THREE) depth = initDepth - 3;
+                    else if (countNotFail >= LMR_REDUCE_TWO) depth = initDepth - 2;
+                    else depth = initDepth - 1;
+                }
+
                 gs.moveSystem.move(move);
 
                 // null-window search:
-                int est = -uq(!isMyMove, -alfa - 1, -alfa, depth - 1, verify);
-                if (alfa < est && est < beta) est = -uq(!isMyMove, -beta, -alfa, depth - 1, verify);
+                est = -uq(!isMyMove, -alfa - 1, -alfa, depth - 1, verify, isPrevNullMove);
+                if (alfa < est && est < beta)
+                    est = -uq(!isMyMove, -beta, -alfa, depth - 1, verify, isPrevNullMove);
 
                 gs.moveSystem.undoMove();
                 if (est > alfa) alfa = est;
@@ -178,7 +233,17 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Кеширование результата в ТТ --------------- //
 
-        table.store(allMoves, alfa, boardState, alfaOrigin, betaOrigin, depth);
+        table.store(
+                allMoves,
+                null,
+                isAllowNullMove ? 1 : 2,
+                isCheckToWhite ? 1 : 2,
+                isCheckToBlack ? 1 : 2,
+                alfa,
+                boardState,
+                alfaOrigin,
+                betaOrigin,
+                depth);
 
         return alfa;
     }
@@ -189,8 +254,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
      * @return лучшая оценка доски
      */
     private int quiesce( // TODO: вынести в отдельный класс
-            final boolean isMyMove, int alfa, int beta, final int depth, final boolean theLast)
-            throws ChessError {
+            final boolean isMyMove, int alfa, int beta, final int depth) throws ChessError {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         // --------------- Поиск в ТТ --------------- //
@@ -198,7 +262,7 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
         final BoardState boardState = gs.history.getLastBoardState();
         final TTEntry entry = table.find(boardState);
         if (entry != null && entry.depth >= depth) {
-            if (entry.lowerBound >= beta) return entry.lowerBound;
+            if (entry.lowerBound >= beta) return beta;
             if (entry.upperBound <= alfa) return entry.upperBound;
             if (entry.lowerBound > alfa) alfa = entry.lowerBound;
             if (entry.upperBound < beta) beta = entry.upperBound;
@@ -208,67 +272,94 @@ public class UltimateQuintessence extends NullMoveMTDFCompatible {
 
         // --------------- Получение всех ходов из ТТ или создание новых --------------- //
 
-        final List<Move> allMoves;
-        if (entry != null) allMoves = entry.allMoves;
-        else allMoves = gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
+        List<Move> allMoves = entry != null ? entry.allMoves : null;
+        final boolean areAttackMovesOrElseAll = entry != null && entry.attackMoves != null;
+        final List<Move> attackMoves =
+                areAttackMovesOrElseAll ? entry.attackMoves : new LinkedList<>();
+        final List<Move> probablyAttackMoves =
+                areAttackMovesOrElseAll
+                        ? attackMoves
+                        : (entry == null // если вхождения нет, значит скорее всего нет и следующих
+                                ? gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor)
+                                : gs.board.getAllPreparedMoves(
+                                        gs, isMyMove ? myColor : enemyColor, table));
 
-        final int standPat =
-                isMyMove
-                        ? getEvaluation(allMoves, true, depth)
-                        : -getEvaluation(allMoves, false, depth);
+        final boolean isCheckToWhite =
+                entry != null && entry.isCheckToWhite != 0
+                        ? entry.isCheckToWhite == 1
+                        : gs.endGameDetector.isCheck(Color.WHITE);
+        final boolean isCheckToBlack =
+                entry != null && entry.isCheckToBlack != 0
+                        ? entry.isCheckToBlack == 1
+                        : gs.endGameDetector.isCheck(Color.BLACK);
+        final boolean isCheckToMe = myColor == Color.WHITE ? isCheckToWhite : isCheckToBlack;
+        final boolean isCheckToEnemy = enemyColor == Color.WHITE ? isCheckToWhite : isCheckToBlack;
 
         // --------------- Условие выхода из рекурсии --------------- //
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        if (standPat >= beta) return beta;
-        if (alfa < standPat) alfa = standPat;
-        if (theLast || isTerminalNode(allMoves)) return alfa;
+        {
+            int standPat =
+                    getEvaluation(
+                            isCheckToMe,
+                            isCheckToEnemy,
+                            allMoves != null ? allMoves : probablyAttackMoves,
+                            allMoves != null || !areAttackMovesOrElseAll,
+                            isMyMove,
+                            depth,
+                            table);
+            if (!isMyMove) standPat = -standPat;
+
+            if (standPat >= beta) return beta;
+            if (alfa < standPat) alfa = standPat;
+        }
+
+        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
+        if (isTerminalNode(probablyAttackMoves)) return alfa;
 
         // --------------- Проведение взятий до потери пульса --------------- //
 
+        if (!areAttackMovesOrElseAll) {
+            SearchImprovements.allSorts(gs.board, probablyAttackMoves);
+            if (allMoves == null) allMoves = probablyAttackMoves;
+        }
+
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        final Iterator<Move> attackMoves =
-                SearchImprovements.MVV_LVA_attack_sort(gs.board, allMoves);
+        for (final Move move : probablyAttackMoves) {
+            if (!areAttackMovesOrElseAll) {
+                if (isNotCapture(move)) continue;
+                attackMoves.add(move);
+            }
 
-        if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
+            gs.moveSystem.move(move);
+            final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1);
+            gs.moveSystem.undoMove();
 
-        if (!attackMoves.hasNext()) { // попытка избавиться от Horizon effect
-            /*for (final Move move : allMoves) {
-                gs.moveSystem.move(move);
-                final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1, true);
-                gs.moveSystem.undoMove();
+            if (resultUpdater.isInvalidMoveVersion(moveVersion))
+                return EvaluationFunc.MIN_ESTIMATION;
 
-                if (resultUpdater.isInvalidMoveVersion(moveVersion))
-                    return EvaluationFunc.MIN_ESTIMATION;
-
-                if (score >= beta) {
-                    alfa = beta;
-                    break;
-                }
-                if (score > alfa) alfa = score;
-            }*/
-        } else { // проведение взятий
-            do {
-                gs.moveSystem.move(attackMoves.next());
-                final int score = -quiesce(!isMyMove, -beta, -alfa, depth - 1, false);
-                gs.moveSystem.undoMove();
-
-                if (resultUpdater.isInvalidMoveVersion(moveVersion))
-                    return EvaluationFunc.MIN_ESTIMATION;
-
-                if (score >= beta) {
-                    alfa = beta;
-                    break;
-                }
-                if (score > alfa) alfa = score;
-            } while (attackMoves.hasNext());
+            if (score >= beta) {
+                alfa = beta;
+                break;
+            }
+            if (score > alfa) alfa = score;
         }
 
         // --------------- Кеширование результата в ТТ --------------- //
 
-        table.store(allMoves, alfa, boardState, alfaOrigin, betaOrigin, depth);
+        table.store(
+                allMoves,
+                attackMoves,
+                0,
+                isCheckToWhite ? 1 : 2,
+                isCheckToBlack ? 1 : 2,
+                alfa,
+                boardState,
+                alfaOrigin,
+                betaOrigin,
+                depth);
 
         return alfa;
     }

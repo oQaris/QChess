@@ -2,8 +2,9 @@ package io.deeplay.qchess.nukebot.bot.searchalg.features;
 
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.model.figures.Figure;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class SearchImprovements {
@@ -15,22 +16,22 @@ public abstract class SearchImprovements {
         allMoves.sort(movesPriority);
     }
 
-    /** @return отсортированный поток по убыванию (макс. жертва - мин. агрессор) */
-    public static Iterator<Move> MVV_LVA_attack_sort(final Board board, final List<Move> allMoves) {
-        // TODO: добавить оценку позиции (?)
-        // TODO: переделать на ArrayList
-        return allMoves.stream()
-                .filter(
-                        move ->
-                                switch (move.getMoveType()) {
-                                    case ATTACK, TURN_INTO_ATTACK -> true;
-                                    default -> false;
-                                })
-                .sorted(
-                        Comparator.comparingInt(
-                                m ->
-                                        board.getFigureUgly(m.getFrom()).figureType.type
-                                                - board.getFigureUgly(m.getTo()).figureType.type))
-                .iterator();
+    /** Сортирует ходы на основе эвристики истории, бабочки и MVV-LVA */
+    public static void allSorts(final Board board, final List<Move> allMoves) {
+        final Comparator<Move> MVV_LVA =
+                Comparator.comparingInt(
+                        m -> {
+                            final Figure from = board.getFigureUgly(m.getFrom());
+                            final Figure to = board.getFigureUgly(m.getTo());
+                            return to == null
+                                    ? FigureType.EMPTY_TYPE
+                                    : from.figureType.type - to.figureType.type;
+                        });
+        allMoves.sort(
+                (m1, m2) -> {
+                    final int s1 = MVV_LVA.compare(m1, m2);
+                    if (s1 != 0) return s1;
+                    return movesPriority.compare(m1, m2);
+                });
     }
 }

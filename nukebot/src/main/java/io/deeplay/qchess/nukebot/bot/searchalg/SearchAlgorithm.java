@@ -5,6 +5,7 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.List;
 
@@ -44,38 +45,79 @@ public abstract class SearchAlgorithm implements Runnable {
 
     public int getEvaluation(final List<Move> allMoves, final boolean isMyMove, final int depth)
             throws ChessError {
+        return getEvaluation(
+                gs.endGameDetector.isCheck(myColor),
+                gs.endGameDetector.isCheck(enemyColor),
+                allMoves,
+                true,
+                isMyMove,
+                depth,
+                null);
+    }
+
+    /**
+     * @param probablyAllMoves возможно все ходы
+     * @param areExactAllMoves true, если probablyAllMoves - точно все ходы, иначе
+     *     probablyAttackMoves - возможно не все ходы
+     * @param isMyMove true, если сейчас ход максимизирующего игрока
+     * @param depth текущая глубина (без вычитания 1)
+     */
+    public int getEvaluation(
+            final boolean isCheckToMe,
+            final boolean isCheckToEnemy,
+            final List<Move> probablyAllMoves,
+            final boolean areExactAllMoves,
+            final boolean isMyMove,
+            final int depth,
+            final TranspositionTable table)
+            throws ChessError {
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
-        final Color enemyColor = myColor.inverse();
-        if (isMyMove) { // allMoves are mine
-            if (gs.endGameDetector.isStalemate(allMoves))
-                return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
+        final int checkBonus;
+        if (isCheckToMe) checkBonus = -EvaluationFunc.KING_COST;
+        else if (isCheckToEnemy) checkBonus = EvaluationFunc.KING_COST;
+        else checkBonus = 0;
 
-            if (gs.endGameDetector.isStalemate(enemyColor)) {
-                if (gs.endGameDetector.isCheck(enemyColor)) {
-                    return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
-                }
-                return 0;
+        if (isMyMove) { // probablyAllMoves are mine
+            boolean isStalemateToMe = probablyAllMoves.isEmpty();
+            // Если поставлен пат, но не факт, что мы посмотрели все ходы, нужно пересчитать:
+            if (isStalemateToMe && !areExactAllMoves) {
+                isStalemateToMe = gs.endGameDetector.isStalemate(myColor, table);
             }
-        } else { // allMoves are enemy's
-            if (gs.endGameDetector.isStalemate(allMoves)) {
-                if (gs.endGameDetector.isCheck(enemyColor)) {
-                    return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
-                }
-                return 0;
+            if (isStalemateToMe) {
+                if (isCheckToMe) return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
+                return checkBonus - depth;
             }
 
-            if (gs.endGameDetector.isStalemate(myColor))
-                return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
+            if (gs.endGameDetector.isStalemate(enemyColor, table)) {
+                if (isCheckToEnemy) return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
+                return checkBonus - depth; // расширяем ничью - чем глубже, тем лучше
+            }
+        } else { // probablyAllMoves are enemy's
+            boolean isStalemateToEnemy = probablyAllMoves.isEmpty();
+            // Если поставлен пат, но не факт, что мы посмотрели все ходы, нужно пересчитать:
+            if (isStalemateToEnemy && !areExactAllMoves) {
+                isStalemateToEnemy = gs.endGameDetector.isStalemate(enemyColor, table);
+            }
+            if (isStalemateToEnemy) {
+                if (isCheckToEnemy) return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
+                return checkBonus - depth; // расширяем ничью - чем глубже, тем лучше
+            }
+
+            if (gs.endGameDetector.isStalemate(myColor, table)) {
+                if (isCheckToMe) return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
+                return checkBonus - depth;
+            }
         }
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
 
         // Проверка на ничью должна быть после проверок на пат и мат
-        if (gs.endGameDetector.isDraw()) return -depth; // расширяем ничью - чем глубже, тем лучше
+        if (gs.endGameDetector.isDraw())
+            return checkBonus - depth; // расширяем ничью - чем глубже, тем лучше
 
         if (resultUpdater.isInvalidMoveVersion(moveVersion)) return EvaluationFunc.MIN_ESTIMATION;
-        final int est = evaluationFunc.getHeuristics(gs, myColor);
-        return est > 0 ? est : est - maxDepth - 1; // расширяем значения для ничьи
+
+        return evaluationFunc.getHeuristics(gs, myColor) + checkBonus;
     }
 }

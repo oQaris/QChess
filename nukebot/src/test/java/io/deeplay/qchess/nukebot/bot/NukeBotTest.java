@@ -135,6 +135,25 @@ public class NukeBotTest {
 
     @Ignore
     @Test
+    public void testPosition() throws ChessError {
+        final GameSettings gs = new GameSettings("1rb3k1/p2p2pp/p1pP4/2P5/1B6/1KP5/5r1P/3R1B1R");
+        System.out.println(gs.board);
+        gs.board.findKing(Color.BLACK).wasMoved = true;
+        gs.board.findKing(Color.WHITE).wasMoved = true;
+
+        final NukeBot bot = NukeBotFactory.getNukeBot(gs, Color.WHITE);
+        final NukeBot bot2 = NukeBotFactory.getNukeBot(gs, Color.BLACK);
+        final Selfplay game = new Selfplay(gs, bot, bot2);
+
+        final Move move = bot.getNextMove();
+        game.move(move);
+        System.err.println(move);
+
+        System.out.println(gs.board);
+    }
+
+    @Ignore
+    @Test
     public void testGame() {
         time = LocalDateTime.now().withNano(0).toString().replace('T', '~').replace(":", ";");
         MDC.put("time", time);
