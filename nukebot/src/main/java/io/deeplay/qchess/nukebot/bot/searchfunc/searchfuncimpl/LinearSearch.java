@@ -1,6 +1,5 @@
 package io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl;
 
-import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
@@ -26,17 +25,6 @@ public class LinearSearch<T extends SearchAlgorithm<? super T>> extends SearchFu
         this.alg = alg;
     }
 
-    private LinearSearch(
-            final Move mainMove,
-            final GameSettings gs,
-            final int maxDepth,
-            final int moveVersion,
-            final LinearSearch<T> searchFunc) {
-        super(mainMove, gs, maxDepth, moveVersion, searchFunc);
-        alg = searchFunc.alg;
-        alg.setSettings(mainMove, gs, maxDepth, moveVersion);
-    }
-
     @Override
     public Move findBest() throws ChessError {
         startTime = System.currentTimeMillis();
@@ -47,9 +35,8 @@ public class LinearSearch<T extends SearchAlgorithm<? super T>> extends SearchFu
         theBestEstimation = EvaluationFunc.MIN_ESTIMATION;
 
         for (final Move move : allMoves) {
-            alg.setSettings(move, gs, maxDepth, moveVersion);
+            alg.setSettings(move, gs, maxDepth, moveVersion, this);
             alg.run();
-//            new LinearSearch<>(move, gs, maxDepth, moveVersion, this).run();
         }
 
         return theBestMove;

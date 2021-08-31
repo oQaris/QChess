@@ -9,17 +9,8 @@ import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.nukebot.bot.NukeBotSettings.BaseAlgEnum;
 import io.deeplay.qchess.nukebot.bot.NukeBotSettings.CommonEvaluationConstructorEnum;
 import io.deeplay.qchess.nukebot.bot.NukeBotSettings.EvaluationEnum;
-import io.deeplay.qchess.nukebot.bot.features.MTDFFactory;
-import io.deeplay.qchess.nukebot.bot.features.TTFactory;
-import io.deeplay.qchess.nukebot.bot.features.components.TranspositionTable;
-import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.MinimaxAlfaBetaPruning;
-import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.NegaScoutAlfaBetaPruning;
-import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.NegamaxAlfaBetaPruning;
-import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.PVSNullMove;
-import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.PVSVerifiedNullMove;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
-import io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl.LinearSearch;
-import io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl.ParallelExecutorsSearch;
+import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFuncFactory;
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,139 +28,7 @@ public class NukeBotFactory implements BotFactory {
             final GameSettings gs, final Color color, final NukeBotSettings botSettings) {
         gs.history.setMinBoardStateToSave(botSettings.maxDepth);
 
-        final SearchFunc<?> deepSearch =
-                switch (botSettings.baseAlg) {
-                    case Minimax -> {
-                        final var alg =
-                                new MinimaxAlfaBetaPruning(
-                                        null,
-                                        null,
-                                        0,
-                                        gs,
-                                        color,
-                                        botSettings.commonEvaluation.commonEvaluationConstructor,
-                                        botSettings.evaluation.evaluationFunc,
-                                        botSettings.maxDepth);
-                        final var algTT =
-                                botSettings.useTT
-                                        ? TTFactory.getAlgWithTT(new TranspositionTable(), alg)
-                                        : alg;
-                        final var algMTDF =
-                                botSettings.useMTDFsIterativeDeepening
-                                        ? MTDFFactory.getAlgWithMTDF(1, 0, algTT)
-                                        : algTT;
-                        final var completeAlg = algMTDF;
-                        final var searchFunc =
-                                botSettings.parallelSearch
-                                        ? new ParallelExecutorsSearch<>(completeAlg)
-                                        : new LinearSearch<>(completeAlg);
-                        yield searchFunc;
-                    }
-                    case Negamax -> {
-                        final var alg =
-                                new NegamaxAlfaBetaPruning(
-                                        null,
-                                        null,
-                                        0,
-                                        gs,
-                                        color,
-                                        botSettings.commonEvaluation.commonEvaluationConstructor,
-                                        botSettings.evaluation.evaluationFunc,
-                                        botSettings.maxDepth);
-                        final var algTT =
-                                botSettings.useTT
-                                        ? TTFactory.getAlgWithTT(new TranspositionTable(), alg)
-                                        : alg;
-                        final var algMTDF =
-                                botSettings.useMTDFsIterativeDeepening
-                                        ? MTDFFactory.getAlgWithMTDF(1, 0, algTT)
-                                        : algTT;
-                        final var completeAlg = algMTDF;
-                        final var searchFunc =
-                                botSettings.parallelSearch
-                                        ? new ParallelExecutorsSearch<>(completeAlg)
-                                        : new LinearSearch<>(completeAlg);
-                        yield searchFunc;
-                    }
-                    case NegaScout -> {
-                        final var alg =
-                                new NegaScoutAlfaBetaPruning(
-                                        null,
-                                        null,
-                                        0,
-                                        gs,
-                                        color,
-                                        botSettings.commonEvaluation.commonEvaluationConstructor,
-                                        botSettings.evaluation.evaluationFunc,
-                                        botSettings.maxDepth);
-                        final var algTT =
-                                botSettings.useTT
-                                        ? TTFactory.getAlgWithTT(new TranspositionTable(), alg)
-                                        : alg;
-                        final var algMTDF =
-                                botSettings.useMTDFsIterativeDeepening
-                                        ? MTDFFactory.getAlgWithMTDF(1, 0, algTT)
-                                        : algTT;
-                        final var completeAlg = algMTDF;
-                        final var searchFunc =
-                                botSettings.parallelSearch
-                                        ? new ParallelExecutorsSearch<>(completeAlg)
-                                        : new LinearSearch<>(completeAlg);
-                        yield searchFunc;
-                    }
-                    case NullMove -> {
-                        final var alg =
-                                new PVSNullMove(
-                                        null,
-                                        null,
-                                        0,
-                                        gs,
-                                        color,
-                                        botSettings.commonEvaluation.commonEvaluationConstructor,
-                                        botSettings.evaluation.evaluationFunc,
-                                        botSettings.maxDepth);
-                        final var algTT =
-                                botSettings.useTT
-                                        ? TTFactory.getAlgWithTT(new TranspositionTable(), alg)
-                                        : alg;
-                        final var algMTDF =
-                                botSettings.useMTDFsIterativeDeepening
-                                        ? MTDFFactory.getAlgWithMTDF(1, 0, algTT)
-                                        : algTT;
-                        final var completeAlg = algMTDF;
-                        final var searchFunc =
-                                botSettings.parallelSearch
-                                        ? new ParallelExecutorsSearch<>(completeAlg)
-                                        : new LinearSearch<>(completeAlg);
-                        yield searchFunc;
-                    }
-                    case VerifiedNullMove -> {
-                        final var alg =
-                                new PVSVerifiedNullMove(
-                                        null,
-                                        null,
-                                        0,
-                                        gs,
-                                        color,
-                                        botSettings.commonEvaluation.commonEvaluationConstructor,
-                                        botSettings.evaluation.evaluationFunc,
-                                        botSettings.maxDepth);
-                        final var algTT =
-                                botSettings.useTT
-                                        ? TTFactory.getAlgWithTT(new TranspositionTable(), alg)
-                                        : alg;
-                        final var algMTDF =
-                                botSettings.useMTDFsIterativeDeepening
-                                        ? MTDFFactory.getAlgWithMTDF(1, 0, algTT)
-                                        : algTT;
-                        final var completeAlg = algMTDF;
-                        final var searchFunc =
-                                botSettings.parallelSearch
-                                        ? new ParallelExecutorsSearch<>(completeAlg)
-                                        : new LinearSearch<>(completeAlg);
-                        yield searchFunc;
-                    }
-                };
+        final SearchFunc<?> deepSearch = SearchFuncFactory.getSearchFunc(gs, color, botSettings);
 
         final NukeBot nukeBot = new NukeBot(gs, color, deepSearch);
 

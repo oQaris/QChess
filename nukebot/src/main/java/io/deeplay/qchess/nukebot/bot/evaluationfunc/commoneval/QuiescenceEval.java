@@ -22,6 +22,16 @@ public class QuiescenceEval extends SimpleEval {
         enemyColor = alg.getEnemyColor();
     }
 
+    /** Поднимает границу для очищения истории */
+    private void upMinBoardStateToSave() {
+        alg.getGameSettings().history.setMinBoardStateToSave(alg.getMaxDepth() + 64);
+    }
+
+    /** Опускает границу для очищения истории */
+    private void downMinBoardStateToSave() {
+        alg.getGameSettings().history.setMinBoardStateToSave(alg.getMaxDepth());
+    }
+
     /**
      * Симулирует все атакующие ходы (если они есть) и считает оценку доски
      *
@@ -37,17 +47,17 @@ public class QuiescenceEval extends SimpleEval {
             final int beta,
             final int depth)
             throws ChessError {
-        if (alg.isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
+        if (alg.getLastWrapper().isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
 
         if (allMoves == null) {
-            allMoves = alg.getLegalMoves(isMyMove ? myColor : enemyColor);
-            if (alg.isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
-            alg.prioritySort(allMoves);
+            allMoves = alg.getLastWrapper().getLegalMoves(isMyMove ? myColor : enemyColor);
+            if (alg.getLastWrapper().isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
+            alg.getLastWrapper().prioritySort(allMoves);
         }
 
         // --------------- Улучшение оценки --------------- //
 
-        if (alg.isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
+        if (alg.getLastWrapper().isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
 
         {
             int standPat =
@@ -55,31 +65,33 @@ public class QuiescenceEval extends SimpleEval {
                             isCheckToMe, isCheckToEnemy, allMoves, isMyMove, alfa, beta, depth);
             if (!isMyMove) standPat = -standPat;
 
-            if (alg.isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
+            if (alg.getLastWrapper().isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
             if (standPat >= beta) return beta;
             if (alfa < standPat) alfa = standPat;
         }
 
-        if (alg.isTerminalNode(allMoves)) return alfa;
+        if (alg.getLastWrapper().isTerminalNode(allMoves)) return alfa;
 
         // --------------- Проведение взятий до потери пульса --------------- //
 
         for (final Move move : allMoves) {
             if (MoveSystem.isNotCapture(move)) continue;
 
-            alg.makeMove(move);
+            upMinBoardStateToSave();
+            alg.getLastWrapper().makeMove(move);
             final int score =
                     -getEvaluation(
-                            alg.isCheck(myColor),
-                            alg.isCheck(enemyColor),
+                            alg.getLastWrapper().isCheck(myColor),
+                            alg.getLastWrapper().isCheck(enemyColor),
                             null,
                             !isMyMove,
                             -beta,
                             -alfa,
                             depth - 1);
-            alg.undoMove();
+            alg.getLastWrapper().undoMove();
+            downMinBoardStateToSave();
 
-            if (alg.isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
+            if (alg.getLastWrapper().isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
 
             if (score >= beta) {
                 alfa = beta;

@@ -11,6 +11,7 @@ import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.NegaAlfaBeta;
 import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.NegaNullMoveAlfaBeta;
 import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.NegaVerifiedNullMoveAlfaBeta;
 import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.PositiveAlfaNegaBeta;
+import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 import java.util.List;
 
 /** Добавляет алгоритму возможность кеширования в таблицах транспозиции */
@@ -85,15 +86,13 @@ public abstract class TTFactory {
 
         @Override
         public void setSettings(
-            final Move mainMove,
-            final GameSettings gs,
-            final int maxDepth,
-            final int moveVersion) {
-            this.mainMove = mainMove;
-            this.gs = gs;
-            this.maxDepth = maxDepth;
-            this.moveVersion = moveVersion;
-            alg.setSettings(mainMove, gs, maxDepth, moveVersion);
+                final Move mainMove,
+                final GameSettings gs,
+                final int maxDepth,
+                final int moveVersion,
+                final SearchFunc<?> searchFunc) {
+            super.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+            alg.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
         }
 
         @Override
@@ -148,6 +147,17 @@ public abstract class TTFactory {
         }
 
         @Override
+        public void setSettings(
+                final Move mainMove,
+                final GameSettings gs,
+                final int maxDepth,
+                final int moveVersion,
+                final SearchFunc<?> searchFunc) {
+            super.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+            alg.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+        }
+
+        @Override
         public boolean isCheck(final Color color) {
             return TTFactory.isCheck(gs, table, color);
         }
@@ -197,6 +207,17 @@ public abstract class TTFactory {
             super(alg);
             this.table = table;
             this.alg = alg;
+        }
+
+        @Override
+        public void setSettings(
+                final Move mainMove,
+                final GameSettings gs,
+                final int maxDepth,
+                final int moveVersion,
+                final SearchFunc<?> searchFunc) {
+            super.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+            alg.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
         }
 
         @Override
@@ -254,6 +275,17 @@ public abstract class TTFactory {
             super(alg);
             this.table = table;
             this.alg = alg;
+        }
+
+        @Override
+        public void setSettings(
+                final Move mainMove,
+                final GameSettings gs,
+                final int maxDepth,
+                final int moveVersion,
+                final SearchFunc<?> searchFunc) {
+            super.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+            alg.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
         }
 
         @Override

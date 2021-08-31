@@ -68,6 +68,7 @@ public class History implements Iterable<BoardState> {
     public History(
             final History history, final GameSettings gameSettings, final int averageMaxMoves) {
         this.gameSettings = gameSettings;
+        minBoardStateToSave = history.minBoardStateToSave;
         repetitionsMap = new HashMap<>(averageMaxMoves + 2); // +2 extra moves (ну мало ли что)
         recordsList = new ArrayDeque<>(averageMaxMoves + 2);
         parentHistory = history;

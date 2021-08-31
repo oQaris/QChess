@@ -32,6 +32,7 @@ public interface AlgBase extends Runnable {
                     commonEvaluationConstructor,
                     evaluationFunc,
                     maxDepth);
+            updateLastWrapper(this);
         }
 
         protected PositiveAlfaNegaBeta(final PositiveAlfaNegaBeta alg) {
@@ -74,6 +75,7 @@ public interface AlgBase extends Runnable {
                     commonEvaluationConstructor,
                     evaluationFunc,
                     maxDepth);
+            updateLastWrapper(this);
         }
 
         protected NegaAlfaBeta(final NegaAlfaBeta alg) {
@@ -121,6 +123,7 @@ public interface AlgBase extends Runnable {
                     commonEvaluationConstructor,
                     evaluationFunc,
                     maxDepth);
+            updateLastWrapper(this);
         }
 
         protected NegaNullMoveAlfaBeta(final NegaNullMoveAlfaBeta alg) {
@@ -189,6 +192,7 @@ public interface AlgBase extends Runnable {
                     commonEvaluationConstructor,
                     evaluationFunc,
                     maxDepth);
+            updateLastWrapper(this);
         }
 
         protected NegaVerifiedNullMoveAlfaBeta(final NegaVerifiedNullMoveAlfaBeta alg) {

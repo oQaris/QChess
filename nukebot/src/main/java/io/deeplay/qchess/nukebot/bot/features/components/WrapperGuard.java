@@ -15,6 +15,7 @@ package io.deeplay.qchess.nukebot.bot.features.components;
  *
  * <pre>
  *     super(null);
+ *     {@link #updateLastWrapper}(this);
  * </pre>
  */
 public abstract class WrapperGuard<T extends WrapperGuard<? super T>> {
@@ -39,7 +40,7 @@ public abstract class WrapperGuard<T extends WrapperGuard<? super T>> {
     }
 
     /** @return последняя обертка над текущим объектом */
-    protected final T getLastWrapper() {
+    public final T getLastWrapper() {
         return lastWrapper;
     }
 }

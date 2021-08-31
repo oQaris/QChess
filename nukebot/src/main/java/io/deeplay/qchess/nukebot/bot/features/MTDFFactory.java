@@ -12,6 +12,7 @@ import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.NegaVerifiedNullMoveAlfaB
 import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.PositiveAlfaNegaBeta;
 import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
+import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 
 /** Добавляет алгоритму возможность итеративного поиска */
 public abstract class MTDFFactory {
@@ -120,12 +121,10 @@ public abstract class MTDFFactory {
                 final Move mainMove,
                 final GameSettings gs,
                 final int maxDepth,
-                final int moveVersion) {
-            this.mainMove = mainMove;
-            this.gs = gs;
-            this.maxDepth = maxDepth;
-            this.moveVersion = moveVersion;
-            alg.setSettings(mainMove, gs, maxDepth, moveVersion);
+                final int moveVersion,
+                final SearchFunc<?> searchFunc) {
+            super.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+            alg.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
         }
 
         @Override
@@ -164,6 +163,17 @@ public abstract class MTDFFactory {
         }
 
         @Override
+        public void setSettings(
+                final Move mainMove,
+                final GameSettings gs,
+                final int maxDepth,
+                final int moveVersion,
+                final SearchFunc<?> searchFunc) {
+            super.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+            alg.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+        }
+
+        @Override
         public void run() {
             MTDFFactory.run(
                     this, resultUpdater, moveVersion, mainMove, startDepth, maxDepth, firstGuess);
@@ -194,6 +204,17 @@ public abstract class MTDFFactory {
             this.alg = alg;
             this.startDepth = startDepth;
             this.firstGuess = firstGuess;
+        }
+
+        @Override
+        public void setSettings(
+                final Move mainMove,
+                final GameSettings gs,
+                final int maxDepth,
+                final int moveVersion,
+                final SearchFunc<?> searchFunc) {
+            super.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+            alg.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
         }
 
         @Override
@@ -229,6 +250,17 @@ public abstract class MTDFFactory {
             this.alg = alg;
             this.startDepth = startDepth;
             this.firstGuess = firstGuess;
+        }
+
+        @Override
+        public void setSettings(
+                final Move mainMove,
+                final GameSettings gs,
+                final int maxDepth,
+                final int moveVersion,
+                final SearchFunc<?> searchFunc) {
+            super.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
+            alg.setSettings(mainMove, gs, maxDepth, moveVersion, searchFunc);
         }
 
         @Override

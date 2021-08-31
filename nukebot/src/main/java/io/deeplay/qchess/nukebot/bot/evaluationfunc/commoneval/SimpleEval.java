@@ -32,7 +32,7 @@ public class SimpleEval implements CommonEvaluation {
             final int beta,
             final int depth)
             throws ChessError {
-        if (alg.isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
+        if (alg.getLastWrapper().isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
 
         if (isMyMove) { // allMoves are mine
             if (allMoves.isEmpty()) { // пат
@@ -40,7 +40,7 @@ public class SimpleEval implements CommonEvaluation {
                 return -depth;
             }
 
-            if (alg.isStalemate(enemyColor)) {
+            if (alg.getLastWrapper().isStalemate(enemyColor)) {
                 if (isCheckToEnemy) return EvaluationFunc.MAX_ESTIMATION - 1000 + depth;
                 return -depth; // расширяем ничью - чем глубже, тем лучше
             }
@@ -50,17 +50,17 @@ public class SimpleEval implements CommonEvaluation {
                 return -depth; // расширяем ничью - чем глубже, тем лучше
             }
 
-            if (alg.isStalemate(myColor)) {
+            if (alg.getLastWrapper().isStalemate(myColor)) {
                 if (isCheckToMe) return EvaluationFunc.MIN_ESTIMATION + 1000 - depth;
                 return -depth;
             }
         }
 
-        if (alg.isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
+        if (alg.getLastWrapper().isInvalidMoveVersion()) return EvaluationFunc.MIN_ESTIMATION;
 
         // Проверка на ничью должна быть после проверок на пат и мат
-        if (alg.isDraw()) return -depth; // расширяем ничью - чем глубже, тем лучше
+        if (alg.getLastWrapper().isDraw()) return -depth; // расширяем ничью - чем глубже, тем лучше
 
-        return evaluationFunc.getHeuristics(alg.getGameSettings(), myColor);
+        return evaluationFunc.getHeuristics(alg.getLastWrapper().getGameSettings(), myColor);
     }
 }

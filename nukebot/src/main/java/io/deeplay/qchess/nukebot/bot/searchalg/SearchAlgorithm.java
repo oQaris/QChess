@@ -20,11 +20,11 @@ import java.util.List;
 public abstract class SearchAlgorithm<T extends SearchAlgorithm<? super T>> extends WrapperGuard<T>
         implements AlgBase, ISearchAlgorithm {
 
-    protected final Color myColor;
-    protected final Color enemyColor;
-    protected final CommonEvaluation commonEvaluation;
-    protected final ResultUpdater resultUpdater;
-    protected final MoveSorter moveSorter;
+    protected Color myColor;
+    protected Color enemyColor;
+    protected CommonEvaluation commonEvaluation;
+    protected ResultUpdater resultUpdater;
+    protected MoveSorter moveSorter;
     protected int maxDepth;
     protected int moveVersion;
     protected Move mainMove;
@@ -82,12 +82,36 @@ public abstract class SearchAlgorithm<T extends SearchAlgorithm<? super T>> exte
         moveSorter = new MoveSorter(gs.board);
     }
 
+    public ResultUpdater getResultUpdater() {
+        return resultUpdater;
+    }
+
+    public int getMoveVersion() {
+        return moveVersion;
+    }
+
+    public Move getMainMove() {
+        return mainMove;
+    }
+
+    public int getMaxDepth() {
+        return maxDepth;
+    }
+
     public void setSettings(
-            final Move mainMove, final GameSettings gs, final int maxDepth, final int moveVersion) {
+            final Move mainMove,
+            final GameSettings gs,
+            final int maxDepth,
+            final int moveVersion,
+            final SearchFunc<?> searchFunc) {
         this.mainMove = mainMove;
         this.gs = gs;
         this.maxDepth = maxDepth;
         this.moveVersion = moveVersion;
+        resultUpdater = searchFunc;
+        commonEvaluation = searchFunc.commonEvaluation;
+        myColor = searchFunc.myColor;
+        enemyColor = searchFunc.enemyColor;
     }
 
     public GameSettings getGameSettings() {
