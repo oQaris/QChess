@@ -30,38 +30,41 @@ public class ClientRequestHandler {
                         GameService::action,
                         ClientToServerType.CHAT_MESSAGE,
                         ChatService::incomingMessage));
-        assert redirector.size() == ClientToServerType.values().length;
+
+        if (redirector.size() != ClientToServerType.values().length) {
+            throw new ExceptionInInitializerError("В сервере не рассмотрены все случаи запросов");
+        }
     }
 
     /**
      * @return json ответ сервера в виде ServerToClientDTO или null, если не нужно ничего отправлять
      */
-    public static String process(String jsonClientRequest, int clientID) {
-        logger.debug("От клиента <{}> пришел json: {}", clientID, jsonClientRequest);
+    public static String process(final String jsonClientRequest, final int clientId) {
+        logger.info("От клиента <{}> пришел json: {}", clientId, jsonClientRequest);
         try {
-            ClientToServerDTO mainDTO =
+            final ClientToServerDTO mainDTO =
                     SerializationService.clientToServerDTOMain(jsonClientRequest);
-            String response =
-                    redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json, clientID);
+            final String response =
+                    redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json, clientId);
 
             if (response != null)
-                logger.debug("Отправлен json клиенту <{}>: {}", clientID, jsonClientRequest);
+                logger.info("Отправлен json клиенту <{}>: {}", clientId, response);
 
             return response;
-        } catch (SerializationException e) {
+        } catch (final SerializationException e) {
             logger.warn(
-                    "Пришел некорректный json от клиента <{}>: {}", clientID, jsonClientRequest);
+                    "Пришел некорректный json от клиента <{}>: {}", clientId, jsonClientRequest);
             return null;
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.warn(
-                    "Получен неизвестный запрос от клиента <{}>: {}", clientID, jsonClientRequest);
+                    "Получен неизвестный запрос от клиента <{}>: {}", clientId, jsonClientRequest);
             return null;
         }
     }
 
     @FunctionalInterface
     private interface Handler {
-        String handle(ClientToServerType type, String json, int clientID)
+        String handle(ClientToServerType type, String json, int clientId)
                 throws SerializationException;
     }
 }

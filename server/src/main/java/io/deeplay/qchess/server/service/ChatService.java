@@ -9,17 +9,20 @@ import io.deeplay.qchess.server.exceptions.ServerException;
 
 public class ChatService {
 
-    public static String incomingMessage(ClientToServerType type, String json, int clientID)
+    private ChatService() {}
+
+    public static String incomingMessage(
+            final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == ChatMessageDTO.class;
-        ChatMessageDTO dto =
+        final ChatMessageDTO dto =
                 SerializationService.clientToServerDTORequest(json, ChatMessageDTO.class);
         ServerController.print(
-                String.format("Пришло сообщение от клиента %d: %s", clientID, dto.message));
+                String.format("Пришло сообщение от клиента %d: %s", clientId, dto.message));
         // TODO: удалить/изменить. Отправляет сообщение всем, включая писавшего
         try {
             ServerController.executeCommand("msg " + json);
-        } catch (ServerException ignore) {
+        } catch (final ServerException ignore) {
             // Сервис используется при включенном сервере
         }
         return null;

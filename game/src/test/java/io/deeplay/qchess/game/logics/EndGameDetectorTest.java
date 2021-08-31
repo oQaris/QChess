@@ -9,6 +9,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Bishop;
+import io.deeplay.qchess.game.model.figures.FigureType;
 import io.deeplay.qchess.game.model.figures.King;
 import io.deeplay.qchess.game.model.figures.Knight;
 import io.deeplay.qchess.game.model.figures.Pawn;
@@ -115,40 +116,43 @@ public class EndGameDetectorTest {
     @Test
     public void testIsDrawWithPeaceMoves_1()
             throws NoSuchFieldException, IllegalAccessException, ChessException {
-        Field count = gs.history.getClass().getDeclaredField("peaceMoveCount");
+        final Field count = gs.history.getClass().getDeclaredField("peaceMoveCount");
         count.setAccessible(true);
         count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT);
 
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
-        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
-        Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
+        final Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
+        final Move moveAttack = new Move(MoveType.ATTACK, Cell.parse("e1"), Cell.parse("e2"));
 
-        gs.history.checkAndAddPeaceMoveCount(move);
+        gs.history.checkAndAddPeaceMoveCount(move, FigureType.KING, null);
         Assert.assertTrue(endGameDetector.isDrawWithPeaceMoves());
-        gs.history.checkAndAddPeaceMoveCount(moveAttack);
+        gs.history.setRemovedFigure(new Pawn(Color.BLACK, Cell.parse("e2")));
+        gs.history.checkAndAddPeaceMoveCount(
+                moveAttack, FigureType.KING, new Pawn(Color.BLACK, Cell.parse("e2")));
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
-        gs.history.checkAndAddPeaceMoveCount(move);
+        gs.history.checkAndAddPeaceMoveCount(move, FigureType.KING, null);
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
 
         count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT);
 
-        gs.history.checkAndAddPeaceMoveCount(moveAttack);
+        gs.history.checkAndAddPeaceMoveCount(
+                moveAttack, FigureType.KING, new Pawn(Color.BLACK, Cell.parse("e2")));
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
     }
 
     @Test
     public void testIsDrawWithPeaceMoves_2()
             throws NoSuchFieldException, IllegalAccessException, ChessException {
-        Field count = gs.history.getClass().getDeclaredField("peaceMoveCount");
+        final Field count = gs.history.getClass().getDeclaredField("peaceMoveCount");
         count.setAccessible(true);
         count.set(gs.history, EndGameDetector.END_PEACE_MOVE_COUNT - 2);
 
         board.setFigure(new King(Color.WHITE, Cell.parse("e2")));
-        Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
+        final Move move = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
 
-        gs.history.checkAndAddPeaceMoveCount(move);
+        gs.history.checkAndAddPeaceMoveCount(move, FigureType.KING, null);
         Assert.assertFalse(endGameDetector.isDrawWithPeaceMoves());
-        gs.history.checkAndAddPeaceMoveCount(move);
+        gs.history.checkAndAddPeaceMoveCount(move, FigureType.KING, null);
         Assert.assertTrue(endGameDetector.isDrawWithPeaceMoves());
     }
 
@@ -158,8 +162,8 @@ public class EndGameDetectorTest {
     public void testIsDrawWithRepetitions() throws ChessException, ChessError {
         board.setFigure(new King(Color.WHITE, Cell.parse("e1")));
         board.setFigure(new King(Color.BLACK, Cell.parse("e8")));
-        Move move1 = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
-        Move move2 = new Move(MoveType.QUIET_MOVE, Cell.parse("e2"), Cell.parse("e1"));
+        final Move move1 = new Move(MoveType.QUIET_MOVE, Cell.parse("e1"), Cell.parse("e2"));
+        final Move move2 = new Move(MoveType.QUIET_MOVE, Cell.parse("e2"), Cell.parse("e1"));
 
         board.moveFigure(move1);
         gs.history.addRecord(move1);

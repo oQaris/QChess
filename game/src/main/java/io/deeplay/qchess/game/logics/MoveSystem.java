@@ -6,6 +6,7 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_WAS_KILLED_I
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.features.ITranspositionTable;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
@@ -14,160 +15,348 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.Figure;
 import io.deeplay.qchess.game.model.figures.FigureType;
+import io.deeplay.qchess.game.model.figures.Pawn;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Хранит различные данные об игре для контроля специфичных ситуаций */
 public class MoveSystem {
-    private static final Logger logger = LoggerFactory.getLogger(MoveSystem.class);
-    private final GameSettings roomSettings;
-    private final Board board;
-    private final EndGameDetector endGameDetector;
-    private final History history;
+    private static final transient Logger logger = LoggerFactory.getLogger(MoveSystem.class);
 
-    public MoveSystem(GameSettings roomSettings) {
-        this.roomSettings = roomSettings;
-        board = roomSettings.board;
-        endGameDetector = roomSettings.endGameDetector;
-        history = roomSettings.history;
+    private final GameSettings gs;
+    private final Board board;
+    private final History history;
+    private final EndGameDetector egd;
+    /** Этот предыдущий ход используется, если последний ход не записывался в историю */
+    private Move prevMoveIfRecordNotUse;
+
+    public MoveSystem(final GameSettings gs) {
+        this.gs = gs;
+        board = gs.board;
+        history = gs.history;
+        egd = gs.endGameDetector;
     }
 
     /**
-     * Делает ход без проверок
+     * Делает ход move без проверок, записывая его в историю и изменяя сторону цвета в истории
      *
      * @return удаленная фигура или null, если ни одну фигуру не взяли
      */
-    public Figure move(Move move) throws ChessError {
+    public Figure move(final Move move) throws ChessError {
+        return move(move, true, true);
+    }
+
+    /**
+     * Делает ход без проверок, записывая его в историю, если указано useHistoryRecord, и изменяя
+     * сторону цвета в истории, если указано changeMoveSideInRecord (полезно для null-move
+     * heuristic)
+     *
+     * @param useHistoryRecord записывать ли ход в историю
+     * @param changeMoveSideInRecord изменять ли сторону цвета в истории
+     * @return удаленная фигура или null, если ни одну фигуру не взяли
+     */
+    public Figure move(
+            final Move move, final boolean useHistoryRecord, final boolean changeMoveSideInRecord)
+            throws ChessError {
         try {
-            logger.debug("Начато выполнение хода: {}", move);
-            Figure removedFigure =
+            final Figure moveFigure = board.getFigureUgly(move.getFrom());
+
+            final Figure removedFigure =
                     switch (move.getMoveType()) {
                             // взятие на проходе
                         case EN_PASSANT -> {
-                            board.moveFigure(move);
-                            yield board.removeFigure(history.getLastMove().getTo());
+                            final Cell enemyPawn = history.getLastMove().getTo();
+                            if (useHistoryRecord) {
+                                board.moveFigureUgly(move);
+                                yield board.removeFigureUgly(enemyPawn);
+                            } else {
+                                board.moveFigureUglyWithoutRecalcHash(move);
+                                yield board.removeFigureUglyWithoutRecalcHash(enemyPawn);
+                            }
                         }
                             // превращение пешки
                         case TURN_INTO, TURN_INTO_ATTACK -> {
-                            FigureType turnIntoType = move.getTurnInto();
-                            Figure turnIntoFigure =
+                            final Figure turnIntoFigure =
                                     Figure.build(
-                                            turnIntoType,
-                                            board.getFigure(move.getFrom()).getColor(),
-                                            move.getTo());
-                            Figure removed = board.moveFigure(move);
-                            board.setFigure(turnIntoFigure);
+                                            move.turnInto, moveFigure.getColor(), move.getTo());
+                            final Figure removed;
+                            if (useHistoryRecord) {
+                                removed = board.moveFigureUgly(move);
+                                board.setFigureUgly(turnIntoFigure);
+                            } else {
+                                removed = board.moveFigureUglyWithoutRecalcHash(move);
+                                board.setFigureUglyWithoutRecalcHash(turnIntoFigure);
+                            }
                             yield removed;
                         }
                             // рокировка
                         case SHORT_CASTLING -> {
-                            Cell from = move.getFrom().createAdd(new Cell(3, 0));
-                            Cell to = move.getFrom().createAdd(new Cell(1, 0));
-                            board.getFigureUgly(from).setWasMoved(true);
-                            board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-                            yield board.moveFigure(move);
+                            final Cell from = move.getFrom().createAdd(new Cell(3, 0));
+                            final Cell to = move.getFrom().createAdd(new Cell(1, 0));
+                            final Move rookMove = new Move(MoveType.QUIET_MOVE, from, to);
+                            board.getFigureUgly(from).wasMoved = true;
+                            if (useHistoryRecord) {
+                                board.moveFigureUgly(rookMove);
+                                yield board.moveFigureUgly(move);
+                            } else {
+                                board.moveFigureUglyWithoutRecalcHash(rookMove);
+                                yield board.moveFigureUglyWithoutRecalcHash(move);
+                            }
                         }
                         case LONG_CASTLING -> {
-                            Cell from = move.getFrom().createAdd(new Cell(-4, 0));
-                            Cell to = move.getFrom().createAdd(new Cell(-1, 0));
-                            board.getFigureUgly(from).setWasMoved(true);
-                            board.moveFigure(new Move(MoveType.QUIET_MOVE, from, to));
-                            yield board.moveFigure(move);
+                            final Cell from = move.getFrom().createAdd(new Cell(-4, 0));
+                            final Cell to = move.getFrom().createAdd(new Cell(-1, 0));
+                            final Move rookMove = new Move(MoveType.QUIET_MOVE, from, to);
+                            board.getFigureUgly(from).wasMoved = true;
+                            if (useHistoryRecord) {
+                                board.moveFigureUgly(rookMove);
+                                yield board.moveFigureUgly(move);
+                            } else {
+                                board.moveFigureUglyWithoutRecalcHash(rookMove);
+                                yield board.moveFigureUglyWithoutRecalcHash(move);
+                            }
                         }
-                        default -> board.moveFigure(move);
+                        default -> useHistoryRecord
+                                ? board.moveFigureUgly(move)
+                                : board.moveFigureUglyWithoutRecalcHash(move);
                     };
 
-            history.checkAndAddPeaceMoveCount(move);
-            history.addRecord(move);
+            history.setHasMovedBeforeLastMove(moveFigure.wasMoved);
+            moveFigure.wasMoved = true;
+            history.setRemovedFigure(removedFigure);
+            if (useHistoryRecord) {
+                history.checkAndAddPeaceMoveCount(move, moveFigure.figureType, removedFigure);
+                if (changeMoveSideInRecord) history.addRecord(move);
+                else history.addRecordButNotChangeMoveSide(move);
+            } else prevMoveIfRecordNotUse = move;
 
-            logger.debug("Ход <{}> выполнен успешно, удаленная фигура: {}", move, removedFigure);
             return removedFigure;
-        } catch (ChessException | NullPointerException e) {
-            logger.error("Ошибка при выполнении хода: {}", move);
+        } catch (final NullPointerException e) {
+            logger.warn("Ошибка при выполнении хода: {}", move);
+            throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
+        }
+    }
+
+    /** Берет последний ход из истории и отменяет его без проверок */
+    public void undoMove() throws ChessError {
+        undoMove(true);
+    }
+
+    /**
+     * Берет последний ход из истории, если указано useHistoryRecord, иначе из кеша
+     * (prevMoveIfRecordNotUse), и отменяет его без проверок
+     *
+     * @param useHistoryRecord брать ли последний ход из истории или взять его из кеша
+     *     (prevMoveIfRecordNotUse)
+     */
+    public void undoMove(final boolean useHistoryRecord) throws ChessError {
+        final Move move = useHistoryRecord ? history.getLastMove() : prevMoveIfRecordNotUse;
+        final boolean hasMoved = history.isHasMovedBeforeLastMove();
+        final Figure removedFigure = history.getRemovedFigure();
+        try {
+            final Move revertMove = new Move(MoveType.QUIET_MOVE, move.getTo(), move.getFrom());
+            if (useHistoryRecord) history.undo();
+            else history.restore();
+
+            if (useHistoryRecord) board.moveFigureUgly(revertMove);
+            else board.moveFigureUglyWithoutRecalcHash(revertMove);
+            final Figure figureThatMoved = board.getFigureUgly(move.getFrom());
+            figureThatMoved.wasMoved = hasMoved;
+
+            switch (move.getMoveType()) {
+                    // взятие на проходе
+                case EN_PASSANT -> {
+                    final Pawn pawn =
+                            new Pawn(
+                                    figureThatMoved.getColor().inverse(),
+                                    history.getLastMove().getTo());
+                    pawn.wasMoved = true;
+                    if (useHistoryRecord) board.setFigureUgly(pawn);
+                    else board.setFigureUglyWithoutRecalcHash(pawn);
+                }
+                    // превращение пешки
+                case TURN_INTO, TURN_INTO_ATTACK -> {
+                    final Pawn pawn = new Pawn(figureThatMoved.getColor(), move.getFrom());
+                    pawn.wasMoved = true;
+                    if (useHistoryRecord) {
+                        board.setFigureUgly(pawn);
+                        if (removedFigure != null) board.setFigureUgly(removedFigure);
+                    } else {
+                        board.setFigureUglyWithoutRecalcHash(pawn);
+                        if (removedFigure != null)
+                            board.setFigureUglyWithoutRecalcHash(removedFigure);
+                    }
+                }
+                    // рокировка
+                case SHORT_CASTLING -> {
+                    final Cell to = move.getFrom().createAdd(new Cell(3, 0));
+                    final Cell from = move.getFrom().createAdd(new Cell(1, 0));
+                    final Move rookMove = new Move(MoveType.QUIET_MOVE, from, to);
+                    if (useHistoryRecord) board.moveFigureUgly(rookMove);
+                    else board.moveFigureUglyWithoutRecalcHash(rookMove);
+                    board.getFigureUgly(to).wasMoved = false;
+                }
+                case LONG_CASTLING -> {
+                    final Cell to = move.getFrom().createAdd(new Cell(-4, 0));
+                    final Cell from = move.getFrom().createAdd(new Cell(-1, 0));
+                    final Move rookMove = new Move(MoveType.QUIET_MOVE, from, to);
+                    if (useHistoryRecord) board.moveFigureUgly(rookMove);
+                    else board.moveFigureUglyWithoutRecalcHash(rookMove);
+                    board.getFigureUgly(to).wasMoved = false;
+                }
+                default -> {
+                    if (removedFigure != null)
+                        if (useHistoryRecord) board.setFigureUgly(removedFigure);
+                        else board.setFigureUglyWithoutRecalcHash(removedFigure);
+                }
+            }
+
+        } catch (final NullPointerException e) {
+            logger.error("Ошибка при отмене хода: {}", move);
             throw new ChessError(ERROR_WHEN_MOVING_FIGURE, e);
         }
     }
 
     /**
-     * @param color цвет фигур
-     * @return все возможные ходы
+     * @param move корректный ход
+     * @return true, если ход move легальный
      */
-    public List<Move> getAllCorrectMoves(Color color) throws ChessError {
-        List<Move> res = new ArrayList<>(64);
-        for (Figure f : board.getFigures(color))
-            for (Move m : f.getAllMoves(roomSettings))
-                if (isCorrectMoveWithoutCheckAvailableMoves(m, true)) res.add(m);
+    private boolean isCorrectVirtualMove(final Move move) throws ChessError, ChessException {
+        logger.trace("Начата проверка виртуального хода {}", move);
+        final Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
+        final Figure virtualKilled = move(move, false, true);
+
+        if (virtualKilled != null && virtualKilled.figureType == FigureType.KING) {
+            logger.error("Срубили короля при проверке виртуального хода {}", move);
+            throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
+        }
+        final boolean isCheck = egd.isCheck(figureToMove);
+
+        undoMove(false);
+        return !isCheck;
+    }
+
+    /**
+     * Опасно! Выполняет ходы без проверки
+     *
+     * @param move Виртуальный ход.
+     * @param func Функция, выполняемая после виртуального хода.
+     * @return Результат функции func.
+     * @throws ChessException Если выбрасывается в функции func.
+     * @throws ChessError Если выбрасывается в функции func.
+     */
+    @Deprecated
+    public <T> T virtualMove(final Move move, final ChessMoveFunc<T> func)
+            throws ChessException, ChessError {
+        logger.trace("Виртуальный ход {}", move);
+        final Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
+        final Figure virtualKilled = move(move);
+        final T res = func.apply(figureToMove, virtualKilled);
+        undoMove();
         return res;
     }
 
-    public List<Move> getAllCorrectMovesForStalemate(Color color) {
-        List<Move> res = new ArrayList<>(64);
-        try {
-            for (Figure f : board.getFigures(color))
-                for (Move m : f.getAllMoves(roomSettings)) {
-                    if (isCorrectMoveWithoutCheckAvailableMoves(m, false)) res.add(m);
-                }
-        } catch (ChessError ignore) {
-        }
+    /**
+     * @param color цвет фигур
+     * @return все возможные ходы без явного указания превращения пешки (будет указано null)
+     * @deprecated Оставлен только для совместимости. Для своих целей лучше использовать {@link
+     *     #getAllPreparedMoves(Color color)}
+     */
+    @Deprecated
+    public List<Move> getAllCorrectMoves(final Color color) throws ChessError {
+        final List<Move> res = new LinkedList<>();
+        for (final Figure f : board.getFigures(color))
+            for (final Move m : f.getAllMoves(gs))
+                if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
         return res;
+    }
+
+    /** @return true если ход корректный */
+    private boolean isCorrectMoveWithoutCheckAvailableMoves(final Move move) throws ChessError {
+        try {
+            final FigureType prevTurnInto = move.turnInto;
+            if (move.getMoveType() == MoveType.TURN_INTO
+                    || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
+                move.turnInto = FigureType.QUEEN; // только для проверки виртуального хода
+            final boolean isCorrect = isCorrectVirtualMove(move);
+            move.turnInto = prevTurnInto;
+            return isCorrect;
+        } catch (final ChessException | NullPointerException e) {
+            logger.warn(
+                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
+                    move,
+                    e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Использует реализацию низкого уровня из доски {@link Board#isHasAnyCorrectMove}
+     *
+     * @return true, если у игрока цвета color нет корректных ходов (поставлен пат)
+     */
+    public boolean isHasNotAnyCorrectMoveSilence(
+            final Color color, final ITranspositionTable table) {
+        try {
+            return !board.isHasAnyCorrectMove(gs, color, table);
+        } catch (final ChessError e) {
+            return true;
+        }
+    }
+
+    /**
+     * Использует реализацию низкого уровня из доски {@link Board#getAllPreparedMoves(GameSettings
+     * gs, Color color)}
+     *
+     * @return список ходов для цвета color, включая превращения пешек в ферзя, слона, ладью и коня
+     *     (создает 4 отдельных хода). Все ходы гарантированно корректные и проверены на шах
+     */
+    public List<Move> getAllPreparedMoves(final Color color) throws ChessError {
+        return board.getAllPreparedMoves(gs, color);
+    }
+
+    /**
+     * @param move корректный ход
+     * @param table ТТ или null
+     * @return true, если после хода нет шаха королю цвета той фигуры, которой был сделан ход
+     */
+    public boolean isCorrectVirtualMoveSilence(final Move move, final ITranspositionTable table)
+            throws ChessError {
+        final Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
+        if (table == null) move(move, false, true);
+        else move(move);
+        final boolean isCheck = egd.isCheck(figureToMove, table);
+        if (table == null) undoMove(false);
+        else undoMove();
+        return !isCheck;
     }
 
     /**
      * @param cell клетка
      * @return все возможные ходы из клетки
      */
-    public List<Move> getAllCorrectMoves(Cell cell) throws ChessError {
-        List<Move> res = new ArrayList<>(27);
-        if (!board.isCorrectCell(cell.getColumn(), cell.getRow())) return res;
-        Figure figure = board.getFigureUgly(cell);
-        if (figure == null) return res;
-        for (Move m : figure.getAllMoves(roomSettings))
-            if (isCorrectVirtualMoveForCell(m)) res.add(m);
+    public List<Move> getAllCorrectMoves(final Cell cell) throws ChessError {
+        final List<Move> res = new ArrayList<>(27);
+        try {
+            for (final Move m : board.getFigureUgly(cell).getAllMoves(gs))
+                if (isCorrectMoveWithoutCheckAvailableMoves(m)) res.add(m);
+        } catch (final ArrayIndexOutOfBoundsException | NullPointerException ignored) {
+            // Вместо проверки клетки на доске
+        }
         return res;
     }
 
-    private boolean isCorrectVirtualMoveForCell(Move move) throws ChessError {
-        try {
-            return move != null && isCorrectVirtualMove(move);
-        } catch (ChessException | NullPointerException e) {
-            logger.warn(
-                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
-                    move,
-                    e.getMessage());
-            return false;
-        }
-    }
-
-    /** @return true если ход корректный */
-    private boolean isCorrectMoveWithoutCheckAvailableMoves(Move move, boolean checkKing)
-            throws ChessError {
-        try {
-            return move != null && checkCorrectnessIfSpecificMove(move) && checkKing
-                    ? isCorrectVirtualMove(move)
-                    : virtualMove(
-                            move,
-                            (figureToMove, virtualKilled) ->
-                                    !endGameDetector.isCheck(figureToMove.getColor()));
-        } catch (ChessException | NullPointerException e) {
-            logger.warn(
-                    "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
-                    move,
-                    e.getMessage());
-            return false;
-        }
-    }
-
-    /** @return true если ход корректный */
-    public boolean isCorrectMove(Move move) throws ChessError {
+    /** @return true, если ход легальный */
+    public boolean isCorrectMove(final Move move) throws ChessError {
         try {
             return move != null
                     && checkCorrectnessIfSpecificMove(move)
                     && inAvailableMoves(move)
                     && isCorrectVirtualMove(move);
-        } catch (ChessException | NullPointerException e) {
+        } catch (final ChessException | NullPointerException | ArrayIndexOutOfBoundsException e) {
             logger.warn(
                     "Проверяемый (некорректный) ход <{}> кинул исключение: {}",
                     move,
@@ -182,86 +371,27 @@ public class MoveSystem {
      * @param move ход для этой фигуры
      * @return true если move специфичный и корректный либо move не специфичный, иначе false
      */
-    private boolean checkCorrectnessIfSpecificMove(Move move) throws ChessException {
+    private boolean checkCorrectnessIfSpecificMove(final Move move) {
         // превращение пешки
-        logger.debug("Начата проверка хода {} на превращение", move);
         if (move.getMoveType() == MoveType.TURN_INTO
                 || move.getMoveType() == MoveType.TURN_INTO_ATTACK)
-            return move.getTurnInto() != null
-                    && (move.getTurnInto() == FigureType.BISHOP
-                            || move.getTurnInto() == FigureType.KNIGHT
-                            || move.getTurnInto() == FigureType.QUEEN
-                            || move.getTurnInto() == FigureType.ROOK);
+            return move.turnInto != null
+                    && move.turnInto != FigureType.KING
+                    && move.turnInto != FigureType.PAWN;
         return true;
     }
 
     /** @return true если ход лежит в доступных */
-    private boolean inAvailableMoves(Move move) throws ChessException {
-        logger.debug("Начата проверка хода {} на содержание его в доступных ходах", move);
-        Figure figure = board.getFigure(move.getFrom());
-        Set<Move> allMoves = figure.getAllMoves(roomSettings);
-        return allMoves.contains(move);
-    }
-
-    /** @param move корректный ход */
-    private boolean isCorrectVirtualMove(Move move) throws ChessError, ChessException {
-        logger.debug("Начата проверка виртуального хода {}", move);
-        Figure figureToMove = board.getFigure(move.getFrom());
-        boolean hasBeenMoved = figureToMove.wasMoved();
-        // виртуальный ход
-        Figure virtualKilled = board.moveFigure(move);
-        if (virtualKilled != null && virtualKilled.getType() == FigureType.KING) {
-            logger.error("Срубили короля при проверке виртуального хода {}", move);
-            throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
-        }
-        boolean isCheck = endGameDetector.isCheck(figureToMove.getColor());
-        // отмена виртуального хода
-        board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
-        figureToMove.setWasMoved(hasBeenMoved);
-        if (virtualKilled != null) board.setFigure(virtualKilled);
-        return !isCheck;
-        // TODO: НЕ МЕНЯТЬ, что работает, только добавлять. пока не будет переделана история
-        //  НЕ трогать этот метод!
-
-        //        return virtualMove(
-        //                move,
-        //                (figureToMove, virtualKilled) -> {
-        //                    if (virtualKilled != null && virtualKilled.getType() ==
-        // FigureType.KING) {
-        //                        logger.error("Срубили короля при проверке виртуального хода {}",
-        // move);
-        //                        throw new ChessError(KING_WAS_KILLED_IN_VIRTUAL_MOVE);
-        //                    }
-        //                    return !endGameDetector.isCheck(figureToMove.getColor());
-        //                });
-    }
-
-    /**
-     * Опасно! Выполняет ходы без проверки
-     *
-     * @param move Виртуальный ход.
-     * @param func Функция, выполняемая после виртуального хода.
-     * @return Результат функции func.
-     * @throws ChessException Если выбрасывается в функции func.
-     * @throws ChessError Если выбрасывается в функции func.
-     */
-    public <T> T virtualMove(Move move, ChessMoveFunc<T> func) throws ChessException, ChessError {
-        // TODO: переделать с измененной историей
-        logger.debug("Виртуальный ход {}", move);
-        Figure figureToMove = board.getFigureUgly(move.getFrom());
-        boolean hasBeenMoved = figureToMove.wasMoved();
-        // виртуальный ход
-        Figure virtualKilled = board.moveFigure(move);
-        T res = func.apply(figureToMove, virtualKilled);
-        // отмена виртуального хода
-        board.moveFigure(new Move(move.getMoveType(), move.getTo(), move.getFrom()));
-        figureToMove.setWasMoved(hasBeenMoved);
-        if (virtualKilled != null) board.setFigure(virtualKilled);
-        return res;
+    private boolean inAvailableMoves(final Move move)
+            throws ChessException, ArrayIndexOutOfBoundsException {
+        for (final Move m : board.getFigureUgly(move.getFrom()).getAllMoves(gs))
+            if (m.equalsWithoutTurnInto(move)) return true;
+        return false;
     }
 
     @FunctionalInterface
     public interface ChessMoveFunc<T> {
-        T apply(Figure from, Figure to) throws ChessException, ChessError;
+        T apply(final Color figureToMove, final Figure virtualKilled)
+                throws ChessException, ChessError;
     }
 }

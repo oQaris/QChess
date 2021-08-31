@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class LocalHost implements IServer {
     private static final Logger logger = LoggerFactory.getLogger(LocalHost.class);
-    private static int maxClients = 2;
+    private static int maxClients = 20;
     private static int port = 8080;
     private static LocalHost localHost;
     private final Object mutex = new Object();
@@ -38,7 +38,7 @@ public class LocalHost implements IServer {
     }
 
     @Override
-    public void setPort(int port) throws ServerException {
+    public void setPort(final int port) throws ServerException {
         synchronized (mutex) {
             checkIsOpen();
             LocalHost.port = port;
@@ -46,12 +46,12 @@ public class LocalHost implements IServer {
     }
 
     @Override
-    public void executeCommand(String command) throws ServerException {
+    public void executeCommand(final String command) throws ServerException {
         ServerCommandService.handleCommand(command);
     }
 
     @Override
-    public void sendAll(String json) throws ServerException {
+    public void sendAll(final String json) throws ServerException {
         synchronized (mutex) {
             checkIsNotOpen();
             clientHandlerManager.sendAll(json);
@@ -59,18 +59,18 @@ public class LocalHost implements IServer {
     }
 
     @Override
-    public void send(String json, int clientID) throws ServerException {
+    public void send(final String json, final int clientId) throws ServerException {
         synchronized (mutex) {
             checkIsNotOpen();
-            clientHandlerManager.send(json, clientID);
+            clientHandlerManager.send(json, clientId);
         }
     }
 
     @Override
-    public void closeConnection(int clientID) throws ServerException {
+    public void closeConnection(final int clientId) throws ServerException {
         synchronized (mutex) {
             checkIsNotOpen();
-            clientHandlerManager.closeConnection(clientID);
+            clientHandlerManager.closeConnection(clientId);
         }
     }
 
@@ -100,7 +100,7 @@ public class LocalHost implements IServer {
     }
 
     @Override
-    public void setMaxClients(int maxClients) throws ServerException {
+    public void setMaxClients(final int maxClients) throws ServerException {
         synchronized (mutex) {
             checkIsOpen();
             LocalHost.maxClients = maxClients;
@@ -116,11 +116,11 @@ public class LocalHost implements IServer {
             try {
                 server = new ServerSocket(port);
                 logger.info("Сервер открыт!");
-            } catch (IllegalArgumentException e) {
+            } catch (final IllegalArgumentException e) {
                 logger.error("Некорректный порт");
                 stopServer();
                 throw new ServerException(ERROR_PORT, e);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.error("Ошибка при открытии сервера: {}", e.getMessage());
                 stopServer();
                 throw new ServerException(ERROR_WHILE_SERVER_OPENING, e);
@@ -151,7 +151,7 @@ public class LocalHost implements IServer {
             // TODO: will remove with NIO
             new Socket("localhost", port);
             clientHandlerManager.join();
-        } catch (IOException | InterruptedException e) {
+        } catch (final IOException | InterruptedException e) {
             logger.error("Обработчик клиентов убил сервер: {}", e.getMessage());
         }
     }
@@ -161,7 +161,7 @@ public class LocalHost implements IServer {
         if (server == null) return;
         try {
             server.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error("Возникла ошибка при закрытии серверного сокета: {}", e.getMessage());
         }
     }

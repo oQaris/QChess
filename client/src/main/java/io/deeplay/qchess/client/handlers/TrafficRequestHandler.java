@@ -28,7 +28,7 @@ public class TrafficRequestHandler {
                         ServerToClientType.ACCEPT_CONNECTION,
                         SessionService::acceptConnection,
                         ServerToClientType.GAME_SETTINGS,
-                        (type, json) -> null, // без запроса игнорируется
+                        GameService::setGameSettings,
                         ServerToClientType.START_GAME,
                         GameService::startGame,
                         ServerToClientType.GAME_ACTION,
@@ -36,27 +36,32 @@ public class TrafficRequestHandler {
                         ServerToClientType.END_GAME,
                         GameService::endGame,
                         ServerToClientType.CHAT_MESSAGE,
-                        ChatService::incomingMessage));
-        assert redirector.size() == ServerToClientType.values().length;
+                        ChatService::incomingMessage,
+                        ServerToClientType.RESET_GAME,
+                        GameService::resetGame));
+
+        if (redirector.size() != ServerToClientType.values().length) {
+            throw new ExceptionInInitializerError("В клиенте не рассмотрены все случаи запросов");
+        }
     }
 
     /**
      * @return json ответ клиента в виде ClientToServerDTO или null, если не нужно ничего отправлять
      */
-    public static String process(String jsonServerRequest) {
+    public static String process(final String jsonServerRequest) {
         logger.debug("Пришел json: {}", jsonServerRequest);
         try {
-            ServerToClientDTO mainDTO =
+            final ServerToClientDTO mainDTO =
                     SerializationService.serverToClientDTOMain(jsonServerRequest);
-            String response = redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json);
+            final String response = redirector.get(mainDTO.type).handle(mainDTO.type, mainDTO.json);
 
             if (response != null) logger.debug("Отправлен json серверу: {}", jsonServerRequest);
 
             return response;
-        } catch (SerializationException e) {
+        } catch (final SerializationException e) {
             logger.warn("Пришел некорректный json от сервера: {}", jsonServerRequest);
             return null;
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.warn("Получен неизвестный запрос от сервера: {}", jsonServerRequest);
             return null;
         }

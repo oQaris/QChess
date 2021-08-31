@@ -5,23 +5,25 @@ import io.deeplay.qchess.client.LocalClient;
 import io.deeplay.qchess.client.dao.GameDAO;
 import io.deeplay.qchess.client.dao.SessionDAO;
 import io.deeplay.qchess.client.exceptions.ClientException;
-import io.deeplay.qchess.client.service.GameGUIAdapterService;
+import io.deeplay.qchess.client.service.GameGUIAdapter;
 import io.deeplay.qchess.client.service.GameService;
 import io.deeplay.qchess.client.view.IClientView;
-import io.deeplay.qchess.client.view.gui.EnemyType;
+import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.client.view.gui.ViewCell;
+import io.deeplay.qchess.client.view.model.ViewColor;
 import io.deeplay.qchess.client.view.model.ViewFigure;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.ConnectionDTO;
 import io.deeplay.qchess.clientserverconversation.dto.clienttoserver.FindGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.AcceptConnectionDTO;
-import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.service.SerializationService;
+import io.deeplay.qchess.game.logics.EndGameDetector.EndGameType;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.model.MoveType;
 import io.deeplay.qchess.game.model.figures.FigureType;
-import io.deeplay.qchess.game.player.PlayerType;
 import java.util.Set;
 
+/** Нужен для связи: View <-> Controller <-> Model */
 public class ClientController {
     private static final IClient client = LocalClient.getInstance();
     private static IClientView view;
@@ -37,12 +39,12 @@ public class ClientController {
      *
      * @param view окружение клиента
      */
-    public static void setView(IClientView view) {
+    public static void setView(final IClientView view) {
         ClientController.view = view;
     }
 
     /** Отправляет сообщение View, если view и message не null */
-    public static void print(String message) {
+    public static void print(final String message) {
         if (view != null && message != null) view.print(message);
     }
 
@@ -52,7 +54,7 @@ public class ClientController {
      * @throws ClientException если клиент уже подключен к серверу или возникла ошибка при
      *     подключении
      */
-    public static void connect(String ip, int port) throws ClientException {
+    public static void connect(final String ip, final int port) throws ClientException {
         client.connect(ip, port);
     }
 
@@ -61,7 +63,7 @@ public class ClientController {
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void disconnect(String reason) throws ClientException {
+    public static void disconnect(final String reason) throws ClientException {
         client.disconnect();
         view.disconnect(reason);
     }
@@ -81,7 +83,7 @@ public class ClientController {
      *
      * @throws ClientException если клиент уже подключен к серверу
      */
-    public static void setPort(int port) throws ClientException {
+    public static void setPort(final int port) throws ClientException {
         client.setPort(port);
     }
 
@@ -95,33 +97,16 @@ public class ClientController {
      *
      * @throws ClientException если клиент уже подключен к серверу
      */
-    public static void setIp(String ip) throws ClientException {
+    public static void setIp(final String ip) throws ClientException {
         client.setIp(ip);
     }
 
     /**
-     * Эта операция блокирует поток, пока не будет получен цвет или не возникнет исключение
+     * Блокирует поток и ожидает ответа от сервера на успешное подключение
      *
-     * @return true, если цвет игрока белый
-     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
-     *     было разорвано
+     * @deprecated Блокирует поток. TODO: переписать на автомат с использованием сервисов клиента
      */
-    public static boolean waitForGameSettings() throws ClientException {
-        GameSettingsDTO dto =
-                client.waitForResponse(
-                        new FindGameDTO(
-                                SessionDAO.getSessionToken(),
-                                switch (GameDAO.getEnemyType()) {
-                                    case USER -> PlayerType.REMOTE_PLAYER;
-                                    case EASYBOT -> PlayerType.RANDOM_BOT;
-                                    case MEDIUMBOT -> PlayerType.ATTACK_BOT;
-                                    case HARDBOT -> PlayerType.MINIMAX_BOT;
-                                }),
-                        GameSettingsDTO.class);
-        return dto.color == Color.WHITE;
-    }
-
-    // TODO: javadoc
+    @Deprecated
     public static void waitForAcceptConnection() throws ClientException {
         client.waitForResponse(new ConnectionDTO(null, true), AcceptConnectionDTO.class);
     }
@@ -131,7 +116,7 @@ public class ClientController {
      *
      * @throws ClientException если при выполнении команды возникла ошибка
      */
-    public static void executeCommand(String command) throws ClientException {
+    public static void executeCommand(final String command) throws ClientException {
         client.executeCommand(command);
     }
 
@@ -140,28 +125,32 @@ public class ClientController {
      *
      * @throws ClientException если клиент не подключен к серверу
      */
-    public static void sendIfNotNull(String json) throws ClientException {
+    public static void sendIfNotNull(final String json) throws ClientException {
         client.sendIfNotNull(json);
     }
 
-    // TODO: добавить javadoc
-    public static Set<ViewCell> getAllMoves(int row, int column) {
-        return GameGUIAdapterService.getAllMoves(row, column);
+    /** @return все возможные ходы в удобной форме для View */
+    public static Set<ViewCell> getAllMoves(final int row, final int column) {
+        return GameGUIAdapter.getAllMoves(row, column);
+    }
+
+    /** @return true, если фигура на указанной клетке isWhite */
+    public static boolean checkFigure(final int row, final int column, final boolean isWhite) {
+        return GameGUIAdapter.checkFigure(row, column, isWhite);
+    }
+
+    /**
+     * @return фигура на указанной клетке в удобной форме для View или null, если фигуры на
+     *     указанной клетке нет
+     */
+    public static ViewFigure getFigure(final int row, final int column) {
+        return GameGUIAdapter.getFigure(row, column);
     }
 
     // TODO: добавить javadoc
-    public static boolean checkFigure(int row, int column, boolean isWhite) {
-        return GameGUIAdapterService.checkFigure(row, column, isWhite);
-    }
-
-    // TODO: добавить javadoc
-    public static ViewFigure getFigure(int row, int column) {
-        return GameGUIAdapterService.getFigure(row, column);
-    }
-
-    // TODO: добавить javadoc
-    public static int tryMakeMove(int rowFrom, int columnFrom, int rowTo, int columnTo) {
-        Move move = GameGUIAdapterService.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
+    public static int tryMakeMove(
+            final int rowFrom, final int columnFrom, final int rowTo, final int columnTo) {
+        final Move move = GameGUIAdapter.tryMakeMove(rowFrom, columnFrom, rowTo, columnTo);
         if (move != null) {
             if (move.getMoveType() == MoveType.TURN_INTO
                     || move.getMoveType() == MoveType.TURN_INTO_ATTACK) {
@@ -177,31 +166,28 @@ public class ClientController {
         return 0;
     }
 
-    // TODO: добавить javadoc
-    /** @throws ClientException если клиент не подключен к серверу */
+    /**
+     * Делает ход и отправляет его серверу
+     *
+     * @throws ClientException если клиент не подключен к серверу
+     */
     public static void makeMove(
-            int rowFrom, int columnFrom, int rowTo, int columnTo, Object turnFigure)
+            final int rowFrom,
+            final int columnFrom,
+            final int rowTo,
+            final int columnTo,
+            final Object turnFigure)
             throws ClientException {
-        Move move =
+        final Move move =
                 GameService.makeMove(
                         rowFrom, columnFrom, rowTo, columnTo, getFigureType(turnFigure));
         view.drawBoard();
         GameService.sendMove(move);
-        GameService.checkEndGame();
     }
 
-    /** @return true, если сейчас ход клиента */
-    public static boolean isMyStep() {
-        return GameDAO.isGameStarted()
-                && GameDAO.getGame().getCurrentPlayerToMove().getColor() == GameDAO.getMyColor();
-    }
-
-    public static void drawBoard() {
-        view.drawBoard();
-    }
-
-    private static FigureType getFigureType(Object figure) {
-        String strFigure = (String) figure;
+    // TODO: добавить javadoc и переделать номально без кастов
+    private static FigureType getFigureType(final Object figure) {
+        final String strFigure = (String) figure;
         if ("Ферзь".equals(strFigure)) {
             return FigureType.QUEEN;
         } else if ("Ладья".equals(strFigure)) {
@@ -214,16 +200,102 @@ public class ClientController {
         return null;
     }
 
-    public static void chooseEnemy(EnemyType enemyType) {
-        GameService.chooseEnemy(enemyType);
+    /** @return true, если сейчас ход клиента */
+    public static boolean isMyStep() {
+        return GameDAO.isGameStarted()
+                && GameDAO.getGame().getCurrentPlayerToMove().getColor() == GameDAO.getMyColor();
     }
 
-    public static void closeGame(String reason) {
+    /** Перерисовывает доску */
+    public static void drawBoard() {
+        view.drawBoard();
+    }
+
+    /** Выбирает тип соперника */
+    public static void chooseEnemy(final PlayerType playerType) {
+        GameService.chooseEnemy(playerType);
+    }
+
+    /** Выбирает КЕМ играть */
+    public static void chooseMyType(final PlayerType playerType) {
+        GameDAO.setMyType(playerType);
+    }
+
+    /**
+     * Выбирает КАКИМ ЦВЕТОМ играть
+     *
+     * @param myColor - если пришёл null, значит нужно выбрать цвет рандомно
+     */
+    public static void chooseMyColor(final ViewColor myColor) {
+        GameDAO.setMyPreferColor(
+                myColor == null
+                        ? null
+                        : switch (myColor) {
+                            case WHITE -> Color.WHITE;
+                            case BLACK -> Color.BLACK;
+                        });
+    }
+
+    /** Делает ход ботом. Гарантируется, что клиент выбрал бота при выборе КЕМ играть */
+    public static void botMove() {
+        GameService.botMove();
+    }
+
+    /** Закрывает View клиента и отключается от сервера */
+    public static void closeGame(final String reason) {
         view.closeGame(reason);
     }
 
-    /** Инициализирует игру у клиента */
-    public static void initGame(boolean color) {
-        GameService.initGame(color);
+    /** Выводит окно с сообщением */
+    public static void showMessage(final String message) {
+        view.showMessage(message);
+    }
+
+    /** Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет) */
+    public static void resetMyColorOnBoard(final Color color) {
+        view.changeMyColorOnBoard(color == Color.WHITE);
+    }
+
+    /**
+     * @throws ClientException если клиент не подключен к серверу или во время ожидания соединение
+     *     было разорвано
+     */
+    public static void sendFindGameRequest() throws ClientException {
+        client.sendIfNotNull(
+                SerializationService.makeMainDTOJsonToServer(
+                        new FindGameDTO(
+                                SessionDAO.getSessionToken(),
+                                getType(GameDAO.getEnemyType()),
+                                2,
+                                GameDAO.getMyPreferColor())));
+    }
+
+    /**
+     * Переводит тип игрока View в тип игрока из движка игры
+     *
+     * @return тип игрока из движка
+     */
+    private static io.deeplay.qchess.game.player.PlayerType getType(final PlayerType pt) {
+        return switch (pt) {
+            case USER -> io.deeplay.qchess.game.player.PlayerType.REMOTE_PLAYER;
+            case EASYBOT -> io.deeplay.qchess.game.player.PlayerType.RANDOM_BOT;
+            case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
+                // TODO: заменить на своего бота
+            case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.QBOT;
+        };
+    }
+
+    /** @return true, если королю цвета color поставили шах */
+    public static boolean isCheck(final boolean color) {
+        return GameGUIAdapter.isCheck(color);
+    }
+
+    /** @return клетка короля цвета color */
+    public static ViewCell getKingCell(final boolean color) {
+        return GameGUIAdapter.getKingCell(color);
+    }
+
+    public static boolean isEndGame() {
+        return GameDAO.getGameSettings().endGameDetector.getGameResult() != EndGameType.NOTHING;
     }
 }

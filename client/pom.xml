@@ -2,19 +2,32 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>io.deeplay</groupId>
-    <artifactId>QChess</artifactId>
-    <version>0.0.1</version>
-  </parent>
-
   <artifactId>QChess-client</artifactId>
-  <version>0.0.1</version>
 
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <outputDirectory>${basedir}/target</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <id>copy-resource-one</id>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <version>3.2.0</version>
+      </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
@@ -65,12 +78,51 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
+    <dependency>
+      <artifactId>QChess-qbot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
+    <!-- Tests -->
+    <dependency>
+      <artifactId>junit</artifactId>
+      <groupId>junit</groupId>
+      <scope>test</scope>
+      <version>4.13.2</version>
+    </dependency>
+    <!-- LoBot -->
+    <dependency>
+      <artifactId>QChess-lobot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>QChess-lobot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <scope>compile</scope>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>QChess-lobot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <scope>compile</scope>
+      <version>0.0.1</version>
+    </dependency>
   </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>QChess</artifactId>
+    <groupId>io.deeplay</groupId>
+    <version>0.0.1</version>
+  </parent>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <version>0.0.1</version>
 
 </project>

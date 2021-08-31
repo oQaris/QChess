@@ -2,16 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>io.deeplay</groupId>
-    <artifactId>QChess</artifactId>
-    <version>0.0.1</version>
-  </parent>
-
   <artifactId>QChess-core</artifactId>
-  <version>0.0.1</version>
 
   <build>
     <plugins>
@@ -39,10 +30,60 @@
         <groupId>org.apache.maven.plugins</groupId>
         <version>3.3.0</version>
       </plugin>
+      <plugin>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <configuration>
+          <jvmTarget>1.8</jvmTarget>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <id>compile</id>
+            <phase>compile</phase>
+          </execution>
+          <execution>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+          </execution>
+        </executions>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <version>${kotlin.version}</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <id>compile</id>
+            <phase>compile</phase>
+          </execution>
+          <execution>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <id>testCompile</id>
+            <phase>test-compile</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
     </plugins>
   </build>
 
   <dependencies>
+    <!-- for ELO -->
+    <dependency>
+      <artifactId>gson</artifactId>
+      <groupId>com.google.code.gson</groupId>
+      <version>2.8.7</version>
+    </dependency>
     <!-- QChess modules -->
     <dependency>
       <artifactId>QChess-client</artifactId>
@@ -64,12 +105,79 @@
       <groupId>io.deeplay</groupId>
       <version>0.0.1</version>
     </dependency>
+    <!-- QChess Bots -->
+    <dependency>
+      <artifactId>QChess-qbot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <scope>compile</scope>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>QChess-lobot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <scope>compile</scope>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>QChess-nuke-bot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <scope>compile</scope>
+      <version>0.0.1</version>
+    </dependency>
+    <!-- Statistics -->
+    <dependency>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>kotlin-test</artifactId>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <scope>test</scope>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <!-- DB -->
+    <dependency>
+      <artifactId>exposed-core</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>exposed-dao</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>exposed-jdbc</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>h2</artifactId>
+      <groupId>com.h2database</groupId>
+      <version>1.4.197</version>
+    </dependency>
+    <dependency>
+      <artifactId>sqlite-jdbc</artifactId>
+      <groupId>org.xerial</groupId>
+      <version>3.36.0.1</version>
+    </dependency>
   </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>QChess</artifactId>
+    <groupId>io.deeplay</groupId>
+    <version>0.0.1</version>
+  </parent>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <kotlin.version>1.5.30-RC</kotlin.version>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <version>0.0.1</version>
 
 </project>

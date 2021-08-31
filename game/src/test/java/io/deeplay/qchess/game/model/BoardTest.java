@@ -26,10 +26,10 @@ public class BoardTest {
     }
 
     @Test
-    public void testFindKingCell() throws ChessException, ChessError {
-        Figure whiteKing = new King(Color.WHITE, Cell.parse("c1"));
-        Figure whitePawn = new Pawn(Color.WHITE, Cell.parse("a1"));
-        Figure blackPawn = new Pawn(Color.BLACK, Cell.parse("e7"));
+    public void testFindKingCell() throws ChessException {
+        final Figure whiteKing = new King(Color.WHITE, Cell.parse("c1"));
+        final Figure whitePawn = new Pawn(Color.WHITE, Cell.parse("a1"));
+        final Figure blackPawn = new Pawn(Color.BLACK, Cell.parse("e7"));
         board.setFigure(whiteKing);
         board.setFigure(whitePawn);
         board.setFigure(blackPawn);
@@ -37,37 +37,37 @@ public class BoardTest {
     }
 
     @Test
-    public void testSetGetFigures() throws ChessException, ChessError {
+    public void testSetGetFigures() throws ChessException {
         // нет фигур
         Assert.assertEquals(List.of(), board.getFigures(Color.WHITE));
         Assert.assertEquals(List.of(), board.getFigures(Color.BLACK));
 
-        Board testBoard = new Board(Board.BoardFilling.STANDARD);
+        final Board testBoard = new Board(Board.BoardFilling.STANDARD);
 
-        List<Figure> black = new ArrayList<>();
-        List<Figure> white = new ArrayList<>();
+        final List<Figure> black = new ArrayList<>();
+        final List<Figure> white = new ArrayList<>();
 
-        for (Character first : "abcdefgh".toCharArray()) {
+        for (final Character first : "abcdefgh".toCharArray()) {
             black.add(testBoard.getFigure(Cell.parse(first + "7")));
             black.add(testBoard.getFigure(Cell.parse(first + "8")));
             white.add(testBoard.getFigure(Cell.parse(first + "1")));
             white.add(testBoard.getFigure(Cell.parse(first + "2")));
         }
 
-        Comparator<Figure> figureComparator =
+        final Comparator<Figure> figureComparator =
                 (o1, o2) -> {
-                    int x1 = o1.getCurrentPosition().getColumn();
-                    int y1 = o1.getCurrentPosition().getRow();
-                    int x2 = o2.getCurrentPosition().getColumn();
-                    int y2 = o2.getCurrentPosition().getRow();
+                    final int x1 = o1.getCurrentPosition().column;
+                    final int y1 = o1.getCurrentPosition().row;
+                    final int x2 = o2.getCurrentPosition().column;
+                    final int y2 = o2.getCurrentPosition().row;
                     return x1 != x2 ? x1 - x2 : y1 - y2;
                 };
 
         black.sort(figureComparator);
         white.sort(figureComparator);
 
-        List<Figure> ansBlack = testBoard.getFigures(Color.BLACK);
-        List<Figure> ansWhite = testBoard.getFigures(Color.WHITE);
+        final List<Figure> ansBlack = testBoard.getFigures(Color.BLACK);
+        final List<Figure> ansWhite = testBoard.getFigures(Color.WHITE);
 
         ansBlack.sort(figureComparator);
         ansWhite.sort(figureComparator);
@@ -96,7 +96,7 @@ public class BoardTest {
 
     @Test
     public void testIsCorrectCell() {
-        Board board = new Board(BoardFilling.STANDARD);
+        final Board board = new Board(BoardFilling.STANDARD);
         Assert.assertTrue(board.isCorrectCell(0, 0));
         Assert.assertFalse(board.isCorrectCell(0, -1));
         Assert.assertTrue(board.isCorrectCell(7, 7));
@@ -105,7 +105,7 @@ public class BoardTest {
 
     @Test
     public void testMoveFigureEmpty() throws ChessException {
-        Figure rook = new Rook(Color.WHITE, Cell.parse("a1"));
+        final Figure rook = new Rook(Color.WHITE, Cell.parse("a1"));
         board.setFigure(rook);
         Assert.assertNull(
                 board.moveFigure(
@@ -125,27 +125,28 @@ public class BoardTest {
     }
 
     @Test
-    public void testBoardStringConstructor1() throws ChessError, ChessException {
-        String placement = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        String expected = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq";
+    public void testBoardStringConstructor1() throws ChessError {
+        final String placement = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        final String expected = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq";
         gameSettings = new GameSettings(placement);
 
-        History history = new History(gameSettings);
+        final History history = new History(gameSettings);
         history.addRecord(null);
-        Assert.assertEquals(expected, history.addRecord(null));
+        Assert.assertEquals(expected, history.getBoardToStringForsythEdwards());
     }
 
     @Test
     public void testBoardStringConstructor2() throws ChessError, ChessException {
-        String placement = "4k3/ppp2ppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR w KQ a3";
+        final String placement = "4k3/ppp2ppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        final String expected = "4k3/ppp2ppp/8/8/P7/8/1PPPPPPP/RNBQKBNR w KQ a3";
         gameSettings = new GameSettings(placement);
 
-        History history = new History(gameSettings);
+        final History history = new History(gameSettings);
 
-        Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
+        final Move move = new Move(MoveType.LONG_MOVE, Cell.parse("a2"), Cell.parse("a4"));
         gameSettings.board.moveFigure(move);
 
-        Assert.assertEquals(expected, history.addRecord(move));
+        history.addRecord(move);
+        Assert.assertEquals(expected, history.getBoardToStringForsythEdwards());
     }
 }

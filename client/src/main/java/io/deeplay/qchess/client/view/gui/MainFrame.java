@@ -1,35 +1,48 @@
 package io.deeplay.qchess.client.view.gui;
 
+import io.deeplay.qchess.client.view.model.ViewColor;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
 
 public class MainFrame {
-    private ConnectFrame connectFrame;
-    private ChoosePlayerFrame choosePlayerFrame;
+    private ChooseMyColorFrame chooseMyColorFrame;
+    private ChooseMyPlayerFrame chooseMyPlayerFrame;
+    private ChooseEnemyPlayerFrame chooseEnemyPlayerFrame;
     private ChooseStyleFrame chooseStyleFrame;
+    private ConnectFrame connectFrame;
     private Table table;
-    private EnemyType enemyType;
+    private PlayerType myPlayerType;
+    private PlayerType enemyPlayerType;
     private String style;
+    private ViewColor myColor;
+
+    public MainFrame() {
+        UIManager.put("Button.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+        UIManager.put("RadioButton.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
+    }
 
     public void createStartFrame() {
-        JFrame frame = new JFrame("Начало");
+        final JFrame frame = new JFrame("Начало");
         frame.setSize(new Dimension(200, 200));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLayout(new GridBagLayout());
         frame.setLocationRelativeTo(null);
 
-        JButton startButton = new JButton("Начать");
+        final JButton startButton = new JButton("Начать");
         startButton.addMouseListener(
                 new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent e) {
+                    public void mousePressed(final MouseEvent e) {
                         super.mousePressed(e);
-                        createChoosePlayerFrame();
+                        createChooseMyColorFrame();
                         frame.setVisible(false);
                         frame.dispose();
                     }
@@ -38,27 +51,47 @@ public class MainFrame {
         frame.setVisible(true);
     }
 
-    public void createChoosePlayerFrame() {
-        choosePlayerFrame = new ChoosePlayerFrame(this);
+    public void createChooseMyColorFrame() {
+        chooseMyColorFrame = new ChooseMyColorFrame(this);
     }
 
-    public void createChooseStyleFrame(EnemyType enemyType) {
-        this.enemyType = enemyType;
+    public void createChooseMyPlayerFrame(final ViewColor myColor) {
+        this.myColor = myColor;
+        chooseMyPlayerFrame = new ChooseMyPlayerFrame(this);
+    }
+
+    public void createChooseEnemyPlayerFrame(final PlayerType playerType) {
+        myPlayerType = playerType;
+        chooseEnemyPlayerFrame = new ChooseEnemyPlayerFrame(this);
+    }
+
+    public void createChooseStyleFrame(final PlayerType playerType) {
+        enemyPlayerType = playerType;
         chooseStyleFrame = new ChooseStyleFrame(this);
     }
 
-    public void createConnectFrame(String style) {
+    public void createConnectFrame(final String style) {
         this.style = style;
         connectFrame = new ConnectFrame(this);
     }
 
-    public void createTable(boolean color) {
+    public void createTable(final boolean color) {
         table = new Table(style, color, this);
     }
 
+    public void destroyChooseMyColorFrame() {
+        chooseMyColorFrame.destroy();
+        chooseMyColorFrame = null;
+    }
+
+    public void destroyChooseMyPlayerFrame() {
+        chooseMyPlayerFrame.destroy();
+        chooseMyPlayerFrame = null;
+    }
+
     public void destroyChoosePlayerFrame() {
-        choosePlayerFrame.destroy();
-        choosePlayerFrame = null;
+        chooseEnemyPlayerFrame.destroy();
+        chooseEnemyPlayerFrame = null;
     }
 
     public void destroyChooseStyleFrame() {
@@ -80,11 +113,19 @@ public class MainFrame {
         return table;
     }
 
-    public EnemyType getEnemyNumber() {
-        return enemyType;
+    public PlayerType getMyPlayerType() {
+        return myPlayerType;
+    }
+
+    public PlayerType getEnemyPlayerType() {
+        return enemyPlayerType;
     }
 
     public String getStyle() {
         return style;
+    }
+
+    public ViewColor getColor() {
+        return myColor;
     }
 }

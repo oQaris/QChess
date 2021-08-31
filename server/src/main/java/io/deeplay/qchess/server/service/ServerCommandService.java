@@ -8,7 +8,9 @@ import io.deeplay.qchess.server.exceptions.ServerException;
 /** Обрабатывает текстовые команды */
 public class ServerCommandService {
 
-    public static void handleCommand(String command) throws ServerException {
+    private ServerCommandService() {}
+
+    public static void handleCommand(final String command) throws ServerException {
         if (command.startsWith("msg ")) {
             ServerController.sendAll(
                     SerializationService.makeMainDTOJsonToClient(

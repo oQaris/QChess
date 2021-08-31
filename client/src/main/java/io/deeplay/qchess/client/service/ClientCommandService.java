@@ -10,7 +10,7 @@ import io.deeplay.qchess.clientserverconversation.service.SerializationService;
 public class ClientCommandService {
 
     /** @throws ClientException если при выполнении команды возникла ошибка */
-    public static void handleCommand(String command) throws ClientException {
+    public static void handleCommand(final String command) throws ClientException {
         if (command.startsWith("msg ")) {
             ClientController.sendIfNotNull(
                     SerializationService.makeMainDTOJsonToServer(

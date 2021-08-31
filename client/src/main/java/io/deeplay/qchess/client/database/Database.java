@@ -1,6 +1,6 @@
 package io.deeplay.qchess.client.database;
 
-import io.deeplay.qchess.client.view.gui.EnemyType;
+import io.deeplay.qchess.client.view.gui.PlayerType;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.Selfplay;
 import io.deeplay.qchess.game.model.Color;
@@ -11,8 +11,10 @@ public class Database {
     private Selfplay game;
     private GameSettings gs;
     private boolean isGameStarted;
-    private EnemyType enemyType;
+    private PlayerType playerType;
+    private PlayerType myType;
     private Color myColor;
+    private Color myPreferColor;
 
     private Database() {}
 
@@ -21,45 +23,75 @@ public class Database {
         return database;
     }
 
+    /** @return токен для подключения к серверу */
     public String getSessionToken() {
         return sessionToken;
     }
 
-    public void setSessionToken(String sessionToken) {
+    /** Устанавливает токен для подключения к серверу */
+    public void setSessionToken(final String sessionToken) {
         this.sessionToken = sessionToken;
     }
 
-    public void newGame(GameSettings gs, Selfplay game, Color color) {
+    /** Добавляет или заменяет игру */
+    public void newGame(final GameSettings gs, final Selfplay game, final Color color) {
         this.gs = gs;
         this.game = game;
         myColor = color;
     }
 
-    public EnemyType getEnemyType() {
-        return enemyType;
+    /** @return тип противника */
+    public PlayerType getEnemyType() {
+        return playerType;
     }
 
-    public void setEnemyType(EnemyType enemyType) {
-        this.enemyType = enemyType;
+    /** Устанавливает тип противника */
+    public void setEnemyType(final PlayerType playerType) {
+        this.playerType = playerType;
     }
 
+    /** @return тип игрока клиента */
+    public PlayerType getMyType() {
+        return myType;
+    }
+
+    /** Устанавливает тип игрока клиента */
+    public void setMyType(final PlayerType playerType) {
+        myType = playerType;
+    }
+
+    /** @return настройки текущей игры */
     public GameSettings getGameSettings() {
         return gs;
     }
 
+    /** @return текущая игра */
     public Selfplay getGame() {
         return game;
     }
 
+    /** Устанавливает флаг, что игра началась */
     public void startGame() {
         isGameStarted = true;
     }
 
+    /** @return true, если флаг, указывающий что игра началась, установлен */
     public boolean isGameStarted() {
         return isGameStarted;
     }
 
+    /** @return цвет игрока клиента */
     public Color getMyColor() {
         return myColor;
+    }
+
+    /** @return предпочитаемый цвет игрока клиента */
+    public Color getMyPreferColor() {
+        return myPreferColor;
+    }
+
+    /** Устанавливает предпочитаемый цвет игрока клиента */
+    public void setMyPreferColor(final Color myPreferColor) {
+        this.myPreferColor = myPreferColor;
     }
 }

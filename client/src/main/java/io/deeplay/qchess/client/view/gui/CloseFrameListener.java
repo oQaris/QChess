@@ -9,15 +9,15 @@ import javax.swing.JOptionPane;
 public class CloseFrameListener extends WindowAdapter {
     private final Frame frame;
 
-    public CloseFrameListener(Frame frame) {
+    public CloseFrameListener(final Frame frame) {
         this.frame = frame;
     }
 
     @Override
-    public void windowClosing(WindowEvent event) {
+    public void windowClosing(final WindowEvent event) {
         super.windowClosing(event);
-        Object[] options = {"Да", "Нет"};
-        int n =
+        final Object[] options = {"Да", "Нет"};
+        final int n =
                 JOptionPane.showOptionDialog(
                         event.getWindow(),
                         "Закрыть окно?",
@@ -26,12 +26,12 @@ public class CloseFrameListener extends WindowAdapter {
                         JOptionPane.QUESTION_MESSAGE,
                         null,
                         options,
-                        options[0]);
+                        null);
         if (n == 0) {
             frame.destroy();
             try {
                 ClientController.disconnect("Клиент отключен");
-            } catch (ClientException e) {
+            } catch (final ClientException e) {
                 System.err.println(e.getMessage());
             }
         }

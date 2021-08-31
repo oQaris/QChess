@@ -11,11 +11,12 @@ public enum ChessErrorCode {
     ERROR_WHEN_MOVING_FIGURE("Проверенный ход выдал ошибку при перемещении фигуры"),
     ERROR_WHILE_ADD_PEACE_MOVE_COUNT("Ошибка при добавлении ходов для ничьи"),
     PARSE_FIGURE_FROM_CHAR_FAILED("Ошибка создания фигуры по символу"),
-    UNKNOWN_FIGURE_SELECTED("Выбрана неизвестная фигура");
+    UNKNOWN_FIGURE_SELECTED("Выбрана неизвестная фигура"),
+    GAME_RESULT_ERROR("Игра еще не закончена");
 
     private final String message;
 
-    ChessErrorCode(String message) {
+    ChessErrorCode(final String message) {
         this.message = message;
     }
 

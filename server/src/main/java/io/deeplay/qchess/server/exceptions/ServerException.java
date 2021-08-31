@@ -2,11 +2,11 @@ package io.deeplay.qchess.server.exceptions;
 
 public class ServerException extends Exception {
 
-    public ServerException(ServerErrorCode code, Throwable cause) {
+    public ServerException(final ServerErrorCode code, final Throwable cause) {
         super(code.getMessage(), cause);
     }
 
-    public ServerException(ServerErrorCode code) {
+    public ServerException(final ServerErrorCode code) {
         super(code.getMessage());
     }
 }

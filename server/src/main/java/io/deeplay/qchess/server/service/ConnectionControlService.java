@@ -13,14 +13,17 @@ import java.util.UUID;
 
 public class ConnectionControlService {
 
-    public static String getJsonToDisconnect(String reason) {
+    private ConnectionControlService() {}
+
+    public static String getJsonToDisconnect(final String reason) {
         return SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason));
     }
 
-    public static String setConnection(ClientToServerType type, String json, int clientID)
+    public static String setConnection(
+            final ClientToServerType type, final String json, final int clientId)
             throws SerializationException {
         assert type.getDTO() == ConnectionDTO.class;
-        ConnectionDTO dto =
+        final ConnectionDTO dto =
                 SerializationService.clientToServerDTORequest(json, ConnectionDTO.class);
 
         if (dto.connection) {
@@ -28,8 +31,8 @@ public class ConnectionControlService {
                 disconnect(dto.sessionToken, "Уже подключен");
                 return null;
             } else {
-                String newSessionToken = UUID.randomUUID().toString();
-                ConnectionControlDAO.addPlayer(newSessionToken, clientID);
+                final String newSessionToken = UUID.randomUUID().toString();
+                ConnectionControlDAO.addPlayer(newSessionToken, clientId);
                 return SerializationService.makeMainDTOJsonToClient(
                         new AcceptConnectionDTO(newSessionToken));
             }
@@ -40,18 +43,18 @@ public class ConnectionControlService {
         return null;
     }
 
-    public static void disconnect(String sessionToken, String reason) {
-        Integer clientID = ConnectionControlDAO.getID(sessionToken);
-        if (clientID == null) return;
+    public static void disconnect(final String sessionToken, final String reason) {
+        final Integer clientId = ConnectionControlDAO.getId(sessionToken);
+        if (clientId == null) return;
         GameService.endGameForOpponentOf(sessionToken);
         ConnectionControlDAO.removePlayer(sessionToken);
         try {
             ServerController.send(
                     SerializationService.makeMainDTOJsonToClient(new DisconnectedDTO(reason)),
-                    clientID);
+                    clientId);
             // TODO: убрать костыль (перенести id клиентов в БД), возвращать Json
-            ServerController.closeConnection(clientID);
-        } catch (ServerException ignore) {
+            ServerController.closeConnection(clientId);
+        } catch (final ServerException ignore) {
             // Сервис вызывается при открытом сервере
         }
     }

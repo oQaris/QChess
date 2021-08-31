@@ -1,24 +1,26 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import java.util.Set;
+import java.util.List;
 
 public class Knight extends Figure {
 
-    public Knight(Color color, Cell position) {
-        super(color, position);
+    public Knight(final Color color, final Cell position) {
+        super(color, position, FigureType.KNIGHT);
     }
 
     @Override
-    public Set<Move> getAllMoves(GameSettings settings) {
-        return stepForEach(settings.board, Figure.knightMove);
+    public List<Move> getAllMoves(final GameSettings settings) {
+        return stepForEach(settings.board, Figure.knightMove, false);
     }
 
     @Override
-    public FigureType getType() {
-        return FigureType.KNIGHT;
+    public boolean isAttackedCell(final Board board, final Cell cell) {
+        for (final Cell c : Figure.knightMove) if (position.createAdd(c).equals(cell)) return true;
+        return false;
     }
 }

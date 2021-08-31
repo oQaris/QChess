@@ -31,21 +31,22 @@ public class ConsolePlayer extends RemotePlayer {
 
     private final BufferedReader in;
 
-    public ConsolePlayer(GameSettings roomSettings, Color color, BufferedReader in) {
-        super(roomSettings, color, "console-player");
+    public ConsolePlayer(
+            final GameSettings roomSettings, final Color color, final BufferedReader in) {
+        super(roomSettings, color, "console-player", "PS5");
         this.in = in;
     }
 
     @Override
     public Move getNextMove() throws ChessError {
         try {
-            List<Move> allMoves = ms.getAllCorrectMoves(color);
+            final List<Move> allMoves = ms.getAllCorrectMoves(color);
             System.out.println(board);
             printMoves(allMoves);
-            Move chosenMove = inputMoveNumber(allMoves);
+            final Move chosenMove = inputMoveNumber(allMoves);
             specificMoveModification(chosenMove);
             return chosenMove;
-        } catch (ChessError e) {
+        } catch (final ChessError e) {
             logger.error("Возникла ошибка в консольном игроке: {}", e.getMessage());
             throw new ChessError(CONSOLE_PLAYER_ERROR, e);
         }
@@ -53,28 +54,28 @@ public class ConsolePlayer extends RemotePlayer {
 
     @Override
     public PlayerType getPlayerType() {
-        return PlayerType.CONSOLE_PLAYER;
+        return PlayerType.LOCAL_PLAYER;
     }
 
-    private void printMoves(List<Move> allMoves) {
+    private void printMoves(final List<Move> allMoves) {
         System.out.println("Выберите ход:");
         allMoves.sort(Comparator.comparing(Move::toString));
         int number = 1;
-        for (Move move : allMoves) {
+        for (final Move move : allMoves) {
             System.out.println(number + ": " + move);
             ++number;
         }
     }
 
-    private Move inputMoveNumber(List<Move> allMoves) {
+    private Move inputMoveNumber(final List<Move> allMoves) {
         Move move = null;
         while (move == null) {
             try {
-                String input = in.readLine();
+                final String input = in.readLine();
                 logger.info("Игрок ввел: {}", input);
-                int numMove = Integer.parseInt(input);
+                final int numMove = Integer.parseInt(input);
                 move = allMoves.get(numMove - 1);
-            } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {
+            } catch (final IOException | NumberFormatException | IndexOutOfBoundsException e) {
                 logger.info("Игрок ввел неправильный ход");
                 System.out.println("Неправильный ход, повторите попытку");
             }
@@ -82,10 +83,11 @@ public class ConsolePlayer extends RemotePlayer {
         return move;
     }
 
-    private void specificMoveModification(Move chosenMove) throws ChessError {
-        if (chosenMove.getMoveType() == MoveType.TURN_INTO) {
+    private void specificMoveModification(final Move chosenMove) throws ChessError {
+        if (chosenMove.getMoveType() == MoveType.TURN_INTO
+                || chosenMove.getMoveType() == MoveType.TURN_INTO_ATTACK) {
             System.out.println(TURN_INTO_INVITE);
-            chosenMove.setTurnInto(readTurnInto());
+            chosenMove.turnInto = readTurnInto();
         }
     }
 
@@ -94,14 +96,14 @@ public class ConsolePlayer extends RemotePlayer {
         final int maxCountFigures = 4;
         while (numTurnIntoFigure == 0) {
             try {
-                String input = in.readLine();
+                final String input = in.readLine();
                 logger.info("Игрок ввел: {}", input);
                 numTurnIntoFigure = Integer.parseInt(input);
                 if (numTurnIntoFigure < 0 || numTurnIntoFigure > maxCountFigures) {
                     numTurnIntoFigure = 0;
                     throw new IllegalArgumentException();
                 }
-            } catch (IOException | IllegalArgumentException e) {
+            } catch (final IOException | IllegalArgumentException e) {
                 logger.info("Игрок ввел неправильный номер фигуры");
                 System.out.println("Неправильный номер фигуры, повторите попытку");
             }

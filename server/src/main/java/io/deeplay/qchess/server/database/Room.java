@@ -24,18 +24,38 @@ public class Room {
      *     io.deeplay.qchess.server.service.MatchMaking#findGame там}, и {@link
      *     io.deeplay.qchess.server.service.GameService#action здесь}
      */
-    @Deprecated(forRemoval = true)
-    public final Object mutex = new Object();
+    @Deprecated public final Object mutex = new Object();
 
     private RemotePlayer player1;
     private RemotePlayer player2;
     private Selfplay game;
+    private int gameCount;
+    private int maxGames;
     private GameSettings gs;
     private boolean error;
 
-    public void setGameSettings(GameSettings gs) {
+    public void incrementEndGameCount() {
+        ++gameCount;
+    }
+
+    public int getGameCount() {
+        return gameCount;
+    }
+
+    public int getMaxGames() {
+        return maxGames;
+    }
+
+    public void setGameSettings(final GameSettings gs, final int maxGames) {
         synchronized (mutex) {
             this.gs = gs;
+            this.maxGames = maxGames;
+        }
+    }
+
+    public GameSettings getGameSettings() {
+        synchronized (mutex) {
+            return gs;
         }
     }
 
@@ -56,8 +76,13 @@ public class Room {
     public void startGame() {
         synchronized (mutex) {
             try {
+                if (player1.getColor() == Color.BLACK) {
+                    final RemotePlayer temp = player1;
+                    player1 = player2;
+                    player2 = temp;
+                }
                 game = new Selfplay(gs, player1, player2);
-            } catch (ChessError chessError) {
+            } catch (final ChessError chessError) {
                 error = true;
             }
         }
@@ -70,7 +95,7 @@ public class Room {
         }
     }
 
-    public void addPlayer(RemotePlayer player) {
+    public void addPlayer(final RemotePlayer player) {
         synchronized (mutex) {
             if (player1 == null) player1 = player;
             else if (player2 == null) player2 = player;
@@ -120,7 +145,7 @@ public class Room {
     }
 
     /** @return игрок с заданным токеном или null, если его нет в этой комнате */
-    public RemotePlayer getPlayer(String sessionToken) {
+    public RemotePlayer getPlayer(final String sessionToken) {
         synchronized (mutex) {
             if (player1 != null && player1.getSessionToken().equals(sessionToken)) return player1;
             if (player2 != null && player2.getSessionToken().equals(sessionToken)) return player2;
@@ -129,7 +154,7 @@ public class Room {
     }
 
     /** @return true, если в комнате есть игрок с заданным токеном */
-    public boolean contains(String sessionToken) {
+    public boolean contains(final String sessionToken) {
         synchronized (mutex) {
             return getPlayer(sessionToken) != null;
         }
@@ -140,11 +165,11 @@ public class Room {
      *
      * @return true, если ход корректный, иначе false
      */
-    public boolean move(Move move) {
+    public boolean move(final Move move) {
         synchronized (mutex) {
             try {
                 return game.move(move);
-            } catch (ChessError chessError) {
+            } catch (final ChessError chessError) {
                 error = true;
                 return false;
             }
@@ -158,13 +183,35 @@ public class Room {
             player2 = null;
             gs = null;
             game = null;
+            error = false;
+            gameCount = 0;
+        }
+    }
+
+    /** Меняет цвет игрокам и сбрасывает игру */
+    public void resetGame() {
+        synchronized (mutex) {
+            final RemotePlayer temp = player1;
+            player1 = player2;
+            player2 = temp;
+
+            try {
+                gs = gs.newWithTheSameSettings();
+                player1.setGameSettings(gs, Color.WHITE);
+                player2.setGameSettings(gs, Color.BLACK);
+                game = new Selfplay(gs, player1, player2);
+            } catch (final ChessError chessError) {
+                // Клонирование настроек безопасно, если было до этого создано успешно
+            }
+
+            error = false;
         }
     }
 
     /**
      * @return токен сессии клиента противника для клиента с sessionToken. Вернет null, если его нет
      */
-    public String getOpponentSessionToken(String sessionToken) {
+    public String getOpponentSessionToken(final String sessionToken) {
         synchronized (mutex) {
             if (player1 != null && player1.getSessionToken().equals(sessionToken)) {
                 if (player2 != null) return player2.getSessionToken();
@@ -183,8 +230,13 @@ public class Room {
     }
 
     /** @return статус конца игры для игрока цвета color или null, если игра еще не окончена */
-    private String getEndGameStatus(Color color) {
-        if (gs.endGameDetector.isDraw()) {
+    private String getEndGameStatus(final Color color) {
+        final boolean isStalemate = gs.endGameDetector.isStalemate(color);
+        if (isStalemate && gs.endGameDetector.isCheck(color)) {
+            return "Мат " + (color == Color.BLACK ? "черным" : "белым");
+        } else if (isStalemate) {
+            return "Пат " + (color == Color.BLACK ? "черным" : "белым");
+        } else {
             if (gs.endGameDetector.isDrawWithPeaceMoves()) {
                 return String.format(
                         "Ничья: %d ходов без взятия и хода пешки",
@@ -196,21 +248,15 @@ public class Room {
             } else if (gs.endGameDetector.isDrawWithNotEnoughMaterialForCheckmate()) {
                 return "Ничья: недостаточно фигур, чтобы поставить мат";
             }
-        } else {
-            if (gs.endGameDetector.isCheckmate(color)) {
-                return "Мат " + (color == Color.BLACK ? "черным" : "белым");
-            } else if (gs.endGameDetector.isStalemate(color)) {
-                return "Пат " + (color == Color.BLACK ? "черным" : "белым");
-            }
         }
         return null;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Room room = (Room) o;
+        final Room room = (Room) o;
         return id == room.id;
     }
 

@@ -4,20 +4,27 @@ import io.deeplay.qchess.server.database.Database;
 
 public class ConnectionControlDAO {
 
-    public static boolean contains(String sessionToken) {
+    /** @return true, если токен есть в списке подключенных клиентов */
+    public static boolean contains(final String sessionToken) {
         return Database.getInstance().contains(sessionToken);
     }
 
-    public static void addPlayer(String sessionToken, int clientID) {
-        Database.getInstance().addPlayer(sessionToken, clientID);
+    /** Добавляет sessionToken к подключенным id клиентов */
+    public static void addPlayer(final String sessionToken, final int clientId) {
+        Database.getInstance().addPlayer(sessionToken, clientId);
     }
 
-    public static void removePlayer(String sessionToken) {
+    /**
+     * Удаляет sessionToken из подключенных id клиентов
+     *
+     * <p>TODO: не удаляет из id в менеджере обработчиков
+     */
+    public static void removePlayer(final String sessionToken) {
         Database.getInstance().removePlayer(sessionToken);
     }
 
     /** @return id клиента или null, если его нет */
-    public static Integer getID(String sessionToken) {
-        return Database.getInstance().getID(sessionToken);
+    public static Integer getId(final String sessionToken) {
+        return Database.getInstance().getId(sessionToken);
     }
 }

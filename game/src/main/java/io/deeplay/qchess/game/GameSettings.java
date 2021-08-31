@@ -11,25 +11,50 @@ public class GameSettings {
     public final MoveSystem moveSystem;
     public final EndGameDetector endGameDetector;
     public final History history;
+    public final int boardSize;
+    public final Board.BoardFilling boardType;
+    public final String fen;
 
-    public GameSettings(int boardSize, Board.BoardFilling boardType) {
-        board = new Board(boardSize, boardType);
-        history = new History(this);
-        endGameDetector = new EndGameDetector(this);
-        moveSystem = new MoveSystem(this);
-    }
-
-    public GameSettings(Board.BoardFilling boardType) {
+    public GameSettings(final Board.BoardFilling boardType) {
+        boardSize = Board.STD_BOARD_SIZE;
+        this.boardType = boardType;
+        fen = null;
         board = new Board(boardType);
         history = new History(this);
         endGameDetector = new EndGameDetector(this);
         moveSystem = new MoveSystem(this);
     }
 
-    public GameSettings(String boardFillingForsythEdwards) throws ChessError {
-        board = new Board(boardFillingForsythEdwards);
+    public GameSettings(final String fen) throws ChessError {
+        boardSize = 0;
+        boardType = null;
+        this.fen = fen;
+        board = new Board(fen);
         history = new History(this);
         endGameDetector = new EndGameDetector(this);
         moveSystem = new MoveSystem(this);
+    }
+
+    /**
+     * Копирует gs, создавая новую историю без очищения, но со ссылкой на предыдущую историю
+     *
+     * @param averageMaxMoves среднее максимальное число ходов, которое будет в истории
+     */
+    public GameSettings(final GameSettings gs, final int averageMaxMoves) {
+        boardSize = gs.boardSize;
+        boardType = gs.boardType;
+        fen = gs.fen;
+        board = new Board(gs.board);
+        history = new History(gs.history, this, averageMaxMoves);
+        endGameDetector = new EndGameDetector(this);
+        moveSystem = new MoveSystem(this);
+    }
+
+    /**
+     * Используется для сброса игры на кастомную первоначальную расстановку после смены сторон
+     * игроков
+     */
+    public GameSettings newWithTheSameSettings() throws ChessError {
+        return boardType != null ? new GameSettings(boardType) : new GameSettings(fen);
     }
 }

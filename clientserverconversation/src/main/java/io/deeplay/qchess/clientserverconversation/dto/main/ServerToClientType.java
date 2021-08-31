@@ -7,6 +7,7 @@ import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ChatMessage
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.DisconnectedDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.EndGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.GameSettingsDTO;
+import io.deeplay.qchess.clientserverconversation.dto.servertoclient.ResetGameDTO;
 import io.deeplay.qchess.clientserverconversation.dto.servertoclient.StartGameDTO;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,26 +21,28 @@ public enum ServerToClientType {
     GAME_SETTINGS(GameSettingsDTO.class),
     GAME_ACTION(ActionDTO.class),
     CHAT_MESSAGE(ChatMessageDTO.class),
-    START_GAME(StartGameDTO.class);
+    START_GAME(StartGameDTO.class),
+    RESET_GAME(ResetGameDTO.class);
 
     private static final Map<Class<? extends IServerToClientDTO>, ServerToClientType> type =
             new HashMap<>();
 
     static {
-        for (ServerToClientType t : ServerToClientType.values()) type.put(t.dto, t);
+        for (final ServerToClientType t : ServerToClientType.values()) type.put(t.dto, t);
     }
 
     private final Class<? extends IServerToClientDTO> dto;
 
-    ServerToClientType(Class<? extends IServerToClientDTO> dto) {
+    ServerToClientType(final Class<? extends IServerToClientDTO> dto) {
         this.dto = dto;
     }
 
-    public static <T extends IServerToClientDTO> ServerToClientType valueOf(Class<T> dtoClass) {
+    public static <T extends IServerToClientDTO> ServerToClientType valueOf(
+            final Class<T> dtoClass) {
         return Objects.requireNonNull(type.get(dtoClass), "DTO сервера не найдено");
     }
 
-    public static ServerToClientType valueOf(IServerToClientDTO dto) {
+    public static ServerToClientType valueOf(final IServerToClientDTO dto) {
         return valueOf(dto.getClass());
     }
 

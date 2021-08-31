@@ -12,12 +12,16 @@ public interface IClientView extends Closeable {
     /** Выводит сообщение */
     void print(String message);
 
+    /** Выводит окно с сообщением */
+    void showMessage(String message);
+
     /** Перерисовывает доску */
     void drawBoard();
 
     /** @return доска */
     ViewBoard getBoard();
 
+    /** Закрывает View клиента и отключается от сервера */
     void closeGame(String reason);
 
     /**
@@ -26,4 +30,7 @@ public interface IClientView extends Closeable {
      * @param reason причина отключения
      */
     void disconnect(String reason);
+
+    /** Изменяет цвет и перерисовывает доску (снизу теперь будет выбранный цвет) */
+    void changeMyColorOnBoard(boolean color);
 }

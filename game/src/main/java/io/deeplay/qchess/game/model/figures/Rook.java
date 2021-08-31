@@ -1,24 +1,45 @@
 package io.deeplay.qchess.game.model.figures;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import java.util.Set;
+import java.util.List;
 
 public class Rook extends Figure {
 
-    public Rook(Color color, Cell position) {
-        super(color, position);
+    public Rook(final Color color, final Cell position) {
+        super(color, position, FigureType.ROOK);
+    }
+
+    public static boolean isAttackedCell(final Board board, final Cell fromPos, final Cell cell) {
+        final int x = cell.column;
+        final int y = cell.row;
+        final int myX = fromPos.column;
+        final int myY = fromPos.row;
+        if (x == myX && y == myY) return false;
+        if (x != myX && y != myY) return false;
+        if (x == myX) {
+            final Cell attackVector = new Cell(0, Integer.compare(y, myY));
+            final Cell pos = fromPos.createAdd(attackVector);
+            while (pos.row != y && board.isEmptyCell(pos)) pos.shift(attackVector);
+            return pos.row == y;
+        } else {
+            final Cell attackVector = new Cell(Integer.compare(x, myX), 0);
+            final Cell pos = fromPos.createAdd(attackVector);
+            while (pos.column != x && board.isEmptyCell(pos)) pos.shift(attackVector);
+            return pos.column == x;
+        }
     }
 
     @Override
-    public Set<Move> getAllMoves(GameSettings settings) {
+    public List<Move> getAllMoves(final GameSettings settings) {
         return rayTrace(settings.board, Figure.plusMove);
     }
 
     @Override
-    public FigureType getType() {
-        return FigureType.ROOK;
+    public boolean isAttackedCell(final Board board, final Cell cell) {
+        return isAttackedCell(board, position, cell);
     }
 }

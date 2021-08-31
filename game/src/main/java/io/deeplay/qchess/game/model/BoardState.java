@@ -1,32 +1,88 @@
 package io.deeplay.qchess.game.model;
 
-import java.util.Objects;
+import io.deeplay.qchess.game.model.figures.Figure;
+import java.util.Arrays;
 
 /** Описывает состояние доски */
 public class BoardState {
-    public final String forsythEdwards;
+    public final int[] boardSnapshot;
+    public final int boardSnapshotHash;
+
+    /** проходимый квадрат или -1, если взятие невозможно */
+    public final int pawnEnPassantSquare;
+
+    public final boolean isWhiteMove;
+
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    public final int isWhiteCastlingPossibility;
+    /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
+    public final int isBlackCastlingPossibility;
+
+    /** Не нужно учитывать в equals и hashCode */
     public final Move lastMove;
+    /** Не нужно учитывать в equals и hashCode */
+    public final boolean hasMovedBeforeLastMove;
+    /** Не нужно учитывать в equals и hashCode */
+    public final Figure removedFigure;
+    /** Не нужно учитывать в equals и hashCode */
     public final int peaceMoveCount;
 
-    public BoardState(String forsythEdwards, Move lastMove, int peaceMoveCount) {
-        this.forsythEdwards = forsythEdwards;
+    public BoardState(
+            final int[] boardSnapshot,
+            final int boardSnapshotHash,
+            final Move lastMove,
+            final int peaceMoveCount,
+            final boolean hasMovedBeforeLastMove,
+            final Figure removedFigure,
+            final boolean isWhiteMove,
+            final int isWhiteCastlingPossibility,
+            final int isBlackCastlingPossibility) {
+        this.boardSnapshot = boardSnapshot;
+        this.boardSnapshotHash = boardSnapshotHash;
         this.lastMove = lastMove;
         this.peaceMoveCount = peaceMoveCount;
+        this.hasMovedBeforeLastMove = hasMovedBeforeLastMove;
+        this.removedFigure = removedFigure;
+        this.isWhiteMove = isWhiteMove;
+        this.isWhiteCastlingPossibility = isWhiteCastlingPossibility;
+        this.isBlackCastlingPossibility = isBlackCastlingPossibility;
+        if (lastMove == null || lastMove.getMoveType() != MoveType.LONG_MOVE)
+            pawnEnPassantSquare = -1;
+        else {
+            int row = lastMove.getFrom().row;
+            if (row == 1) ++row; // ход черных
+            else --row; // ход белых
+            pawnEnPassantSquare = row * 8 + lastMove.getFrom().column;
+        }
     }
 
+    /** Используется только для нахождения повторений доски */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || BoardState.class != o.getClass()) return false;
-        BoardState that = (BoardState) o;
-        return peaceMoveCount == that.peaceMoveCount
-                && forsythEdwards.equals(that.forsythEdwards)
-                && Objects.equals(lastMove, that.lastMove);
+        final BoardState that = (BoardState) o;
+        try {
+            return isWhiteMove == that.isWhiteMove
+                    && boardSnapshotHash == that.boardSnapshotHash
+                    && isWhiteCastlingPossibility == that.isWhiteCastlingPossibility
+                    && isBlackCastlingPossibility == that.isBlackCastlingPossibility
+                    && pawnEnPassantSquare == that.pawnEnPassantSquare
+                    && Arrays.equals(boardSnapshot, that.boardSnapshot);
+        } catch (final NullPointerException e) {
+            return false;
+        }
     }
 
+    /** Используется только для нахождения повторений доски */
     @Override
     public int hashCode() {
-        final int h1 = lastMove == null ? 1 : lastMove.fullHashCode();
-        return 17 * (31 * h1 + forsythEdwards.hashCode()) + peaceMoveCount;
+        int result = 31;
+        result = 31 * result + (isWhiteMove ? 1 : 0);
+        result = 31 * result + boardSnapshotHash;
+        result = 31 * result + isWhiteCastlingPossibility;
+        result = 31 * result + isBlackCastlingPossibility;
+        result = 31 * result + pawnEnPassantSquare;
+        return result;
     }
 }
