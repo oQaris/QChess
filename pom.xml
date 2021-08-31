@@ -12,6 +12,8 @@
     <module>clientserverconversation</module>
     <module>game</module>
     <module>core</module>
+    <module>lobot</module>
+    <module>logparser</module>
     <module>qbot</module>
     <module>nukebot</module>
     <module>lobot</module>

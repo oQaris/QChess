@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class FigureService {
 
-    private static final Map<FigureType, Character> charFigureMap = new HashMap<>();
-    private static final Map<Character, Integer> intCharMap = new HashMap<>();
-    private static final Map<FigureType, Integer> figureValMap = new HashMap<>();
+    private final static Map<FigureType, Character> charFigureMap = new HashMap<>();
+    private final static Map<Character, Integer> intCharMap = new HashMap<>();
+    private final static Map<FigureType, Integer> figureValMap = new HashMap<>();
 
     static {
         charFigureMap.put(FigureType.PAWN, 'p');
@@ -41,16 +41,16 @@ public class FigureService {
     }
 
     @Deprecated
-    public static char convertFigureToChar(final Figure figure) {
+    public static char convertFigureToChar(Figure figure) {
         return charFigureMap.get(figure.figureType);
     }
 
     @Deprecated
-    public static int convertCharFigureToInt(final char cell) {
+    public static int convertCharFigureToInt(char cell) {
         return intCharMap.get(Character.toLowerCase(cell));
     }
 
-    public static int convertFigureToVal(final Figure figure) {
+    public static int convertFigureToVal(Figure figure) {
         return figureValMap.get(figure.figureType);
     }
 }

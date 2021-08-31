@@ -50,6 +50,9 @@ public class ClusterPoint {
 
     @Override
     public String toString() {
-        return "{" + "value=" + value + ", mark=" + mark + '}';
+        return "{" +
+            "value=" + value +
+            ", mark=" + mark +
+            '}';
     }
 }

@@ -13,7 +13,7 @@ public class MonteCarloEvaluation implements Evaluation {
     private final int iterationNumber;
 
     public MonteCarloEvaluation(final int iterationsNumber) {
-        iterationNumber = iterationsNumber;
+        this.iterationNumber = iterationsNumber;
     }
 
     @Override
@@ -30,16 +30,16 @@ public class MonteCarloEvaluation implements Evaluation {
             try {
                 game = new MonteCarloSelfplay(gs, firstPlayer, secondPlayer);
                 game.run();
-            } catch (final ChessError chessError) {
+            } catch (ChessError chessError) {
                 chessError.printStackTrace();
             }
-            final EndGameType endResult = gs.endGameDetector.getGameResult();
+            EndGameType endResult = gs.endGameDetector.getGameResult();
             if (color == Color.WHITE && endResult == EndGameType.CHECKMATE_TO_BLACK
-                    || color == Color.BLACK && endResult == EndGameType.CHECKMATE_TO_WHITE) {
+                || color == Color.BLACK && endResult == EndGameType.CHECKMATE_TO_WHITE) {
                 wins++;
             }
         }
-        // System.out.println((wins * 1000) / iterationNumber);
+        //System.out.println((wins * 1000) / iterationNumber);
         return (wins * 1000) / iterationNumber;
     }
 }

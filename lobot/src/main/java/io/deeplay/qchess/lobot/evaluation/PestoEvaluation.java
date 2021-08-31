@@ -132,30 +132,32 @@ public class PestoEvaluation implements Evaluation {
         -27, -11, 4, 13, 14, 4, -5, -17,
         -53, -34, -21, -11, -28, -14, -24, -43
     };
-    private final int[][] mg_pesto_table = {
-        mg_pawn_table,
-        mg_knight_table,
-        mg_bishop_table,
-        mg_rook_table,
-        mg_queen_table,
-        mg_king_table
-    };
-    private final int[][] eg_pesto_table = {
-        eg_pawn_table,
-        eg_knight_table,
-        eg_bishop_table,
-        eg_rook_table,
-        eg_queen_table,
-        eg_king_table
-    };
-    private final List<FigureType> figureTypeList =
-            Arrays.asList(
-                    FigureType.PAWN,
-                    FigureType.KNIGHT,
-                    FigureType.BISHOP,
-                    FigureType.ROOK,
-                    FigureType.QUEEN,
-                    FigureType.KING);
+    private final int[][] mg_pesto_table =
+        {
+            mg_pawn_table,
+            mg_knight_table,
+            mg_bishop_table,
+            mg_rook_table,
+            mg_queen_table,
+            mg_king_table
+        };
+    private final int[][] eg_pesto_table =
+        {
+            eg_pawn_table,
+            eg_knight_table,
+            eg_bishop_table,
+            eg_rook_table,
+            eg_queen_table,
+            eg_king_table
+        };
+    private final List<FigureType> figureTypeList = Arrays.asList(
+        FigureType.PAWN,
+        FigureType.KNIGHT,
+        FigureType.BISHOP,
+        FigureType.ROOK,
+        FigureType.QUEEN,
+        FigureType.KING
+    );
     int[] gamephaseInc = {0, 0, 1, 1, 1, 1, 2, 2, 4, 4, 0, 0};
     int[][] mg_table = new int[12][64];
     int[][] eg_table = new int[12][64];
@@ -178,32 +180,28 @@ public class PestoEvaluation implements Evaluation {
 
     @Override
     public int evaluateBoard(final GameSettings gameSettings, final Color color) {
-        final int[] mg = {0, 0};
-        final int[] eg = {0, 0};
+        int[] mg = {0, 0};
+        int[] eg = {0, 0};
         int gamePhase = 0;
 
-        for (final Figure figure : gameSettings.board.getAllFigures()) {
-            final int coef = figure.getColor() == Color.WHITE ? 0 : 1;
-            final int index = 2 * figureTypeList.indexOf(figure.figureType) + coef;
-            mg[coef] +=
-                    mg_table[index][
-                            figure.getCurrentPosition().row * Board.STD_BOARD_SIZE
-                                    + figure.getCurrentPosition().column];
-            eg[coef] +=
-                    mg_table[index][
-                            figure.getCurrentPosition().row * Board.STD_BOARD_SIZE
-                                    + figure.getCurrentPosition().column];
+        for (Figure figure : gameSettings.board.getAllFigures()) {
+            int coef = figure.getColor() == Color.WHITE ? 0 : 1;
+            int index = 2 * figureTypeList.indexOf(figure.figureType) + coef;
+            mg[coef] += mg_table[index][figure.getCurrentPosition().row * Board.STD_BOARD_SIZE
+                + figure.getCurrentPosition().column];
+            eg[coef] += mg_table[index][figure.getCurrentPosition().row * Board.STD_BOARD_SIZE
+                + figure.getCurrentPosition().column];
             gamePhase += gamephaseInc[index];
         }
 
-        final int coef = color == Color.WHITE ? 0 : 1;
-        final int mgScore = mg[coef] - mg[coef ^ 1];
-        final int egScore = eg[coef] - eg[coef ^ 1];
+        int coef = color == Color.WHITE ? 0 : 1;
+        int mgScore = mg[coef] - mg[coef ^ 1];
+        int egScore = eg[coef] - eg[coef ^ 1];
         int mgPhase = gamePhase;
         if (mgPhase > 24) {
             mgPhase = 24;
         }
-        final int egPhase = 24 - mgPhase;
+        int egPhase = 24 - mgPhase;
         return (mgScore * mgPhase + egScore * egPhase) / 24;
     }
 }

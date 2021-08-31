@@ -90,6 +90,18 @@
       <scope>test</scope>
       <version>4.13.2</version>
     </dependency>
+    <!-- LoBot -->
+    <dependency>
+      <artifactId>QChess-lobot</artifactId>
+      <groupId>io.deeplay</groupId>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>io.deeplay</groupId>
+      <artifactId>QChess-lobot</artifactId>
+      <version>0.0.1</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>
 
