@@ -49,6 +49,11 @@ public class Cell implements Serializable {
         throw new IllegalArgumentException(INCORRECT_COORDINATES.getMessage());
     }
 
+    /** @return номер клетки на доске */
+    public int toSquare() {
+        return row * 8 + column;
+    }
+
     /** @return создает новую клетку, суммируя с текущей */
     public Cell createAdd(final Cell shiftCell) {
         return new Cell(column + shiftCell.column, row + shiftCell.row);

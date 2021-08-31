@@ -1,6 +1,7 @@
 package io.deeplay.qchess.game.logics;
 
 import io.deeplay.qchess.game.GameSettings;
+import io.deeplay.qchess.game.features.ITranspositionTable;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
@@ -224,7 +225,12 @@ public class EndGameDetector {
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
     public boolean isStalemate(final Color color) {
-        return !gs.moveSystem.isHasAnyCorrectMoveSilence(color);
+        return gs.moveSystem.isHasNotAnyCorrectMoveSilence(color, null);
+    }
+
+    /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
+    public boolean isStalemate(final Color color, final ITranspositionTable table) {
+        return gs.moveSystem.isHasNotAnyCorrectMoveSilence(color, table);
     }
 
     /** @return true, если установленному цвету поставили пат (нет доступных ходов) */
@@ -234,6 +240,12 @@ public class EndGameDetector {
 
     /** @return true если игроку с указанным цветом ставят шах */
     public boolean isCheck(final Color color) {
+        return isCheck(color, null);
+    }
+
+    /** @return true если игроку с указанным цветом ставят шах */
+    public boolean isCheck(final Color color, final ITranspositionTable table) {
+        if (table != null) return table.isCheckTo(gs, gs.history.getLastBoardState(), color);
         final Cell kingCell = gs.board.findKingCell(color);
         if (kingCell == null) return false;
         return Board.isAttackedCell(gs.board, kingCell, color.inverse());

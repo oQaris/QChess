@@ -8,7 +8,9 @@ public class BoardState {
     public final int[] boardSnapshot;
     public final int boardSnapshotHash;
 
-    public final boolean isPawnEnPassantPossible;
+    /** проходимый квадрат или -1, если взятие невозможно */
+    public final int pawnEnPassantSquare;
+
     public final boolean isWhiteMove;
 
     /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
@@ -44,7 +46,14 @@ public class BoardState {
         this.isWhiteMove = isWhiteMove;
         this.isWhiteCastlingPossibility = isWhiteCastlingPossibility;
         this.isBlackCastlingPossibility = isBlackCastlingPossibility;
-        isPawnEnPassantPossible = lastMove != null && lastMove.getMoveType() == MoveType.LONG_MOVE;
+        if (lastMove == null || lastMove.getMoveType() != MoveType.LONG_MOVE)
+            pawnEnPassantSquare = -1;
+        else {
+            int row = lastMove.getFrom().row;
+            if (row == 1) ++row; // ход черных
+            else --row; // ход белых
+            pawnEnPassantSquare = row * 8 + lastMove.getFrom().column;
+        }
     }
 
     /** Используется только для нахождения повторений доски */
@@ -58,7 +67,7 @@ public class BoardState {
                     && boardSnapshotHash == that.boardSnapshotHash
                     && isWhiteCastlingPossibility == that.isWhiteCastlingPossibility
                     && isBlackCastlingPossibility == that.isBlackCastlingPossibility
-                    && isPawnEnPassantPossible == that.isPawnEnPassantPossible
+                    && pawnEnPassantSquare == that.pawnEnPassantSquare
                     && Arrays.equals(boardSnapshot, that.boardSnapshot);
         } catch (final NullPointerException e) {
             return false;
@@ -73,7 +82,7 @@ public class BoardState {
         result = 31 * result + boardSnapshotHash;
         result = 31 * result + isWhiteCastlingPossibility;
         result = 31 * result + isBlackCastlingPossibility;
-        result = 31 * result + (isPawnEnPassantPossible ? 1 : 0);
+        result = 31 * result + pawnEnPassantSquare;
         return result;
     }
 }

@@ -8,20 +8,20 @@ import java.io.Serializable;
  */
 public enum MoveType implements Serializable {
     // Для рокировки
-    SHORT_CASTLING(0),
-    LONG_CASTLING(0),
+    SHORT_CASTLING(10),
+    LONG_CASTLING(10),
     // Для длинного первого хода пешки
     LONG_MOVE(10),
     // Обычный ход
-    QUIET_MOVE(20),
+    QUIET_MOVE(10),
     // Для взятия на проходе
-    EN_PASSANT(30),
+    EN_PASSANT(20),
     // Атака фигуры
-    ATTACK(40),
+    ATTACK(20),
     // Для простого хода-превращения пешки
-    TURN_INTO(50),
+    TURN_INTO(30),
     // Для атакующего хода-превращения пешки
-    TURN_INTO_ATTACK(60);
+    TURN_INTO_ATTACK(40);
 
     public final int importantLevel;
 

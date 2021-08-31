@@ -10,6 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class History {
@@ -145,15 +146,8 @@ public class History {
     public void checkAndAddPeaceMoveCount(
             final Move move, final FigureType moveFigureType, final Figure removedFigure) {
         switch (move.getMoveType()) {
-            case EN_PASSANT, TURN_INTO, TURN_INTO_ATTACK:
+            case ATTACK, TURN_INTO, TURN_INTO_ATTACK, EN_PASSANT:
                 if (parentHistory == null) clearHistory(minBoardStateToSave);
-                peaceMoveCount = 0;
-                break;
-            case ATTACK:
-                if (parentHistory == null) {
-                    if (removedFigure.figureType == FigureType.PAWN
-                            || moveFigureType == FigureType.PAWN) clearHistory(minBoardStateToSave);
-                }
                 peaceMoveCount = 0;
                 break;
             default:
@@ -163,6 +157,21 @@ public class History {
                 } else ++peaceMoveCount;
                 break;
         }
+    }
+
+    /**
+     * @param move ход, после которого проверяется на возможность очищения
+     * @param moveFigureType тип фигуры, которой нужно походить
+     * @param removedFigure фигура, которую возьмут или null, если ход не атакующий
+     * @return true, если история очистится после хода move
+     */
+    public boolean willHistoryClear(
+            final Move move, final FigureType moveFigureType, final Figure removedFigure) {
+        return parentHistory == null
+                && switch (move.getMoveType()) {
+                    case ATTACK, TURN_INTO, TURN_INTO_ATTACK, EN_PASSANT -> true;
+                    default -> moveFigureType == FigureType.PAWN;
+                };
     }
 
     /**
