@@ -50,4 +50,13 @@ public class AttackBot extends RemotePlayer {
     public PlayerType getPlayerType() {
         return PlayerType.ATTACK_BOT;
     }
+
+    public static class AttackBotFactory implements BotFactory {
+
+        @Override
+        public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
+            // name ignores
+            return new AttackBot(gs, myColor);
+        }
+    }
 }

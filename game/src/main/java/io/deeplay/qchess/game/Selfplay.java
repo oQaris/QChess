@@ -161,14 +161,8 @@ public class Selfplay {
                         currentPlayerToMove,
                         move,
                         roomSettings.board.getFigureUgly(move.getTo()));
-                logger.debug(roomSettings.board.toString());
+                // logger.debug(roomSettings.board.toString());
                 logger.debug("FEN: {}", roomSettings.history.getBoardToStringForsythEdwards());
-                logger.debug(
-                        "board hash: {}",
-                        roomSettings.history.getLastBoardState().boardSnapshotHash);
-                logger.debug(
-                        "board snapshot: {}",
-                        roomSettings.history.getLastBoardState().boardSnapshot);
                 logger.debug("<---------------------------------------------------------------->");
             }
             return removedFigure;

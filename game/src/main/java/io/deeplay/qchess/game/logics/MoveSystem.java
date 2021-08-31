@@ -6,6 +6,7 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.KING_WAS_KILLED_I
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
+import io.deeplay.qchess.game.features.ITranspositionTable;
 import io.deeplay.qchess.game.model.Board;
 import io.deeplay.qchess.game.model.Cell;
 import io.deeplay.qchess.game.model.Color;
@@ -293,16 +294,16 @@ public class MoveSystem {
     }
 
     /**
-     * Использует реализацию низкого уровня из доски {@link Board#isHasAnyCorrectMove(GameSettings
-     * gs, Color color)}
+     * Использует реализацию низкого уровня из доски {@link Board#isHasAnyCorrectMove}
      *
      * @return true, если у игрока цвета color нет корректных ходов (поставлен пат)
      */
-    public boolean isHasAnyCorrectMoveSilence(final Color color) {
+    public boolean isHasNotAnyCorrectMoveSilence(
+            final Color color, final ITranspositionTable table) {
         try {
-            return board.isHasAnyCorrectMove(gs, color);
+            return !board.isHasAnyCorrectMove(gs, color, table);
         } catch (final ChessError e) {
-            return false;
+            return true;
         }
     }
 
@@ -319,13 +320,17 @@ public class MoveSystem {
 
     /**
      * @param move корректный ход
+     * @param table ТТ или null
      * @return true, если после хода нет шаха королю цвета той фигуры, которой был сделан ход
      */
-    public boolean isCorrectVirtualMoveSilence(final Move move) throws ChessError {
+    public boolean isCorrectVirtualMoveSilence(final Move move, final ITranspositionTable table)
+            throws ChessError {
         final Color figureToMove = board.getFigureUgly(move.getFrom()).getColor();
-        move(move, false, true);
-        final boolean isCheck = egd.isCheck(figureToMove);
-        undoMove(false);
+        if (table == null) move(move, false, true);
+        else move(move);
+        final boolean isCheck = egd.isCheck(figureToMove, table);
+        if (table == null) undoMove(false);
+        else undoMove();
         return !isCheck;
     }
 
