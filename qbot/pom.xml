@@ -4,37 +4,6 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>QChess-qbot</artifactId>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <configuration>
-          <compilerPlugins>
-            <plugin>kotlinx-serialization</plugin>
-          </compilerPlugins>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <artifactId>kotlin-maven-serialization</artifactId>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <version>${kotlin.version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <id>compile</id>
-            <phase>compile</phase>
-          </execution>
-        </executions>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <version>${kotlin.version}</version>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
     <!-- Logger -->
     <dependency>
@@ -51,7 +20,7 @@
     <dependency>
       <artifactId>QChess-game</artifactId>
       <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <!-- Tests -->
     <dependency>
@@ -78,7 +47,7 @@
       <version>1.9</version>
     </dependency>
     <!-- Statistics -->
-    <dependency>
+    <!--<dependency>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
       <groupId>org.jetbrains.kotlin</groupId>
       <version>${kotlin.version}</version>
@@ -88,7 +57,7 @@
       <groupId>org.jetbrains.kotlin</groupId>
       <scope>test</scope>
       <version>${kotlin.version}</version>
-    </dependency>
+    </dependency>-->
     <!-- DB -->
     <dependency>
       <artifactId>exposed-core</artifactId>
@@ -106,20 +75,9 @@
       <version>0.31.1</version>
     </dependency>
     <dependency>
-      <artifactId>h2</artifactId>
-      <groupId>com.h2database</groupId>
-      <version>1.4.197</version>
-    </dependency>
-    <dependency>
       <artifactId>sqlite-jdbc</artifactId>
       <groupId>org.xerial</groupId>
       <version>3.36.0.1</version>
-    </dependency>
-
-    <dependency>
-      <artifactId>jackson-databind</artifactId>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <version>2.11.1</version>
     </dependency>
   </dependencies>
 
@@ -128,10 +86,25 @@
   <parent>
     <artifactId>QChess</artifactId>
     <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kotlin-bintray</id>
+      <name>Kotlin Bintray</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <properties>
+    <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

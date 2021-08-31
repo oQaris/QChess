@@ -5,6 +5,7 @@
   <artifactId>QChess</artifactId>
 
   <groupId>io.deeplay</groupId>
+
   <modelVersion>4.0.0</modelVersion>
   <modules>
     <module>client</module>
@@ -15,10 +16,22 @@
     <module>lobot</module>
     <module>qbot</module>
     <module>nukebot</module>
-    <module>lobot</module>
   </modules>
-
   <packaging>pom</packaging>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kotlin-bintray</id>
+      <name>Kotlin Bintray</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <properties>
     <maven.compiler.source>14</maven.compiler.source>
@@ -26,6 +39,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 
 </project>

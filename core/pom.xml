@@ -4,79 +4,6 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>QChess-core</artifactId>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>io.deeplay.qchess.core.Main</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <id>make-assembly</id>
-            <phase>package</phase>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.3.0</version>
-      </plugin>
-      <plugin>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <configuration>
-          <jvmTarget>1.8</jvmTarget>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <id>compile</id>
-            <phase>compile</phase>
-          </execution>
-          <execution>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-            <id>test-compile</id>
-            <phase>test-compile</phase>
-          </execution>
-        </executions>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <version>${kotlin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <id>compile</id>
-            <phase>compile</phase>
-          </execution>
-          <execution>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-            <id>testCompile</id>
-            <phase>test-compile</phase>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
     <!-- for ELO -->
     <dependency>
@@ -88,41 +15,41 @@
     <dependency>
       <artifactId>QChess-client</artifactId>
       <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <dependency>
       <artifactId>QChess-server</artifactId>
       <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <dependency>
       <artifactId>QChess-client-server-conversation</artifactId>
       <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <dependency>
       <artifactId>QChess-game</artifactId>
       <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <!-- QChess Bots -->
     <dependency>
       <artifactId>QChess-qbot</artifactId>
       <groupId>io.deeplay</groupId>
       <scope>compile</scope>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <dependency>
       <artifactId>QChess-lobot</artifactId>
       <groupId>io.deeplay</groupId>
       <scope>compile</scope>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <dependency>
       <artifactId>QChess-nuke-bot</artifactId>
       <groupId>io.deeplay</groupId>
       <scope>compile</scope>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <!-- Statistics -->
     <dependency>
@@ -163,13 +90,27 @@
       <version>3.36.0.1</version>
     </dependency>
   </dependencies>
-  <modelVersion>4.0.0</modelVersion>
 
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>QChess</artifactId>
     <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kotlin-bintray</id>
+      <name>Kotlin Bintray</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <properties>
     <kotlin.version>1.5.30-RC</kotlin.version>
@@ -178,6 +119,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 
 </project>
