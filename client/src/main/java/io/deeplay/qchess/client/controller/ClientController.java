@@ -281,7 +281,7 @@ public class ClientController {
             case EASYBOT -> io.deeplay.qchess.game.player.PlayerType.RANDOM_BOT;
             case MEDIUMBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
                 // TODO: заменить на своего бота
-            case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.ATTACK_BOT;
+            case HARDBOT -> io.deeplay.qchess.game.player.PlayerType.QBOT;
         };
     }
 

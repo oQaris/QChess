@@ -28,7 +28,7 @@ public class QMinimaxBot extends QBot {
     }
 
     public QMinimaxBot(final GameSettings roomSettings, final Color color) {
-        this(roomSettings, color, 3);
+        this(roomSettings, color, 6);
     }
 
     /**

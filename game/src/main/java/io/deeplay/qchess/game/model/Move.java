@@ -2,9 +2,10 @@ package io.deeplay.qchess.game.model;
 
 import com.google.gson.annotations.SerializedName;
 import io.deeplay.qchess.game.model.figures.FigureType;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Move {
+public class Move implements Serializable {
     @SerializedName("type")
     private final MoveType moveType;
 
@@ -21,6 +22,14 @@ public class Move {
         this.moveType = moveType;
         this.from = from;
         this.to = to;
+    }
+
+    public Move(
+            final MoveType moveType, final Cell from, final Cell to, final FigureType turnInto) {
+        this.moveType = moveType;
+        this.from = from;
+        this.to = to;
+        this.turnInto = turnInto;
     }
 
     public Move(final Move move, final FigureType turnInto) {

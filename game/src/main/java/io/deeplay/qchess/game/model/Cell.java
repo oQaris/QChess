@@ -4,18 +4,18 @@ import static io.deeplay.qchess.game.exceptions.ChessErrorCode.INCORRECT_COORDIN
 import static io.deeplay.qchess.game.model.Board.STD_BOARD_SIZE;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Cell {
+public class Cell implements Serializable {
     public static final transient int[][] hashCodes = new int[STD_BOARD_SIZE][STD_BOARD_SIZE];
 
     private static final transient Logger logger = LoggerFactory.getLogger(Cell.class);
 
     static {
         for (int i = 0; i < STD_BOARD_SIZE; ++i)
-            for (int j = 0; j < STD_BOARD_SIZE; ++j)
-                hashCodes[i][j] = (i * STD_BOARD_SIZE + j) * 10;
+            for (int j = 0; j < STD_BOARD_SIZE; ++j) hashCodes[i][j] = i * STD_BOARD_SIZE + j;
     }
 
     @SerializedName("column")
@@ -71,6 +71,10 @@ public class Cell {
     @Override
     public int hashCode() {
         return hashCodes[column][row];
+    }
+
+    public byte toByte() {
+        return (byte) hashCodes[column][row];
     }
 
     @Override

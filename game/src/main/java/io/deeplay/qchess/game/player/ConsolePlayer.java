@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConsolePlayer extends RemotePlayer {
-    private static final transient Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConsolePlayer.class);
     private static final String TURN_INTO_INVITE =
             "Выберите фигуру для превращения:"
                     + System.lineSeparator()

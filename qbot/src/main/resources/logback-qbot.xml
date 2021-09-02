@@ -75,11 +75,11 @@
     </filter>
   </appender>
 
-  <logger level="debug" name="io.deeplay.qchess.game.Selfplay">
+  <logger level="off" name="io.deeplay.qchess.game">
     <appender-ref ref="GAME-STATISTICS"/>
   </logger>
 
-  <logger level="debug" name="io.deeplay.qchess.qbot">
+  <logger level="off" name="io.deeplay.qchess.qbot">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>
     <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>

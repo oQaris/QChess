@@ -1,6 +1,8 @@
 package io.deeplay.qchess.game.model.figures;
 
-public enum FigureType {
+import java.io.Serializable;
+
+public enum FigureType implements Serializable {
     PAWN(0),
     KNIGHT(1),
     BISHOP(2),

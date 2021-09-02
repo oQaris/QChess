@@ -10,10 +10,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-public class History implements Iterable<BoardState> {
+public class History {
     /** Среднее из максимальных число ходов за 1 партию */
     private static final int AVERAGE_MAXIMUM_MOVES = 100;
 
@@ -35,6 +34,11 @@ public class History implements Iterable<BoardState> {
     private final Map<BoardState, Integer> repetitionsMap;
     /** Используется как стек */
     private final Deque<BoardState> recordsList;
+    /**
+     * Родитель текущей истории или null, если текущая история является корнем (обычно это история
+     * основной партии, не симуляции бота)
+     */
+    private final History parentHistory;
 
     private Move lastMove;
     /** Двигалась ли фигура до последнего хода (фигура, которая совершила этот последний ход) */
@@ -48,20 +52,11 @@ public class History implements Iterable<BoardState> {
     private int isWhiteCastlingPossibility = 3;
     /** 0 - нет возможности рокироваться, 1 - левая рокировка возможна, 2 - правая, 3 - обе */
     private int isBlackCastlingPossibility = 3;
-
     /** Минимум состояний доски в истории ходов, которое необходимо сохранить после чистки */
     private int minBoardStateToSave;
 
-    /**
-     * Родитель текущей истории или null, если текущая история является корнем (обычно это история
-     * основной партии, не симуляции бота)
-     */
-    private History parentHistory;
-
     public History(final GameSettings gameSettings) {
-        this.gameSettings = gameSettings;
-        repetitionsMap = new HashMap<>(AVERAGE_MAXIMUM_MOVES);
-        recordsList = new ArrayDeque<>(AVERAGE_MAXIMUM_MOVES);
+        this(null, gameSettings, AVERAGE_MAXIMUM_MOVES);
     }
 
     /** Создает новую историю со ссылкой на предыдущую */
@@ -72,7 +67,7 @@ public class History implements Iterable<BoardState> {
         repetitionsMap = new HashMap<>(averageMaxMoves + 2); // +2 extra moves (ну мало ли что)
         recordsList = new ArrayDeque<>(averageMaxMoves + 2);
         parentHistory = history;
-        final BoardState boardState = history.recordsList.peek();
+        final BoardState boardState = history != null ? history.recordsList.peek() : null;
         recordsList.push(boardState != null ? boardState : newBoardState());
         restore();
     }
@@ -207,7 +202,7 @@ public class History implements Iterable<BoardState> {
 
     /**
      * @return текущая доска в записи FEN
-     * @deprecated TODO: неправильно работает и не используется
+     * @deprecated не до конца работает и используется только в логгере
      */
     @Deprecated
     public String getBoardToStringForsythEdwards() throws ChessError {
@@ -360,11 +355,5 @@ public class History implements Iterable<BoardState> {
         isBlackCastlingPossibility = boardState.isBlackCastlingPossibility;
         recordsList.push(boardState);
         repetitionsMap.put(boardState, repetitionsMap.getOrDefault(boardState, 0) + 1);
-    }
-
-    /** @return итератор от конца истории в начало */
-    @Override
-    public Iterator<BoardState> iterator() {
-        return recordsList.iterator();
     }
 }

@@ -37,21 +37,20 @@ public class MainFrame {
             final File soundFile = new File("./client/src/main/resources/sound.wav");
             final AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
 
-            //Получаем реализацию интерфейса Clip
-            //Может выкинуть LineUnavailableException
+            // Получаем реализацию интерфейса Clip
+            // Может выкинуть LineUnavailableException
             final Clip clip = AudioSystem.getClip();
 
-            //Загружаем наш звуковой поток в Clip
-            //Может выкинуть IOException и LineUnavailableException
+            // Загружаем наш звуковой поток в Clip
+            // Может выкинуть IOException и LineUnavailableException
             clip.open(ais);
 
-            clip.setFramePosition(0); //устанавливаем указатель на старт
-            clip.start(); //Поехали!!!
+            clip.setFramePosition(0); // устанавливаем указатель на старт
+            clip.start(); // Поехали!!!
         } catch (final IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
             exc.printStackTrace();
         }
     }
-
 
     public void createStartFrame() {
         final JFrame frame = new JFrame("Начало");

@@ -61,14 +61,55 @@
       <groupId>com.google.code.gson</groupId>
       <version>2.8.7</version>
     </dependency>
+    <dependency>
+      <artifactId>jackson-core</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <version>2.10.2</version>
+    </dependency>
+    <dependency>
+      <artifactId>jackson-databind</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <version>2.10.2</version>
+    </dependency>
+    <dependency>
+      <artifactId>jackson-annotations</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <version>2.10.2</version>
+    </dependency>
+    <dependency>
+      <artifactId>kotlinx-serialization-core</artifactId>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <type>pom</type>
+      <version>1.2.2</version>
+    </dependency>
+    <dependency>
+      <artifactId>kotlinx-serialization-json</artifactId>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <type>pom</type>
+      <version>1.2.2</version>
+    </dependency>
   </dependencies>
-  <modelVersion>4.0.0</modelVersion>
 
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>QChess</artifactId>
     <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kotlin-bintray</id>
+      <name>Kotlin Bintray</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <properties>
     <maven.compiler.source>14</maven.compiler.source>
@@ -77,6 +118,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 
 </project>

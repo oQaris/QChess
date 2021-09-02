@@ -60,7 +60,7 @@
 
 1. В корне проекта выполнить команду: `mvn package`
     - Можно добавить флаг `-DskipTests`, чтобы пропустить тесты
-2. В папке *core/target/* выполнить: `java -jar QChess-core-0.0.1-jar-with-dependencies.jar`
+2. В папке *core/target/* выполнить: `java -jar QChess-core-0.0.2-jar-with-dependencies.jar`
 3. Ввести `s`, если вы хотите запустить сервер или `c`, чтобы запустить клиент.
 
 Также в других папках лежат отдельные модули проекта:

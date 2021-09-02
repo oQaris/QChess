@@ -9,7 +9,7 @@ import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.BotFactory.SpecificFactory;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.game.player.TimeWrapper;
-import io.deeplay.qchess.qbot.QNegamaxTTBot;
+import io.deeplay.qchess.qbot.QNegamaxBot;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,7 +23,7 @@ public class Arena {
     private static final Map<String, Function<RemotePlayer, String>> optionalLogs =
             Map.of(
                     "NegaMaxBot",
-                    bot -> "Обращений к ТТ: " + ((QNegamaxTTBot) bot).getCountFindingTT());
+                    bot -> "Обращений к ТТ: " + ((QNegamaxBot) bot).getCountFindingTT());
     private static final RatingELO rating = new RatingELO();
 
     static {

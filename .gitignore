@@ -1,5 +1,5 @@
 .idea/
 target/
 *.iml
-logs/
+logs1/
 elo_rating.txt

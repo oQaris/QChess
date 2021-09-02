@@ -48,12 +48,12 @@ public abstract class Figure {
     private static final transient Logger logger = LoggerFactory.getLogger(Figure.class);
 
     static {
-        for (int i = 0; i < 8; ++i)
-            for (int j = 0; j < 8; ++j) {
-                hashCodes[0][0][i][j] = Cell.hashCodes[i][j];
-                hashCodes[0][1][i][j] = Cell.hashCodes[i][j] + 1;
-                hashCodes[1][0][i][j] = Cell.hashCodes[i][j] + 2;
-                hashCodes[1][1][i][j] = Cell.hashCodes[i][j] + 3;
+        for (int i = 0; i < Board.STD_BOARD_SIZE; ++i)
+            for (int j = 0; j < Board.STD_BOARD_SIZE; ++j) {
+                hashCodes[0][0][i][j] = Cell.hashCodes[i][j] * 10;
+                hashCodes[0][1][i][j] = Cell.hashCodes[i][j] * 10 + 1;
+                hashCodes[1][0][i][j] = Cell.hashCodes[i][j] * 10 + 2;
+                hashCodes[1][1][i][j] = Cell.hashCodes[i][j] * 10 + 3;
             }
     }
 

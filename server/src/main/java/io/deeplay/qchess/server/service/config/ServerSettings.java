@@ -12,7 +12,7 @@ public class ServerSettings {
 
     public static final String JAR_CONFIG_PATH = "/server_configuration.conf";
     public static final String DEFAULT_CONFIG_PATH = "./server_configuration.conf";
-    public static final String DEFAULT_LOGBACK_NAME = "logback-server.xml";
+    public static final String DEFAULT_LOGBACK_NAME = "logback.xml";
 
     private static final transient Logger logger = LoggerFactory.getLogger(ServerSettings.class);
 

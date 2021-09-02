@@ -15,7 +15,7 @@
     <dependency>
       <artifactId>QChess-game</artifactId>
       <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
   </dependencies>
 
@@ -23,7 +23,7 @@
   <parent>
     <artifactId>QChess</artifactId>
     <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
 
   <properties>
@@ -32,6 +32,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 
 </project>
