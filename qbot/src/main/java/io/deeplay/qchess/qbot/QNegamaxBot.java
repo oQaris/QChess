@@ -76,7 +76,9 @@ public class QNegamaxBot extends QBot {
                                     if (mt == ATTACK || mt == TURN_INTO_ATTACK)
                                         level +=
                                                 gs.board.getFigureUgly(m.getTo()).figureType.type
-                                                        - gs.board.getFigureUgly(m.getFrom()).figureType.type;
+                                                        - gs.board.getFigureUgly(m.getFrom())
+                                                                .figureType
+                                                                .type;
                                     return level;
                                 })
                         .reversed());

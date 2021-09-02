@@ -8,7 +8,6 @@ import io.deeplay.qchess.game.model.Move
 import io.deeplay.qchess.game.model.MoveType
 import io.deeplay.qchess.game.model.figures.FigureType
 import java.io.File
-import java.io.ObjectInputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -17,14 +16,16 @@ import java.nio.file.StandardOpenOption
 
 
 private val profiles = Storage
-public val profilesMap = mutableMapOf<String, Profile>()
+val profilesMap = mutableMapOf<String, Profile>()
 
-fun parse(file: File) {
+fun parse(file: File, isUseDB: Boolean = false) {
     val buf = file.inputStream().bufferedReader()
     val fpName = buf.readLine().takeLastWhile { !it.isWhitespace() }
     val spName = buf.readLine().takeLastWhile { !it.isWhitespace() }
-    val p1 = /*profiles.getOrPutProfileId(fpName)*/profilesMap.getOrPut(fpName) { Profile() }
-    val p2 = /*profiles.getOrPutProfileId(spName)*/profilesMap.getOrPut(spName) { Profile() }
+    val profileId1 = profiles.getOrPutProfileId(fpName)
+    val profileId2 = profiles.getOrPutProfileId(spName)
+    val profile1 = profilesMap.getOrPut(fpName) { Profile() }
+    val profile2 = profilesMap.getOrPut(spName) { Profile() }
     var isCurP1 = true
     var prewFen = GameSettings(Board.BoardFilling.STANDARD).history.getBoardToStringForsythEdwards()
 
@@ -41,10 +42,14 @@ fun parse(file: File) {
                     val turnInto = chnks[1].dropLast(8).takeLastWhile { !it.isWhitespace() }
                     move.turnInto = FigureType.valueOf(turnInto)
                 }
-                //val stateId = profiles.getOrPutStateId(if (isCurP1) p1 else p2, prewFen)
-                //profiles.push(stateId, move)
-                (if (isCurP1) p1 else p2).update(prewFen, move)
-                isCurP1 = !isCurP1
+                if (isUseDB) {
+                    val stateId =
+                        profiles.getOrPutStateId(if (isCurP1) profileId1 else profileId2, prewFen)
+                    profiles.push(stateId, move)
+                } else {
+                    (if (isCurP1) profile1 else profile2).update(prewFen, move)
+                    isCurP1 = !isCurP1
+                }
             }
             // Если FEN
             else if (chnks[0] == "FEN")
@@ -84,6 +89,7 @@ fun main() {
             f
         )
     }
+    // Для вывода на консоль
     /*profilesMap.forEach { (t, u) ->
         println(
             "$t:\n${
@@ -110,44 +116,7 @@ fun main() {
     )
     println("Успешно!")
 
-    /*profiles.getProfiles().forEach { (prfName, prfId) ->
-        println("$prfName:")
-        profiles.getStates(prfId).forEach { (sttFen, sttId) ->
-            println(
-                "$sttFen -> ${
-                    profiles.getMoves(sttId).joinToString(", ") { (move, freq) -> "$move = $freq" }
-                }"
-            )
-        }
-    }*/
-
     //profiles.showAll()
-}
-
-fun pullProfiles(): HashMap<String, Profile> {
-    Files.newInputStream(finalProfiles).use { reader ->
-        /*val mapper = ObjectMapper()
-        val typeRef: TypeReference<HashMap<String, Profile>> =
-            object : TypeReference<HashMap<String, Profile>>() {}
-        return mapper.readValue(reader, typeRef)*/
-
-        try {
-            ObjectInputStream(reader).use { ois ->
-                return ois.readObject() as HashMap<String, Profile>
-            }
-        } catch (ex: java.lang.Exception) {
-            println(ex.message)
-        }
-
-        //return Json.decodeFromString<HashMap<String, Profile>>(reader.readText())
-
-        /*return Gson().fromJson<Map<String, Profile>>(
-                reader,
-                object :
-                    TypeToken<Map<String, Profile>>() {}.type
-            )*/
-    }
-    return HashMap()
 }
 
 fun Move.toStr(): String {

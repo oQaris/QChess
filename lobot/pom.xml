@@ -55,7 +55,7 @@
     <dependency>
       <artifactId>QChess-game</artifactId>
       <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
   </dependencies>
 
@@ -64,7 +64,7 @@
   <parent>
     <artifactId>QChess</artifactId>
     <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
 
   <properties>

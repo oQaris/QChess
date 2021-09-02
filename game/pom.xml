@@ -26,33 +26,6 @@
         <groupId>org.jacoco</groupId>
         <version>0.8.7</version>
       </plugin>
-
-      <plugin>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <configuration>
-          <compilerPlugins>
-            <plugin>kotlinx-serialization</plugin>
-          </compilerPlugins>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <artifactId>kotlin-maven-serialization</artifactId>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <version>${kotlin.version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <id>compile</id>
-            <phase>compile</phase>
-          </execution>
-        </executions>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <version>${kotlin.version}</version>
-      </plugin>
     </plugins>
   </build>
 
@@ -116,13 +89,27 @@
       <version>1.2.2</version>
     </dependency>
   </dependencies>
-  <modelVersion>4.0.0</modelVersion>
 
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>QChess</artifactId>
     <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kotlin-bintray</id>
+      <name>Kotlin Bintray</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <properties>
     <maven.compiler.source>14</maven.compiler.source>
@@ -131,6 +118,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 
 </project>

@@ -23,7 +23,6 @@ import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.lobot.LoBot;
 import io.deeplay.qchess.qbot.QNegamaxBot;
 import java.util.List;
 
