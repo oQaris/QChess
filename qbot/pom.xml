@@ -46,18 +46,6 @@
       <groupId>org.apache.commons</groupId>
       <version>1.9</version>
     </dependency>
-    <!-- Statistics -->
-    <!--<dependency>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <version>${kotlin.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>kotlin-test</artifactId>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <scope>test</scope>
-      <version>${kotlin.version}</version>
-    </dependency>-->
     <!-- DB -->
     <dependency>
       <artifactId>exposed-core</artifactId>
