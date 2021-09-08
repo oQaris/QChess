@@ -5,68 +5,70 @@ import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm;
-import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
+import io.deeplay.qchess.nukebot.bot.evaluationfunc.commoneval.CommonEvaluationConstructor;
+import io.deeplay.qchess.nukebot.bot.exceptions.SearchAlgErrorCode;
+import io.deeplay.qchess.nukebot.bot.exceptions.SearchAlgException;
+import io.deeplay.qchess.nukebot.bot.searchalg.AlgBase.NegaAlfaBeta;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import java.util.List;
 
-/**
- * Реализует алгоритм поиска негамаксом, поэтому желательно использовать функцию оценки не зависящую
- * от цвета игрока (должна быть с нулевой суммой, т.е. для текущего игрока возвращать максимум, а
- * для противника минимум)
- */
-public class NegamaxAlfaBetaPruning extends SearchAlgorithm {
+/** Реализует алгоритм поиска негамаксом с альфа-бета отсечениями */
+public class NegamaxAlfaBetaPruning extends NegaAlfaBeta {
 
     public NegamaxAlfaBetaPruning(
             final ResultUpdater resultUpdater,
             final Move mainMove,
             final int moveVersion,
             final GameSettings gs,
-            final Color color,
+            final Color myColor,
+            final CommonEvaluationConstructor commonEvaluationConstructor,
             final EvaluationFunc evaluationFunc,
             final int maxDepth) {
-        super(resultUpdater, mainMove, moveVersion, gs, color, evaluationFunc, maxDepth);
+        super(
+                resultUpdater,
+                mainMove,
+                moveVersion,
+                gs,
+                myColor,
+                commonEvaluationConstructor,
+                evaluationFunc,
+                maxDepth);
     }
 
     @Override
     public void run() {
         try {
-            gs.moveSystem.move(mainMove);
+            makeMove(mainMove);
             final int est =
-                    -negamax(
+                    -super.negaSearch(
                             false,
                             EvaluationFunc.MIN_ESTIMATION,
                             EvaluationFunc.MAX_ESTIMATION,
                             maxDepth);
-            resultUpdater.updateResult(mainMove, est, maxDepth, moveVersion);
-            gs.moveSystem.undoMove();
-        } catch (final ChessError ignore) {
+            updateResult(est);
+            undoMove();
+        } catch (final ChessError e) {
+            throw new SearchAlgException(SearchAlgErrorCode.SEARCH_ALG, e);
         }
     }
 
-    /**
-     * @param isMyMove true, если это максимизирующий игрок, false - минимизирующий
-     * @param alfa лучшая оценка из гарантированных для текущего игрока
-     * @param beta лучшая оценка из гарантированных для противника
-     * @return лучшая оценка из гарантированных для текущего игрока
-     */
-    private int negamax(final boolean isMyMove, int alfa, final int beta, final int depth)
+    @Override
+    public int negaSearch(final boolean isMyMove, int alfa, final int beta, final int depth)
             throws ChessError {
-        final List<Move> allMoves =
-                gs.board.getAllPreparedMoves(gs, isMyMove ? myColor : enemyColor);
-        if (depth <= 0 || isTerminalNode(allMoves))
-            return isMyMove
-                    ? getEvaluation(allMoves, true, depth)
-                    : -getEvaluation(allMoves, false, depth);
+        final List<Move> allMoves = getLegalMoves(isMyMove ? myColor : enemyColor);
+        if (depth <= 0 || isTerminalNode(allMoves)) {
+            final int est = getEvaluation(allMoves, isMyMove, alfa, beta, depth);
+            return isMyMove ? est : -est;
+        }
+
+        prioritySort(allMoves);
 
         int optEstimation = EvaluationFunc.MIN_ESTIMATION;
 
-        SearchImprovements.prioritySort(allMoves);
-
         for (final Move move : allMoves) {
-            gs.moveSystem.move(move);
-            final int estimation = -negamax(!isMyMove, -beta, -alfa, depth - 1);
-            gs.moveSystem.undoMove();
+            makeMove(move);
+            final int estimation = -super.negaSearch(!isMyMove, -beta, -alfa, depth - 1);
+            undoMove();
 
             if (estimation > optEstimation) optEstimation = estimation;
             if (optEstimation > alfa) alfa = optEstimation;

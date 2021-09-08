@@ -5,5 +5,5 @@ public enum PlayerType {
     REMOTE_PLAYER,
     RANDOM_BOT,
     ATTACK_BOT,
-    QBOT
+    HARD_BOT
 }

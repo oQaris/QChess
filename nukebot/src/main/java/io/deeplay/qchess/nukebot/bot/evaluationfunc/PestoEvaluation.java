@@ -117,6 +117,7 @@ public class PestoEvaluation {
         }
     }
 
+    /** Оценка доски PeSTO */
     public static int pestoHeuristic(final GameSettings gs, final Color myColor) {
         int gamePhase = 0;
         final int[] mg = {0, 0};

@@ -2,16 +2,17 @@ package io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.nukebot.bot.NukeBotSettings;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithmFactory;
-import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
-import io.deeplay.qchess.nukebot.bot.searchalg.features.TranspositionTable;
-import io.deeplay.qchess.nukebot.bot.searchalg.searchalgimpl.mtdfcompatible.MTDFSearch;
+import io.deeplay.qchess.nukebot.bot.features.MoveSorter;
+import io.deeplay.qchess.nukebot.bot.features.components.TranspositionTable;
+import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm;
 import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
+import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFuncFactory;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -19,13 +20,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Параллельный поиск на основе {@link ExecutorService} */
-public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater {
+public class ParallelExecutorsSearch<T extends SearchAlgorithm<? super T>> extends SearchFunc<T>
+        implements ResultUpdater {
 
     private static final Logger logger = LoggerFactory.getLogger(ParallelExecutorsSearch.class);
+
+    private final Random random = new Random();
 
     private final TranspositionTable table = new TranspositionTable();
 
     private final Object mutexTheBest = new Object();
+
+    private final T alg;
+    private final NukeBotSettings botSettings;
+
     /** Используется, чтобы незавершенные потоки с прошлых ходов случайно не сломали текущий */
     private volatile int moveVersion;
     /** Лучшая оценка для текущего цвета myColor */
@@ -35,12 +43,10 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
     /** Лучшая глубина для текущего цвета myColor, на которой была основана оценка */
     private volatile int theBestMaxDepth;
 
-    public ParallelExecutorsSearch(
-            final GameSettings gs,
-            final Color color,
-            final EvaluationFunc evaluationFunc,
-            final int maxDepth) {
-        super(gs, color, evaluationFunc, maxDepth);
+    public ParallelExecutorsSearch(final T alg, final NukeBotSettings botSettings) {
+        super(alg);
+        this.alg = alg;
+        this.botSettings = botSettings;
     }
 
     @Override
@@ -48,10 +54,10 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
         final long startTime = System.currentTimeMillis();
 
         final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor, table);
-        SearchImprovements.prioritySort(allMoves);
+        MoveSorter.moveTypeSort(allMoves);
 
         theBestEstimation = EvaluationFunc.MIN_ESTIMATION;
-        theBestMove = allMoves.get(0);
+        theBestMove = allMoves.get(random.nextInt(allMoves.size()));
         theBestMaxDepth = -1;
 
         final int availableProcessorsCount = Runtime.getRuntime().availableProcessors();
@@ -60,18 +66,10 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
 
         for (final Move move : allMoves) {
             final GameSettings gsParallel = new GameSettings(gs, maxDepth);
-            final MTDFSearch searchAlgorithm =
-                    SearchAlgorithmFactory.getMTDFCompatibleAlgorithm(
-                            table,
-                            this,
-                            move,
-                            moveVersion,
-                            gsParallel,
-                            myColor,
-                            evaluationFunc,
-                            maxDepth);
-
-            executor.execute(searchAlgorithm);
+            final SearchAlgorithm<?> searchFunc =
+                    SearchFuncFactory.getSearchFunc(
+                            this, move, moveVersion, gsParallel, myColor, botSettings, false);
+            executor.execute(searchFunc);
         }
         executor.shutdown();
 
@@ -92,16 +90,16 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
 
     @Override
     public void updateResult(
-            final Move move, final int estimation, final int maxDepth, final int moveVersion) {
+            final Move move, final int estimation, final int startDepth, final int moveVersion) {
         if (moveVersion != this.moveVersion) return;
-        if (maxDepth > theBestMaxDepth || estimation > theBestEstimation) {
+        if (startDepth > theBestMaxDepth || estimation > theBestEstimation) {
             synchronized (mutexTheBest) {
                 // 2 одинаковые проверки нужны, чтобы лишний раз не синхронизировать
                 if (moveVersion != this.moveVersion) return;
-                if (maxDepth > theBestMaxDepth || estimation > theBestEstimation) {
+                if (startDepth > theBestMaxDepth || estimation > theBestEstimation) {
                     theBestEstimation = estimation;
                     theBestMove = move;
-                    theBestMaxDepth = maxDepth;
+                    theBestMaxDepth = startDepth;
                 }
             }
         }
@@ -110,5 +108,10 @@ public class ParallelExecutorsSearch extends SearchFunc implements ResultUpdater
     @Override
     public boolean isInvalidMoveVersion(final int myMoveVersion) {
         return moveVersion != myMoveVersion;
+    }
+
+    @Override
+    public void run() {
+        alg.run();
     }
 }

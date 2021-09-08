@@ -8,13 +8,15 @@ import io.deeplay.qchess.game.model.Move;
  */
 public interface ResultUpdater {
     /**
+     * Обновляет текущий лучший ход
+     *
      * @param move лучший найденный ход
      * @param estimation его оценка
-     * @param maxDepth глубина, на которой была основана оценка (чем больше, тем лучше)
+     * @param startDepth глубина, с которой стартовал алгоритм поиска (чем больше, тем лучше)
      * @param moveVersion версия хода - используется, чтобы незавершенные потоки с прошлых ходов
      *     случайно не сломали текущий
      */
-    void updateResult(Move move, int estimation, int maxDepth, int moveVersion);
+    void updateResult(Move move, int estimation, int startDepth, int moveVersion);
 
     /**
      * Чем чаще проверяется валидность версии, тем лучше

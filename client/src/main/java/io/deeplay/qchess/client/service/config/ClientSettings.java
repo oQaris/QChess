@@ -14,7 +14,7 @@ public class ClientSettings {
 
     public static final String JAR_CONFIG_PATH = "/client_configuration.conf";
     public static final String DEFAULT_CONFIG_PATH = "./client_configuration.conf";
-    public static final String DEFAULT_LOGBACK_NAME = "logback-client.xml";
+    public static final String DEFAULT_LOGBACK_NAME = "logback.xml";
 
     private static final transient Logger logger = LoggerFactory.getLogger(ClientSettings.class);
 

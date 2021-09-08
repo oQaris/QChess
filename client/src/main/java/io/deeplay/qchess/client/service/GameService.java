@@ -23,7 +23,6 @@ import io.deeplay.qchess.game.player.AttackBot;
 import io.deeplay.qchess.game.player.Player;
 import io.deeplay.qchess.game.player.RandomBot;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.qbot.QNegamaxBot;
 import java.util.List;
 
 public class GameService {
@@ -95,7 +94,7 @@ public class GameService {
             case EASYBOT -> new RandomBot(gs, color);
             case MEDIUMBOT -> new AttackBot(gs, color);
                 // TODO: использовать своего бота
-            case HARDBOT -> new QNegamaxBot(gs, color);
+            case HARDBOT -> new AttackBot(gs, color);
         };
     }
 

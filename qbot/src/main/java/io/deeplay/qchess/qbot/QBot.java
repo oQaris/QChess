@@ -39,7 +39,7 @@ public abstract class QBot extends RemotePlayer {
 
     @Override
     public PlayerType getPlayerType() {
-        return PlayerType.QBOT;
+        return PlayerType.HARD_BOT;
     }
 
     abstract List<Move> getTopMoves() throws ChessError;

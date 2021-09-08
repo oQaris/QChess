@@ -86,7 +86,7 @@
     <appender-ref ref="SIFTER"/>
   </logger>
 
-  <logger level="debug" name="io.deeplay.qchess.game.Selfplay">
+  <logger level="off" name="io.deeplay.qchess.game.Selfplay">
     <appender-ref ref="GAME-STATISTICS"/>
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-PARTIAL-STREAM"/>

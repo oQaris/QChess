@@ -2,34 +2,30 @@ package io.deeplay.qchess.nukebot.bot.searchfunc;
 
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
-import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
+import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm;
 
-public abstract class SearchFunc {
+public abstract class SearchFunc<T extends SearchAlgorithm<? super T>> extends SearchAlgorithm<T>
+        implements ResultUpdater {
 
     public static final long TIME_TO_MOVE = 5000;
 
-    public final EvaluationFunc evaluationFunc;
-    public final Color myColor;
-    public final int maxDepth;
-
-    protected final GameSettings gs;
-
     protected SearchFunc(
+            final Move mainMove,
             final GameSettings gs,
-            final Color color,
-            final EvaluationFunc evaluationFunc,
-            final int maxDepth) {
-        this.evaluationFunc = evaluationFunc;
-        myColor = color;
-        this.maxDepth = maxDepth;
-        this.gs = gs;
+            final int maxDepth,
+            final int moveVersion,
+            final SearchFunc<?> searchFunc) {
+        super(searchFunc, mainMove, moveVersion, gs, maxDepth);
+    }
+
+    protected SearchFunc(final T alg) {
+        super(alg);
     }
 
     /** @return true, если время на обдумывание хода вышло */
-    static boolean timesUp(final long startTimeMillis, final long maxTimeMillis) {
-        return System.currentTimeMillis() - startTimeMillis > maxTimeMillis;
+    public static boolean timesUp(final long startTimeMillis) {
+        return System.currentTimeMillis() - startTimeMillis > TIME_TO_MOVE;
     }
 
     public abstract Move findBest() throws ChessError;

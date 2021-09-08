@@ -1,20 +1,16 @@
 package io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl;
 
-import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
-import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
 import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithm;
-import io.deeplay.qchess.nukebot.bot.searchalg.SearchAlgorithmFactory;
-import io.deeplay.qchess.nukebot.bot.searchalg.features.SearchImprovements;
-import io.deeplay.qchess.nukebot.bot.searchfunc.ResultUpdater;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
 import java.util.List;
 
 /** Простой линейный поиск без параллельных вычислений */
-public class LinearSearch extends SearchFunc implements ResultUpdater {
+public class LinearSearch<T extends SearchAlgorithm<? super T>> extends SearchFunc<T> {
 
+    private final T alg;
     /** Лучшая оценка для текущего цвета myColor */
     private int theBestEstimation;
     /** Лучший ход для текущего цвета myColor */
@@ -24,29 +20,23 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
 
     private long startTime;
 
-    public LinearSearch(
-            final GameSettings gs,
-            final Color color,
-            final EvaluationFunc evaluationFunc,
-            final int maxDepth) {
-        super(gs, color, evaluationFunc, maxDepth);
+    public LinearSearch(final T alg) {
+        super(alg);
+        this.alg = alg;
     }
 
     @Override
     public Move findBest() throws ChessError {
         startTime = System.currentTimeMillis();
 
-        final List<Move> allMoves = gs.board.getAllPreparedMoves(gs, myColor);
-        SearchImprovements.prioritySort(allMoves);
+        final List<Move> allMoves = getLegalMoves(myColor);
+        prioritySort(allMoves);
 
         theBestEstimation = EvaluationFunc.MIN_ESTIMATION;
 
         for (final Move move : allMoves) {
-            final SearchAlgorithm searchAlgorithm =
-                    SearchAlgorithmFactory.getSearchAlgorithm(
-                            this, move, 0, gs, myColor, evaluationFunc, maxDepth);
-
-            searchAlgorithm.run();
+            alg.setSettings(move, gs, maxDepth, moveVersion, this);
+            alg.run();
         }
 
         return theBestMove;
@@ -54,16 +44,21 @@ public class LinearSearch extends SearchFunc implements ResultUpdater {
 
     @Override
     public void updateResult(
-            final Move move, final int estimation, final int maxDepth, final int moveVersion) {
-        if (maxDepth > theBestMaxDepth || estimation > theBestEstimation) {
+            final Move move, final int estimation, final int startDepth, final int moveVersion) {
+        if (startDepth > theBestMaxDepth || estimation > theBestEstimation) {
             theBestEstimation = estimation;
             theBestMove = move;
-            theBestMaxDepth = maxDepth;
+            theBestMaxDepth = startDepth;
         }
     }
 
     @Override
     public boolean isInvalidMoveVersion(final int myMoveVersion) {
-        return System.currentTimeMillis() - startTime > TIME_TO_MOVE;
+        return SearchFunc.timesUp(startTime);
+    }
+
+    @Override
+    public void run() {
+        alg.run();
     }
 }

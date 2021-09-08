@@ -1,56 +1,71 @@
 package io.deeplay.qchess.nukebot.bot;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.player.BotFactory;
 import io.deeplay.qchess.game.player.RemotePlayer;
-import io.deeplay.qchess.nukebot.bot.evaluationfunc.EvaluationFunc;
-import io.deeplay.qchess.nukebot.bot.evaluationfunc.PestoEvaluation;
+import io.deeplay.qchess.nukebot.bot.NukeBotSettings.BaseAlgEnum;
+import io.deeplay.qchess.nukebot.bot.NukeBotSettings.CommonEvaluationConstructorEnum;
+import io.deeplay.qchess.nukebot.bot.NukeBotSettings.EvaluationEnum;
 import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFunc;
-import io.deeplay.qchess.nukebot.bot.searchfunc.searchfuncimpl.ParallelExecutorsSearch;
+import io.deeplay.qchess.nukebot.bot.searchfunc.SearchFuncFactory;
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 public class NukeBotFactory implements BotFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(NukeBotFactory.class);
+    private static final transient Logger logger = LoggerFactory.getLogger(NukeBotFactory.class);
+    private static final transient Gson gson = new Gson();
 
-    private static String time;
-
-    private static int lastBotId;
-
-    /** Устанавливает время для записи логов */
-    public static void setTime(final String time) {
-        NukeBotFactory.time = time;
+    public static NukeBot getNukeBot(final GameSettings gs, final Color color) {
+        return getNukeBot(gs, color, new NukeBotSettings());
     }
 
-    public static synchronized NukeBot getNukeBot(final GameSettings gs, final Color color) {
-        MDC.put("time", time);
-        ++lastBotId;
+    public static NukeBot getNukeBot(
+            final GameSettings gs, final Color color, final NukeBotSettings botSettings) {
+        gs.history.setMinBoardStateToSave(botSettings.maxDepth);
 
-        final int maxDepth = 3;
-        gs.history.setMinBoardStateToSave(maxDepth);
-
-        final EvaluationFunc evaluationFunc = PestoEvaluation::pestoHeuristic;
-        final SearchFunc deepSearch =
-                new ParallelExecutorsSearch(gs, color, evaluationFunc, maxDepth);
+        final SearchFunc<?> deepSearch = SearchFuncFactory.getSearchFunc(gs, color, botSettings);
 
         final NukeBot nukeBot = new NukeBot(gs, color, deepSearch);
 
-        nukeBot.setId(lastBotId);
+        if (logger.isInfoEnabled()) {
+            synchronized (logger) {
+                logger.info("NukeBot успешно создан! Текущие настройки бота:");
+                logger.info("JSON: {}", gson.toJson(botSettings));
+                logger.info("Максимальная глубина: {}", botSettings.maxDepth);
+                logger.info("Базовый алгоритм: {}", botSettings.baseAlg);
+                logger.info("\t\tВарианты алгоритмов: {}", Arrays.toString(BaseAlgEnum.values()));
+                logger.info("Функция оценки: {}", botSettings.evaluation);
+                logger.info("\t\tВарианты функций: {}", Arrays.toString(EvaluationEnum.values()));
+                logger.info("Параллельный поиск: {}", botSettings.parallelSearch);
+                logger.info(
+                        "Итеративное углубление с MTDF: {}",
+                        botSettings.useMTDFsIterativeDeepening);
+                logger.info("Таблицы транспозиции (кеширование): {}", botSettings.useTT);
+                logger.info("Улучшение функции оценки: {}", botSettings.commonEvaluation);
+                logger.info(
+                        "\t\tВарианты улучшений: {}",
+                        Arrays.toString(CommonEvaluationConstructorEnum.values()));
+            }
+        }
 
-        logger.info(
-                "[NukeBotFactory] Создан бот #{} цвета {} с глубиной поиска {}",
-                lastBotId,
-                color,
-                deepSearch.maxDepth);
         return nukeBot;
     }
 
     @Override
-    public RemotePlayer newBot(final String name, final GameSettings gs, final Color myColor) {
-        // todo учитывать name
-        return getNukeBot(gs, myColor);
+    public RemotePlayer newBot(
+            final String settingsJson, final GameSettings gs, final Color myColor) {
+        NukeBotSettings botSettings;
+        try {
+            botSettings = gson.fromJson(settingsJson, NukeBotSettings.class);
+        } catch (final JsonSyntaxException e) {
+            logger.warn("Ошибка при парсинге настроек NukeBot! Установка стандартных настроек...");
+            botSettings = new NukeBotSettings();
+        }
+        return getNukeBot(gs, myColor, botSettings);
     }
 }
