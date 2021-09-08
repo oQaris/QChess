@@ -65,6 +65,7 @@ public class MatchMaking {
                             case RANDOM_BOT -> new RandomBot(gs, clientColor.inverse());
                             case ATTACK_BOT -> new AttackBot(gs, clientColor.inverse());
                                 // TODO: вставить своего бота
+                            case HARD_BOT -> new AttackBot(gs, clientColor.inverse());
                         };
 
                 if (enemyBot == null && dto.enemyType != PlayerType.REMOTE_PLAYER) {

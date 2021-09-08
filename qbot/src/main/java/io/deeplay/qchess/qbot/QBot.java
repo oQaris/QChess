@@ -4,6 +4,7 @@ import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.model.Color;
 import io.deeplay.qchess.game.model.Move;
+import io.deeplay.qchess.game.player.PlayerType;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.qbot.strategy.Strategy;
 import java.util.List;
@@ -34,6 +35,11 @@ public abstract class QBot extends RemotePlayer {
     public Move getNextMove() throws ChessError {
         final List<Move> topMoves = getTopMoves();
         return topMoves.get(new Random().nextInt(topMoves.size()));
+    }
+
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.HARD_BOT;
     }
 
     abstract List<Move> getTopMoves() throws ChessError;
