@@ -3,6 +3,74 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>QChess-qbot</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <sourceDirs>
+                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                <sourceDir>${project.basedir}/src/main/java</sourceDir>
+              </sourceDirs>
+            </configuration>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <id>compile</id>
+          </execution>
+          <execution>
+            <configuration>
+              <sourceDirs>
+                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                <sourceDir>${project.basedir}/src/test/java</sourceDir>
+              </sourceDirs>
+            </configuration>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+            <id>test-compile</id>
+          </execution>
+        </executions>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <version>1.4.32</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <!-- Замена компиляции по умолчанию -->
+          <execution>
+            <id>default-compile</id>
+            <phase>none</phase>
+          </execution>
+          <!-- Замена default-testCompile по умолчанию -->
+          <execution>
+            <id>default-testCompile</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <id>java-compile</id>
+            <phase>compile</phase>
+          </execution>
+          <execution>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <id>java-test-compile</id>
+            <phase>test-compile</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.5.1</version>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <!-- Logger -->
     <dependency>
@@ -19,7 +87,7 @@
     <dependency>
       <artifactId>QChess-game</artifactId>
       <groupId>io.deeplay</groupId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <!-- Tests -->
     <dependency>
@@ -45,7 +113,27 @@
       <groupId>org.apache.commons</groupId>
       <version>1.9</version>
     </dependency>
-
+    <!-- DB -->
+    <dependency>
+      <artifactId>exposed-core</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>exposed-dao</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>exposed-jdbc</artifactId>
+      <groupId>org.jetbrains.exposed</groupId>
+      <version>0.31.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>sqlite-jdbc</artifactId>
+      <groupId>org.xerial</groupId>
+      <version>3.36.0.1</version>
+    </dependency>
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>
@@ -53,10 +141,25 @@
   <parent>
     <artifactId>QChess</artifactId>
     <groupId>io.deeplay</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kotlin-bintray</id>
+      <name>Kotlin Bintray</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <properties>
+    <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <maven.compiler.source>14</maven.compiler.source>
     <maven.compiler.target>14</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

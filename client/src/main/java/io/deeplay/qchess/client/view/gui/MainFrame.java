@@ -6,13 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -33,25 +26,7 @@ public class MainFrame {
     public MainFrame() {
         UIManager.put("Button.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
         UIManager.put("RadioButton.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
-        try {
-            final File soundFile = new File("./client/src/main/resources/sound.wav");
-            final AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
-
-            //Получаем реализацию интерфейса Clip
-            //Может выкинуть LineUnavailableException
-            final Clip clip = AudioSystem.getClip();
-
-            //Загружаем наш звуковой поток в Clip
-            //Может выкинуть IOException и LineUnavailableException
-            clip.open(ais);
-
-            clip.setFramePosition(0); //устанавливаем указатель на старт
-            clip.start(); //Поехали!!!
-        } catch (final IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
-            exc.printStackTrace();
-        }
     }
-
 
     public void createStartFrame() {
         final JFrame frame = new JFrame("Начало");
