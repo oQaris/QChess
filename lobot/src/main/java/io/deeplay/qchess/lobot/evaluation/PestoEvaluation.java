@@ -178,13 +178,13 @@ public class PestoEvaluation implements Evaluation {
 
     @Override
     public int evaluateBoard(final GameSettings gameSettings, final Color color) {
-        final int[] mg = {0, 0};
-        final int[] eg = {0, 0};
+        int[] mg = {0, 0};
+        int[] eg = {0, 0};
         int gamePhase = 0;
 
-        for (final Figure figure : gameSettings.board.getAllFigures()) {
-            final int coef = figure.getColor() == Color.WHITE ? 0 : 1;
-            final int index = 2 * figureTypeList.indexOf(figure.figureType) + coef;
+        for (Figure figure : gameSettings.board.getAllFigures()) {
+            int coef = figure.getColor() == Color.WHITE ? 0 : 1;
+            int index = 2 * figureTypeList.indexOf(figure.figureType) + coef;
             mg[coef] +=
                     mg_table[index][
                             figure.getCurrentPosition().row * Board.STD_BOARD_SIZE
@@ -196,14 +196,14 @@ public class PestoEvaluation implements Evaluation {
             gamePhase += gamephaseInc[index];
         }
 
-        final int coef = color == Color.WHITE ? 0 : 1;
-        final int mgScore = mg[coef] - mg[coef ^ 1];
-        final int egScore = eg[coef] - eg[coef ^ 1];
+        int coef = color == Color.WHITE ? 0 : 1;
+        int mgScore = mg[coef] - mg[coef ^ 1];
+        int egScore = eg[coef] - eg[coef ^ 1];
         int mgPhase = gamePhase;
         if (mgPhase > 24) {
             mgPhase = 24;
         }
-        final int egPhase = 24 - mgPhase;
+        int egPhase = 24 - mgPhase;
         return (mgScore * mgPhase + egScore * egPhase) / 24;
     }
 }

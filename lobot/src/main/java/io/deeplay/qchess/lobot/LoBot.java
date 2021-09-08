@@ -1,5 +1,6 @@
 package io.deeplay.qchess.lobot;
 
+import io.deeplay.qchess.MoveWeight;
 import io.deeplay.qchess.game.GameSettings;
 import io.deeplay.qchess.game.exceptions.ChessError;
 import io.deeplay.qchess.game.exceptions.ChessException;
@@ -10,6 +11,8 @@ import io.deeplay.qchess.game.model.Move;
 import io.deeplay.qchess.game.player.RemotePlayer;
 import io.deeplay.qchess.lobot.evaluation.Evaluation;
 import io.deeplay.qchess.lobot.evaluation.MonteCarloEvaluation;
+import io.deeplay.qchess.lobot.profiler.Distribution;
+import io.deeplay.qchess.lobot.profiler.Profile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,6 +25,7 @@ public class LoBot extends RemotePlayer {
     private final int depth;
     private final ChessMoveFunc<Integer> algorithm;
     private final boolean onMonteCarlo;
+    private final Profile profile;
 
     public LoBot(final GameSettings roomSettings, final Color color) {
         this(roomSettings, color, new Strategy());
@@ -32,8 +36,9 @@ public class LoBot extends RemotePlayer {
         evaluation = strategy.getEvaluation();
         depth = strategy.getDepth();
         algorithm = getAlgorithm(strategy.getAlgorithm());
-        history.setMinBoardStateToSave(100);
+        roomSettings.history.setMinBoardStateToSave(100);
         onMonteCarlo = strategy.getOnMonteCarlo();
+        profile = strategy.getProfile();
     }
 
     private ChessMoveFunc<Integer> getAlgorithm(final TraversalAlgorithm traversal) {
@@ -47,6 +52,10 @@ public class LoBot extends RemotePlayer {
             case NEGAMAXALPHABETA -> (from, to) ->
                     negamaxWithAlphaBeta(
                             depth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, color.inverse());
+            case CLUSTERMINIMAX -> (from, to) ->
+                    clusterMinimax(
+                            depth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, color.inverse());
+            case EXPECTIMAX_PROFILE -> (from, to) -> expectimaxProfile(depth - 1, color.inverse());
             default -> null;
         };
     }
@@ -259,6 +268,64 @@ public class LoBot extends RemotePlayer {
         }
     }
 
+    private int expectimaxProfile(final int depth, final Color currentColor)
+            throws ChessError, ChessException {
+        if (depth == 0) {
+            return evaluation.evaluateBoard(roomSettings, color);
+        }
+
+        final List<Move> moves = ms.getAllPreparedMoves(currentColor);
+
+        final EndGameType endGameType = egd.updateEndGameStatus();
+        egd.revertEndGameStatus();
+        if (endGameType != EndGameType.NOTHING) {
+            return Strategy.getTerminalEvaluation(currentColor, endGameType);
+        }
+
+        if (color == currentColor) {
+            int bestMoveValue = Integer.MIN_VALUE;
+            for (final Move move : moves) {
+                final int currentValue =
+                        roomSettings.moveSystem.virtualMove(
+                                move,
+                                (from, to) -> expectimaxProfile(depth - 1, currentColor.inverse()));
+                bestMoveValue = Math.max(bestMoveValue, currentValue);
+            }
+            return bestMoveValue;
+        } else {
+            double sum = 0;
+            final Distribution distribution = profile.get(roomSettings);
+            if (!distribution.isEmpty()) {
+                final int fullSize = distribution.fullSize();
+                for (final Move move : moves) {
+                    if (distribution.containMove(move)) {
+                        int currentValue = 0;
+                        final double prob = (distribution.get(move) * 1.0) / fullSize;
+                        try {
+                            roomSettings.moveSystem.move(move);
+                            currentValue = expectimaxProfile(depth - 1, currentColor.inverse());
+                            roomSettings.moveSystem.undoMove();
+                        } catch (final ChessError chessError) {
+                            chessError.printStackTrace();
+                        }
+                        sum += (currentValue * prob);
+                    }
+                }
+                return (int) Math.round(sum);
+            }
+
+            int bestMoveValue = Integer.MAX_VALUE;
+            for (final Move move : moves) {
+                final int currentValue =
+                        roomSettings.moveSystem.virtualMove(
+                                move,
+                                (from, to) -> expectimaxProfile(depth - 1, currentColor.inverse()));
+                bestMoveValue = Math.min(bestMoveValue, currentValue);
+            }
+            return bestMoveValue;
+        }
+    }
+
     private int minimax(final int depth, int alpha, int beta, final Color currentColor)
             throws ChessError, ChessException {
 
@@ -318,39 +385,51 @@ public class LoBot extends RemotePlayer {
         }
 
         final List<Move> moves = ms.getAllPreparedMoves(currentColor);
-
-        final List<Integer> clusterMoves =
-                Strategy.getClusters(
-                        moves.stream()
-                                .map(
-                                        move -> {
-                                            int evaluate = 0;
-                                            try {
-                                                roomSettings.moveSystem.move(move);
-                                                evaluate =
-                                                        evaluation.evaluateBoard(
-                                                                roomSettings, color);
-                                                roomSettings.moveSystem.undoMove();
-                                            } catch (final ChessError chessError) {
-                                                chessError.printStackTrace();
-                                            }
-                                            return evaluate;
-                                        })
-                                .collect(Collectors.toSet()));
-
+        final List<MoveWeight> clusterMoves;
+        if (color == currentColor) {
+            clusterMoves =
+                    ClusterService.getClusteredMovesDBSCAN(
+                            moves.stream()
+                                    .map(
+                                            move -> {
+                                                int evaluate = 0;
+                                                try {
+                                                    roomSettings.moveSystem.move(move);
+                                                    evaluate =
+                                                            evaluation.evaluateBoard(
+                                                                    roomSettings, color);
+                                                    roomSettings.moveSystem.undoMove();
+                                                } catch (final ChessError chessError) {
+                                                    chessError.printStackTrace();
+                                                }
+                                                return new MovePoint(evaluate, 0, move);
+                                            })
+                                    .collect(Collectors.toSet()),
+                            2,
+                            7);
+        } else {
+            final double weight = 1.0 / moves.size();
+            clusterMoves =
+                    moves.stream()
+                            .map(move -> new MoveWeight(move, weight))
+                            .collect(Collectors.toList());
+        }
         int bestMoveValue = color == currentColor ? Integer.MIN_VALUE / 2 : Integer.MAX_VALUE / 2;
-        for (final Move move : moves) {
+
+        for (final MoveWeight moveWeight : clusterMoves) {
             final int alphaForLambda = alpha;
             final int betaForLambda = beta;
+            System.err.println(((int) Math.round(moveWeight.getWeight() * 100)));
             final int currentValue =
-                    roomSettings.moveSystem.virtualMove(
-                            move,
-                            (from, to) ->
-                                    clusterMinimax(
-                                            depth - 1,
-                                            alphaForLambda,
-                                            betaForLambda,
-                                            currentColor.inverse()));
+                    (roomSettings.moveSystem.virtualMove(
+                                    moveWeight.getMove(),
+                                    (from, to) ->
+                                            clusterMinimax(
+                                                    depth - 1,
+                                                    alphaForLambda,
+                                                    betaForLambda,
+                                                    currentColor.inverse())))
+                            * ((int) Math.round(moveWeight.getWeight() * 100));
 
             if (color == currentColor) {
                 bestMoveValue = Math.max(bestMoveValue, currentValue);

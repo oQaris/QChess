@@ -5,5 +5,7 @@ public enum TraversalAlgorithm {
     EXPECTIMAX,
     NEGAMAX,
     NEGAMAXALPHABETA,
-    NEGASCOUT
+    NEGASCOUT,
+    CLUSTERMINIMAX,
+    EXPECTIMAX_PROFILE
 }

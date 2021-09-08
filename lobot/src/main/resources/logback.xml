@@ -1,0 +1,71 @@
+<configuration>
+
+  <!-- Вывод на консоль -->
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+    <encoder>
+      <pattern>[%d{HH:mm:ss.SSS}] %level [%thread] "%logger{30}" - %msg%n</pattern>
+    </encoder>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+
+    <target>System.out</target>
+  </appender>
+
+  <!-- Для вывода результатов игр локально -->
+  <appender class="ch.qos.logback.core.FileAppender" name="GAME-STATISTICS">
+    <append>false</append>
+
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+
+    <file>logs/qchess-statistics.log</file>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+  </appender>
+
+  <!-- DEBUG -->
+  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-DEBUG">
+    <append>false</append>
+
+    <encoder>
+      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
+    </encoder>
+
+    <file>logs/qchess-last-session-debug.log</file>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+  </appender>
+
+  <!-- INFO -->
+  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION-INFO">
+    <append>false</append>
+
+    <encoder>
+      <pattern>[%d{yyyy.MM.dd - HH:mm:ss.SSS}] %level [%thread] "%logger" - %msg%n</pattern>
+    </encoder>
+
+    <file>logs/qchess-last-session-info.log</file>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+  </appender>
+
+  <logger level="off" name="io.deeplay.qchess.game.Selfplay">
+    <appender-ref ref="GAME-STATISTICS"/>
+  </logger>
+
+  <root level="debug">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE-LAST-SESSION-DEBUG"/>
+    <appender-ref ref="FILE-LAST-SESSION-INFO"/>
+  </root>
+
+</configuration>

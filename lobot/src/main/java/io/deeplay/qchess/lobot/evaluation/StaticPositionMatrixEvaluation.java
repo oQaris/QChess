@@ -91,20 +91,19 @@ public class StaticPositionMatrixEvaluation implements Evaluation {
     @Override
     public int evaluateBoard(final GameSettings gameSettings, final Color color) {
         int result = 0;
-        for (final Figure figure : gameSettings.board.getAllFigures()) {
-            final int coef = (figure.getColor() == color) ? 1 : -1;
-            final int inverse = figure.getColor() == Color.WHITE ? 1 : -1;
-            final int val = FigureService.convertFigureToVal(figure);
-            final int rowCoord =
+        for (Figure figure : gameSettings.board.getAllFigures()) {
+            int coef = (figure.getColor() == color) ? 1 : -1;
+            int inverse = figure.getColor() == Color.WHITE ? 1 : -1;
+            int val = FigureService.convertFigureToVal(figure);
+            int rowCoord =
                     (figure.getCurrentPosition().row
                                     - ((1 - inverse) / 2) * (Board.STD_BOARD_SIZE - 1))
                             * inverse;
-            final int columnCoord =
+            int columnCoord =
                     (figure.getCurrentPosition().column
                                     - ((1 - inverse) / 2) * (Board.STD_BOARD_SIZE - 1))
                             * inverse;
-            final int cur =
-                    (coef * (val + figureFieldMap.get(figure.figureType)[rowCoord][columnCoord]));
+            int cur = (coef * (val + figureFieldMap.get(figure.figureType)[rowCoord][columnCoord]));
             result += cur;
         }
         return result;
